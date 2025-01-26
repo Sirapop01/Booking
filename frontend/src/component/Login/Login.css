@@ -9,7 +9,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+
     background-color: #f0f0f0; /* สีพื้นหลัง */
   }
   
@@ -56,10 +56,13 @@
     text-align: center;
     margin-bottom: 20px;
     font-size: 64px; 
+    font-family: 'Inder', sans-serif;
+    font-weight: 400;
   }
   
   .input-group {
     margin-bottom: 15px;
+    width: 100%
   }
   
   .input-group input {
@@ -94,8 +97,8 @@
     line-height: auto; /* กำหนด line height เป็น Auto */
     letter-spacing: 0%; /* กำหนด letter spacing */
     cursor: pointer; /* กำหนด cursor เป็น pointer */
-    margin-left: 600px;
-    margin-right: 20px;
+    margin-left: auto;
+    margin-right: 30px;
   }
   
   .forgot-password {
