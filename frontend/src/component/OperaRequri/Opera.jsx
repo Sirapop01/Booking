@@ -45,7 +45,7 @@ const OperaRequri = () => {
           </li>
         </ol>
         <button className="accept-button" onClick={handleConfirm}>
-          ยืนยัน
+          ยืนยันนน
         </button>
       </main>
     </div>
