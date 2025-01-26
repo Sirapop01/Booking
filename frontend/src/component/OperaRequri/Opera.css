@@ -46,7 +46,7 @@ html, body {
 /* Main Content */
 .main-content {
   margin-top: 100px; /* เว้นที่สำหรับ header */
-  background-color: #1c2536;
+  background-color: #ffffff;
   width: 100%;
   max-width: 800px;
   padding: 20px;
@@ -64,7 +64,7 @@ html, body {
 .main-content ol {
   margin: 0;
   padding-left: 20px;
-  color: #e0e0e0;
+  color: #000000;
 }
 
 .main-content li {
@@ -81,7 +81,7 @@ html, body {
   padding: 10px 20px;
   font-size: 1rem;
   color: #ffffff;
-  background-color: #ff6f61;
+  background-color: #07213A;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -89,5 +89,5 @@ html, body {
 }
 
 .accept-button:hover {
-  background-color: #e5574b;
+  background-color: #14AE5C;
 }
