@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
 
-.container {
+.container1 {
   display: flex;
   min-height: 100vh;
   background: linear-gradient(to right, #07213A 24%, #0C3B67 61%, #135BA0 90%);

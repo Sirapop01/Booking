@@ -38,7 +38,7 @@ function RegisterCustomer() {
   };
 
   return (
-    <div className="container">
+    <div className="container1">
       <div className="left-side">
         <div className="image-container">
           <img src={logo} alt="Logo" className="logo-on-image" />
