@@ -20,16 +20,16 @@ function Login() {
   };
 
   return (
-    <div className="container">
-      <div className="left-side">
-        <img src={logo} alt="Logo" className="logo" />
-        <p className="logo-text">MatchWeb</p>
-        <img src={bgImage} alt="Background" className="bg-img" />
+    <div className="logincontainer">
+      <div className="login-left-side">
+        <img src={logo} alt="Logo" className="login-logo" />
+        <p className="login-logo-text">MatchWeb</p>
+        <img src={bgImage} alt="Background" className="login-bg-img" />
       </div>
-      <div className="right-side">
-        <div className="form-container">
+      <div className="login-right-side">
+        <div className="login-form-container">
           <h2 className="login-heading">ลงชื่อเข้าใช้</h2>
-          <div className="input-group">
+          <div className="login-input-group">
             <input
               type="email"
               id="email"
@@ -38,7 +38,7 @@ function Login() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="input-group password-input">
+          <div className="login-input-group login-password-input">
             <input
               type={showPassword ? 'text' : 'password'} // เปลี่ยน type ระหว่าง text และ password
               id="password"
@@ -48,13 +48,13 @@ function Login() {
             />
             <button
               type="button"
-              className="toggle-password"
+              className="login-toggle-password"
               onClick={togglePasswordVisibility}
             >
               {showPassword ? '👁️' : '👁️‍🗨️'} {/* แสดงไอคอน */}
             </button>
           </div>
-          <div className="remember-me">
+          <div className="login-remember-me">
             <input
               type="checkbox"
               id="rememberMe"
@@ -65,8 +65,8 @@ function Login() {
           </div>
 
           {/* Divider Section */}
-          <div className="divider">
-            <span className="divider-text">Or</span>
+          <div className="login-divider">
+            <span className="login-divider-text">Or</span>
           </div>
 
           {/* Login Button */}
@@ -74,12 +74,14 @@ function Login() {
             Login
           </button>
 
-          <p className="forgot-password">
+          <p className="login-forgot-password">
             <a href="/forgot-password">ลืมรหัสผ่าน ?</a>
           </p>
-          <p className="signup-link">
+          <p className="login-signup-link">
             Don't have an Account? <a href="/customer-register">Sign Up</a>
           </p>
+      
+
         </div>
       </div>
     </div>
