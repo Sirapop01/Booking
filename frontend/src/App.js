@@ -5,6 +5,7 @@ import Login from './component/Login/Login';
 import RegisterChoice from './component/RegisterChoice/RegisterChoice';
 import RegisterCustomer from './component/Register/RegisterCustomer';
 import ForgotPassword from './component/Repass/ForgotPassword';
+import OperaRequri from './component/OperaRequri/Opera'
 
 
 function App() {
