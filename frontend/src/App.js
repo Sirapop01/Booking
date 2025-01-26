@@ -3,6 +3,7 @@ import './App.css';
 import Login from './component/Login/Login';
 import RegisterChoice from './component/RegisterChoice/RegisterChoice';
 import RegisterCustomer from './component/Register/RegisterCustomer';
+import OperaRequri from './component/OperaRequri/Opera';
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
         <Route path="/" element={<RegisterChoice />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/customer-register" element={<RegisterCustomer/>} />
-     
+        <Route path="/OperaRequri" element={<OperaRequri/>} />
       </Routes>
     </BrowserRouter>
   );
