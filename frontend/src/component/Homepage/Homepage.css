@@ -1,53 +1,163 @@
-/* Navbar.css */
 @import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
 
+
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #07213A;
-    padding: 10px 20px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .navbar-button {
-    background-color: #fff;
-    color: #07213A;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-  }
-  
-  .navbar-button:hover {
-    background-color: #d1d1d1;
-  }
-  
-  .navbar-logo {
-    color: #fff;
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  .navbar-links {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .navbar-link {
-    background: none;
-    color: #fff;
-    border: 1px solid #fff;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .navbar-link:hover {
-    background-color: #fff;
-    color: #07213A;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #07213A;
+  padding: 30px 30px;
+}
+
+.navbar-button {
+  background-color: #fff;
+  color: #07213A;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.navbar-button:hover {
+  background-color: #d1d1d1;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 10px;
+}
+
+.navbar-link {
+  background: none;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.navbar-link:hover {
+  background-color: #fff;
+  color: #07213A;
+}
+
+.navbar-logo-img {
+  width: 80px;
+  height: 80px;
+  margin: 0 15px;
+}
+
+/* --------------------- ปรับส่วนค้นหาตรงกลางให้ใหญ่ขึ้น --------------------- */
+
+/* ดึงทุกอย่างมาตรงกลาง และกำหนด max-width ที่ใหญ่ขึ้น */
+.search-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 900px; /* เพิ่มได้ตามต้องการ เช่น 1000px */
+  margin: 40px auto; /* จัดกึ่งกลาง */
+}
+
+/* ขยายขนาด input ค้นหา */
+.search-input {
+  width: 100%;            /* ใช้เต็มความกว้างของ .search-section */
+  padding: 12px;          /* เพิ่ม padding ให้ใหญ่ขึ้น */
+  font-size: 18px;        /* ขยาย font */
+  border-radius: 5px;
+  border: 2px solid #ccc; /* เพิ่มความหนาเส้นขอบเล็กน้อย */
+  margin-bottom: 20px;
+}
+
+/* กลุ่ม date-time-people-radio */
+.date-time-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* ให้มันขยายเต็ม container ด้วย */
+}
+
+/* ขยาย input วันที่/เวลา */
+.date-input,
+.time-input {
+  width: 150px;           /* ขยายกว้างขึ้นอีกหน่อย */
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 2px solid #ccc;
+}
+
+/* select เลือกจำนวนคน */
+.people-select {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+}
+
+/* ตัวเลือก "จองได้" / "แสดงทั้งหมด" */
+.booking-status {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.booking-status label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 16px;
+}
+
+/* ปุ่มค้นหา */
+.search-button {
+  background-color: #07213A;
+  color: #fff;
+  border: none;
+  padding: 12px 24px; /* เพิ่มขนาดให้ใหญ่ขึ้น */
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;    /* เพิ่ม font-size */
+  font-weight: bold;
+}
+
+.search-button:hover {
+  background-color: #0c3259;
+}
+
+/* --------------------- ไอคอนกีฬา --------------------- */
+
+.sports-icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  gap: 10px;
+}
+
+/* ปุ่มแต่ละกีฬา */
+.sport-btn {
+  font-size: 24px; 
+  width: 70px;     /* เพิ่มขนาดตามชอบ เช่น 80px */
+  height: 70px;
+  background-color: #fff;
+  border: 2px solid #ccc; /* เพิ่มความหนาของเส้นขอบ */
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.sport-btn:hover {
+  background-color: #ddd;
+}
