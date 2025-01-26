@@ -1,51 +1,170 @@
-/* Navbar.css */
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #07213A;
-    padding: 10px 20px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .navbar-button {
-    background-color: #fff;
-    color: #07213A;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-  }
-  
-  .navbar-button:hover {
-    background-color: #d1d1d1;
-  }
-  
-  .navbar-logo {
-    color: #fff;
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  .navbar-links {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .navbar-link {
-    background: none;
-    color: #fff;
-    border: 1px solid #fff;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .navbar-link:hover {
-    background-color: #fff;
-    color: #07213A;
-  }
-  
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+
+/* Container หลัก */
+.homepage {
+  min-height: 100vh;
+  background-color: #fff; /* ใช้สีขาวเต็มหน้าเว็บ */
+}
+
+/* Navbar Section */
+.homepage-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #07213A;
+  padding: 30px 30px;
+  font-family: 'Inder', sans-serif;
+}
+
+.homepage-navbar-promo-btn {
+  background-color: #fff;
+  color: #07213A;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.homepage-navbar-promo-btn:hover {
+  background-color: #d1d1d1;
+}
+
+.homepage-navbar-logo {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.homepage-logo-img {
+  width: 80px;
+  height: 80px;
+  margin: 0 15px;
+}
+
+.homepage-navbar-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.homepage-login-btn,
+.homepage-register-btn {
+  background: none;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.homepage-login-btn:hover,
+.homepage-register-btn:hover {
+  background-color: #fff;
+  color: #07213A;
+}
+
+/* Search Section */
+.homepage-search-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 900px;
+  margin: 40px auto;
+}
+
+.homepage-search-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 5px;
+  border: 2px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.homepage-date-time {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.homepage-date-input,
+.homepage-time-input {
+  width: 150px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 2px solid #ccc;
+}
+
+.homepage-people-select {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+}
+
+.homepage-booking-options {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: #000000;
+}
+
+.homepage-booking-options label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 16px;
+}
+
+.homepage-search-btn {
+  background-color: #07213A;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.homepage-search-btn:hover {
+  background-color: #0c3259;
+}
+
+/* Sports Icons Section */
+.homepage-sports-icons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  background-color: #07213A;
+  border-radius: 30px;
+  padding: 20px 30px;
+  max-width: 800px;
+  margin: 30px auto;
+}
+
+.homepage-sport-icon {
+  width: 60px;
+  height: 60px;
+  background-color: #D1D1D1;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.homepage-sport-icon:hover {
+  background-color: #ddd;
+}

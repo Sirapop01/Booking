@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import "./RegisterChoice.css";
 import logo from "../assets/logo.png";
 
@@ -7,11 +7,11 @@ function RegisterChoice() {
   const navigate = useNavigate();
 
   const handleCustomerRegister = () => {
-    navigate("/customer-register"); // เปลี่ยน path ตามต้องการ
+    navigate("/customer-register"); // เส้นทางสำหรับผู้ใช้งาน
   };
 
   const handleOwnerRegister = () => {
-    navigate("/owner-register"); // เปลี่ยน path ตามต้องการ
+    navigate("/RegisterOpera"); // เส้นทางสำหรับผู้ประกอบการ
   };
 
   return (
