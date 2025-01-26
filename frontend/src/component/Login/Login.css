@@ -1,0 +1,111 @@
+.container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden; /* ซ่อนส่วนเกินของรูปภาพ */
+  }
+  
+  .left-side {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0; /* สีพื้นหลัง */
+  }
+  
+  .logo {
+    width: 150px; /* ปรับขนาด logo ตามต้องการ */
+    margin-bottom: 5px; 
+    margin-top: 100px;
+  }
+  
+  .logo-text {
+    font-family: 'Inder', sans-serif; /* กำหนด font family */
+    font-weight: 400; /* กำหนด font weight เป็น Regular */
+    font-size: 48px; /* กำหนด font size */
+    line-height: auto; /* กำหนด line height เป็น Auto */
+    letter-spacing: 0%; /* กำหนด letter spacing */
+    color: #FFFFFF; /* กำหนดสี */
+    text-align: center; /* จัดตำแหน่งข้อความให้อยู่กึ่งกลาง */
+    margin-bottom: 20px; 
+
+  }
+  
+  .bg-img {
+    width: 80%; /* ปรับขนาดรูปภาพตามต้องการ */
+    height: auto;
+  }
+  
+  .right-side {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .form-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 80%; 
+  }
+  
+  .login-heading {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 64px; 
+  }
+  
+  .input-group {
+    margin-bottom: 15px;
+  }
+  
+  .input-group input {
+    width: 679px; /* กำหนดความกว้าง */
+    height: 70px; /* กำหนดความสูง */
+    background-color: #0C2C4B; /* กำหนดสีพื้นหลัง */
+    border: none; /* ไม่มีขอบ */
+    color: #FFFFFF; /* กำหนดสีตัวอักษร */
+    padding: 20px; /* กำหนด padding */
+    font-family: 'Inder', sans-serif; /* กำหนด font family */
+    font-weight: 400; /* กำหนด font weight เป็น Regular */
+    font-size: 24px; /* กำหนด font size */
+    line-height: auto; /* กำหนด line height เป็น Auto */
+    letter-spacing: 0%; /* กำหนด letter spacing */
+    color: rgba(255, 255, 255, 0.42); /* กำหนดสี */
+  }
+  
+  .input-group input::placeholder {
+    color: #999;
+  }
+  
+  .login-button {
+    width: 144px; /* กำหนดความกว้าง */
+    height: 55px; /* กำหนดความสูง */
+    background-color: #39BBDF; /* กำหนดสีพื้นหลัง */
+    border: 1px solid #0C2C4B; /* กำหนดขอบ */
+    border-radius: 9px; /* กำหนด corner radius */
+    color: #FFFFFF; /* กำหนดสีตัวอักษร */
+    font-family: 'Inder', sans-serif; /* กำหนด font family */
+    font-weight: 400; /* กำหนด font weight เป็น Regular */
+    font-size: 24px; /* กำหนด font size */
+    line-height: auto; /* กำหนด line height เป็น Auto */
+    letter-spacing: 0%; /* กำหนด letter spacing */
+    cursor: pointer; /* กำหนด cursor เป็น pointer */
+    margin-left: 600px;
+    margin-right: 20px;
+  }
+  
+  .forgot-password {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px; 
+  }
+  
+  .signup-link {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px; 
+  }
