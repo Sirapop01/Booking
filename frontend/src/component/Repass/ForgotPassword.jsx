@@ -1,14 +1,19 @@
 import React, { useState } from "react";
-import "./ForgotPassword.css"; // หรือจะเขียน Inline Style ก็ได้
+import axios from "axios";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // ส่วนนี้จะเป็นการเรียกใช้งาน API เพื่อส่งอีเมลรีเซ็ตรหัสผ่าน
-    console.log("Email for reset password:", email);
-    alert("ระบบได้ส่งคำขอเปลี่ยนรหัสผ่านไปยังอีเมลของคุณแล้ว");
+    try {
+      // เรียกไปยัง API ที่ฝั่ง Backend
+      const response = await axios.post("http://localhost:4000/api/send-email", { email });
+      alert("ส่งอีเมลสำเร็จ!");
+    } catch (error) {
+      console.error(error);
+      alert("เกิดข้อผิดพลาดในการส่งอีเมล");
+    }
   };
 
   return (
