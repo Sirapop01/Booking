@@ -11,7 +11,7 @@ function App() {
         <Route path="/" element={<RegisterChoice />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/customer-register" element={<RegisterCustomer/>} />
-        
+        //fdfdf
       </Routes>
     </BrowserRouter>
   );
