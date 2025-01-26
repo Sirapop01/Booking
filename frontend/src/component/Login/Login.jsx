@@ -48,7 +48,7 @@ function Login() {
             <a href="/forgot-password">ลืมรหัสผ่าน?</a>
           </p>
           <p className="signup-link">
-            Don't have an Account? <a href="/register">Sign Up</a>
+            Don't have an Account? <a href="/customer-register">Sign Up</a>
           </p> 
         </div>
       </div>
