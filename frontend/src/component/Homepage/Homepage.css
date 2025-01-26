@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
-
+/**/
 
 .navbar {
   display: flex;
@@ -7,6 +7,7 @@
   align-items: center;
   background-color: #07213A;
   padding: 30px 30px;
+  font-family: 'Inder', sans-serif;
 }
 
 .navbar-button {
@@ -112,6 +113,7 @@
   display: flex;
   gap: 10px;
   align-items: center;
+  color: #000000;
 }
 
 .booking-status label {
@@ -140,24 +142,39 @@
 /* --------------------- ไอคอนกีฬา --------------------- */
 
 .sports-icons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 30px;
-  gap: 10px;
-}
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    background-color: #07213A;
+    border-radius: 30px;
+    padding: 20px 30px;
+    /* ลดความยาวโดยกำหนด max-width ที่เล็กลง แล้วใช้ margin auto */
+    max-width: 800px; /* ปรับตัวเลขได้ตามต้องการ */
+    margin: 30px auto; 
+  }
+  
 
 /* ปุ่มแต่ละกีฬา */
 .sport-btn {
-  font-size: 24px; 
-  width: 70px;     /* เพิ่มขนาดตามชอบ เช่น 80px */
-  height: 70px;
-  background-color: #fff;
-  border: 2px solid #ccc; /* เพิ่มความหนาของเส้นขอบ */
-  border-radius: 8px;
-  cursor: pointer;
-}
+    width: 60px;
+    height: 60px;
+    background-color: #D1D1D1;
+    border: none;
+    border-radius: 8px;  /* มุมโค้งเล็กน้อย */
+    cursor: pointer;
+    font-size: 24px;     /* กรณีเป็นอีโมจิหรือไอคอนแบบตัวหนังสือ */
+    /* ถ้าต้องการให้ไอคอนกึ่งกลางในปุ่ม: */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
 .sport-btn:hover {
   background-color: #ddd;
 }
+
+.homepage-container {
+    min-height: 100vh;
+    background-color: #fff;  /* ใช้สีขาวเต็มหน้าเว็บ */
+  }

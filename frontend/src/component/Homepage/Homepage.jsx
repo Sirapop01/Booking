@@ -57,8 +57,10 @@ const Homepage = () => {
             <option>จำนวน</option>
             <option value="1">1</option>
             <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
             <option value="5">5</option>
-            <option value="10">10</option>
+            <option value="6">6</option>
           </select>
 
           <div className="booking-status">
@@ -76,7 +78,7 @@ const Homepage = () => {
         </div>
       </div>
 
-      {/* ส่วนไอคอนกีฬา (ใช้อีโมจิแทนการใช้ react-icons) */}
+      {/* ส่วนไอคอนกีฬา (ใช้อีโมจิแทนการใช้ react-icons) */} 
       <div className="sports-icons">
         <button className="sport-btn">⚽</button>
         <button className="sport-btn">🏀</button>
