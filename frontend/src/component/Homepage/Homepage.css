@@ -1,4 +1,6 @@
 /* Navbar.css */
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+
 .navbar {
     display: flex;
     justify-content: space-between;
