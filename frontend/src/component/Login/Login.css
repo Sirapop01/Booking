@@ -48,28 +48,29 @@
   
   .form-container {
     background-color: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: none;
+    border-radius: none;
+    box-shadow: none rgba(0, 0, 0, 0.1);
     width: 80%; 
   }
   
   .login-heading {
     text-align: center;
-    margin-bottom: 20px;
-    font-size: 64px; 
-    font-family: 'Inder', sans-serif;
+    margin-bottom: 200px;
+    font-size: 44px; 
+    font-family: 'Inder';
     font-weight: 400;
   }
   
   .input-group {
     margin-bottom: 15px;
     width: 100%
+
   }
   
   .input-group input {
-    width: 679px; /* กำหนดความกว้าง */
-    height: 70px; /* กำหนดความสูง */
+    width: 500px; /* กำหนดความกว้าง */
+    height: 20px; /* กำหนดความสูง */
     background-color: #0C2C4B; /* กำหนดสีพื้นหลัง */
     border: none; /* ไม่มีขอบ */
     color: #FFFFFF; /* กำหนดสีตัวอักษร */
@@ -80,17 +81,29 @@
     line-height: auto; /* กำหนด line height เป็น Auto */
     letter-spacing: 0%; /* กำหนด letter spacing */
     color: rgba(255, 255, 255, 0.42); /* กำหนดสี */
+    border-radius: 10px;
+    margin-bottom: 15px;
+    margin-left: -100px;
+    
   }
+
+  .input-group {
+    position: relative; 
+    top: -150px; /* ขยับกล่องทั้งหมดขึ้น */
+    right: -30px;
+    
+}
   
   .input-group input::placeholder {
     color: #999;
   }
   
   .login-button {
+    position: relative;
     width: 144px; /* กำหนดความกว้าง */
     height: 55px; /* กำหนดความสูง */
     background-color: #39BBDF; /* กำหนดสีพื้นหลัง */
-    border: 1px solid #0C2C4B; /* กำหนดขอบ */
+    border: 1px solid #39BBDF; /* กำหนดขอบ */
     border-radius: 9px; /* กำหนด corner radius */
     color: #FFFFFF; /* กำหนดสีตัวอักษร */
     font-family: 'Inder', sans-serif; /* กำหนด font family */
@@ -99,18 +112,209 @@
     line-height: auto; /* กำหนด line height เป็น Auto */
     letter-spacing: 0%; /* กำหนด letter spacing */
     cursor: pointer; /* กำหนด cursor เป็น pointer */
-    margin-left: auto;
-    margin-right: 30px;
+    margin-left: 320px;
+    margin-top: -100px;
+    top: -150px;
+    
+    
+    
   }
+
   
-  .forgot-password {
-    text-align: center;
-    margin-top: 10px;
-    font-size: 14px; 
-  }
+
   
-  .signup-link {
-    text-align: center;
-    margin-top: 10px;
-    font-size: 14px; 
-  }
+  .remember-me {
+    display: flex;
+    align-items: center;
+    position: relative; /* ตั้งตำแหน่งแบบ relative */
+    top: -150px; /* ขยับขึ้นด้านบน */
+    left: -70px;
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #526B82;
+    gap: 10px;
+}
+
+.remember-me input {
+  appearance: none; /* ซ่อน checkbox ดั้งเดิม */
+  width: 20px;
+  height: 20px;
+  border: 2px solid #39BBDF; /* ขอบกล่อง */
+  border-radius: 5px; /* มุมกล่องมน */
+  background-color: #fff; /* พื้นหลังสีขาว */
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.remember-me input:checked {
+  background-color: #39BBDF; /* สีพื้นหลังเมื่อเลือก */
+  border-color: #39BBDF; /* สีขอบเมื่อเลือก */
+}
+
+.remember-me input:checked::after {
+  content: '✔'; /* เครื่องหมายติ๊ก */
+  color: #fff; /* สีเครื่องหมาย */
+  font-size: 16px;
+  display: inline-block;
+  text-align: center;
+}
+
+.remember-me label {
+  cursor: pointer;
+  font-size: 18px;
+  color: #526B82;
+  font-family: 'Inder', sans-serif;
+}
+
+.forgot-password {
+  margin-top: -70px; /* ระยะห่างระหว่าง "จดจำฉัน" และ "ลืมรหัสผ่าน" */
+  font-size: 14px;
+  color: #526B82;
+  text-align: left; /* จัดข้อความไว้ทางซ้าย */
+  position: relative; /* ตั้งตำแหน่งแบบ relative */
+  left: -70px; /* ปรับตำแหน่งให้ตรงกับฟอร์ม */
+  top: -190px;
+  right: 500px;
+}
+
+.forgot-password a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.forgot-password a:hover {
+  color: #39BBDF; /* สีเมื่อเมาส์ชี้ */
+   /* เพิ่มเส้นใต้เมื่อ hover */
+}
+
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  top: -10px; /* ขยับขึ้นด้านบน */
+  margin: 40px 0; /* ระยะห่างด้านบนและล่าง */
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  width: 5000px; /* กำหนดความยาวเส้นโดยตรง */
+  border-top: 1px solid #ccc; /* เส้นแบ่ง */
+  margin: 0 10px; /* ระยะห่างระหว่างเส้นกับข้อความ */
+}
+
+.divider-text {
+  font-size: 16px;
+  color: #ccc; /* สีของข้อความ "Or" */
+  font-family: 'Inder', sans-serif;
+}
+
+
+.signup-link {
+  text-align: center;
+  margin-top: 20px; /* เพิ่มระยะห่างด้านบน */
+  font-size: 16px; /* เพิ่มขนาดตัวอักษร */
+  font-family: 'Inder', sans-serif; /* ใช้ฟอนต์ที่สอดคล้อง */
+  color: #526B82; /* สีข้อความพื้นฐาน */
+  line-height: 1.5; /* เพิ่มระยะห่างระหว่างบรรทัด */
+}
+
+.signup-link a {
+  color: #39BBDF; /* สีลิงก์ */
+  text-decoration: false; /* ลบเส้นใต้ */
+  font-weight: bold; /* เพิ่มความหนาของข้อความ */
+  transition: color 0.3s ease; /* เพิ่มเอฟเฟกต์เมื่อ hover */
+}
+
+.signup-link a:hover {
+  color: #1B82B1; /* เปลี่ยนสีลิงก์เมื่อ hover */
+  text-decoration: underline; /* เพิ่มเส้นใต้เมื่อ hover */
+}
+
+/* กำหนดฟอนต์หลักใน body */
+body {
+  font-family: 'Inder', sans-serif; /* ใช้ฟอนต์หลักที่เหมือนกัน */
+  font-size: 16px; /* กำหนดขนาดตัวอักษรพื้นฐาน */
+  color: #526B82; /* กำหนดสีข้อความพื้นฐาน */
+  line-height: 1.6; /* ระยะห่างระหว่างบรรทัด */
+}
+
+/* ลบการตั้งฟอนต์เฉพาะในแต่ละส่วน */
+.logo-text {
+  font-size: 48px; /* ยังคงขนาดฟอนต์เฉพาะ */
+  color: #FFFFFF;
+  text-align: center;
+}
+
+.login-heading {
+  text-align: center;
+  font-size: 44px; 
+  font-weight: 400;
+}
+
+.input-group input {
+  font-size: 24px; /* ใช้ฟอนต์จาก body */
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.remember-me label {
+  font-size: 18px;
+  color: #526B82;
+}
+
+.forgot-password {
+  font-size: 14px;
+  color: #526B82;
+}
+
+.signup-link {
+  font-size: 16px;
+  color: #526B82;
+}
+
+.signup-link a {
+  font-weight: bold;
+  color: #39BBDF;
+}
+
+.divider-text {
+  font-size: 16px;
+  color: #ccc;
+}
+
+.password-input {
+  position: relative; /* ใช้ relative เพื่อให้ปุ่มตาเป็นตำแหน่ง absolute */
+}
+
+.password-input input {
+  width: 117%;
+  padding-right: 50px; /* เพิ่มพื้นที่ด้านขวาสำหรับปุ่มตา */
+}
+
+.toggle-password {
+  position: absolute;
+  top: 40%; /* วางปุ่มตาให้อยู่ตรงกลางแนวตั้ง */
+  right: -5px; /* วางปุ่มตาให้อยู่ทางด้านขวา */
+  transform: translateY(-50%); /* เลื่อนปุ่มขึ้นเล็กน้อยเพื่อให้อยู่ตรงกลาง */
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px; /* ขนาดไอคอน */
+  color: #999; /* สีของปุ่มตา */
+  transition: color 0.3s ease;
+}
+
+.toggle-password:hover {
+  color: #333; /* เปลี่ยนสีเมื่อ hover */
+}
+
+
+
+
+
