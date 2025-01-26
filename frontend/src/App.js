@@ -4,6 +4,7 @@ import Homepage from './component/Homepage/Homepage';
 import Login from './component/Login/Login';
 import RegisterChoice from './component/RegisterChoice/RegisterChoice';
 import RegisterCustomer from './component/Register/RegisterCustomer';
+import ForgotPassword from './component/Repass/ForgotPassword';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/RegisterChoice" element={<RegisterChoice />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/customer-register" element={<RegisterCustomer/>} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
 
       </Routes>
     </BrowserRouter>
