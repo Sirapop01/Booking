@@ -6,7 +6,6 @@ import RegisterChoice from './component/RegisterChoice/RegisterChoice';
 import RegisterCustomer from './component/Register/RegisterCustomer';
 import ForgotPassword from './component/Repass/ForgotPassword';
 import OperaRequri from './component/OperaRequri/Opera';
-import RegisterOpera from './component/RegisterOpera/Registeropera';
 
 function App() {
   return (
