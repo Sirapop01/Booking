@@ -1,18 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
 
-* {
-  font-family: 'Inder', sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.homepage-container {
-  min-height: 100vh;
-  background-color: #f5f5f5;
-}
-
-/* --------------------- Navbar เดิม คงไว้ได้ตามปกติ --------------------- */
 
 .navbar {
   display: flex;
