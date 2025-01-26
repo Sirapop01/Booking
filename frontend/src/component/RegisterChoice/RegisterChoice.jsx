@@ -11,7 +11,7 @@ function RegisterChoice() {
   };
 
   const handleOwnerRegister = () => {
-    navigate("/owner-register"); // เปลี่ยน path ตามต้องการ
+    navigate("/RegisterOpera"); // เปลี่ยน path ตามต้องการ
   };
 
   return (
