@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Homepage.css';
+import logo from '../assets/logo.png';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -16,7 +17,9 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <button className="navbar-button">โปรโมชั่น</button>
-      <div className="navbar-logo">MatchWeb</div>
+      <div className="navbar-logo">
+        <img src={logo} alt="logo" className="navbar-logo-img" />
+            MatchWeb</div>
       <div className="navbar-links">
         <button className="navbar-link" onClick={handleLoginClick}>เข้าสู่ระบบ</button>
         <button className="navbar-button" onClick={handleRegisterClick}>ลงทะเบียน</button>
