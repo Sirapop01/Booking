@@ -1,0 +1,141 @@
+/* Background สีเข้มของทั้งหน้า */
+body {
+    background-color: #0B2840;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* ภาชนะรวม */
+  .stadium-page-container {
+    width: 80%;
+    margin: 20px auto;
+    text-align: center;
+  }
+  
+  /* หัวข้อ */
+  .page-title {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #ffffff;
+    display: inline-flex; /* ให้ไอคอนและข้อความจัดในแนวเดียวกัน */
+    align-items: center; /* จัดตำแหน่งแนวตั้งให้ตรงกัน */
+  }
+  
+  /* ตาราง */
+  .stadium-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    text-align: left;
+    background-color: #13293D;
+    color: #ffffff;
+    border: 2px solid #ffffff; /* ขอบตารางด้านนอก */
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .stadium-table th,
+  .stadium-table td {
+    border: 2px solid #3A506B; /* ขอบช่องในตาราง */
+    padding: 12px;
+  }
+  
+  /* หัวตาราง */
+  .stadium-table thead th {
+    background-color: #07213A;
+    color: #ffffff;
+    font-size: 16px;
+    border-bottom: 2px solid #ffffff; /* ขอบด้านล่างหัวตาราง */
+  }
+  
+  /* แถวที่เปิด */
+  .open-row:hover {
+    background-color: #0A4F6E;
+    color: #ffffff;
+    cursor: pointer;
+  }
+  
+  /* แถวที่ปิด (false) => สีเทา */
+  .closed-row {
+    background-color: #B0B0B0;
+    color: #ffffff;
+  }
+  
+  /* ปุ่ม toggle เปิด/ปิด */
+  .toggle-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    font-size: 14px;
+  }
+  
+  .btn-close {
+    background-color: #f44336; /* สีแดง */
+    color: #ffffff;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-close:hover {
+    background-color: #d32f2f;
+  }
+  
+  .btn-open {
+    background-color: #4caf50; /* สีเขียว */
+    color: #ffffff;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-open:hover {
+    background-color: #388e3c;
+  }
+  
+  /* ปุ่มล่าง 3 ปุ่ม */
+  .bottom-buttons {
+    margin-top: 20px;
+    text-align: right; /* จัดปุ่มไปทางขวา */
+  }
+  
+  .bottom-buttons a {
+    display: inline-block;
+    margin: 0 8px; /* ระยะห่างระหว่างปุ่ม */
+    padding: 8px 16px;
+    background-color: #07213A;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    border: 1px solid #ffffff;
+  }
+  
+  .bottom-buttons a:hover {
+    background-color: #0A4F6E;
+  }
+  
+  /* ปุ่มกลับไปยัง Home */
+  .home-button {
+    position: fixed;
+    top: 20px; /* ระยะจากด้านบน */
+    left: 20px; /* ระยะจากด้านซ้าย */
+    width: 50px; /* ขนาดความกว้าง */
+    height: 50px; /* ขนาดความสูง */
+    background-color: #ffffff; /* พื้นหลังสีขาว */
+    border-radius: 50%; /* ทำให้เป็นวงกลม */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* เงา */
+    text-decoration: none; /* ลบเส้นขีดใต้ลิงก์ */
+  }
+  
+  .home-button:hover {
+    background-color: #f0f0f0; /* เปลี่ยนสีเมื่อ hover */
+  }
+  
+  .home-icon {
+    font-size: 24px; /* ขนาดของไอคอน */
+    color: #0B2840; /* สีของไอคอน */
+  }
