@@ -22,7 +22,7 @@ function App() {
         <Route path="changepassword" element={<ChangePassword/>} />
         <Route path="/OperaRequri" element={<OperaRequri/>} />
         <Route path="/RegisterOpera" element={<RegisterOpera/>} />
-        
+        <Route path="/stadium-list" element={<StadiumList />} />
       </Routes>
     </BrowserRouter>
   );
