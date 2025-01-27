@@ -7,6 +7,8 @@ import RegisterCustomer from './component/Register/RegisterCustomer';
 import ForgotPassword from './component/ForgotPassword/ForgotPassword';
 import OperaRequri from './component/OperaRequri/Opera';
 import RegisterOpera from './component/RegisterOpera/RegisterOpera';
+import ChangePassword from './component/ChangePassword/ChangePassword';
+import StadiumList from './component/StadiumList/StadiumList';
 import Resetpassword from './component/ResetPassword/ResetPassword';
 /**/ 
 function App() {
@@ -21,6 +23,7 @@ function App() {
         <Route path="/reset-password" element={<Resetpassword/>} />
         <Route path="/OperaRequri" element={<OperaRequri/>} />
         <Route path="/RegisterOpera" element={<RegisterOpera/>} />
+        <Route path="/stadium-list" element={<StadiumList />} />
       </Routes>
     </BrowserRouter>
   );
