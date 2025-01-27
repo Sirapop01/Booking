@@ -1,5 +1,5 @@
 /* Container หลัก */
-.logincontainer {
+.login-container {
   display: flex;
   height: 100vh;
   align-items: center; /* จัดแนวกลางในแนวตั้ง */
@@ -104,16 +104,46 @@
 .login-remember-me {
   display: flex;
   align-items: center;
+  gap: 10px; /* เพิ่มระยะห่างระหว่าง Checkbox และข้อความ */
   margin-bottom: 20px;
-  color: #FFFFFF;
+  color: #39BBDF;
+  font-size: 14px;
+  cursor: pointer;
 }
 
-.login-remember-me input {
-  margin-right: 10px;
+.login-remember-me input[type="checkbox"] {
+  appearance: none; /* ซ่อนดีไซน์พื้นฐานของ Checkbox */
+  width: 18px;
+  height: 18px;
+  border: 2px solid #39BBDF; /* กำหนดขอบ Checkbox */
+  border-radius: 3px; /* เพิ่มมุมมน */
+  background-color: transparent; /* พื้นหลังโปร่งใส */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.login-remember-me input[type="checkbox"]:checked {
+  background-color: #39BBDF; /* เปลี่ยนพื้นหลังเมื่อถูกเลือก */
+  border-color: #39BBDF;
+}
+
+.login-remember-me input[type="checkbox"]:checked::after {
+  content: '✔'; /* เครื่องหมายติ๊ก */
+  color: #fff; /* สีเครื่องหมายติ๊ก */
+  font-size: 14px;
+  display: inline-block;
+  text-align: center;
 }
 
 .login-remember-me label {
-  font-size: 14px;
+  cursor: pointer;
+  color: #39BBDF;
+  margin-left: -5px;
+  position: relative;
+  top: -1px
 }
 
 /* ลืมรหัสผ่าน */

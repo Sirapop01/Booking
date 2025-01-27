@@ -1,0 +1,175 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #0b1120; /* พื้นหลังสีเข้ม */
+    color: #ffffff; /* ตัวอักษรสีขาว */
+  }
+  
+  .registration-container {
+    max-width: 900px;
+    margin: 50px auto;
+    background-color: #ffffff; /* สีพื้นหลังของฟอร์ม */
+    color: #000000; /* ตัวอักษรสีดำ */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* เงาที่ชัดขึ้น */
+  }
+  
+  .registration-header {
+    text-align: center;
+    background-color: #1c2536; /* สีพื้นหลังหัวข้อ */
+    padding: 20px;
+    border-radius: 15px 15px 0 0;
+    color: #ffffff; /* ตัวอักษรสีขาว */
+  }
+  
+  .registration-header h1 {
+    margin: 0;
+    font-size: 2.5rem; /* ขนาดตัวอักษรใหญ่ขึ้น */
+    font-weight: bold;
+  }
+  
+  .registration-header p {
+    margin: 5px 0 0;
+    font-size: 1rem;
+    color: #b0bec5; /* สีตัวอักษรเทาอ่อน */
+  }
+  
+  .registration-content {
+    padding: 20px;
+  }
+  
+  .registration-content h2 {
+    text-align: center;
+    font-size: 1.8rem; /* ขนาดตัวอักษรใหญ่ขึ้น */
+    margin-bottom: 15px;
+    color: #07213a; /* สีตัวอักษรเน้น */
+  }
+  
+  .registration-content p {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #666;
+  }
+  
+  .registration-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* ระยะห่างระหว่างกลุ่ม */
+  }
+  
+  .form-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* ระยะห่างระหว่างคอลัมน์ */
+  }
+  
+  .form-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* ระยะห่างระหว่าง input */
+  }
+  
+  .divider {
+    width: 2px;
+    background-color: #ccc; /* เส้นแบ่งสีเทา */
+    margin: 0 20px;
+  }
+  
+  label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.95rem;
+    color: #333; /* ตัวอักษรสีดำ */
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="date"] {
+    padding: 12px;
+    border: 1px solid #ccc; /* ขอบสีเทา */
+    border-radius: 8px; /* มุมมนขึ้น */
+    margin-top: 5px;
+    font-size: 1rem;
+  }
+  
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus,
+  input[type="date"]:focus {
+    border-color: #007bff; /* สีขอบเมื่อโฟกัส */
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  .form-terms {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .terms-label {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* ระยะห่างระหว่าง checkbox และข้อความ */
+    font-size: 1rem;
+    color: #6c757d;
+    position: relative;
+    top : 10px;
+    
+  }
+  
+  .terms-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-left:-250px;
+    accent-color: #007bff; /* สีของ checkbox */
+  }
+  
+  .highlight-terms {
+    color: #000000;
+    font-weight: bold;
+    
+  }
+  
+  .highlight-conditions {
+    color: #07213A;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+    top:-34px;
+    position: relative;
+    
+  }
+  
+  .submit-button {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    background-color: #007bff; /* สีพื้นหลังปุ่ม */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3; /* สีพื้นหลังเมื่อ hover */
+    transform: scale(1.02); /* ขยายเล็กน้อยเมื่อ hover */
+  }
+
+  .accept-text {
+    color: #333; /* สีข้อความ */
+    font-weight: normal; /* น้ำหนักของข้อความ */
+    font-size: 1rem; /* ขนาดตัวอักษร */
+    margin-right: 5px; /* ระยะห่างด้านขวาจาก "ข้อกำหนดและเงื่อนไข" */
+    position: relative;
+    top : -34px;
+  }
+  

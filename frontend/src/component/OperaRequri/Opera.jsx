@@ -6,7 +6,7 @@ const OperaRequri = () => {
   const navigate = useNavigate(); // ใช้ useNavigate เพื่อจัดการการนำทาง
 
   const handleConfirm = () => {
-    navigate("/next-page"); // เปลี่ยน URL ไปยังเส้นทางถัดไป (ปรับตามเส้นทางจริงของคุณ)
+    navigate("/RegisterOpera"); // เปลี่ยน URL กลับไปยัง RegisterOpera
   };
 
   return (
@@ -51,5 +51,4 @@ const OperaRequri = () => {
     </div>
   );
 };
-
 export default OperaRequri;

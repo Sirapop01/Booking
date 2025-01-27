@@ -20,7 +20,7 @@ function Login() {
   };
 
   return (
-    <div className="logincontainer">
+    <div className="login-container">
       <div className="login-left-side">
         <img src={logo} alt="Logo" className="login-logo" />
         <p className="login-logo-text">MatchWeb</p>
@@ -80,8 +80,6 @@ function Login() {
           <p className="login-signup-link">
             Don't have an Account? <a href="/customer-register">Sign Up</a>
           </p>
-      
-
         </div>
       </div>
     </div>
