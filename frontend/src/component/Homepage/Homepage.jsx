@@ -15,6 +15,7 @@ const Homepage = () => {
   };
 
   return (
+
     <div className="homepage">
       {/* Navbar Section */}
       <nav className="homepage-navbar">
@@ -49,6 +50,7 @@ const Homepage = () => {
           />
           <input 
             type="text" 
+
             className="homepage-time-input" 
             placeholder="xx:xx-xx:xx"
           />
@@ -63,6 +65,7 @@ const Homepage = () => {
             <option value="6">6</option>
           </select>
 
+
           <div className="homepage-booking-options">
             <label>
               <input type="radio" name="booking" defaultChecked />
@@ -73,6 +76,7 @@ const Homepage = () => {
               แสดงทั้งหมด
             </label>
           </div>
+
 
           <button className="homepage-search-btn">ค้นหา</button>
         </div>
@@ -94,8 +98,5 @@ const Homepage = () => {
     </div>
   );
 };
-
-
-
 
 export default Homepage;
