@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "./ChangePassword.css"; // ไฟล์ CSS สำหรับสไตล์
+import "./ResetPassword.css"; // ไฟล์ CSS สำหรับสไตล์
 
-function ChangePassword() {
+function ResetPassword() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -45,4 +45,4 @@ function ChangePassword() {
   );
 }
 
-export default ChangePassword;
+export default ResetPassword;

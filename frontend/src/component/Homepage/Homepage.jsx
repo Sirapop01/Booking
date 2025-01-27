@@ -15,45 +15,47 @@ const Homepage = () => {
   };
 
   return (
-    <div className="homepage-container">
-      {/* ส่วน Navbar */}
-      <nav className="navbar">
-        <button className="navbar-button">โปรโมชั่น</button>
-        <div className="navbar-logo">
-          <img src={logo} alt="logo" className="navbar-logo-img" />
+
+    <div className="homepage">
+      {/* Navbar Section */}
+      <nav className="homepage-navbar">
+        <button className="homepage-navbar-promo-btn">โปรโมชั่น</button>
+        <div className="homepage-navbar-logo">
+          <img src={logo} alt="logo" className="homepage-logo-img" />
           MatchWeb
         </div>
-        <div className="navbar-links">
-          <button className="navbar-link" onClick={handleLoginClick}>
+        <div className="homepage-navbar-actions">
+          <button className="homepage-login-btn" onClick={handleLoginClick}>
             เข้าสู่ระบบ
           </button>
-          <button className="navbar-button" onClick={handleRegisterClick}>
+          <button className="homepage-register-btn" onClick={handleRegisterClick}>
             ลงทะเบียน
           </button>
         </div>
       </nav>
 
-      {/* ส่วนค้นหาสถานที่ วันเวลา จำนวน */}
-      <div className="search-section">
+      {/* Search Section */}
+      <div className="homepage-search-section">
         <input 
           type="text" 
-          className="search-input" 
+          className="homepage-search-input" 
           placeholder="ค้นหาสถานที่" 
         />
 
-        <div className="date-time-container">
+        <div className="homepage-date-time">
           <input 
             type="text" 
-            className="date-input" 
+            className="homepage-date-input" 
             placeholder="xx/xx/xxxx"
           />
           <input 
             type="text" 
-            className="time-input" 
+
+            className="homepage-time-input" 
             placeholder="xx:xx-xx:xx"
           />
 
-          <select className="people-select">
+          <select className="homepage-people-select">
             <option>จำนวน</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -63,7 +65,8 @@ const Homepage = () => {
             <option value="6">6</option>
           </select>
 
-          <div className="booking-status">
+
+          <div className="homepage-booking-options">
             <label>
               <input type="radio" name="booking" defaultChecked />
               จองได้
@@ -74,22 +77,23 @@ const Homepage = () => {
             </label>
           </div>
 
-          <button className="search-button">ค้นหา</button>
+
+          <button className="homepage-search-btn">ค้นหา</button>
         </div>
       </div>
 
-      {/* ส่วนไอคอนกีฬา (ใช้อีโมจิแทนการใช้ react-icons) */} 
-      <div className="sports-icons">
-        <button className="sport-btn">⚽</button>
-        <button className="sport-btn">🏀</button>
-        <button className="sport-btn">🏸</button>
-        <button className="sport-btn">🎾</button>
-        <button className="sport-btn">🏐</button>
-        <button className="sport-btn">🏓</button>
-        <button className="sport-btn">🥊</button>
-        <button className="sport-btn">🎳</button>
-        <button className="sport-btn">⛳</button>
-        <button className="sport-btn">...</button>
+      {/* Sports Icons Section */}
+      <div className="homepage-sports-icons">
+        <button className="homepage-sport-icon">⚽</button>
+        <button className="homepage-sport-icon">🏀</button>
+        <button className="homepage-sport-icon">🏸</button>
+        <button className="homepage-sport-icon">🎾</button>
+        <button className="homepage-sport-icon">🏐</button>
+        <button className="homepage-sport-icon">🏓</button>
+        <button className="homepage-sport-icon">🥊</button>
+        <button className="homepage-sport-icon">🎳</button>
+        <button className="homepage-sport-icon">⛳</button>
+        <button className="homepage-sport-icon">...</button>
       </div>
     </div>
   );
