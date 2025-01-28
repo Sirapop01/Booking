@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // ✅ นำเข้า useNavigate
 import './StadiumList.css';
 import logo from "../assets/logo.png";
 import homeLogo from "../assets/logoalt.png";
 
-
 function StadiumList() {
+  const navigate = useNavigate(); // ✅ ใช้ navigate สำหรับเปลี่ยนหน้า
+
   // โหลดข้อมูลสนามจาก Local Storage ถ้ามี
   const loadStadiums = () => {
     const savedData = localStorage.getItem("stadiums");
@@ -47,7 +49,7 @@ function StadiumList() {
     <div className="stadium-page-container">
       {/* ปุ่มกลับไปยังหน้า Home */}
       <a href="/" className="home-button">
-      <img src={homeLogo} alt="Home Logo" className="home-logo" />
+        <img src={homeLogo} alt="Home Logo" className="home-logo" />
       </a>
 
       {/* หัวข้อ + โลโก้ */}
@@ -105,7 +107,9 @@ function StadiumList() {
           แก้ไข
         </a>
         <a href="/add_new_stadium" className="btn">เพิ่มสนามใหม่</a>
-        <a href="/manage_sub_stadium" className="btn">จัดการสนามย่อย</a>
+        <button className="btn" onClick={() => navigate("/manage-sub-stadium")}>
+          จัดการสนามย่อย
+        </button>
       </div>
     </div>
   );
