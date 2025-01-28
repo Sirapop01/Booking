@@ -10,9 +10,9 @@ import RegisterOpera from './component/RegisterOpera/RegisterOpera';
 import RegisterArena from './component/RegisterArena/Registerarena';
 import StadiumList from './component/StadiumList/StadiumList';
 import Resetpassword from './component/ResetPassword/ResetPassword';
+import UserProfile from './component/UserProfile/UserProfile';
 import ManageStadium from './component/ManageStadium/ManageStadium';
 import ManageSubStadium from './component/ManageSubStadium/ManageSubStadium';
-
 
 /**/ 
 
@@ -20,7 +20,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-
+        
+        <Route path='/' element={<Test/>} />
         <Route path="/RegisterChoice" element={<RegisterChoice />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/customer-register" element={<RegisterCustomer/>} />
@@ -30,6 +31,7 @@ function App() {
         <Route path="/RegisterOpera" element={<RegisterOpera/>} />
         <Route path="/RegisterArena" element={<RegisterArena/>} />
         <Route path="/stadium-list" element={<StadiumList />} />
+        <Route path='/profile' element={<UserProfile />} />
         <Route path="/manage-stadium" element={<ManageStadium />} />
         <Route path="/manage-sub-stadium" element={<ManageSubStadium />} />
       </Routes>

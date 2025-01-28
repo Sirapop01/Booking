@@ -1,0 +1,225 @@
+.profile-container {
+    display: flex;
+    height: 100vh;
+    background-color: #f9f9f9;
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    width: 230px;
+    background: #2c3e50;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+  }
+  
+  .profile-image img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+  
+  nav button, .logout-button {
+    background: #34495e;
+    color: white;
+    border: none;
+    padding: 8px;
+    margin: 5px 0;
+    font-size: 14px;
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .logout-button {
+    background: #e74c3c;
+  }
+  
+  /* Profile Content */
+  .profile-content {
+    flex: 1;
+    padding: 20px;
+    background: white;
+    border-left: 3px solid #2c3e50;
+  }
+  
+  .profile-content h2 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 15px;
+  }
+  
+  h3 {
+    color : #000;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .edit-icon {
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 8px;
+    color: #3498db;
+  }
+  
+  /* Form Layout */
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .input-group label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333; /* เปลี่ยนสีฟอนต์ของ Label */
+  }
+  
+  /* ฟอร์ม Input */
+  .input-group input {
+    padding: 6px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333; /* เปลี่ยนสีฟอนต์เป็นดำ */
+    background-color: #fff; /* พื้นหลังขาว */
+  }
+  
+  /* ReadOnly Input */
+  .input-group input[readonly] {
+    background-color: #f0f0f0;
+    color: #666; /* เปลี่ยนสีฟอนต์เป็นเทาเข้ม */
+    cursor: not-allowed;
+  }
+  
+  /* ปุ่มบันทึก */
+  .save-button {
+    background-color: #27ae60;
+    color: white;
+    padding: 8px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  .save-button:hover {
+    background-color: #219150;
+  }
+  
+  /* ปุ่มลืมรหัสผ่าน */
+  .forgot-password {
+    display: block;
+    text-align: center;
+    padding: 8px;
+    font-size: 12px;
+    color: #3498db;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  /* ✨ MODAL OVERLAY */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* 🖤 แบ็คกราวด์มืดขึ้นเล็กน้อย */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px); /* 🌫️ เอฟเฟกต์เบลอ */
+}
+
+/* ✨ MODAL BOX */
+.modal {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 15px; /* 📦 ขอบโค้งมน */
+  text-align: center;
+  width: 400px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3); /* ☁️ เงา */
+  animation: fadeIn 0.3s ease-in-out; /* 🎬 เอฟเฟกต์โผล่มา */
+}
+
+/* 🎬 เอฟเฟกต์แสดง Modal */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px); /* ⬆️ ขยับขึ้นเล็กน้อย */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ✨ TITLE */
+.modal h2 {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* ✨ SUBTEXT */
+.modal p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* 🔹 BUTTON CONTAINER */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* ✅ CONFIRM BUTTON */
+.confirm-button {
+  background: #1e3a8a; /* 🔵 สีน้ำเงินเข้ม */
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%;
+}
+
+.confirm-button:hover {
+  background: #3b82f6; /* 🔵 เปลี่ยนเป็นสีฟ้าสว่างขึ้น */
+}
+
+/* ❌ CANCEL BUTTON */
+.cancel-button {
+  background: #e11d48; /* 🔴 สีแดง */
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%;
+}
+
+.cancel-button:hover {
+  background: #f87171; /* 🔴 สีแดงอ่อนลง */
+}
+
+  
