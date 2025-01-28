@@ -16,7 +16,6 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-
     let members = {
       email,
       password 
@@ -26,6 +25,9 @@ function Login() {
       const response = await axios.post(
         "http://localhost:4000/api/auth/login", members );
         if(response.data.message == "เข้าสู่ระบบสำเร็จ"){
+
+          localStorage.setItem('token', response.data.token);
+
           navigate("/");
         }else{
           alert("เข้าสู่ระบบไม่สำเร็จ");

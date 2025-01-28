@@ -67,8 +67,9 @@ exports.login = async (req, res) => {
     
     const LoginOK = await bcrypt.compare(password, exitResult.password)
     if(LoginOK){
-
-      const token = jwt.sign({email}, secret, { expiresIn : '1h'})
+      const name = exitResult.firstName;
+      const id = exitResult._id;
+      const token = jwt.sign({email, name, id}, secret, { expiresIn : '1h'})
 
       //password 123456
       console.log("เข้าสู่ระบบสำเร็จ");
@@ -85,3 +86,39 @@ exports.login = async (req, res) => {
       res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
     }
 }; 
+
+exports.getMB = async (req, res) => {
+  console.log("✅ GET Member Requested:", req.params.id);
+  try {
+      const userData = await User.findById(req.params.id);  // ✅ ใช้ findById() แทน findOne()
+      
+      if (!userData) {
+          return res.status(404).json({ message: "ไม่พบข้อมูล" });
+      }
+
+      return res.status(200).json(userData);
+  } catch (error) {
+      console.error("❌ Error fetching user data:", error);
+      return res.status(500).json({ message: "เกิดปัญหาในระบบ" });
+  }
+};
+
+exports.logout = async (req, res) => {
+  try {
+    if (req.session) {
+      req.session.destroy((err) => {
+        if (err) {
+          return res.status(500).json({ message: "ไม่สามารถออกจากระบบได้" });
+        }
+      });
+    }
+    console.log("✅ Logout API Called");
+    res.clearCookie("connect.sid"); // ✅ แก้ชื่อให้ถูกต้อง
+    return res.status(200).json({ message: "ออกจากระบบเสร็จสิ้น" });
+  } catch (error) {
+    console.error("❌ Logout Error:", error);
+    return res.status(500).json({ message: "เกิดปัญหาในระบบ" });
+  }
+};
+
+
