@@ -13,6 +13,7 @@ import Resetpassword from './component/ResetPassword/ResetPassword';
 import UserProfile from './component/UserProfile/UserProfile';
 import ManageStadium from './component/ManageStadium/ManageStadium';
 import ManageSubStadium from './component/ManageSubStadium/ManageSubStadium';
+import ManageSubStadiumDetails from './component/ManageSubStadiumDetails/ManageSubStadiumDetails';
 
 /**/ 
 
@@ -34,6 +35,7 @@ function App() {
         <Route path='/profile' element={<UserProfile />} />
         <Route path="/manage-stadium" element={<ManageStadium />} />
         <Route path="/manage-sub-stadium" element={<ManageSubStadium />} />
+        <Route path="/manage-substadium-details" element={<ManageSubStadiumDetails />} />
       </Routes>
     </BrowserRouter>
   );
