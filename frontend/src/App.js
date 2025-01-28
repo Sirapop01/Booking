@@ -9,13 +9,16 @@ import OperaRequri from './component/OperaRequri/Opera';
 import RegisterOpera from './component/RegisterOpera/RegisterOpera';
 import StadiumList from './component/StadiumList/StadiumList';
 import Resetpassword from './component/ResetPassword/ResetPassword';
+import Test from './component/Test/Test';
+import UserProfile from './component/UserProfile/UserProfile';
 
 /**/ 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-
+        
+        <Route path='/' element={<Test/>} />
         <Route path="/RegisterChoice" element={<RegisterChoice />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/customer-register" element={<RegisterCustomer/>} />
@@ -24,6 +27,7 @@ function App() {
         <Route path="/OperaRequri" element={<OperaRequri/>} />
         <Route path="/RegisterOpera" element={<RegisterOpera/>} />
         <Route path="/stadium-list" element={<StadiumList />} />
+        <Route path='/profile' element={<UserProfile />} />
       </Routes>
     </BrowserRouter>
   );
