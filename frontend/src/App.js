@@ -9,6 +9,8 @@ import RegisterCustomer from './component/Register/RegisterCustomer';
 import ForgotPassword from './component/ForgotPassword/ForgotPassword';
 import OperaRequri from './component/OperaRequri/Opera';
 import RegisterOpera from './component/RegisterOpera/Registeropera';
+import StadiumList from './component/StadiumList/StadiumList';
+import Resetpassword from './component/ResetPassword/ResetPassword';
 
 /**/ 
 function App() {
