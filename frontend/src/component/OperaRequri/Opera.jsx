@@ -51,8 +51,4 @@ const OperaRequri = () => {
     </div>
   );
 };
-
-
-
-
 export default OperaRequri;

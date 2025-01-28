@@ -4,9 +4,13 @@ import Homepage from './component/Homepage/Homepage';
 import Login from './component/Login/Login';
 import RegisterChoice from './component/RegisterChoice/RegisterChoice';
 import RegisterCustomer from './component/Register/RegisterCustomer';
+import ForgotPassword from './component/ForgotPassword/ForgotPassword';
 import OperaRequri from './component/OperaRequri/Opera';
-import RegisterOpera from './component/RegisterOpera/Registeropera';
+import RegisterOpera from './component/RegisterOpera/RegisterOpera';
 import RegisterArena from './component/RegisterArena/Registerarena';
+import ChangePassword from './component/ChangePassword/ChangePassword';
+/**/ 
+
 function App() {
   return (
     <BrowserRouter>
@@ -15,6 +19,8 @@ function App() {
         <Route path="/RegisterChoice" element={<RegisterChoice />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/customer-register" element={<RegisterCustomer/>} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="changepassword" element={<ChangePassword/>} />
         <Route path="/OperaRequri" element={<OperaRequri/>} />
         <Route path="/RegisterOpera" element={<RegisterOpera/>} />
         <Route path="/RegisterArena" element={<RegisterArena/>} />

@@ -1,49 +1,137 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RegisterCustomer.css';
-import registerImage from '../assets/threeman.png'; 
-import logo from '../assets/logo.png'
+import registerImage from '../assets/threeman.png'; // ภาพนักกีฬา PNG
+import logo from '../assets/logo.png'; // โลโก้
 
 function RegisterCustomer() {
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [gender, setGender] = useState(''); // เพิ่ม state สำหรับเพศ
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [interestedSports, setInterestedSports] = useState('');
-  const [province, setProvince] = useState(''); // เพิ่ม state สำหรับจังหวัด
-  const [district, setDistrict] = useState(''); // เพิ่ม state สำหรับอำเภอ
-  const [subdistrict, setSubdistrict] = useState(''); // เพิ่ม state สำหรับตำบล
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: '',
+    gender: '',
+    phoneNumber: '',
+    interestedSports: '',
+    province: '',
+    district: '',
+    subdistrict: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const handleRegister = () => {
-    // TODO: ตรวจสอบข้อมูล (เช่น password ตรงกันหรือไม่) 
-    // TODO: ส่งข้อมูลไปยัง backend (เช่น API) เพื่อบันทึกข้อมูลลง database
-    console.log('Email:', email);
-    console.log('Password:', password);
-    // ... (log ข้อมูลอื่นๆ)
+    console.log('Registration data:', formData);
   };
 
   const handleGoBack = () => {
-    navigate('/login'); // เปลี่ยน path ไปยังหน้า Login
+    navigate('/login');
   };
 
   return (
-    <div className="container">
+    <div className="container1">
       <div className="left-side">
-        <div className="image-container"> 
-          <img src={registerImage} alt="Register" className="register-image" />
+        <div className="image-container">
           <img src={logo} alt="Logo" className="logo-on-image" />
-          <p className="logo-text-on-image">MatchWeb</p> 
+          <p className="logo-text-on-image">MatchWeb</p>
+          <img src={registerImage} alt="Athletes" className="register-image" />
         </div>
       </div>
       <div className="right-side">
         <h1 className="register-heading">ลงทะเบียน</h1>
         <div className="form-container">
-          {/* ลบ input fields ออกทั้งหมด */}
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="อีเมล"
+          />
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="รหัสผ่าน"
+          />
+          <input
+            type="password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            placeholder="ยืนยันรหัสผ่าน"
+          />
+          <div className="name-container">
+            <input
+              type="text"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              placeholder="ชื่อ"
+            />
+            <input
+              type="text"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              placeholder="นามสกุล"
+            />
+          </div>
+          <select
+            name="gender"
+            value={formData.gender}
+            onChange={handleChange}
+          >
+            <option value="">เพศ</option>
+            <option value="male">ชาย</option>
+            <option value="female">หญิง</option>
+          </select>
+          <input
+            type="tel"
+            name="phoneNumber"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            placeholder="เบอร์โทรศัพท์"
+          />
+          <input
+            type="text"
+            name="interestedSports"
+            value={formData.interestedSports}
+            onChange={handleChange}
+            placeholder="กีฬาที่สนใจ"
+          />
+          <div className="location-container">
+            <select
+              name="province"
+              value={formData.province}
+              onChange={handleChange}
+            >
+              <option value="">จังหวัด</option>
+            </select>
+            <select
+              name="district"
+              value={formData.district}
+              onChange={handleChange}
+            >
+              <option value="">อำเภอ</option>
+            </select>
+            <select
+              name="subdistrict"
+              value={formData.subdistrict}
+              onChange={handleChange}
+            >
+              <option value="">ตำบล</option>
+            </select>
+          </div>
           <button className="register-button" onClick={handleRegister}>
             ลงทะเบียน
           </button>

@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
 
+
 /* Container หลัก */
 .homepage {
   min-height: 100vh;
   background-color: #fff; /* ใช้สีขาวเต็มหน้าเว็บ */
 }
-
 /* Navbar Section */
 .homepage-navbar {
   display: flex;
@@ -15,6 +15,7 @@
   padding: 30px 30px;
   font-family: 'Inder', sans-serif;
 }
+
 
 .homepage-navbar-promo-btn {
   background-color: #fff;
@@ -26,6 +27,7 @@
   font-size: 18px;
   font-weight: bold;
 }
+
 
 .homepage-navbar-promo-btn:hover {
   background-color: #d1d1d1;
@@ -39,6 +41,7 @@
   font-weight: bold;
 }
 
+
 .homepage-logo-img {
   width: 80px;
   height: 80px;
@@ -49,6 +52,7 @@
   display: flex;
   gap: 10px;
 }
+
 
 .homepage-login-btn,
 .homepage-register-btn {
@@ -61,11 +65,13 @@
   font-size: 18px;
 }
 
+
 .homepage-login-btn:hover,
 .homepage-register-btn:hover {
   background-color: #fff;
   color: #07213A;
 }
+
 
 /* Search Section */
 .homepage-search-section {
@@ -103,6 +109,7 @@
   border: 2px solid #ccc;
 }
 
+
 .homepage-people-select {
   padding: 10px;
   font-size: 16px;
@@ -110,12 +117,14 @@
   border-radius: 5px;
 }
 
+
 .homepage-booking-options {
   display: flex;
   gap: 10px;
   align-items: center;
   color: #000000;
 }
+
 
 .homepage-booking-options label {
   display: flex;
@@ -171,3 +180,4 @@
 .homepage-sport-icon:hover {
   background-color: #ddd;
 }
+

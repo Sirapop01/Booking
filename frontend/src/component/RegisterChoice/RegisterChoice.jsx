@@ -11,6 +11,7 @@ function RegisterChoice() {
   };
 
   const handleOwnerRegister = () => {
+
     navigate("/RegisterOpera"); // เส้นทางสำหรับผู้ประกอบการ
   };
 
