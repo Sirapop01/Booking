@@ -118,6 +118,8 @@ body {
     gap: 10px; /* ระยะห่างระหว่าง checkbox และข้อความ */
     font-size: 1rem;
     color: #6c757d;
+    position: relative;
+    left :-100px;
   }
   
   .terms-label input[type="checkbox"] {
@@ -136,6 +138,9 @@ body {
     font-weight: bold;
     text-decoration: underline;
     cursor: pointer;
+    position: relative;
+    left: 150px;
+    top: -70px;
   }
   
   .submit-button {
@@ -155,4 +160,10 @@ body {
   .submit-button:hover {
     background-color: #0056b3; /* สีพื้นหลังเมื่อ hover */
     transform: scale(1.02); /* ขยายเล็กน้อยเมื่อ hover */
+  }
+
+  .accept-text{
+    position: relative;
+    top: -40px;
+    left: 40px;
   }
