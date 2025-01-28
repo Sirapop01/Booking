@@ -1,0 +1,113 @@
+/* Container หลัก */
+.manage-substadium-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 100vh;
+    color: white;
+}
+
+/* หัวข้อ */
+.page-title {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+/* หัวข้อรอง */
+.subtitle {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+/* กรอบหมวดหมู่กีฬา */
+.sports-container {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 800px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    border: 2px solid black;
+}
+
+/* การ์ดของกีฬา */
+.sport-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    border: 2px solid black;
+    border-radius: 10px;
+    width: 120px;
+    height: 120px;
+    cursor: pointer;
+}
+
+.sport-card p {
+    margin-top: 8px;
+    color: black;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* ไอคอนกีฬา */
+.sport-icon {
+    width: 40px;
+    height: 40px;
+}
+
+/* ปุ่มเพิ่มหมวดหมู่ */
+.add-card {
+    background: #f0f0f0;
+}
+
+/* ปุ่ม Home */
+.home-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.home-logo {
+    width: 35px;
+    height: 35px;
+}
+
+/* ปุ่มย้อนกลับ */
+.btn-back {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: 2px solid black;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-back:hover {
+    background-color: #e0e0e0;
+}
