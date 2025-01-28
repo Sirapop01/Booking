@@ -9,6 +9,7 @@ import OperaRequri from './component/OperaRequri/Opera';
 import RegisterOpera from './component/RegisterOpera/Registeropera';
 import StadiumList from './component/StadiumList/StadiumList';
 import Resetpassword from './component/ResetPassword/ResetPassword';
+import ManageStadium from './component/ManageStadium/ManageStadium';
 
 /**/ 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/OperaRequri" element={<OperaRequri/>} />
         <Route path="/RegisterOpera" element={<RegisterOpera/>} />
         <Route path="/stadium-list" element={<StadiumList />} />
+        <Route path="/manage-stadium" element={<ManageStadium />} />
       </Routes>
     </BrowserRouter>
   );
