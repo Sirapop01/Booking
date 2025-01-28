@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Import Link
 import "./Registeropera.css";
-
+/**/ 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
     idCard: "",
@@ -144,7 +144,7 @@ const RegistrationForm = () => {
                 onChange={handleChange}
               />
               <span>
-              <span className="accept-text">ยอมรับ</span>{" "}
+                ยอมรับ{" "}
                 <Link to="/OperaRequri" className="highlight-conditions">
                   ข้อกำหนดและเงื่อนไข
                 </Link>
