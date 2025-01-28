@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import Link
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import "./Registeropera.css";
 
 const RegistrationForm = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
   const [formData, setFormData] = useState({
     idCard: "",
     firstName: "",
@@ -15,7 +16,7 @@ const RegistrationForm = () => {
     acceptTerms: false,
   });
 
-  const [errorMessage, setErrorMessage] = useState(""); // State สำหรับข้อความแจ้งเตือน
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -24,7 +25,7 @@ const RegistrationForm = () => {
       [name]: type === "checkbox" ? checked : value,
     });
     if (name === "acceptTerms") {
-      setErrorMessage(""); // ล้างข้อความแจ้งเตือนเมื่อ Checkbox ถูกติ๊ก
+      setErrorMessage("");
     }
   };
 
@@ -35,7 +36,9 @@ const RegistrationForm = () => {
       return;
     }
     console.log("Form Data Submitted:", formData);
-    setErrorMessage(""); // ล้างข้อความแจ้งเตือนหลังส่งฟอร์มสำเร็จ
+
+    // Navigate to /RegisterArena
+    navigate("/RegisterArena");
   };
 
   return (
@@ -144,7 +147,7 @@ const RegistrationForm = () => {
                 onChange={handleChange}
               />
               <span>
-              <span className="accept-text">ยอมรับ</span>{" "}
+                <span className="accept-text">ยอมรับ</span>{" "}
                 <Link to="/OperaRequri" className="highlight-conditions">
                   ข้อกำหนดและเงื่อนไข
                 </Link>
@@ -152,12 +155,12 @@ const RegistrationForm = () => {
             </label>
           </div>
           {errorMessage && (
-            <p className="error-message">{errorMessage}</p> // แสดงข้อความแจ้งเตือน
+            <p className="error-message">{errorMessage}</p>
           )}
           <button
             type="submit"
             className="submit-button"
-            disabled={!formData.acceptTerms} // ปุ่มจะถูกปิดใช้งานถ้า Checkbox ไม่ถูกติ๊ก
+            disabled={!formData.acceptTerms}
           >
             ดำเนินการต่อ
           </button>
