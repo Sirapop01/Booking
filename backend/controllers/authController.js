@@ -13,13 +13,13 @@ exports.register = async (req, res) => {
 
     // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
     if (password !== confirmPassword) {
-      return res.status(400).json({ message: "❌ รหัสผ่านกับยืนยันรหัสผ่านไม่ตรงกัน" });
+      return res.status(400).json({ message: "รหัสผ่านกับยืนยันรหัสผ่านไม่ตรงกัน" });
     }
 
     // ตรวจสอบว่าอีเมลถูกใช้ไปแล้วหรือไม่
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "❌ อีเมลนี้ถูกใช้งานแล้ว" });
+      return res.status(400).json({ message: "อีเมลนี้ถูกใช้งานแล้ว" });
     }
 
     // แฮชรหัสผ่านก่อนบันทึกลงฐานข้อมูล
@@ -39,11 +39,11 @@ exports.register = async (req, res) => {
       subdistrict,
     });
 
-    res.status(201).json({ message: "✅ สมัครสมาชิกสำเร็จ!", user: newUser });
+    res.status(201).json({ message: "สมัครสมาชิกสำเร็จ!", user: newUser });
 
   } catch (err) {
-    console.error("❌ Error registering user:", err);
-    res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในระบบ" });
+    console.error("Error registering user:", err);
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
   }
 };
 
@@ -71,17 +71,17 @@ exports.login = async (req, res) => {
       const token = jwt.sign({email}, secret, { expiresIn : '1h'})
 
       //password 123456
-      console.log("OK laaaaaa!");
-      return res.json({message: "ok la",token}
+      console.log("เข้าสู่ระบบสำเร็จ");
+      return res.json({message: "เข้าสู่ระบบสำเร็จ",token}
         
       );
     }else{
-      console.log("ไม่ OK waa!");
-      return res.json({message: "ไม่ ok la"});
+      console.log("เข้าสู่ระบบไม่สำเร็จ");
+      return res.json({message: "เข้าสู่ระบบไม่สำเร็จ"});
     }
 
     } catch (err) {
-      console.error("❌ Error Login user:", err);
-      res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในระบบ" });
+      console.error("Error Login user:", err);
+      res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
     }
 }; 
