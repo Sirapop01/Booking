@@ -6,7 +6,7 @@ import RegisterChoice from './component/RegisterChoice/RegisterChoice';
 import RegisterCustomer from './component/Register/RegisterCustomer';
 import ForgotPassword from './component/ForgotPassword/ForgotPassword';
 import OperaRequri from './component/OperaRequri/Opera';
-import RegisterOpera from './component/RegisterOpera/Registeropera';
+import RegisterOpera from './component/RegisterOpera/RegisterOpera';
 import RegisterArena from './component/RegisterArena/Registerarena';
 import StadiumList from './component/StadiumList/StadiumList';
 import Resetpassword from './component/ResetPassword/ResetPassword';
