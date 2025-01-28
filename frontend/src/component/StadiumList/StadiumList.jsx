@@ -1,76 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './StadiumList.css';
 import logo from "../assets/logo.png";
-import { AiOutlineHome } from 'react-icons/ai';
+import homeLogo from "../assets/logoalt.png";
+
 
 function StadiumList() {
-  // ------------------------------------------------------------------
-  // 1) จำลองข้อมูลสนาม (stadiums) ไว้ใน useState เพื่อให้แก้ไขสถานะได้
-  // ------------------------------------------------------------------
-  const [stadiums, setStadiums] = useState([
-    {
-      id: 1,
-      name: 'Wichai Arena',
-      status: 'ยืนยัน',
-      open: true, // true = เปิดให้จอง, false = ปิดชั่วคราว
-    },
-    {
-      id: 2,
-      name: 'Sophia Arena',
-      status: 'ยืนยัน',
-      open: true,
-    },
-    {
-      id: 3,
-      name: 'Arena Tepzaxx',
-      status: 'ยืนยัน',
-      open: true,
-    },
-    {
-      id: 4,
-      name: 'Sophon Arena',
-      status: 'ยืนยัน',
-      open: true,
-    },
-    {
-      id: 5,
-      name: 'Tety Arena',
-      status: 'รอการยืนยัน',
-      open: false,
-    },
-  ]);
+  // โหลดข้อมูลสนามจาก Local Storage ถ้ามี
+  const loadStadiums = () => {
+    const savedData = localStorage.getItem("stadiums");
+    if (savedData) {
+      return JSON.parse(savedData);
+    }
+    return [
+      { id: 1, name: 'Wichai Arena', status: 'ยืนยัน', open: true },
+      { id: 2, name: 'Sophia Arena', status: 'ยืนยัน', open: true },
+      { id: 3, name: 'Arena Tepzaxx', status: 'ยืนยัน', open: true },
+      { id: 4, name: 'Sophon Arena', status: 'ยืนยัน', open: true },
+      { id: 5, name: 'Tety Arena', status: 'รอการยืนยัน', open: false },
+    ];
+  };
 
-  /**
-   * toggleStadium
-   * ฟังก์ชันสำหรับเปลี่ยนสถานะเปิด/ปิด (open) ของสนามที่มี id ตรงกับ stadiumId
-   * @param {number} stadiumId - ไอดีของสนามที่ต้องการเปลี่ยน
-   * @param {boolean} openState - สถานะใหม่ (true=เปิด, false=ปิด)
-   */
+  // State สำหรับเก็บสนามที่ถูกเลือก และข้อมูลสนาม
+  const [selectedStadium, setSelectedStadium] = useState(null);
+  const [stadiums, setStadiums] = useState(loadStadiums);
+
+  // บันทึกข้อมูลลง Local Storage ทุกครั้งที่มีการเปลี่ยนแปลง
+  useEffect(() => {
+    localStorage.setItem("stadiums", JSON.stringify(stadiums));
+  }, [stadiums]);
+
+  // ฟังก์ชันเลือกสนาม
+  const handleRowClick = (id) => {
+    setSelectedStadium(id === selectedStadium ? null : id); // คลิกซ้ำเพื่อยกเลิกการเลือก
+  };
+
+  // ฟังก์ชันเปิด/ปิดสนาม (และบันทึกลง Local Storage)
   const toggleStadium = (stadiumId, openState) => {
-    // ตัวอย่าง: ถ้าต้องการเชื่อมต่อกับฐานข้อมูลจริง ให้เรียก fetch/axios ที่นี่
-    // แล้วค่อย setState (stadiums) ตามข้อมูลที่อัปเดตจากเซิร์ฟเวอร์
     setStadiums((prev) =>
       prev.map((st) =>
-        st.id === stadiumId
-          ? { ...st, open: openState } // เปลี่ยนเฉพาะ open
-          : st
+        st.id === stadiumId ? { ...st, open: openState } : st
       )
     );
   };
 
   return (
     <div className="stadium-page-container">
-
-    {/* ปุ่มกลับไปยังหน้า Home */}
-    <a href="/" className="home-button">
-        <AiOutlineHome className="home-icon" />
+      {/* ปุ่มกลับไปยังหน้า Home */}
+      <a href="/" className="home-button">
+      <img src={homeLogo} alt="Home Logo" className="home-logo" />
       </a>
 
+      {/* หัวข้อ + โลโก้ */}
       <h1 className="page-title">
         <img src={logo} alt="Logo" className="logo" />
         สนามของฉัน
       </h1>
 
+      {/* ตารางสนาม */}
       <table className="stadium-table">
         <thead>
           <tr>
@@ -84,25 +70,25 @@ function StadiumList() {
           {stadiums.map((stadium) => (
             <tr
               key={stadium.id}
-              className={`table-row ${
-                stadium.open ? 'open-row' : 'closed-row'
-              }`}
+              className={`table-row 
+                ${selectedStadium === stadium.id ? 'selected' : ''} 
+                ${!stadium.open || stadium.status === 'รอการยืนยัน' ? 'closed-row' : ''}`
+              }
+              onClick={() => handleRowClick(stadium.id)}
             >
               <td>{stadium.name}</td>
               <td>{stadium.status}</td>
               <td>
-                {stadium.open ? (
-                  <button
-                    className="toggle-btn btn-close"
-                    onClick={() => toggleStadium(stadium.id, false)}
-                  >
+                {stadium.status === 'รอการยืนยัน' ? (
+                  <button className="toggle-btn btn-disabled" disabled>
+                    รอการยืนยัน
+                  </button>
+                ) : stadium.open ? (
+                  <button className="toggle-btn btn-close" onClick={() => toggleStadium(stadium.id, false)}>
                     กดเพื่อปิดชั่วคราว
                   </button>
                 ) : (
-                  <button
-                    className="toggle-btn btn-open"
-                    onClick={() => toggleStadium(stadium.id, true)}
-                  >
+                  <button className="toggle-btn btn-open" onClick={() => toggleStadium(stadium.id, true)}>
                     กดเพื่อเปิด
                   </button>
                 )}
@@ -113,10 +99,13 @@ function StadiumList() {
         </tbody>
       </table>
 
+      {/* ปุ่มด้านล่าง */}
       <div className="bottom-buttons">
-        <a href="/edit">แก้ไข</a>
-        <a href="/add_new_stadium">เพิ่มสนามใหม่</a>
-        <a href="/manage_sub_stadium">จัดการสนามย่อย</a>
+        <a href={selectedStadium ? `/edit/${selectedStadium}` : '#'} className={`btn ${selectedStadium ? '' : 'disabled'}`}>
+          แก้ไข
+        </a>
+        <a href="/add_new_stadium" className="btn">เพิ่มสนามใหม่</a>
+        <a href="/manage_sub_stadium" className="btn">จัดการสนามย่อย</a>
       </div>
     </div>
   );
