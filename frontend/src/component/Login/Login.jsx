@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Login.css';
+import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png'; // Path ของโลโก้
 import bgImage from '../assets/threeman.png'; // Path ของรูปพื้นหลัง
 import { IoEyeSharp } from "react-icons/io5";
@@ -12,7 +13,8 @@ function Login() {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false); // State สำหรับ "จดจำฉัน"
   const [showPassword, setShowPassword] = useState(false); // State สำหรับแสดง/ซ่อนรหัสผ่าน
-  
+  const navigate = useNavigate();
+
   const handleLogin = async () => {
 
     let members = {
@@ -22,9 +24,13 @@ function Login() {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/auth/login", members
-      );
-      
+        "http://localhost:4000/api/auth/login", members );
+        if(response.data.message == "เข้าสู่ระบบสำเร็จ"){
+          navigate("/");
+        }else{
+          alert("เข้าสู่ระบบไม่สำเร็จ");
+        }
+      console.log(response.data.message)
     }catch (err){
       console.log(err)
     }
