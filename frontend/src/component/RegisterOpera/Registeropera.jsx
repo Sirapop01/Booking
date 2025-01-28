@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Import Link
-import "./RegisterOpera.css";
+import "./Registeropera.css";
 /**/ 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
