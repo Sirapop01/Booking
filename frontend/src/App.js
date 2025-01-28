@@ -1,8 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'; 
 import './App.css';
 
-import StadiumList from './component/StadiumList/StadiumList';
-import Resetpassword from './component/ResetPassword/ResetPassword';
 import Login from './component/Login/Login';
 import RegisterChoice from './component/RegisterChoice/RegisterChoice';
 import RegisterCustomer from './component/Register/RegisterCustomer';
