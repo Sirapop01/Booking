@@ -119,31 +119,40 @@ body {
   cursor: not-allowed;
 }
 
-/* ปุ่มล่าง */
+/* ✅ ปรับขนาดและพื้นหลังของปุ่มล่าง */
 .bottom-buttons {
   margin-top: 20px;
-  text-align: right;
+  display: flex;
+  justify-content: right;
+  gap: 15px;
 }
 
+/* ✅ ปรับขนาดของปุ่มให้เท่ากัน */
 .btn {
-  display: inline-block;
-  margin: 0 8px;
-  padding: 8px 16px;
+  padding: 12px 20px;
   background-color: #07213A;
   color: #ffffff;
   text-decoration: none;
-  border-radius: 4px;
-  border: 1px solid #ffffff;
+  border-radius: 5px;
+  border: 2px solid #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 150px;
+  text-align: center;
 }
 
+/* ✅ ปรับสีปุ่มเมื่อ hover */
+.btn:hover {
+  background-color: #0A4F6E;
+}
+
+/* ✅ ปรับปุ่มที่กดไม่ได้ให้มีสีจาง */
 .btn.disabled {
   background-color: #555 !important;
   pointer-events: none;
   opacity: 0.5;
-}
-
-.btn:hover {
-  background-color: #0A4F6E;
 }
 
 /* ปุ่มกลับไปยัง Home */
@@ -151,15 +160,15 @@ body {
   position: fixed;
   top: 20px;
   left: 20px;
-  width: 50px; /* ขนาดความกว้าง */
-  height: 50px; /* ขนาดความสูง */
+  width: 60px;
+  height: 60px;
   background-color: #ffffff;
-  border-radius: 10px; /* มุมโค้ง */
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* เงา */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .home-button:hover {
@@ -167,6 +176,6 @@ body {
 }
 
 .home-logo {
-  width: 30px; /* ขนาดของรูปในปุ่ม Home */
-  height: 30px;
+  width: 35px;
+  height: 35px;
 }
