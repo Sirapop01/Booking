@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import "./Registeropera.css";
+import { Link } from "react-router-dom"; // Import Link
+import "./RegisterOpera.css";
+/**/ 
 
 const RegistrationForm = () => {
   const navigate = useNavigate(); // Initialize useNavigate
@@ -147,7 +150,10 @@ const RegistrationForm = () => {
                 onChange={handleChange}
               />
               <span>
+
                 <span className="accept-text">ยอมรับ</span>{" "}
+                ยอมรับ{" "}
+
                 <Link to="/OperaRequri" className="highlight-conditions">
                   ข้อกำหนดและเงื่อนไข
                 </Link>

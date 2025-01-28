@@ -1,46 +1,36 @@
-// server.js
 const express = require("express");
-const nodemailer = require("nodemailer");
+const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const cors = require("cors");
+
+// Import Routes
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
-const PORT = 4000; // พอร์ตที่ต้องการให้ Backend รัน
+const PORT = 4000;
 
-// ใช้ body-parser เพื่ออ่าน JSON (หรือใช้ express.json() แทนก็ได้)
+// Middleware
 app.use(bodyParser.json());
+app.use(cors());
 
-// สร้าง Transporter สำหรับส่งเมล (ใช้ Gmail)
-const transporter = nodemailer.createTransport({
-  service: "Gmail",
-  auth: {
-    user: "sirapop0122@gmail.com", // ใส่ Gmail ของคุณ
-    pass: "Pupa_22012547"         // ใส่รหัสผ่าน หรือ App Password
-  },
+// MongoDB Connection String (Replace with your credentials)
+const MONGO_URI = "mongodb+srv://Booking:Booking@cluster0.1cryq.mongodb.net/";
+
+// Connect to MongoDB Atlas
+mongoose.connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => console.log("✅ MongoDB connected successfully"))
+.catch((err) => {
+    console.error("❌ MongoDB connection error:", err.message);
+    process.exit(1); // Stop server if MongoDB fails
 });
 
-app.post("/api/send-email", async (req, res) => {
-  try {
-    const { email } = req.body;
+// Routes
+app.use("/api/auth", authRoutes);
 
-    if (!email) {
-      return res.status(400).json({ message: "ไม่มีอีเมลที่ส่งมา" });
-    }
-
-    const mailOptions = {
-      from: "sirapop0122@gmail.com",           // อีเมลผู้ส่ง
-      to: email,                              // อีเมลผู้รับ (ที่กรอกจาก Frontend)
-      subject: "Password Reset",
-      text: "ลิงก์สำหรับเปลี่ยนรหัสผ่าน: http://localhost:3000/changepassword"
-    };
-
-    await transporter.sendMail(mailOptions);
-    res.status(200).json({ message: "ส่งอีเมลสำเร็จ" });
-  } catch (error) {
-    console.error("Error sending email:", error);
-    res.status(500).json({ message: "เกิดข้อผิดพลาดในการส่งอีเมล" });
-  }
-});
-
+// Start Server
 app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
+    console.log(`🚀 Server started on port ${PORT}`);
 });

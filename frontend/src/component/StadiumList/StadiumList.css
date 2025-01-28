@@ -1,0 +1,172 @@
+/* Background สีเข้มของทั้งหน้า */
+body {
+  background-color: #0B2840;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* ภาชนะรวม */
+.stadium-page-container {
+  width: 80%;
+  margin: 20px auto;
+  text-align: center;
+}
+
+/* หัวข้อ + โลโก้ */
+.page-title {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+/* ตาราง */
+.stadium-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
+  text-align: left;
+  background-color: #13293D;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.stadium-table th,
+.stadium-table td {
+  border: 2px solid #3A506B;
+  padding: 12px;
+}
+
+/* หัวตาราง */
+.stadium-table thead th {
+  background-color: #07213A;
+  color: #ffffff;
+  font-size: 16px;
+  border-bottom: 2px solid #ffffff;
+}
+
+/* แถวที่เปิด */
+.open-row:hover {
+  background-color: #0A4F6E;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+/* แถวที่ปิด (false) หรือรอการยืนยัน => สีเทา */
+.closed-row {
+  background-color: #B0B0B0 !important;
+  color: #ffffff;
+}
+
+/* แถวที่ถูกเลือก */
+.selected {
+  background-color: #1E90FF !important; /* สีฟ้า */
+  color: #ffffff;
+}
+
+/* ป้องกันการเลือกข้อความ */
+.table-row {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ปุ่ม toggle เปิด/ปิด */
+.toggle-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+/* ปุ่มปิด */
+.btn-close {
+  background-color: #f44336;
+  color: #ffffff;
+}
+
+.btn-close:hover {
+  background-color: #d32f2f;
+}
+
+/* ปุ่มเปิด */
+.btn-open {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+
+.btn-open:hover {
+  background-color: #388e3c;
+}
+
+/* ปุ่มที่กดไม่ได้ */
+.btn-disabled {
+  background-color: #777;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+/* ปุ่มล่าง */
+.bottom-buttons {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.btn {
+  display: inline-block;
+  margin: 0 8px;
+  padding: 8px 16px;
+  background-color: #07213A;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 4px;
+  border: 1px solid #ffffff;
+}
+
+.btn.disabled {
+  background-color: #555 !important;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.btn:hover {
+  background-color: #0A4F6E;
+}
+
+/* ปุ่มกลับไปยัง Home */
+.home-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 50px; /* ขนาดความกว้าง */
+  height: 50px; /* ขนาดความสูง */
+  background-color: #ffffff;
+  border-radius: 10px; /* มุมโค้ง */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* เงา */
+}
+
+.home-button:hover {
+  background-color: #f0f0f0;
+}
+
+.home-logo {
+  width: 30px; /* ขนาดของรูปในปุ่ม Home */
+  height: 30px;
+}

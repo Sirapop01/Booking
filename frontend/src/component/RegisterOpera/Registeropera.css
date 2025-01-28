@@ -1,3 +1,4 @@
+/**/ 
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -117,22 +118,17 @@ body {
     gap: 10px; /* ระยะห่างระหว่าง checkbox และข้อความ */
     font-size: 1rem;
     color: #6c757d;
-    position: relative;
-    top : 10px;
-    
   }
   
   .terms-label input[type="checkbox"] {
     width: 20px;
     height: 20px;
-    margin-left:-250px;
     accent-color: #007bff; /* สีของ checkbox */
   }
   
   .highlight-terms {
     color: #000000;
     font-weight: bold;
-    
   }
   
   .highlight-conditions {
@@ -140,9 +136,6 @@ body {
     font-weight: bold;
     text-decoration: underline;
     cursor: pointer;
-    top:-34px;
-    position: relative;
-    
   }
   
   .submit-button {
@@ -163,13 +156,3 @@ body {
     background-color: #0056b3; /* สีพื้นหลังเมื่อ hover */
     transform: scale(1.02); /* ขยายเล็กน้อยเมื่อ hover */
   }
-
-  .accept-text {
-    color: #333; /* สีข้อความ */
-    font-weight: normal; /* น้ำหนักของข้อความ */
-    font-size: 1rem; /* ขนาดตัวอักษร */
-    margin-right: 5px; /* ระยะห่างด้านขวาจาก "ข้อกำหนดและเงื่อนไข" */
-    position: relative;
-    top : -34px;
-  }
-  
