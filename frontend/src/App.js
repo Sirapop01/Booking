@@ -12,6 +12,7 @@ import StadiumList from './component/StadiumList/StadiumList';
 import Resetpassword from './component/ResetPassword/ResetPassword';
 import ManageStadium from './component/ManageStadium/ManageStadium';
 import ManageSubStadium from './component/ManageSubStadium/ManageSubStadium';
+import ManageSubStadiumDetails from './component/ManageSubStadiumDetails/ManageSubStadiumDetails';
 
 
 /**/ 
@@ -32,6 +33,7 @@ function App() {
         <Route path="/stadium-list" element={<StadiumList />} />
         <Route path="/manage-stadium" element={<ManageStadium />} />
         <Route path="/manage-sub-stadium" element={<ManageSubStadium />} />
+        <Route path="/manage-substadium-details" element={<ManageSubStadiumDetails />} />
       </Routes>
     </BrowserRouter>
   );
