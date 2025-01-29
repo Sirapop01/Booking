@@ -7,6 +7,15 @@
     margin: 20px auto;
 }
 
+/* ✅ ปิดการแสดงเคอร์เซอร์พิมพ์ (Text Cursor) */
+.manage-substadium-details,
+.courts-list,
+.court-details,
+table {
+    user-select: none; /* ป้องกันการไฮไลต์ */
+    cursor: default; /* ไม่แสดงเคอร์เซอร์พิมพ์ */
+}
+
 /* ✅ ปุ่ม Home */
 .home-button {
     position: fixed;
@@ -69,7 +78,25 @@ th, td {
     padding-right: 15px;
 }
 
-/* ปุ่มเปิด/ปิดสถานะ */
+/* ✅ แถวของตาราง */
+.table-row {
+    cursor: pointer; /* เปลี่ยนเป็น pointer เมื่อโฮเวอร์ */
+    transition: background-color 0.3s ease;
+}
+
+/* ✅ แถวที่ถูกเลือก */
+.selected {
+    background-color: #1E90FF;
+    color: white;
+}
+
+/* ✅ แถวที่ปิด (สถานะ = ปิด) */
+.closed-row {
+    background-color: #B0B0B0 !important;
+    color: #ffffff !important;
+}
+
+/* ✅ ปุ่มเปิด/ปิดสถานะ */
 .toggle-btn {
     padding: 6px 12px;
     border-radius: 5px;
@@ -99,6 +126,7 @@ th, td {
     min-width: 300px;
 }
 
+/* ✅ ปรับ input และ textarea */
 .court-details input,
 .court-details textarea {
     width: 100%;
@@ -106,9 +134,21 @@ th, td {
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-bottom: 10px;
+    font-size: 16px;
+    background-color: white;
+    color: black;
 }
 
-/* ✅ ปรับขนาดปุ่ม */
+/* ✅ ล็อก input เมื่อไม่ได้กดแก้ไข */
+.court-details input[readonly],
+.court-details textarea[readonly] {
+    background-color: #f5f5f5;
+    color: #777;
+    border: 1px solid #ddd;
+    cursor: not-allowed;
+}
+
+/* ✅ ปุ่มแก้ไข/บันทึก และเพิ่ม/ยกเลิก */
 .details-buttons {
     display: flex;
     justify-content: space-between;
@@ -122,13 +162,24 @@ th, td {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
 }
 
-.add-btn {
-    background-color: #4CAF50;
+.cancel-btn {
+    background-color: #DC3545;
     color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
+}
+
+/* ✅ ปรับขนาดปุ่มเมื่อ hover */
+.edit-btn:hover {
+    background-color: #1976D2;
+}
+
+.cancel-btn:hover {
+    background-color: #C82333;
 }
