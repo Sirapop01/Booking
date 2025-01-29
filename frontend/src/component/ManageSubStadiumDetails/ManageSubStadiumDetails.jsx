@@ -11,9 +11,13 @@ function ManageSubStadiumDetails() {
   ]);
 
   const [selectedCourt, setSelectedCourt] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedName, setEditedName] = useState("");
 
   const selectCourt = (court) => {
     setSelectedCourt(selectedCourt?.id === court.id ? null : court);
+    setIsEditing(false);
+    setEditedName(court.name);
   };
 
   const toggleCourtStatus = (courtId) => {
@@ -22,6 +26,19 @@ function ManageSubStadiumDetails() {
         court.id === courtId ? { ...court, status: court.status === "เปิด" ? "ปิด" : "เปิด" } : court
       )
     );
+  };
+
+  const handleEditClick = () => {
+    if (isEditing) {
+      // ✅ บันทึกค่าที่แก้ไขลงในตาราง
+      setCourts((prevCourts) =>
+        prevCourts.map((court) =>
+          court.id === selectedCourt.id ? { ...court, name: editedName } : court
+        )
+      );
+      setSelectedCourt((prev) => ({ ...prev, name: editedName }));
+    }
+    setIsEditing(!isEditing);
   };
 
   return (
@@ -59,7 +76,7 @@ function ManageSubStadiumDetails() {
                       toggleCourtStatus(court.id);
                     }}
                   >
-                    {court.status === "เปิด" ? "กดเพื่อปิด" : "กดเพื่อเปิด"}
+                    {court.status === "เปิด" ? "กดเพื่อปิดชั่วคราว" : "กดเพื่อเปิด"}
                   </button>
                 </td>
               </tr>
@@ -73,17 +90,28 @@ function ManageSubStadiumDetails() {
         {selectedCourt ? (
           <>
             <h2>ข้อมูลสนาม</h2>
-            <p><strong>ชื่อสนาม:</strong> {selectedCourt.name}</p>
-            <p><strong>สนาม:</strong> <input type="text" defaultValue={selectedCourt.owner} /></p>
-            <p><strong>เจ้าของ:</strong> <input type="text" defaultValue={selectedCourt.owner} /></p>
-            <p><strong>เบอร์โทรศัพท์:</strong> <input type="text" defaultValue={selectedCourt.phone} /></p>
-            <p><strong>คำอธิบาย:</strong> <textarea defaultValue={selectedCourt.description} /></p>
-            <p><strong>เวลาทำการ:</strong> <input type="text" defaultValue={selectedCourt.hours} /></p>
-            <p><strong>ราคาต่อชั่วโมง:</strong> <input type="text" defaultValue={selectedCourt.price} /></p>
+            <p><strong>ชื่อสนาม:</strong> 
+              <input 
+                type="text" 
+                value={editedName} 
+                onChange={(e) => setEditedName(e.target.value)} 
+                readOnly={!isEditing} 
+              />
+            </p>
+            <p><strong>สนาม:</strong> <input type="text" defaultValue={selectedCourt.owner} readOnly={!isEditing} /></p>
+            <p><strong>เจ้าของ:</strong> <input type="text" defaultValue={selectedCourt.owner} readOnly={!isEditing} /></p>
+            <p><strong>เบอร์โทรศัพท์:</strong> <input type="text" defaultValue={selectedCourt.phone} readOnly={!isEditing} /></p>
+            <p><strong>คำอธิบาย:</strong> <textarea defaultValue={selectedCourt.description} readOnly={!isEditing} /></p>
+            <p><strong>เวลาทำการ:</strong> <input type="text" defaultValue={selectedCourt.hours} readOnly={!isEditing} /></p>
+            <p><strong>ราคาต่อชั่วโมง:</strong> <input type="text" defaultValue={selectedCourt.price} readOnly={!isEditing} /></p>
             <p><strong>สถานะ:</strong> {selectedCourt.status}</p>
             <div className="details-buttons">
-              <button className="edit-btn">แก้ไขที่เลือก</button>
-              <button className="add-btn">เพิ่ม</button>
+              <button className="edit-btn" onClick={handleEditClick}>
+                {isEditing ? "บันทึก" : "แก้ไขที่เลือก"}
+              </button>
+              <button className="cancel-btn" onClick={() => setIsEditing(false)}>
+                {isEditing ? "ยกเลิก" : "เพิ่ม"}
+              </button>
             </div>
           </>
         ) : (
