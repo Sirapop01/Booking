@@ -1,6 +1,6 @@
 .manage-substadium-details {
     display: flex;
-    gap: 20px;
+    gap: 15px; /* ✅ ลดระยะห่างระหว่างช่องรูปภาพและรายละเอียด */
     justify-content: center;
     align-items: flex-start;
     width: 90%;
@@ -116,6 +116,49 @@ th, td {
 }
 
 /* ✅ ฝั่งขวา: รายละเอียดสนาม */
+.image-gallery {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* ✅ ทำให้ชิดซ้าย */
+}
+
+.stadium-image {
+    width: 100px; /* ✅ ขนาดของรูป */
+    height: 100px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+}
+
+/* ✅ ปุ่มเพิ่มรูป */
+.image-upload-box {
+    width: 100px;
+    height: 100px;
+    border: 2px dashed #888;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.image-upload-box:hover {
+    background-color: #f0f0f0;
+}
+
+.plus-icon {
+    font-size: 40px;
+    color: #555;
+}
+
+/* ✅ ซ่อน input file */
+.file-input-hidden {
+    display: none;
+}
+
+
 .court-details {
     flex: 1;
     background: white;
@@ -133,7 +176,7 @@ th, td {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 8px; /* ✅ ลดระยะห่าง */
     font-size: 16px;
     background-color: white;
     color: black;
@@ -152,7 +195,7 @@ th, td {
 .details-buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 15px; /* ✅ ลดระยะห่าง */
 }
 
 .edit-btn {
