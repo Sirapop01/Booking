@@ -33,14 +33,14 @@ body {
 
 .registration-header h1 {
   margin: 0;
-  font-size: 2.5rem; /* ขนาดตัวอักษรใหญ่ขึ้น */
+  font-size: 2.5rem;
   font-weight: bold;
 }
 
 .registration-header p {
   margin: 5px 0 0;
   font-size: 1rem;
-  color: #b0bec5; /* สีตัวอักษรเทาอ่อน */
+  color: #b0bec5; 
 }
 
 .registration-content {
@@ -51,7 +51,7 @@ body {
   text-align: center;
   position: relative;
   top:-20px;
-  font-size: 1.8rem; /* ขนาดตัวอักษรใหญ่ขึ้น */
+  font-size: 1.8rem; 
   margin-bottom: 15px;
   color: #07213a; /* สีตัวอักษรเน้น */
 }
