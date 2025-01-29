@@ -49,7 +49,9 @@ const MatchWebForm = () => {
 
     // ตรวจสอบว่าฟิลด์ที่จำเป็นครบถ้วนและมีรูปภาพอย่างน้อย 1 รูป
     if (!fieldName || !ownerName || !phone || !workingHours || !location || images.length < 1) {
-      setFormErrors("กรุณากรอกข้อมูลที่จำเป็น *");
+
+      setFormErrors("กรุณากรอกข้อมูลที่จำเป็น");
+
       return;
     }
 
@@ -77,7 +79,7 @@ const MatchWebForm = () => {
           <div className="image-upload">
             {images.length < 4 ? (
               <label htmlFor="imageInput">
-                <span>เพิ่มรูป {images.length}/4 *</span>
+                <span>เพิ่มรูป {images.length}/4</span>
               </label>
             ) : (
               <span className="complete-message">รูปภาพครบจำนวนแล้ว</span>

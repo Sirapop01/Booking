@@ -1,62 +1,83 @@
 @import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+/**/
 
-
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #07213A;
-  padding: 30px 30px;
-}
-
-.navbar-button {
-  background-color: #fff;
-  color: #07213A;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.navbar-button:hover {
-  background-color: #d1d1d1;
-}
-
-.navbar-logo {
-  display: flex;
-  align-items: center;
-  color: #fff;
-  font-size: 30px;
-  font-weight: bold;
-}
-
-.navbar-links {
-  display: flex;
-  gap: 10px;
-}
-
-.navbar-link {
-  background: none;
-  color: #fff;
-  border: 1px solid #fff;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 18px;
-}
-
-.navbar-link:hover {
-  background-color: #fff;
-  color: #07213A;
-}
-
-.navbar-logo-img {
-  width: 80px;
-  height: 80px;
-  margin: 0 15px;
-}
+.navbar-homepage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #07213A;
+    padding: 20px 30px;
+    font-family: 'Inder', sans-serif;
+  }
+  
+  /* จัดตำแหน่งปุ่มโปรโมชั่นให้อยู่ซ้าย */
+  .navbar-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* ปรับปุ่มโปรโมชั่น */
+  .navbar-button-homepage {
+    background-color: #fff;
+    color: #07213A;
+    border: 1px solid #07213A;
+    padding: 8px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  
+  .navbar-button-homepage:hover {
+    background-color: #d1d1d1;
+  }
+  
+  /* ทำให้โลโก้และ MatchWeb อยู่ตรงกลาง */
+  .navbar-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    margin-left: 60px;
+  }
+  
+  .navbar-logo-img-homepage {
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+  }
+  
+  .navbar-title {
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+  }
+  
+  /* ปุ่มด้านขวา (เข้าสู่ระบบ, ลงทะเบียน) */
+  .navbar-links {
+    display: flex;
+    gap: 10px;
+  }
+  
+  /* ปรับให้ปุ่มเข้าสู่ระบบ, ลงทะเบียน เท่ากับปุ่มโปรโมชั่น */
+  .navbar-button,
+  .navbar-link {
+    background-color: #fff;
+    color: #07213A;
+    border: 1px solid #07213A;
+    padding: 8px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    white-space: nowrap;
+  }
+  
+  .navbar-button:hover,
+  .navbar-link:hover {
+    background-color: #d1d1d1;
+  }
 
 /* --------------------- ปรับส่วนค้นหาตรงกลางให้ใหญ่ขึ้น --------------------- */
 
@@ -91,35 +112,170 @@
 
 /* ขยาย input วันที่/เวลา */
 .date-input,
-.time-input {
+.time-input{
   width: 150px;           /* ขยายกว้างขึ้นอีกหน่อย */
   padding: 10px;
   font-size: 16px;
   border-radius: 5px;
-  border: 2px solid #ccc;
+  border: 2px solid #000000;
 }
 
 /* select เลือกจำนวนคน */
-.people-select {
+.people-select-value {
+  width: 150px;           /* ขยายกว้างขึ้นอีกหน่อย */
   padding: 10px;
   font-size: 16px;
-  border: 2px solid #ccc;
   border-radius: 5px;
+  border: 2px solid #000000;
+  margin-bottom: 4px;
 }
 
 /* ตัวเลือก "จองได้" / "แสดงทั้งหมด" */
-.booking-status {
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+
+/*---------------- Navbar ----------------*/
+.navbar {
   display: flex;
-  gap: 10px;
+  justify-content: space-between;
   align-items: center;
+  background-color: #07213A;
+  padding: 30px 30px;
+  font-family: 'Inder', sans-serif;
 }
 
-.booking-status label {
+.navbar-button {
+  background-color: #fff;
+  color: #07213A;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.navbar-logo {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 16px;
+  color: #fff;
+  font-size: 30px;
+  font-weight: bold;
 }
+
+.navbar-link {
+  background: none;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/*---------------- Search Section ----------------*/
+.search-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 900px;
+    margin: 40px auto;
+    position: relative;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 12px 12px 12px 40px; 
+    font-size: 18px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    margin-bottom: 20px;
+    color: #000; /* เปลี่ยนสีข้อความเป็นสีดำ */
+  }
+  
+  .search-input::placeholder {
+    color: #3b3b3b !important; /* บังคับให้ placeholder เป็นสีดำ */
+    opacity: 1; /* บาง browser อาจลด opacity ของ placeholder */
+  }
+
+  .date-time-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  /* ปรับให้ช่องเลือกวันที่และเวลาเหมือนกัน */
+  .date-input, .time-input {
+    width: 180px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #ccc; /* ปรับสีขอบให้เป็นสีเทาอ่อน */
+    background-color: #fff;
+    margin-bottom: 8px;
+  }
+  
+  .date-input::-webkit-calendar-picker-indicator, .time-input::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+    cursor: pointer;
+  }
+  
+
+.people-select-value {
+    width: 150px;
+    padding: 17px;
+    font-size: 16px;
+    border-radius: 10px; /* ปรับให้เหมือนกับรูป */
+    border: 1px solid #ccc; /* ปรับสีขอบให้เป็นสีเทาอ่อน */
+    appearance: none;
+    background-color: #fff;
+    color: #000; /* เปลี่ยนสีข้อความเป็นสีดำ */
+    margin-bottom: 1px;
+  }
+
+/* ลดขนาด radio button และจัดข้อความไปทางขวา */
+/* จัดให้ทั้งสอง radio button เท่ากัน */
+.booking-status {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    font-size: 14px;
+  }
+  
+  .booking-status label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    flex-direction: row; /* ทำให้ข้อความอยู่ขวาของปุ่ม */
+  }
+  
+  .booking-status input[type="radio"] {
+    transform: scale(0.8); /* ลดขนาด radio button */
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  /* ทำให้ radio button ที่ถูกเลือกมีวงกลมสีดำข้างใน */
+  .booking-status input[type="radio"]:checked::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    background-color: black;
+    border-radius: 50%;
+    position: absolute;
+  }
+  
+  
 
 /* ปุ่มค้นหา */
 .search-button {
@@ -140,24 +296,39 @@
 /* --------------------- ไอคอนกีฬา --------------------- */
 
 .sports-icons {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 30px;
-  gap: 10px;
-}
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    background-color: #07213A;
+    border-radius: 30px;
+    padding: 20px 30px;
+    /* ลดความยาวโดยกำหนด max-width ที่เล็กลง แล้วใช้ margin auto */
+    max-width: 800px; /* ปรับตัวเลขได้ตามต้องการ */
+    margin: 30px auto; 
+  }
+  
 
 /* ปุ่มแต่ละกีฬา */
 .sport-btn {
-  font-size: 24px; 
-  width: 70px;     /* เพิ่มขนาดตามชอบ เช่น 80px */
-  height: 70px;
-  background-color: #fff;
-  border: 2px solid #ccc; /* เพิ่มความหนาของเส้นขอบ */
-  border-radius: 8px;
-  cursor: pointer;
-}
+    width: 60px;
+    height: 60px;
+    background-color: #D1D1D1;
+    border: none;
+    border-radius: 8px;  /* มุมโค้งเล็กน้อย */
+    cursor: pointer;
+    font-size: 24px;     /* กรณีเป็นอีโมจิหรือไอคอนแบบตัวหนังสือ */
+    /* ถ้าต้องการให้ไอคอนกึ่งกลางในปุ่ม: */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
 .sport-btn:hover {
   background-color: #ddd;
 }
+
+.homepage-container {
+    min-height: 100vh;
+    background-color: #fff;  /* ใช้สีขาวเต็มหน้าเว็บ */
+  }

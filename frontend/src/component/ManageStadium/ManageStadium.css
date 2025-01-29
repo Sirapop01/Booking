@@ -1,0 +1,185 @@
+/* Container หลัก */
+.manage-stadium-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 100vh;
+    color: white;
+}
+
+/* ขยายกรอบสีขาวหลัก */
+.form-container {
+    display: flex;
+    justify-content: space-between;
+    background: white;
+    padding: 50px;
+    border-radius: 15px;
+    color: black;
+    width: 95%;
+    max-width: 1400px;
+    gap: 50px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* อัปโหลดรูป */
+.image-upload-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+}
+
+/* ทำให้ข้อความ "รูปภาพสนาม" อยู่ด้านบน */
+.image-upload-section p {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* ✅ ปรับขนาดช่องอัปโหลดรูป */
+.image-upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 320px;
+    height: 370px;
+    border: 2px solid black;
+    border-radius: 10px;
+    cursor: pointer;
+    overflow: hidden;
+    background-color: #f9f9f9;
+    position: relative;
+}
+
+/* ไอคอน "+" */
+.upload-placeholder {
+    font-size: 40px;
+    color: black;
+    font-weight: bold;
+}
+
+/* แสดงรูปภาพให้เต็มขนาด */
+.uploaded-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 📋 ข้อมูลสนาม */
+.stadium-info {
+    flex: 2;
+    text-align: left;
+}
+
+/* 🛠 ปรับขนาด input ให้เหมือนต้นฉบับ */
+input,
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 5px;
+    border: 2px solid black;
+    font-size: 16px;
+    background-color: white;
+    color: black;
+}
+
+textarea {
+    min-height: 100px;
+}
+
+/* 🏗 ข้อมูลเพิ่มเติม */
+.additional-info {
+    flex: 1.5;
+    text-align: left;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* ✅ ปรับขนาดกรอบ "สิ่งอำนวยความสะดวก" และจัดเรียง checkbox เป็นสองคอลัมน์ โดยให้ checkbox อยู่หน้าข้อความ */
+.amenities-box {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    max-width: 300px;
+}
+
+.amenities {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.amenities label {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    gap: 8px;
+    white-space: nowrap;
+    flex-direction: row;
+}
+
+.amenities input {
+    width: 16px;
+    height: 16px;
+}
+
+/* 📌 ขยับช่องข้อมูลสนาม / เงื่อนไขการจอง ให้มาตรงกลาง ไม่ติดขอบ */
+.additional-info textarea {
+    margin-top: 10px;
+    padding: 15px;
+}
+
+/* 📌 ปุ่ม Home */
+.home-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.home-logo {
+    width: 35px;
+    height: 35px;
+}
+
+/* 🔘 ปุ่มบันทึก / ยกเลิก */
+.bottom-buttons {
+    margin-top: 20px;
+    text-align: right;
+    width: 95%;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: 2px solid black;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 140px;
+}
+
+.btn-save {
+    background-color: #2ea7ff;
+    color: white;
+}
+
+.btn-cancel {
+    background-color: #ff4c4c;
+    color: white;
+}

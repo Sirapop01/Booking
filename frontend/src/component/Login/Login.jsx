@@ -1,29 +1,64 @@
 import React, { useState } from 'react';
 import './Login.css';
-import logo from '../assets/logo.png'; // แก้ไข path ของ logo 
-import bgImage from '../assets/threeman.png'; // แก้ไข path ของรูปภาพพื้นหลัง
+import { useNavigate } from 'react-router-dom';
+import logo from '../assets/logo.png'; // Path ของโลโก้
+import bgImage from '../assets/threeman.png'; // Path ของรูปพื้นหลัง
+import { IoEyeSharp } from "react-icons/io5";
+import { FaEyeSlash } from "react-icons/fa";
+
+import axios from 'axios';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false); // State สำหรับ "จดจำฉัน"
+  const [showPassword, setShowPassword] = useState(false); // State สำหรับแสดง/ซ่อนรหัสผ่าน
+  const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // TODO: ตรวจสอบข้อมูล login กับ database (MongoDB)
+  const handleLogin = async () => {
+    let members = {
+      email,
+      password 
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/auth/login", members );
+        if(response.data.message == "เข้าสู่ระบบสำเร็จ"){
+
+          localStorage.setItem('token', response.data.token);
+
+          navigate("/");
+        }else{
+          alert("เข้าสู่ระบบไม่สำเร็จ");
+        }
+      console.log(response.data.message)
+    }catch (err){
+      console.log(err)
+    }
+
     console.log('Email:', email);
     console.log('Password:', password);
+    console.log('Remember Me:', rememberMe);
+  };
+
+
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
-    <div className="container">
-      <div className="left-side">
-        <img src={logo} alt="Logo" className="logo" />
-        <p className="logo-text">MatchWeb</p> {/* แก้ไขข้อความ */}
-        <img src={bgImage} alt="Background" className="bg-img" />
+    <div className="login-container">
+      <div className="login-left-side">
+        <img src={logo} alt="Logo" className="login-logo" />
+        <p className="login-logo-text">MatchWeb</p>
+        <img src={bgImage} alt="Background" className="login-bg-img" />
       </div>
-      <div className="right-side">
-        <div className="form-container">
+      <div className="login-right-side">
+        <div className="login-form-container">
           <h2 className="login-heading">ลงชื่อเข้าใช้</h2>
-          <div className="input-group">
+          <div className="login-input-group">
             <input
               type="email"
               id="email"
@@ -32,24 +67,48 @@ function Login() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="input-group">
+          <div className="login-input-group login-password-input">
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'} // เปลี่ยน type ระหว่าง text และ password
               id="password"
               placeholder="รหัสผ่าน"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            <button
+              type="button"
+              className="login-toggle-password"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? <IoEyeSharp/>:<FaEyeSlash/>  } 
+            </button>
           </div>
+          <div className="login-remember-me">
+            <input
+              type="checkbox"
+              id="rememberMe"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
+            <label htmlFor="rememberMe">จดจำฉัน</label>
+          </div>
+
+          {/* Divider Section */}
+          <div className="login-divider">
+            <span className="login-divider-text">Or</span>
+          </div>
+
+          {/* Login Button */}
           <button className="login-button" onClick={handleLogin}>
             Login
           </button>
-          <p className="forgot-password">
-            <a href="/forgot-password">ลืมรหัสผ่าน?</a>
+
+          <p className="login-forgot-password">
+            <a href="/forgot-password">ลืมรหัสผ่าน ?</a>
           </p>
-          <p className="signup-link">
+          <p className="login-signup-link">
             Don't have an Account? <a href="/customer-register">Sign Up</a>
-          </p> 
+          </p>
         </div>
       </div>
     </div>
