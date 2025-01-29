@@ -13,7 +13,7 @@ import Resetpassword from './component/ResetPassword/ResetPassword';
 import UserProfile from './component/UserProfile/UserProfile';
 import ManageStadium from './component/ManageStadium/ManageStadium';
 import ManageSubStadium from './component/ManageSubStadium/ManageSubStadium';
-
+import Test from './component/Test/Test';
 /**/ 
 
 function App() {
