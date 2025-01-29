@@ -47,7 +47,8 @@ const Test = () => {
         <p>🔑 **ไม่พบ Token ใน Local Storage**</p>
       )}
 
-      <button onClick={() => navigate("/")}>🔙 กลับหน้าแรก</button>
+      <button onClick={() => navigate("/login")}>🔙 กลับหน้าlogin</button>
+      <button onClick={() => navigate("/profile")}>🔙 กลับหน้าprofile</button>
     </div>
   );
 };

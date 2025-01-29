@@ -121,4 +121,28 @@ exports.logout = async (req, res) => {
   }
 };
 
+exports.updateUser = async (req, res) => {
+  try {
+    const { id } = req.params; // รับ ID จาก URL
+    const updateData = req.body; // ข้อมูลที่ส่งมาอัปเดต
+
+    // ตรวจสอบว่าผู้ใช้มีอยู่จริงหรือไม่
+    const existingUser = await User.findById(id);
+    if (!existingUser) {
+      return res.status(404).json({ message: "ไม่พบผู้ใช้ในระบบ" });
+    }
+
+    // อัปเดตข้อมูลผู้ใช้
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
+
+    return res.status(200).json({
+      message: "✅ อัปเดตข้อมูลสำเร็จ!",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("❌ Error updating user:", error);
+    return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูล" });
+  }
+};
+
 

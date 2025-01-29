@@ -23,7 +23,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         
-       
+        <Route path='/' element={<Test/>} />
         <Route path="/RegisterChoice" element={<RegisterChoice />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/customer-register" element={<RegisterCustomer/>} />
