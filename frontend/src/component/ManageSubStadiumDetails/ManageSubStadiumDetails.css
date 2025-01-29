@@ -1,3 +1,4 @@
+/*css managesubstadiumdetail*/
 .manage-substadium-details {
     display: flex;
     gap: 15px; /* ✅ ลดระยะห่างระหว่างช่องรูปภาพและรายละเอียด */
@@ -225,4 +226,20 @@ th, td {
 
 .cancel-btn:hover {
     background-color: #C82333;
+}
+
+.add-btn {
+    background-color: white;
+    color: black;
+    padding: 10px 20px;
+    border: 2px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* ✅ เปลี่ยนสีเมื่อ hover */
+.add-btn:hover {
+    background-color: #f0f0f0;
 }
