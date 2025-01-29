@@ -31,10 +31,54 @@ body {
 .registration-header {
   text-align: center;
   background-color: #1c2536;
-  padding: 20px;
   border-radius: 15px 15px 0 0;
   color: #ffffff;
   width: 100%;
+  height: 120px; /* หรือกำหนดเป็น fixed height เช่น 120px */
+}
+
+.registration-header h1{
+  position: relative;
+  top:150px;
+  left:-30px;
+  text-align: center;
+  background-color: #1c2536;
+  padding: 30px;
+  border-radius: 0 0 0 0;
+  color: #ffffff;
+  width: 100%;
+}
+
+.registration-header p{
+  position: relative;
+  top:98px;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 0px;
+  margin-bottom: 15px; 
+  color: #ffffff; 
+}
+
+
+/* ====== Title Section (แก้ไขตรงนี้) ====== */
+.registration-content h2 {
+  font-size: 24px; /* ปรับขนาดให้เหมาะสม */
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 5px; /* ลดระยะห่างด้านล่างของหัวข้อ */
+ position: relative;
+ top:-50px;
+}
+
+/* ====== Subtitle (ข้อความอธิบาย) ====== */
+.registration-content p {
+  position: relative;
+  top:-40px;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 0px; /* ลดระยะห่างด้านบนของข้อความ */
+  margin-bottom: 15px; /* ปรับระยะห่างด้านล่าง */
+  color: #666; /* ปรับสีข้อความให้อ่านง่ายขึ้น */
 }
 
 /* ====== Content ====== */
@@ -129,6 +173,32 @@ input[type="checkbox"] {
 .submit-button:hover {
   background-color: #0056b3;
   transform: scale(1.02);
+}
+
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 40px; /* ป้องกันปุ่มทับข้อความ */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #007bff;
+}
+
+.toggle-password:hover {
+  color: #0056b3;
 }
 
 /* ====== Responsive Design (Mobile) ====== */

@@ -16,6 +16,8 @@ const RegistrationForm = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -25,7 +27,6 @@ const RegistrationForm = () => {
       [name]: type === "checkbox" ? checked : value,
     });
 
-    // ล้าง error หากผู้ใช้เริ่มพิมพ์ข้อมูล
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: value ? "" : prevErrors[name],
@@ -105,12 +106,28 @@ const RegistrationForm = () => {
               {errors.email && <span className="error-message">{errors.email}</span>}
             </label>
 
-            <label>
+            {/* รหัสผ่าน */}
+            <label className="password-label">
               รหัสผ่าน *
-              <input type="password" name="password" value={formData.password} onChange={handleChange} />
-              {errors.password && <span className="error-message">{errors.password}</span>}
             </label>
+            <div className="password-container">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+              />
+              <button
+                type="button"
+                className="toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? "ซ่อน" : "เเสดง"}
+              </button>
+            </div>
+            {errors.password && <span className="error-message">{errors.password}</span>}
 
+            {/* ยืนยันรหัสผ่าน */}
             <label>
               ยืนยันรหัสผ่าน *
               <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} />
