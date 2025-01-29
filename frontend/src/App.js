@@ -14,8 +14,10 @@ import UserProfile from './component/UserProfile/UserProfile';
 import ManageStadium from './component/ManageStadium/ManageStadium';
 import ManageSubStadium from './component/ManageSubStadium/ManageSubStadium';
 import ManageSubStadiumDetails from './component/ManageSubStadiumDetails/ManageSubStadiumDetails';
+
+import Discount from './component/Discount/Discount';
 import TestHome from './component/Test/TestHome';
-import Promotion from './component/Promotion/Promotion';
+
 
 /**/ 
 
@@ -38,7 +40,7 @@ function App() {
         <Route path="/manage-stadium" element={<ManageStadium />} />
         <Route path="/manage-sub-stadium" element={<ManageSubStadium />} />
         <Route path="/manage-substadium-details" element={<ManageSubStadiumDetails />} />
-        <Route path='/Promotion' element={<Promotion />} />
+        <Route path='/Discount' element={<Discount />} />
       </Routes>
     </BrowserRouter>
   );
