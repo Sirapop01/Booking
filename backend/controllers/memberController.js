@@ -8,7 +8,7 @@ exports.register = async (req, res) => {
   try {
     const {
       email, password, confirmPassword, firstName, lastName,
-      gender, phoneNumber, interestedSports, province, district, subdistrict
+      gender, phoneNumber, interestedSports, province, district, subdistrict,
     } = req.body;
 
     // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
@@ -37,6 +37,7 @@ exports.register = async (req, res) => {
       province,
       district,
       subdistrict,
+      role : "user"
     });
 
     res.status(201).json({ message: "สมัครสมาชิกสำเร็จ!", user: newUser });
@@ -69,7 +70,8 @@ exports.login = async (req, res) => {
     if(LoginOK){
       const name = exitResult.firstName;
       const id = exitResult._id;
-      const token = jwt.sign({email, name, id}, secret, { expiresIn : '1h'})
+      const role = exitResult.role;
+      const token = jwt.sign({email, name, id, role}, secret, { expiresIn : '1h'})
 
       //password 123456
       console.log("เข้าสู่ระบบสำเร็จ");

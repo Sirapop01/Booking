@@ -4,16 +4,26 @@ import homeLogo from "../assets/logoalt.png";
 
 function ManageSubStadiumDetails() {
   const [courts, setCourts] = useState([
-    { id: 1, name: "Court 1", status: "เปิด", owner: "Wichai Arena", phone: "098 4230 116", description: "", hours: "13:00 - 19:00", price: "200 B" },
-    { id: 2, name: "Court 2", status: "เปิด", owner: "Wichai Arena", phone: "098 4230 116", description: "", hours: "13:00 - 19:00", price: "200 B" },
-    { id: 3, name: "Court 3", status: "เปิด", owner: "Wichai Arena", phone: "098 4230 116", description: "", hours: "13:00 - 19:00", price: "200 B" },
-    { id: 4, name: "Court 4", status: "ปิด", owner: "Wichai Arena", phone: "098 4230 116", description: "", hours: "13:00 - 19:00", price: "200 B" },
+    { id: 1, name: "Court 1", status: "เปิด", owner: "Wichai Arena", phone: "0984230116", description: "", openTime: "13:00", closeTime: "19:00", price: "200 B", image: null },
+    { id: 2, name: "Court 2", status: "เปิด", owner: "Wichai Arena", phone: "0984230116", description: "", openTime: "13:00", closeTime: "19:00", price: "200 B", image: null },
+    { id: 3, name: "Court 3", status: "เปิด", owner: "Wichai Arena", phone: "0984230116", description: "", openTime: "13:00", closeTime: "19:00", price: "200 B", image: null },
+    { id: 4, name: "Court 4", status: "ปิด", owner: "Wichai Arena", phone: "0984230116", description: "", openTime: "13:00", closeTime: "19:00", price: "200 B", image: null },
   ]);
 
   const [selectedCourt, setSelectedCourt] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [editedCourt, setEditedCourt] = useState({
+    id: null, name: "", status: "เปิด", owner: "", phone: "", description: "", openTime: "", closeTime: "", price: "", image: null,
+  });
 
   const selectCourt = (court) => {
     setSelectedCourt(selectedCourt?.id === court.id ? null : court);
+    setIsEditing(false);
+    setIsAdding(false);
+    setEditedCourt(court || {
+      id: null, name: "", status: "เปิด", owner: "", phone: "", description: "", openTime: "", closeTime: "", price: "", image: null,
+    });
   };
 
   const toggleCourtStatus = (courtId) => {
@@ -22,6 +32,34 @@ function ManageSubStadiumDetails() {
         court.id === courtId ? { ...court, status: court.status === "เปิด" ? "ปิด" : "เปิด" } : court
       )
     );
+  };
+
+  const handleEditClick = () => {
+    if (isEditing && selectedCourt) {
+      setCourts((prevCourts) =>
+        prevCourts.map((court) =>
+          court.id === selectedCourt.id ? { ...court, ...editedCourt } : court
+        )
+      );
+      setSelectedCourt(editedCourt);
+    }
+    setIsEditing(!isEditing);
+  };
+
+  const handleImageChange = (event) => {
+    const files = Array.from(event.target.files);
+    const imageUrls = files.map((file) => URL.createObjectURL(file));
+    
+    setEditedCourt((prevCourt) => ({
+        ...prevCourt,
+        images: [...(prevCourt.images || []), ...imageUrls] // ✅ เช็คว่ามีค่าแล้วหรือไม่
+    }));
+  };
+
+  const handleCancel = () => {
+    setIsAdding(false);
+    setIsEditing(false);
+    setSelectedCourt(null);
   };
 
   return (
@@ -59,7 +97,7 @@ function ManageSubStadiumDetails() {
                       toggleCourtStatus(court.id);
                     }}
                   >
-                    {court.status === "เปิด" ? "กดเพื่อปิด" : "กดเพื่อเปิด"}
+                    {court.status === "เปิด" ? "กดเพื่อปิดชั่วคราว" : "กดเพื่อเปิด"}
                   </button>
                 </td>
               </tr>
@@ -70,27 +108,76 @@ function ManageSubStadiumDetails() {
 
       {/* ✅ ฝั่งขวา: รายละเอียดสนาม */}
       <div className="court-details">
-        {selectedCourt ? (
-          <>
-            <h2>ข้อมูลสนาม</h2>
-            <p><strong>ชื่อสนาม:</strong> {selectedCourt.name}</p>
-            <p><strong>สนาม:</strong> <input type="text" defaultValue={selectedCourt.owner} /></p>
-            <p><strong>เจ้าของ:</strong> <input type="text" defaultValue={selectedCourt.owner} /></p>
-            <p><strong>เบอร์โทรศัพท์:</strong> <input type="text" defaultValue={selectedCourt.phone} /></p>
-            <p><strong>คำอธิบาย:</strong> <textarea defaultValue={selectedCourt.description} /></p>
-            <p><strong>เวลาทำการ:</strong> <input type="text" defaultValue={selectedCourt.hours} /></p>
-            <p><strong>ราคาต่อชั่วโมง:</strong> <input type="text" defaultValue={selectedCourt.price} /></p>
-            <p><strong>สถานะ:</strong> {selectedCourt.status}</p>
-            <div className="details-buttons">
-              <button className="edit-btn">แก้ไขที่เลือก</button>
-              <button className="add-btn">เพิ่ม</button>
-            </div>
-          </>
-        ) : (
-          <p>กรุณาเลือกสนามเพื่อดูรายละเอียด</p>
-        )}
+        <h2>ข้อมูลสนาม</h2>
+        <div className="stadium-info">
+          {/* ✅ รูปสนาม */}
+          {/* ✅ รูปสนาม (รองรับหลายรูป) */}
+        {/* ✅ รูปสนาม (รองรับหลายรูป) */}
+              <div className="image-gallery">
+          {editedCourt.images && editedCourt.images.length > 0 && editedCourt.images.map((img, index) => (
+              <img key={index} src={img} alt={`สนามกีฬา ${index + 1}`} className="stadium-image" />
+          ))}
+          
+          {/* ✅ ปุ่มเพิ่มรูป */}
+          {isEditing && (
+              <label className="image-upload-box">
+                  <span className="plus-icon">+</span>
+                  <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="file-input-hidden" 
+                      onChange={handleImageChange} 
+                      multiple 
+                  />
+              </label>
+          )}
       </div>
-    </div>
+
+
+
+          <p><strong>ชื่อสนาม:</strong> 
+            <input 
+              type="text" 
+              value={editedCourt.name} 
+              onChange={(e) => setEditedCourt({ ...editedCourt, name: e.target.value })} 
+              readOnly={!isEditing} 
+            />
+          </p>
+          <p><strong>คำอธิบาย:</strong> <textarea value={editedCourt.description} onChange={(e) => setEditedCourt({ ...editedCourt, description: e.target.value })} readOnly={!isEditing} /></p>
+        </div>
+
+         {/* ✅ ช่องเลือกเวลาเปิด-ปิด */}
+         <p><strong>เวลาทำการ:</strong></p>
+          <div className="time-picker">
+            <label>เปิด: </label>
+            <input type="time" value={editedCourt.openTime} onChange={(e) => setEditedCourt({ ...editedCourt, openTime: e.target.value })} readOnly={!isEditing} />
+            <label> - ปิด: </label>
+            <input type="time" value={editedCourt.closeTime} onChange={(e) => setEditedCourt({ ...editedCourt, closeTime: e.target.value })} readOnly={!isEditing} />
+          </div>
+
+          <p><strong>ราคาต่อชั่วโมง:</strong> <input type="text" value={editedCourt.price} onChange={(e) => setEditedCourt({ ...editedCourt, price: e.target.value })} readOnly={!isEditing} /></p>
+        
+
+
+        <h2>เจ้าของสนาม</h2>
+        <div className="owner-info">
+          <p><strong>ชื่อเจ้าของ:</strong> <input type="text" value={editedCourt.owner} onChange={(e) => setEditedCourt({ ...editedCourt, owner: e.target.value })} readOnly={!isEditing} /></p>
+          <p><strong>เบอร์โทรศัพท์:</strong> 
+            <input 
+              type="text" 
+              value={editedCourt.phone} 
+              onChange={(e) => setEditedCourt({ ...editedCourt, phone: e.target.value })} 
+              readOnly={!isEditing} 
+            />
+          </p>
+        </div>
+
+        <div className="details-buttons">
+          <button className="edit-btn" onClick={handleEditClick}>{isEditing ? "บันทึก" : "แก้ไขที่เลือก"}</button>
+          <button className="cancel-btn" onClick={handleCancel}>{isAdding ? "ยกเลิก" : "เพิ่ม"}</button>
+        </div>
+      </div>
+      </div>
   );
 }
 

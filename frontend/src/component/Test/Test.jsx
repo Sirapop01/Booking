@@ -36,7 +36,7 @@ const Test = () => {
           {decodedToken ? (
             <>
               <p>👤 **อีเมล:** {decodedToken.email}</p>
-              <p>🆔 **name:** {decodedToken.id}</p>
+              <p>🆔 **name:** {decodedToken.name}</p>
               <p>⏳ **หมดอายุ:** {new Date(decodedToken.exp * 1000).toLocaleString()}</p>
             </>
           ) : (

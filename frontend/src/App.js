@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'; 
 import './App.css';
-
+import Homepage from './component/Homepage/Homepage';
 import Login from './component/Login/Login';
 import RegisterChoice from './component/RegisterChoice/RegisterChoice';
 import RegisterCustomer from './component/Register/RegisterCustomer';
@@ -13,9 +13,11 @@ import Resetpassword from './component/ResetPassword/ResetPassword';
 import UserProfile from './component/UserProfile/UserProfile';
 import ManageStadium from './component/ManageStadium/ManageStadium';
 import ManageSubStadium from './component/ManageSubStadium/ManageSubStadium';
-import Test from './component/Test/Test';
 import ManageSubStadiumDetails from './component/ManageSubStadiumDetails/ManageSubStadiumDetails';
+
 import Discount from './component/Discount/Discount';
+import TestHome from './component/Test/TestHome';
+
 
 /**/ 
 
@@ -24,7 +26,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         
-        <Route path='/' element={<Test/>} />
+        <Route path='/' element={<Homepage/>} />
         <Route path="/RegisterChoice" element={<RegisterChoice />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/customer-register" element={<RegisterCustomer/>} />
