@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./RegisterChoice.css";
 import logo from "../assets/logo.png";
+import background from "../assets/Blackground/Blackground.png";
 
 function RegisterChoice() {
   const navigate = useNavigate();
@@ -11,14 +12,13 @@ function RegisterChoice() {
   };
 
   const handleOwnerRegister = () => {
-
     navigate("/RegisterOpera"); // เส้นทางสำหรับผู้ประกอบการ
   };
 
   return (
-    <div className="container">
+    <div className="container" style={{ backgroundImage: `url(${background})` }}>
       <div className="content">
-        <img src={logo} alt="Logo" className="logo" />
+      <img src={logo} alt="Logo" className="logo" style={{ width: "200px", height: "auto" }} />
         <h1 className="welcome-text">Welcome To MatchWeb</h1>
         <p className="description-text">
           "ไม่ว่าคุณจะกำลังมองหาสนามที่สมบูรณ์แบบ หรืออยากเพิ่มโอกาสให้ธุรกิจสนามของคุณ ที่นี่คือจุดเริ่มต้นของคุณ!
@@ -28,7 +28,7 @@ function RegisterChoice() {
         <h2 className="choice-heading">รูปแบบบัญชีที่ต้องการลงทะเบียน</h2>
         <div className="button-group">
           <button className="customer-button" onClick={handleCustomerRegister}>
-            ผู้ใช้งาน
+            ผู้ใช้ปกติ
           </button>
           <button className="owner-button" onClick={handleOwnerRegister}>
             ผู้ประกอบการ
@@ -50,8 +50,5 @@ function RegisterChoice() {
     </div>
   );
 }
-
-
-
 
 export default RegisterChoice;
