@@ -243,3 +243,111 @@ th, td {
 .add-btn:hover {
     background-color: #f0f0f0;
 }
+.save-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.save-btn:hover {
+    background-color: #218838;
+}
+
+.delete-cell {
+    text-align: center;
+    padding-left: 10px;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: red;
+}
+
+.delete-btn:hover {
+    color: darkred;
+}
+
+/* ✅ ทำให้พื้นหลังมืดลง */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* สีดำโปร่งแสง */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* ✅ ป็อปอัพยืนยันการลบ */
+.delete-popup {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    width: 350px;  /* ✅ ขยายขนาด */
+    max-width: 90%; /* ✅ ป้องกันการซ่อนข้อความ */
+}
+
+.delete-popup h2 {
+    font-size: 20px;
+    color: black;  /* ✅ ป้องกันสีขาว */
+    margin-bottom: 10px;
+}
+
+.delete-popup p {
+    font-size: 16px;
+    color: black;  /* ✅ ป้องกันสีขาว */
+    word-wrap: break-word; /* ✅ ป้องกันข้อความซ้อน */
+}
+
+/* ✅ ปุ่มปิดป็อปอัพ */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* ✅ ช่องพิมพ์ยืนยัน */
+.delete-popup input {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* ✅ ปรับปุ่มให้ใหญ่ขึ้น */
+.confirm-delete-btn {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* ✅ ปิดปุ่มถ้าผู้ใช้ยังไม่พิมพ์ "Delete" */
+.confirm-delete-btn:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}
