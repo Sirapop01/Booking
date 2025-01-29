@@ -85,7 +85,7 @@ select {
 }
 
 input::placeholder {
-  color: #ffffff; /* สีข้อความ placeholder */
+  color: #000; /* สีข้อความ placeholder */
   opacity: 0.7; /* ความโปร่งใสของ placeholder */
 }
 

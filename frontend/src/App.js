@@ -13,8 +13,8 @@ import Resetpassword from './component/ResetPassword/ResetPassword';
 import UserProfile from './component/UserProfile/UserProfile';
 import ManageStadium from './component/ManageStadium/ManageStadium';
 import ManageSubStadium from './component/ManageSubStadium/ManageSubStadium';
-import Test from './component/Test/Test';
 import ManageSubStadiumDetails from './component/ManageSubStadiumDetails/ManageSubStadiumDetails';
+import TestHome from './component/Test/TestHome';
 import Promotion from './component/Promotion/Promotion';
 
 /**/ 

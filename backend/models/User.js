@@ -12,6 +12,8 @@ const UserSchema = new mongoose.Schema({
   province: { type: String, required: true },
   district: { type: String, required: true },
   subdistrict: { type: String, required: true },
+  role: {type : String,requird: true }
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", UserSchema);
