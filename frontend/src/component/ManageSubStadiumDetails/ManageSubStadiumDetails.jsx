@@ -36,16 +36,11 @@ function ManageSubStadiumDetails() {
   };
 
   const handleEditClick = () => {
-    if (isEditing && selectedCourt) {
-      setCourts((prevCourts) =>
-        prevCourts.map((court) =>
-          court.id === selectedCourt.id ? { ...court, ...editedCourt } : court
-        )
-      );
-      setSelectedCourt(editedCourt);
+    if (selectedCourt) {
+        setIsEditing(true);
+        setEditedCourt(selectedCourt);
     }
-    setIsEditing(!isEditing);
-  };
+};
 
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);
@@ -75,31 +70,43 @@ const handleRemoveImage = (index) => {
     setEditedCourt({
         id: null, name: "", status: "เปิด", owner: "", phone: "", description: "", openTime: "", closeTime: "", price: "", images: []
     });
-    setSelectedCourt(null);
 };
 
 const handleSaveClick = () => {
-    if (isAdding) {
-        // ✅ เพิ่มสนามใหม่ไปยังตารางฝั่งซ้าย
-        const newCourt = {
-            ...editedCourt,
-            id: courts.length + 1 // ✅ กำหนด ID ใหม่
-        };
-        setCourts([...courts, newCourt]);
-    } else {
-        // ✅ อัปเดตสนามที่เลือก
-        setCourts((prevCourts) =>
-            prevCourts.map((court) =>
-                court.id === selectedCourt.id ? { ...court, ...editedCourt } : court
-            )
-        );
-    }
+  if (isAdding) {
+      const newCourt = { ...editedCourt, id: courts.length + 1 };
+      setCourts([...courts, newCourt]);
+  } else {
+      setCourts(courts.map(court => court.id === selectedCourt.id ? editedCourt : court));
+  }
 
-    // ✅ รีเซ็ตสถานะ
-    setIsEditing(false);
-    setIsAdding(false);
-    setSelectedCourt(null);
+  setIsEditing(false);
+  setIsAdding(false);
+  setSelectedCourt(null);
 };
+
+const handleDeleteCourt = (event, courtId) => {
+  event.stopPropagation(); // ป้องกันการเลือกสนามโดยไม่ได้ตั้งใจ
+  setCourtToDelete(courtId);
+  setIsDeletePopupOpen(true);
+  setDeleteConfirmText(""); // รีเซ็ตค่าช่องพิมพ์
+};
+
+const confirmDeleteCourt = () => {
+  setCourts((prevCourts) => prevCourts.filter((court) => court.id !== courtToDelete));
+
+  // รีเซ็ตค่า
+  setIsDeletePopupOpen(false);
+  setCourtToDelete(null);
+  setSelectedCourt(null);
+  setIsEditing(false);
+};
+
+const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+const [deleteConfirmText, setDeleteConfirmText] = useState("");
+const [courtToDelete, setCourtToDelete] = useState(null);
+
+
 
   return (
     <div className="manage-substadium-details">
@@ -139,11 +146,40 @@ const handleSaveClick = () => {
                     {court.status === "เปิด" ? "กดเพื่อปิดชั่วคราว" : "กดเพื่อเปิด"}
                   </button>
                 </td>
+                <td className="delete-cell">
+                  <button className="delete-btn" onClick={(e) => handleDeleteCourt(e, court.id)}>
+                    ❌
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {isDeletePopupOpen && (
+          <div className="overlay">
+              <div className="delete-popup">
+                  <button className="close-btn" onClick={() => setIsDeletePopupOpen(false)}>✖</button>
+                  <h2>ลบสนามย่อยนี้</h2>
+                  <p>โปรดพิมพ์ <strong>"Delete"</strong> เพื่อยืนยัน</p>
+                  <input 
+                      type="text" 
+                      value={deleteConfirmText} 
+                      onChange={(e) => setDeleteConfirmText(e.target.value)}
+                      placeholder="พิมพ์ Delete ที่นี่"
+                  />
+                  <button 
+                      className="confirm-delete-btn" 
+                      onClick={confirmDeleteCourt} 
+                      disabled={deleteConfirmText !== "Delete"}
+                  >
+                      ลบ
+                  </button>
+              </div>
+          </div>
+      )}
+
 
       {/* ✅ ฝั่งขวา: รายละเอียดสนาม */}
       <div className="court-details">
@@ -217,15 +253,25 @@ const handleSaveClick = () => {
         </div>
 
           <div className="details-buttons">
-            <button className="edit-btn" onClick={handleSaveClick}>
-                {isEditing ? "บันทึก" : "แก้ไขที่เลือก"}
-            </button>
+            {!isEditing && !isAdding && selectedCourt && (
+                <button className="edit-btn" onClick={() => setIsEditing(true)}>
+                    แก้ไขที่เลือก
+                </button>
+            )}
 
-            {!isEditing && !isAdding ? (
+            {isEditing && (
+                <button className="save-btn" onClick={handleSaveClick}>
+                    บันทึก
+                </button>
+            )}
+
+            {!isEditing && !isAdding && (
                 <button className="add-btn" onClick={handleAddClick}>
                     เพิ่ม
                 </button>
-            ) : (
+            )}
+
+            {(isEditing || isAdding) && (
                 <button className="cancel-btn" onClick={handleCancel}>
                     ยกเลิก
                 </button>
