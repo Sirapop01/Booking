@@ -35,6 +35,9 @@ const UserProfile = () => {
   }, []);
 
   const toggleEdit = () => {
+    if (isEditable) {
+      updateMemberData(); // ✅ เมื่อกดปิดโหมดแก้ไข ให้ส่งข้อมูลไป Backend
+    }
     setIsEditable(!isEditable);
   };
 
@@ -57,6 +60,18 @@ const UserProfile = () => {
       console.error("❌ Error fetching member data:", error);
     }
   };
+
+    // ✅ ฟังก์ชันอัปเดตข้อมูลไปที่ฐานข้อมูล
+    const updateMemberData = async () => {
+      try {
+        const response = await axios.put(`http://localhost:4000/api/auth/update/${id}`, member);
+        console.log("✅ Updated Member Data:", response.data);
+        alert("🎉 อัปเดตข้อมูลสำเร็จ!");
+      } catch (error) {
+        console.error("❌ Error updating member data:", error);
+        alert("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
+      }
+    };
 
   const toggleLogout = () => {
     setShowLogoutModal(true); // ✅ Open the modal
