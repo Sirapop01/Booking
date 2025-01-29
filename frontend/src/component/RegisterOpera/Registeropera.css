@@ -1,168 +1,118 @@
-/**/ 
+/* ====== Global Styles ====== */
 body {
-
-  font-family: Arial, sans-serif;
+  font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #0b1120; /* พื้นหลังสีเข้ม */
-  color: #ffffff; /* ตัวอักษรสีขาว */
+  background-color: #0b1120;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden; /* ปิดการเลื่อนของหน้า */
 }
 
+/* ====== Main Container ====== */
 .registration-container {
-  position: relative;
-  top: 30px;
-  max-width: 900px;
-  max-height: 80vh;
-  margin: 50px auto;
-  background-color: #ffffff; /* สีพื้นหลังของฟอร์ม */
-  color: #000000; /* ตัวอักษรสีดำ */
+  width: 100%;
+  max-width: 1100px;
+  height: 90vh; /* ป้องกันการเลื่อน */
+  background-color: #ffffff;
+  color: #000000;
   padding: 30px;
   border-radius: 15px;
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* เงาที่ชัดขึ้น */
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* ====== Header ====== */
 .registration-header {
   text-align: center;
-  position: relative;
-  top: 5px;
   background-color: #1c2536;
   padding: 20px;
   border-radius: 15px 15px 0 0;
-  color: #ffffff; 
+  color: #ffffff;
+  width: 100%;
 }
 
-.registration-header h1 {
-  margin: 0;
-  font-size: 2.5rem;
-  font-weight: bold;
-}
-
-.registration-header p {
-  margin: 5px 0 0;
-  font-size: 1rem;
-  color: #b0bec5; 
-}
-
+/* ====== Content ====== */
 .registration-content {
   padding: 20px;
-}
-
-.registration-content h2 {
-  text-align: center;
-  position: relative;
-  top:-20px;
-  font-size: 1.8rem; 
-  margin-bottom: 15px;
-  color: #07213a; /* สีตัวอักษรเน้น */
-}
-
-.registration-content p {
-  text-align: center;
-  margin-bottom: 20px;
-  position: relative;
-  top:-20px;
-  color: #666;
-}
-
-.registration-form {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 25px; /* ระยะห่างระหว่างกลุ่ม */
+  align-items: center;
+  flex-grow: 1;
+}
+
+/* ====== Form Layout (2 Columns) ====== */
+.registration-form {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap; /* ป้องกันการล้น */
+  gap: 20px;
+  padding: 10px;
+  justify-content: center;
 }
 
 .form-group {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px; /* ระยะห่างระหว่างคอลัมน์ */
-}
-
-.form-column {
-  flex: 1;
+  width: 45%; /* ทำให้ช่องไม่ล้น */
   display: flex;
   flex-direction: column;
-  gap: 15px; /* ระยะห่างระหว่าง input */
 }
 
-.divider {
-  width: 2px;
-  background-color: #ccc; /* เส้นแบ่งสีเทา */
-  margin: 0 20px;
-  height:380px;
-}
-
-
-
-label {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.95rem;
-  color: #333; /* ตัวอักษรสีดำ */
-}
-
+/* ====== Input Fields ====== */
 input[type="text"],
 input[type="email"],
 input[type="password"],
 input[type="date"] {
-  padding: 12px;
-  border: 1px solid #ccc; /* ขอบสีเทา */
-  border-radius: 8px; /* มุมมนขึ้น */
-  margin-top: 5px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
   font-size: 1rem;
 }
 
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="date"]:focus {
-  border-color: #007bff; /* สีขอบเมื่อโฟกัส */
-  outline: none;
-  box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
-}
-
+/* ====== Terms & Conditions Section ====== */
 .form-terms {
-  margin-top: 20px;
+  width: 100%;
   display: flex;
-  justify-content: center; 
+  justify-content: center;
+  align-items: center;
+  gap: 8px; /* ปรับระยะห่างระหว่าง checkbox และข้อความ */
+  margin-bottom: 5px; /* ลดระยะห่างด้านล่าง เพื่อขยับขึ้น */
+  text-align: center;
 }
 
-.terms-label {
+/* ====== Checkbox and Label Styles ====== */
+.form-terms label {
   display: flex;
   align-items: center;
-  gap: 10px; /* ระยะห่างระหว่าง checkbox และข้อความ */
-  font-size: 1rem;
-  color: #6c757d;
-  position: relative;
-  left :-100px;
+  gap: 5px;
+  font-size: 16px;
+  font-weight: normal;
 }
 
-.terms-label input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  accent-color: #007bff; /* สีของ checkbox */
-  position: relative;
-  top: -30px; /* ขยับ checkbox ขึ้น */
-}
-
-.highlight-terms {
-  color: #000000;
-  font-weight: bold;
-}
-
-.highlight-conditions {
-  color: #07213A;
-  font-weight: bold;
-  text-decoration: underline;
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
   cursor: pointer;
-  position: relative;
-  left: 150px;
-  top: -100px;
+}
+
+/* ====== ปุ่มดำเนินการต่อ ====== */
+.submit-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* จัดปุ่มไว้ตรงกลาง */
+  align-items: center;
+  margin-top: 0px; /* ลดระยะห่างด้านบน เพื่อขยับขึ้น */
 }
 
 .submit-button {
-  display: block;
-  width: 100%;
-  padding: 12px 20px;
-  background-color: #007bff; /* สีพื้นหลังปุ่ม */
+  padding: 10px 24px;
+  background-color: #007bff;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -170,22 +120,40 @@ input[type="date"]:focus {
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  position: relative;
-  top: -100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px; /* ตั้งค่าความกว้างให้ปุ่มดูสมดุล */
 }
 
 .submit-button:hover {
-  background-color: #0056b3; /* สีพื้นหลังเมื่อ hover */
-  transform: scale(1.02); /* ขยายเล็กน้อยเมื่อ hover */
+  background-color: #0056b3;
+  transform: scale(1.02);
 }
 
-.accept-text{
-  position: relative;
-  top: -70px;
-  left: 40px;
-}
+/* ====== Responsive Design (Mobile) ====== */
+@media (max-width: 768px) {
+  .registration-container {
+    width: 90%;
+    height: auto; /* ให้ฟอร์มเล็กลงถ้าหน้าจอเล็ก */
+  }
 
-.error-messages {
-  text-align: center;
-  margin-bottom: 10px;
+  .registration-form {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .form-group {
+    width: 100%;
+  }
+
+  .form-terms {
+    flex-direction: row;
+    gap: 5px;
+    margin-bottom: 5px; /* ปรับให้ขยับขึ้น */
+  }
+
+  .submit-button-container {
+    margin-top: 0px; /* ปรับให้ปุ่มขยับขึ้น */
+  }
 }
