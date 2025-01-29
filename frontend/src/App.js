@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'; 
 import './App.css';
-import Homepage from './component/Homepage/Homepage';
+import Homepage from './component/HomePage/Homepage';
 import Login from './component/Login/Login';
 import RegisterChoice from './component/RegisterChoice/RegisterChoice';
 import RegisterCustomer from './component/Register/RegisterCustomer';
@@ -14,6 +14,7 @@ import UserProfile from './component/UserProfile/UserProfile';
 import ManageStadium from './component/ManageStadium/ManageStadium';
 import ManageSubStadium from './component/ManageSubStadium/ManageSubStadium';
 import ManageSubStadiumDetails from './component/ManageSubStadiumDetails/ManageSubStadiumDetails';
+import SuccessRegis from  './component/SuccessRegis/SuccessRegis';
 
 import Discount from './component/Discount/Discount';
 import TestHome from './component/Test/TestHome';
@@ -41,6 +42,8 @@ function App() {
         <Route path="/manage-sub-stadium" element={<ManageSubStadium />} />
         <Route path="/manage-substadium-details" element={<ManageSubStadiumDetails />} />
         <Route path='/Discount' element={<Discount />} />
+        <Route path='/SuccessRegis' element={<SuccessRegis />} />
+
       </Routes>
     </BrowserRouter>
   );
