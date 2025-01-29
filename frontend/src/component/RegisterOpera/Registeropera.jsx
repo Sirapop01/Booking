@@ -143,12 +143,20 @@ const RegistrationForm = () => {
                 checked={formData.acceptTerms}
                 onChange={handleChange}
               />
+
+              <span>
+                ยอมรับ{" "}
+                <Link to="/OperaRequri" className="highlight-conditions">
+                  ข้อกำหนดและเงื่อนไข
+                </Link>
+              </span>
+
               <span className="accept-text">ยอมรับ</span>{" "}
                 
                 <Link to="/OperaRequri" className="highlight-conditions">
                   ข้อกำหนดและเงื่อนไข
                 </Link>
-              
+      
             </label>
           </div>
           {errorMessage && (
@@ -168,3 +176,4 @@ const RegistrationForm = () => {
 };
 
 export default RegistrationForm;
+
