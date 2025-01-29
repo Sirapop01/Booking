@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "./Promotion.css";
+import Promo from "../assets/icons/Promotion.jpg";
+import "./Discount.css";
 
 const Promotion = () => {
   const [selectedCoupon, setSelectedCoupon] = useState(null);
@@ -11,17 +12,17 @@ const Promotion = () => {
   ];
 
   const handleSelect = (id) => {
-    setSelectedCoupon(id);
+    setSelectedCoupon((prevSelected) => (prevSelected === id ? null : id));
   };
 
   return (
     <div className="promotion-container">
       <div className="image-section">
-        <img src="/images/tom-briskey-basketball.jpg" alt="Basketball Hoop" className="promo-image" />
+          <img src={Promo} alt="Promo" className="promo" />
       </div>
 
       <div className="promotion-section">
-        <h2 className="promotion-title" style={{ fontSize: "36px", color: "#000000" }}>🏷️ คูปอง</h2>
+        <h2 className="promotion-title">🏷️ คูปอง</h2>
 
         {coupons.map((coupon) => (
           <div

@@ -15,7 +15,7 @@ import ManageStadium from './component/ManageStadium/ManageStadium';
 import ManageSubStadium from './component/ManageSubStadium/ManageSubStadium';
 import Test from './component/Test/Test';
 import ManageSubStadiumDetails from './component/ManageSubStadiumDetails/ManageSubStadiumDetails';
-import Promotion from './component/Promotion/Promotion';
+import Discount from './component/Discount/Discount';
 
 /**/ 
 
@@ -38,7 +38,7 @@ function App() {
         <Route path="/manage-stadium" element={<ManageStadium />} />
         <Route path="/manage-sub-stadium" element={<ManageSubStadium />} />
         <Route path="/manage-substadium-details" element={<ManageSubStadiumDetails />} />
-        <Route path='/Promotion' element={<Promotion />} />
+        <Route path='/Discount' element={<Discount />} />
       </Routes>
     </BrowserRouter>
   );
