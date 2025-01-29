@@ -7,6 +7,9 @@ import RegisterCustomer from './component/Register/RegisterCustomer';
 import ForgotPassword from './component/Repass/ForgotPassword';
 import OperaRequri from './component/OperaRequri/Opera';
 import RegisterOpera from './component/RegisterOpera/Registeropera';
+import RegisterArena from './component/RegisterArena/Registerarena';
+import Registermoreoper from './component/Registermoreoper/Prachachon';
+
 function App() {
   return (
     <BrowserRouter>
@@ -19,6 +22,8 @@ function App() {
 
         <Route path="/OperaRequri" element={<OperaRequri/>} />
         <Route path="/RegisterOpera" element={<RegisterOpera/>} />
+        <Route path="/RegisterArena" element={<RegisterArena/>} />
+        <Route path="/Registermoreoper" element={<Registermoreoper/>} />
       </Routes>
     </BrowserRouter>
   );
