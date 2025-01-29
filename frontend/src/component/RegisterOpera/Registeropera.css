@@ -25,10 +25,10 @@ body {
   text-align: center;
   position: relative;
   top: 5px;
-  background-color: #1c2536; /* สีพื้นหลังหัวข้อ */
+  background-color: #1c2536;
   padding: 20px;
   border-radius: 15px 15px 0 0;
-  color: #ffffff; /* ตัวอักษรสีขาว */
+  color: #ffffff; 
 }
 
 .registration-header h1 {
