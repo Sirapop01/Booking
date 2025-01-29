@@ -1,0 +1,134 @@
+.manage-substadium-details {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: flex-start;
+    width: 90%;
+    margin: 20px auto;
+}
+
+/* ✅ ปุ่ม Home */
+.home-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.home-logo {
+    width: 35px;
+    height: 35px;
+}
+
+/* ✅ หัวข้อ "รายการสนาม" */
+.section-title {
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* ✅ ฝั่งซ้าย: รายการสนาม */
+.courts-list {
+    flex: 1;
+    background: white;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ตาราง */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+
+/* ✅ ปรับตำแหน่งหัวข้อ "สถานะ" ให้ตรงกับปุ่ม */
+.status-header {
+    text-align: right;
+    padding-right: 15px;
+}
+
+/* ✅ ปรับปุ่มให้ชิดขวา */
+.status-cell {
+    text-align: right;
+    padding-right: 15px;
+}
+
+/* ปุ่มเปิด/ปิดสถานะ */
+.toggle-btn {
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.btn-close {
+    background-color: red;
+    color: white;
+}
+
+.btn-open {
+    background-color: green;
+    color: white;
+}
+
+/* ✅ ฝั่งขวา: รายละเอียดสนาม */
+.court-details {
+    flex: 1;
+    background: white;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    min-width: 300px;
+}
+
+.court-details input,
+.court-details textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+/* ✅ ปรับขนาดปุ่ม */
+.details-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.edit-btn {
+    background-color: #2196F3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
