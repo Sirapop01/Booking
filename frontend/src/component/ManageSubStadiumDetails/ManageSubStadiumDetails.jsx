@@ -48,19 +48,57 @@ function ManageSubStadiumDetails() {
 
   const handleImageChange = (event) => {
     const files = Array.from(event.target.files);
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-    
+
     setEditedCourt((prevCourt) => ({
         ...prevCourt,
-        images: [...(prevCourt.images || []), ...imageUrls] // ✅ เช็คว่ามีค่าแล้วหรือไม่
+        images: [...(prevCourt.images || []), ...files] // ✅ เก็บไฟล์จริง
     }));
-  };
+};
+
+const handleRemoveImage = (index) => {
+    setEditedCourt((prevCourt) => ({
+        ...prevCourt,
+        images: prevCourt.images.filter((_, i) => i !== index) // ✅ ลบรูปที่เลือก
+    }));
+};
 
   const handleCancel = () => {
     setIsAdding(false);
     setIsEditing(false);
     setSelectedCourt(null);
   };
+
+  const handleAddClick = () => {
+    setIsAdding(true);
+    setIsEditing(true);
+    setEditedCourt({
+        id: null, name: "", status: "เปิด", owner: "", phone: "", description: "", openTime: "", closeTime: "", price: "", images: []
+    });
+    setSelectedCourt(null);
+};
+
+const handleSaveClick = () => {
+    if (isAdding) {
+        // ✅ เพิ่มสนามใหม่ไปยังตารางฝั่งซ้าย
+        const newCourt = {
+            ...editedCourt,
+            id: courts.length + 1 // ✅ กำหนด ID ใหม่
+        };
+        setCourts([...courts, newCourt]);
+    } else {
+        // ✅ อัปเดตสนามที่เลือก
+        setCourts((prevCourts) =>
+            prevCourts.map((court) =>
+                court.id === selectedCourt.id ? { ...court, ...editedCourt } : court
+            )
+        );
+    }
+
+    // ✅ รีเซ็ตสถานะ
+    setIsEditing(false);
+    setIsAdding(false);
+    setSelectedCourt(null);
+};
 
   return (
     <div className="manage-substadium-details">
@@ -110,30 +148,35 @@ function ManageSubStadiumDetails() {
       <div className="court-details">
         <h2>ข้อมูลสนาม</h2>
         <div className="stadium-info">
-          {/* ✅ รูปสนาม */}
-          {/* ✅ รูปสนาม (รองรับหลายรูป) */}
-        {/* ✅ รูปสนาม (รองรับหลายรูป) */}
-              <div className="image-gallery">
-          {editedCourt.images && editedCourt.images.length > 0 && editedCourt.images.map((img, index) => (
-              <img key={index} src={img} alt={`สนามกีฬา ${index + 1}`} className="stadium-image" />
-          ))}
-          
-          {/* ✅ ปุ่มเพิ่มรูป */}
-          {isEditing && (
+            <div className="image-gallery">
+            {/* ✅ แสดงภาพที่อัปโหลด */}
+            {editedCourt.images && editedCourt.images.length > 0 ? (
+              editedCourt.images.map((file, index) => (
+                <div key={index} className="image-wrapper">
+                  <img src={URL.createObjectURL(file)} alt={`สนามกีฬา ${index + 1}`} className="stadium-image" />
+                  {isEditing && (
+                    <button className="remove-image-btn" onClick={() => handleRemoveImage(index)}>✖</button>
+                  )}
+                </div>
+              ))
+            ) : (
+              <div className="image-placeholder">ไม่มีรูปภาพ</div>
+            )}
+
+            {/* ✅ ปุ่มเพิ่มรูป */}
+            {isEditing && (
               <label className="image-upload-box">
-                  <span className="plus-icon">+</span>
-                  <input 
-                      type="file" 
-                      accept="image/*" 
-                      className="file-input-hidden" 
-                      onChange={handleImageChange} 
-                      multiple 
-                  />
+                <span className="plus-icon">+</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="file-input-hidden"
+                  onChange={handleImageChange}
+                  multiple
+                />
               </label>
-          )}
-      </div>
-
-
+            )}
+          </div>
 
           <p><strong>ชื่อสนาม:</strong> 
             <input 
@@ -172,9 +215,20 @@ function ManageSubStadiumDetails() {
           </p>
         </div>
 
-        <div className="details-buttons">
-          <button className="edit-btn" onClick={handleEditClick}>{isEditing ? "บันทึก" : "แก้ไขที่เลือก"}</button>
-          <button className="cancel-btn" onClick={handleCancel}>{isAdding ? "ยกเลิก" : "เพิ่ม"}</button>
+          <div className="details-buttons">
+            <button className="edit-btn" onClick={handleSaveClick}>
+                {isEditing ? "บันทึก" : "แก้ไขที่เลือก"}
+            </button>
+
+            {!isEditing && !isAdding ? (
+                <button className="add-btn" onClick={handleAddClick}>
+                    เพิ่ม
+                </button>
+            ) : (
+                <button className="cancel-btn" onClick={handleCancel}>
+                    ยกเลิก
+                </button>
+            )}
         </div>
       </div>
       </div>
