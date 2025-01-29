@@ -68,7 +68,10 @@ function RegisterCustomer() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:4000/api/auth/register", formData);
+      const response = await axios.post("http://localhost:4000/api/auth/register", {
+        ...formData,
+        role: 'user'  // ส่งค่า role เป็น 'user' เสมอ
+      });
       alert("✅ สมัครสมาชิกสำเร็จ!");
       navigate("/login");
     } catch (err) {

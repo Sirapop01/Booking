@@ -13,8 +13,8 @@ import Resetpassword from './component/ResetPassword/ResetPassword';
 import UserProfile from './component/UserProfile/UserProfile';
 import ManageStadium from './component/ManageStadium/ManageStadium';
 import ManageSubStadium from './component/ManageSubStadium/ManageSubStadium';
-import Test from './component/Test/Test';
 import ManageSubStadiumDetails from './component/ManageSubStadiumDetails/ManageSubStadiumDetails';
+import TestHome from './component/Test/TestHome';
 
 /**/ 
 
@@ -23,7 +23,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         
-        <Route path='/' element={<Test/>} />
+        <Route path='/' element={<TestHome/>} />
         <Route path="/RegisterChoice" element={<RegisterChoice />} />
         <Route path="/login" element={<Login />} /> 
         <Route path="/customer-register" element={<RegisterCustomer/>} />
