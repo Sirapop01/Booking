@@ -1,3 +1,4 @@
+/*jsx managesubstadiumdetail*/
 import React, { useState } from "react";
 import "./ManageSubStadiumDetails.css";
 import homeLogo from "../assets/logoalt.png";
