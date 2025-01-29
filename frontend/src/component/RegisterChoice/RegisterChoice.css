@@ -28,23 +28,30 @@
 /* โลโก้ */
 .logo {
     width: 130px; /* ทำให้โลโก้ใหญ่ขึ้น */
-    margin-bottom: 20px;
+    margin-bottom: 80px;
 }
 
-/* ข้อความต้อนรับ */
 .welcome-text {
-    font-size: 55px;  /* เพิ่มขนาด */
+    font-size: 55px;
     font-weight: bold;
     margin: 15px 0;
+    position: relative;
+    top: -50px; /* ขยับขึ้นไปข้างบน */
+    letter-spacing: 3px;
 }
 
-/* คำอธิบาย */
+
 .description-text {
-    font-size: 20px;
+    font-size: 16px;
     max-width: 750px;
     line-height: 1.8;
     margin-bottom: 35px;
+    white-space: nowrap; /* ป้องกันการขึ้นบรรทัดใหม่ */
+    overflow: hidden; /* ป้องกันข้อความเกินขอบ */
+    position: relative;
+    top: -60px; /* ขยับขึ้นไปข้างบน */
 }
+
 
 /* หัวข้อรูปแบบบัญชี */
 .choice-heading {
