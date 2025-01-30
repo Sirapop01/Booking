@@ -9,11 +9,10 @@ const Navbar = () => {
   const [username, setUsername] = useState('');
 
   useEffect(() => {
-    // ตรวจสอบว่าผู้ใช้ล็อกอินหรือยัง (จำลองจาก LocalStorage หรือ Context API)
     const user = localStorage.getItem('user');
     if (user) {
       setIsLoggedIn(true);
-      setUsername(user); // ตั้งค่าชื่อผู้ใช้
+      setUsername(user);
     }
   }, []);
 
@@ -29,16 +28,25 @@ const Navbar = () => {
     navigate('/promotion');
   };
 
+  const handleFavoritesClick = () => {
+    navigate('/favorites');
+  };
+
   const handleLogout = () => {
-    localStorage.removeItem('user'); // ลบข้อมูลผู้ใช้
+    localStorage.removeItem('user');
     setIsLoggedIn(false);
     setUsername('');
-    navigate('/'); // กลับไปหน้าแรก
+    navigate('/');
   };
 
   return (
     <nav className="navbar-homepage">
       <div className="navbar-left">
+        {isLoggedIn && (
+          <button className="navbar-button-homepage" onClick={handleFavoritesClick}>
+            รายการโปรด
+          </button>
+        )}
         <button className="navbar-button-homepage" onClick={handlePromotionClick}>
           โปรโมชั่น
         </button>
