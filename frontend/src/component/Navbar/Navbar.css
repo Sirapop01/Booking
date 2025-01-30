@@ -10,13 +10,14 @@
     font-family: 'Inder', sans-serif;
 }
 
-/* ปุ่มโปรโมชั่นอยู่ซ้าย */
+/* ปุ่มด้านซ้าย (โปรโมชั่น + รายการโปรด) */
 .navbar-left {
     display: flex;
     align-items: center;
+    gap: 10px; /* เพิ่มระยะห่างระหว่างปุ่ม */
 }
 
-/* ปรับปุ่มโปรโมชั่น */
+/* ปรับปุ่มโปรโมชั่น + รายการโปรด */
 .navbar-button-homepage {
     background-color: #fff;
     color: #07213A;
@@ -62,7 +63,7 @@
     gap: 10px;
 }
 
-/* ปรับปุ่มเข้าสู่ระบบ และลงทะเบียน */
+/* ปุ่มเข้าสู่ระบบ + ลงทะเบียน */
 .navbar-button,
 .navbar-link {
     background-color: #fff;
@@ -82,7 +83,7 @@
     background-color: #d1d1d1;
 }
 
-/* ✅ ปรับสไตล์สำหรับเมื่อผู้ใช้ล็อกอินแล้ว */
+/* ✅ ปรับสไตล์เมื่อผู้ใช้ล็อกอิน */
 .navbar-user {
     display: flex;
     align-items: center;
@@ -112,4 +113,44 @@
 
 .menu-icon:hover {
     background-color: #d1d1d1;
+}
+
+/* ✅ เพิ่ม Responsive Design */
+@media (max-width: 768px) {
+    .navbar-homepage {
+        padding: 15px 20px;
+    }
+    
+    .navbar-center {
+        margin-left: 20px;
+    }
+    
+    .navbar-logo-img-homepage {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .navbar-title {
+        font-size: 24px;
+    }
+    
+    .navbar-button-homepage,
+    .navbar-button,
+    .navbar-link {
+        font-size: 16px;
+        padding: 6px 14px;
+    }
+
+    .navbar-left {
+        gap: 5px;
+    }
+
+    .navbar-user {
+        gap: 10px;
+    }
+
+    .menu-icon {
+        padding: 5px 10px;
+        font-size: 18px;
+    }
 }
