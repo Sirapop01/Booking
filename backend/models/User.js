@@ -12,7 +12,8 @@ const UserSchema = new mongoose.Schema({
   province: { type: String, required: true },
   district: { type: String, required: true },
   subdistrict: { type: String, required: true },
-  role: {type : String,requird: true }
+  role: {type : String,requird: true },
+  profileImage : {type : String, requird : true}
 
 }, { timestamps: true });
 

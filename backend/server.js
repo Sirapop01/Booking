@@ -15,16 +15,15 @@ app.use("/uploads", express.static("uploads")); // ทำให้โฟลเ�
 
 const MONGO_URI = "mongodb+srv://Booking:Booking@cluster0.1cryq.mongodb.net/";
 
-mongoose.connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log("✅ MongoDB connected successfully"))
-.catch((err) => {
-    console.error("❌ MongoDB connection error:", err.message);
-    process.exit(1);
-});
+mongoose.connect(MONGO_URI)
+    .then(() => console.log("✅ MongoDB connected successfully"))
+    .catch((err) => {
+        console.error("❌ MongoDB connection error:", err.message);
+        process.exit(1);
+    });
 
+
+app.use("/uploads", express.static("uploads")); // ให้เข้าถึงรูปภาพผ่าน URL ได้
 app.use("/api/auth", authRoutes);
 app.use("/api/images", uploadRoutes); // เพิ่ม Route สำหรับการอัปโหลดรูป
 
