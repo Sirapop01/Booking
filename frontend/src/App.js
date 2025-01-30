@@ -9,7 +9,7 @@ import OperaRequri from './component/OperaRequri/Opera';
 import RegisterOpera from './component/RegisterOpera/Registeropera';
 import StadiumList from './component/StadiumList/StadiumList';
 import Resetpassword from './component/ResetPassword/ResetPassword';
-
+import FavoriteList from './component/Favorites/FavoritesList';
 /**/ 
 function App() {
   return (
@@ -24,6 +24,7 @@ function App() {
         <Route path="/OperaRequri" element={<OperaRequri/>} />
         <Route path="/RegisterOpera" element={<RegisterOpera/>} />
         <Route path="/stadium-list" element={<StadiumList />} />
+        <Route path='/FavoritesList' element={<FavoriteList />} />
       </Routes>
     </BrowserRouter>
   );
