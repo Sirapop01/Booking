@@ -1,0 +1,353 @@
+/*css managesubstadiumdetail*/
+.manage-substadium-details {
+    display: flex;
+    gap: 15px; /* ✅ ลดระยะห่างระหว่างช่องรูปภาพและรายละเอียด */
+    justify-content: center;
+    align-items: flex-start;
+    width: 90%;
+    margin: 20px auto;
+}
+
+/* ✅ ปิดการแสดงเคอร์เซอร์พิมพ์ (Text Cursor) */
+.manage-substadium-details,
+.courts-list,
+.court-details,
+table {
+    user-select: none; /* ป้องกันการไฮไลต์ */
+    cursor: default; /* ไม่แสดงเคอร์เซอร์พิมพ์ */
+}
+
+/* ✅ ปุ่ม Home */
+.home-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.home-logo {
+    width: 35px;
+    height: 35px;
+}
+
+/* ✅ หัวข้อ "รายการสนาม" */
+.section-title {
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* ✅ ฝั่งซ้าย: รายการสนาม */
+.courts-list {
+    flex: 1;
+    background: white;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ตาราง */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+}
+
+/* ✅ ปรับตำแหน่งหัวข้อ "สถานะ" ให้ตรงกับปุ่ม */
+.status-header {
+    text-align: right;
+    padding-right: 15px;
+}
+
+/* ✅ ปรับปุ่มให้ชิดขวา */
+.status-cell {
+    text-align: right;
+    padding-right: 15px;
+}
+
+/* ✅ แถวของตาราง */
+.table-row {
+    cursor: pointer; /* เปลี่ยนเป็น pointer เมื่อโฮเวอร์ */
+    transition: background-color 0.3s ease;
+}
+
+/* ✅ แถวที่ถูกเลือก */
+.selected {
+    background-color: #1E90FF;
+    color: white;
+}
+
+/* ✅ แถวที่ปิด (สถานะ = ปิด) */
+.closed-row {
+    background-color: #B0B0B0 !important;
+    color: #ffffff !important;
+}
+
+/* ✅ ปุ่มเปิด/ปิดสถานะ */
+.toggle-btn {
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.btn-close {
+    background-color: red;
+    color: white;
+}
+
+.btn-open {
+    background-color: green;
+    color: white;
+}
+
+/* ✅ ฝั่งขวา: รายละเอียดสนาม */
+.image-gallery {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* ✅ ทำให้ชิดซ้าย */
+}
+
+.stadium-image {
+    width: 100px; /* ✅ ขนาดของรูป */
+    height: 100px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+}
+
+/* ✅ ปุ่มเพิ่มรูป */
+.image-upload-box {
+    width: 100px;
+    height: 100px;
+    border: 2px dashed #888;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.image-upload-box:hover {
+    background-color: #f0f0f0;
+}
+
+.plus-icon {
+    font-size: 40px;
+    color: #555;
+}
+
+/* ✅ ซ่อน input file */
+.file-input-hidden {
+    display: none;
+}
+
+
+.court-details {
+    flex: 1;
+    background: white;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    min-width: 300px;
+}
+
+/* ✅ ปรับ input และ textarea */
+.court-details input,
+.court-details textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 8px; /* ✅ ลดระยะห่าง */
+    font-size: 16px;
+    background-color: white;
+    color: black;
+}
+
+/* ✅ ล็อก input เมื่อไม่ได้กดแก้ไข */
+.court-details input[readonly],
+.court-details textarea[readonly] {
+    background-color: #f5f5f5;
+    color: #777;
+    border: 1px solid #ddd;
+    cursor: not-allowed;
+}
+
+/* ✅ ปุ่มแก้ไข/บันทึก และเพิ่ม/ยกเลิก */
+.details-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px; /* ✅ ลดระยะห่าง */
+}
+
+.edit-btn {
+    background-color: #2196F3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.cancel-btn {
+    background-color: #DC3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* ✅ ปรับขนาดปุ่มเมื่อ hover */
+.edit-btn:hover {
+    background-color: #1976D2;
+}
+
+.cancel-btn:hover {
+    background-color: #C82333;
+}
+
+.add-btn {
+    background-color: white;
+    color: black;
+    padding: 10px 20px;
+    border: 2px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* ✅ เปลี่ยนสีเมื่อ hover */
+.add-btn:hover {
+    background-color: #f0f0f0;
+}
+.save-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.save-btn:hover {
+    background-color: #218838;
+}
+
+.delete-cell {
+    text-align: center;
+    padding-left: 10px;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: red;
+}
+
+.delete-btn:hover {
+    color: darkred;
+}
+
+/* ✅ ทำให้พื้นหลังมืดลง */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* สีดำโปร่งแสง */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* ✅ ป็อปอัพยืนยันการลบ */
+.delete-popup {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    width: 350px;  /* ✅ ขยายขนาด */
+    max-width: 90%; /* ✅ ป้องกันการซ่อนข้อความ */
+}
+
+.delete-popup h2 {
+    font-size: 20px;
+    color: black;  /* ✅ ป้องกันสีขาว */
+    margin-bottom: 10px;
+}
+
+.delete-popup p {
+    font-size: 16px;
+    color: black;  /* ✅ ป้องกันสีขาว */
+    word-wrap: break-word; /* ✅ ป้องกันข้อความซ้อน */
+}
+
+/* ✅ ปุ่มปิดป็อปอัพ */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* ✅ ช่องพิมพ์ยืนยัน */
+.delete-popup input {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* ✅ ปรับปุ่มให้ใหญ่ขึ้น */
+.confirm-delete-btn {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* ✅ ปิดปุ่มถ้าผู้ใช้ยังไม่พิมพ์ "Delete" */
+.confirm-delete-btn:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}

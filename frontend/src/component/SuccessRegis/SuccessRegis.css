@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+
+/* ตั้งค่าสีพื้นหลัง */
+body1 {
+    background-color: #0d2235; /* สีน้ำเงินเข้ม */
+    color: white;
+    font-family: 'Inder', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* จัดให้อยู่ตรงกลางแนวตั้ง */
+    min-height: 100vh; /* ให้เต็มหน้าจอ */
+    margin: 0;
+    overflow : hidden;
+}
+
+html {
+    overflow: hidden; /* ปิดการเลื่อนของ HTML */
+}
+
+/* คอนเทนเนอร์หลักที่ครอบทุกอย่าง */
+.registration-success-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh; /* ให้เต็มจอ */
+}
+
+/* ส่วนหัวของหน้า */
+.registration-header {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 20px;
+    top : -170px;
+    position: relative;
+    background-color: #0d2235;
+}
+
+/* กล่องโลโก้ */
+.registration-logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+/* โลโก้ */
+.registration-logo {
+    width: 70px;
+    height: 70px;
+}
+
+/* ชื่อเว็บไซต์ */
+.registration-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* เส้นคั่นใต้โลโก้ */
+.registration-divider {
+    width: 90%;
+    height: 2px;
+    background-color: white;
+    margin: 5px auto;
+}
+
+/* คำอธิบายใต้โลโก้ */
+.registration-subtitle {
+    font-size: 16px;
+    opacity: 0.9;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+/* กล่องแสดงผลการสมัครสำเร็จ */
+.registration-success-box {
+    background: white;
+    color: black;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    max-width: 600px;
+    width: 95%;
+    top: -40px;
+    position: relative;
+}
+
+/* ไอคอนแจ้งเตือนสำเร็จ */
+.registration-success-icon {
+    background: #28a745;
+    display: inline-block;
+    padding: 20px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.registration-success-icon svg {
+    width: 60px;
+    height: 60px;
+    color: white;
+}
+
+/* ข้อความแจ้งเตือน */
+.registration-success-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* คำอธิบายผลการสมัคร */
+.registration-success-message {
+    font-size: 18px;
+    color: #28a745;
+}
+
+/* ปุ่มยืนยัน */
+.registration-confirm-button {
+    background: #28a745;
+    color: white;
+    padding: 14px 30px;
+    margin-top: 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.2s;
+}
+
+.registration-confirm-button:hover {
+    background: #218838;
+    transform: scale(1.05);
+}

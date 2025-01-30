@@ -1,19 +1,48 @@
 import React, { useState } from 'react';
 import './Login.css';
+import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png'; // Path ของโลโก้
 import bgImage from '../assets/threeman.png'; // Path ของรูปพื้นหลัง
+import { IoEyeSharp } from "react-icons/io5";
+import { FaEyeSlash } from "react-icons/fa";
+
+import axios from 'axios';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false); // State สำหรับ "จดจำฉัน"
   const [showPassword, setShowPassword] = useState(false); // State สำหรับแสดง/ซ่อนรหัสผ่าน
+  const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    let members = {
+      email,
+      password 
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/auth/login", members );
+        if(response.data.message == "เข้าสู่ระบบสำเร็จ"){
+
+          localStorage.setItem('token', response.data.token);
+          
+          navigate("/");
+        }else{
+          alert("เข้าสู่ระบบไม่สำเร็จ");
+        }
+      console.log(response.data.message)
+    }catch (err){
+      console.log(err)
+    }
+
     console.log('Email:', email);
     console.log('Password:', password);
     console.log('Remember Me:', rememberMe);
   };
+
+
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -51,7 +80,7 @@ function Login() {
               className="login-toggle-password"
               onClick={togglePasswordVisibility}
             >
-              {showPassword ? '👁️' : '👁️‍🗨️'} {/* แสดงไอคอน */}
+              {showPassword ? <IoEyeSharp/>:<FaEyeSlash/>  } 
             </button>
           </div>
           <div className="login-remember-me">

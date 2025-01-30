@@ -4,97 +4,116 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    background-color: #000 !important; /* สีพื้นหลัง */
-    color: #fff; /* สีตัวอักษร */
-  }
-  
-  .content {
+    height: 100vh;
+    width: 100vw;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     text-align: center;
-  }
-  
-  .logo {
-    width: 150px; /* ปรับขนาด logo ตามต้องการ */
-    margin-bottom: 10px; /* ลด margin-bottom */
-    margin-top: 10px; /* เพิ่ม margin-top (ถ้าต้องการ) */
-  }
-  
-  .welcome-text {  /* ปรับแต่งเฉพาะส่วนนี้ */
-    font-family: 'Inder', sans-serif; /* กำหนด font family */
-    font-weight: 400; /* กำหนด font weight เป็น Regular */
-    font-size: 96px; /* กำหนด font size */
-    line-height: auto; /* กำหนด line height เป็น Auto */
-    letter-spacing: 0%; /* กำหนด letter spacing */
-    color: #FFFFFF; /* กำหนดสี */
-    margin-bottom: 20px; 
-  }
+    font-family: 'Inder', sans-serif;
+    color: #fff;
+}
 
-  .description-text {
-    font-family: 'Inder', sans-serif;
-    font-size: 24px;
-    font-weight: 400;
-    margin-bottom: 40px;
-  }
-  
-  .choice-heading {
-    font-family: 'Inder', sans-serif;
-    font-weight: 400;
-    font-size: 24px;
-    margin-bottom: 50px;
-  }
-  
-  .button-group {
+/* กล่องเนื้อหา */
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 850px;
+    padding: 20px;
+}
+
+/* โลโก้ */
+.logo {
+    width: 130px; /* ทำให้โลโก้ใหญ่ขึ้น */
+    margin-bottom: 80px;
+}
+
+.welcome-text {
+    font-size: 55px;
+    font-weight: bold;
+    margin: 15px 0;
+    position: relative;
+    top: -50px; /* ขยับขึ้นไปข้างบน */
+    letter-spacing: 3px;
+}
+
+
+.description-text {
+    font-size: 16px;
+    max-width: 750px;
+    line-height: 1.8;
+    margin-bottom: 35px;
+    white-space: nowrap; /* ป้องกันการขึ้นบรรทัดใหม่ */
+    overflow: hidden; /* ป้องกันข้อความเกินขอบ */
+    position: relative;
+    top: -60px; /* ขยับขึ้นไปข้างบน */
+}
+
+
+/* หัวข้อรูปแบบบัญชี */
+.choice-heading {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 25px;
+}
+
+/* กล่องปุ่ม */
+.button-group {
     display: flex;
     justify-content: center;
-    gap: 580px;
-    margin-bottom: 20px;
-  }
-  
-  .customer-button
-  {
-    padding: 15px 30px;
+    align-items: center;
+    gap: 50px;
+    margin-top: 20px;
+}
+
+/* ปุ่มสมัคร */
+.customer-button,
+.owner-button {
+    background: #ffffff;
+    color: #000;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 18px 50px;  /* ขยายปุ่มให้ใหญ่ขึ้น */
     border: none;
-    border-radius: 5px;
-    font-size: 18px;
+    border-radius: 30px;
     cursor: pointer;
-    margin-left: 75px;
-  }
+    transition: 0.3s;
+    width: 280px;
+    text-align: center;
+    box-shadow: 0px 4px 12px rgba(255, 255, 255, 0.4);
+}
 
-  .owner-button {
-    padding: 15px 30px;
-    border: none;
-    border-radius: 5px;
-    font-size: 18px;
-    cursor: pointer;
-    margin-left: 80px;
-    margin-right: 50px;
-  }
+.customer-button:hover,
+.owner-button:hover {
+    background: #f0f0f0;
+}
 
-    .customer-button,
-    .owner-button {
-      background-color: #fff; /* สีปุ่มผู้ใช้งาน */
-      color: #000; /* สีตัวอักษร */
-      font-family: 'Inder', sans-serif;  /* กำหนด font family */
-      font-size: 24px;  /* กำหนด font size */
-      font-weight: 400;  /* กำหนด font weight เป็น Regular */
-    }
-  
-    .description-group {
-      display: flex;
-      justify-content: center;
-      gap: 580px;
-      align-items: flex-start; /* เพิ่ม align-items: flex-start */
-    }
-  
-  .customer-description,
-  .owner-description {
-    font-family: 'Inder', sans-serif;
-    font-size: 16px;
-    width: 230px; /* ปรับความกว้างตามต้องการ */
-    display: flex; /* เปลี่ยนเป็น flex container */
-    flex-direction: column; /* จัดเรียง element ให้อยู่ในแนวตั้ง */
-    align-items: center; /* จัดปุ่มและข้อความให้อยู่กึ่งกลางในแนวนอน */
-  }
+/* คำอธิบายใต้ปุ่ม */
+.description-group {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* เปลี่ยนจาก center เป็น flex-start เพื่อให้อยู่แนวเดียวกัน */
+  gap: 90px;
+  margin-top: 15px;
+}
 
+/* ปรับคำอธิบายใต้ปุ่มให้ชัดขึ้น */
+.customer-description,
+.owner-description {
+  font-size: 18px;
+  width: 250px; /* บังคับให้ขนาดเท่ากัน */
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* ทำให้ข้อความอยู่ตรงกลาง */
+}
 
-  
+/* เส้นแบ่งตรงกลาง */
+.divider {
+    width: 2px;
+    height: 90px;
+    background-color: #fff;
+}

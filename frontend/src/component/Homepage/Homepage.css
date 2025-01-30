@@ -1,183 +1,163 @@
 @import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
 
 
-/* Container หลัก */
-.homepage {
-  min-height: 100vh;
-  background-color: #fff; /* ใช้สีขาวเต็มหน้าเว็บ */
-}
-/* Navbar Section */
-.homepage-navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #07213A;
-  padding: 30px 30px;
-  font-family: 'Inder', sans-serif;
-}
+/*---------------- Search Section ----------------*/
+.search-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 900px;
+    margin: 40px auto;
+    position: relative;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 12px 12px 12px 40px; 
+    font-size: 18px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    margin-bottom: 20px;
+    color: #000; /* เปลี่ยนสีข้อความเป็นสีดำ */
+  }
+  
+  .search-input::placeholder {
+    color: #3b3b3b !important; /* บังคับให้ placeholder เป็นสีดำ */
+    opacity: 1; /* บาง browser อาจลด opacity ของ placeholder */
+  }
 
+  .date-time-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  /* ปรับให้ช่องเลือกวันที่และเวลาเหมือนกัน */
+  .date-input, .time-input {
+    width: 180px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #ccc; /* ปรับสีขอบให้เป็นสีเทาอ่อน */
+    background-color: #fff;
+    margin-bottom: 8px;
+  }
+  
+  .date-input::-webkit-calendar-picker-indicator, .time-input::-webkit-calendar-picker-indicator {
+    filter: invert(0.5);
+    cursor: pointer;
+  }
+  
 
-.homepage-navbar-promo-btn {
-  background-color: #fff;
-  color: #07213A;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: bold;
-}
+.people-select-value {
+    width: 150px;
+    padding: 17px;
+    font-size: 16px;
+    border-radius: 10px; /* ปรับให้เหมือนกับรูป */
+    border: 1px solid #ccc; /* ปรับสีขอบให้เป็นสีเทาอ่อน */
+    appearance: none;
+    background-color: #fff;
+    color: #000; /* เปลี่ยนสีข้อความเป็นสีดำ */
+    margin-bottom: 1px;
+  }
 
+/* ลดขนาด radio button และจัดข้อความไปทางขวา */
+/* จัดให้ทั้งสอง radio button เท่ากัน */
+.booking-status {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    font-size: 14px;
+  }
+  
+  .booking-status label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    flex-direction: row; /* ทำให้ข้อความอยู่ขวาของปุ่ม */
+  }
+  
+  .booking-status input[type="radio"] {
+    transform: scale(0.8); /* ลดขนาด radio button */
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  
+  /* ทำให้ radio button ที่ถูกเลือกมีวงกลมสีดำข้างใน */
+  .booking-status input[type="radio"]:checked::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    background-color: black;
+    border-radius: 50%;
+    position: absolute;
+  }
+  
+  
 
-.homepage-navbar-promo-btn:hover {
-  background-color: #d1d1d1;
-}
-
-.homepage-navbar-logo {
-  display: flex;
-  align-items: center;
-  color: #fff;
-  font-size: 30px;
-  font-weight: bold;
-}
-
-
-.homepage-logo-img {
-  width: 80px;
-  height: 80px;
-  margin: 0 15px;
-}
-
-.homepage-navbar-actions {
-  display: flex;
-  gap: 10px;
-}
-
-
-.homepage-login-btn,
-.homepage-register-btn {
-  background: none;
-  color: #fff;
-  border: 1px solid #fff;
-  padding: 8px 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 18px;
-}
-
-
-.homepage-login-btn:hover,
-.homepage-register-btn:hover {
-  background-color: #fff;
-  color: #07213A;
-}
-
-
-/* Search Section */
-.homepage-search-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 900px;
-  margin: 40px auto;
-}
-
-.homepage-search-input {
-  width: 100%;
-  padding: 12px;
-  font-size: 18px;
-  border-radius: 5px;
-  border: 2px solid #ccc;
-  margin-bottom: 20px;
-}
-
-.homepage-date-time {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
-.homepage-date-input,
-.homepage-time-input {
-  width: 150px;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 2px solid #ccc;
-}
-
-
-.homepage-people-select {
-  padding: 10px;
-  font-size: 16px;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-}
-
-
-.homepage-booking-options {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  color: #000000;
-}
-
-
-.homepage-booking-options label {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 16px;
-}
-
-.homepage-search-btn {
+/* ปุ่มค้นหา */
+.search-button {
   background-color: #07213A;
   color: #fff;
   border: none;
-  padding: 12px 24px;
+  padding: 12px 24px; /* เพิ่มขนาดให้ใหญ่ขึ้น */
   border-radius: 5px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 18px;    /* เพิ่ม font-size */
   font-weight: bold;
 }
 
-.homepage-search-btn:hover {
+.search-button:hover {
   background-color: #0c3259;
 }
 
-/* Sports Icons Section */
-.homepage-sports-icons {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-  background-color: #07213A;
-  border-radius: 30px;
-  padding: 20px 30px;
-  max-width: 800px;
-  margin: 30px auto;
-}
+/* --------------------- ไอคอนกีฬา --------------------- */
 
-.homepage-sport-icon {
-  width: 60px;
-  height: 60px;
-  background-color: #D1D1D1;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+.sports-icons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    background-color: #07213A;
+    border-radius: 30px;
+    padding: 20px 30px;
+    /* ลดความยาวโดยกำหนด max-width ที่เล็กลง แล้วใช้ margin auto */
+    max-width: 800px; /* ปรับตัวเลขได้ตามต้องการ */
+    margin: 30px auto; 
+  }
+  
 
+/* ปุ่มแต่ละกีฬา */
+.sport-btn {
+    width: 60px;
+    height: 60px;
+    background-color: #D1D1D1;
+    border: none;
+    border-radius: 8px;  /* มุมโค้งเล็กน้อย */
+    cursor: pointer;
+    font-size: 24px;     /* กรณีเป็นอีโมจิหรือไอคอนแบบตัวหนังสือ */
+    /* ถ้าต้องการให้ไอคอนกึ่งกลางในปุ่ม: */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-
-
-.homepage-sport-icon:hover {
+.sport-btn:hover {
   background-color: #ddd;
 }
 
+.homepage-container {
+    min-height: 100vh;
+    background-color: #fff;  /* ใช้สีขาวเต็มหน้าเว็บ */
+  }

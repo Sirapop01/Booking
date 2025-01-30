@@ -1,61 +1,26 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import Navbar from '../Navbar/Navbar'; // นำ Navbar มาใช้
 import './Homepage.css';
-import logo from '../assets/logo.png';
 
 const Homepage = () => {
-  const navigate = useNavigate();
-
-  const handleLoginClick = () => {
-    navigate('/login');
-  };
-
-  const handleRegisterClick = () => {
-    navigate('/RegisterChoice');
-  };
-
   return (
+    <div className="homepage-container">
+      {/* เรียกใช้ Navbar ที่แยกออกมา */}
+      <Navbar />
 
-    <div className="homepage">
-      {/* Navbar Section */}
-      <nav className="homepage-navbar">
-        <button className="homepage-navbar-promo-btn">โปรโมชั่น</button>
-        <div className="homepage-navbar-logo">
-          <img src={logo} alt="logo" className="homepage-logo-img" />
-          MatchWeb
-        </div>
-        <div className="homepage-navbar-actions">
-          <button className="homepage-login-btn" onClick={handleLoginClick}>
-            เข้าสู่ระบบ
-          </button>
-          <button className="homepage-register-btn" onClick={handleRegisterClick}>
-            ลงทะเบียน
-          </button>
-        </div>
-      </nav>
-
-      {/* Search Section */}
-      <div className="homepage-search-section">
+      {/* ส่วนค้นหาสถานที่ วันเวลา จำนวน */}
+      <div className="search-section">
         <input 
           type="text" 
-          className="homepage-search-input" 
+          className="search-input" 
           placeholder="ค้นหาสถานที่" 
         />
 
-        <div className="homepage-date-time">
-          <input 
-            type="text" 
-            className="homepage-date-input" 
-            placeholder="xx/xx/xxxx"
-          />
-          <input 
-            type="text" 
+        <div className="date-time-container">
+          <input type="date" className="date-input" />
+          <input type="time" className="time-input" />
 
-            className="homepage-time-input" 
-            placeholder="xx:xx-xx:xx"
-          />
-
-          <select className="homepage-people-select">
+          <select className="people-select-value">
             <option>จำนวน</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -65,8 +30,7 @@ const Homepage = () => {
             <option value="6">6</option>
           </select>
 
-
-          <div className="homepage-booking-options">
+          <div className="booking-status">
             <label>
               <input type="radio" name="booking" defaultChecked />
               จองได้
@@ -77,23 +41,22 @@ const Homepage = () => {
             </label>
           </div>
 
-
-          <button className="homepage-search-btn">ค้นหา</button>
+          <button className="search-button">ค้นหา</button>
         </div>
       </div>
 
-      {/* Sports Icons Section */}
-      <div className="homepage-sports-icons">
-        <button className="homepage-sport-icon">⚽</button>
-        <button className="homepage-sport-icon">🏀</button>
-        <button className="homepage-sport-icon">🏸</button>
-        <button className="homepage-sport-icon">🎾</button>
-        <button className="homepage-sport-icon">🏐</button>
-        <button className="homepage-sport-icon">🏓</button>
-        <button className="homepage-sport-icon">🥊</button>
-        <button className="homepage-sport-icon">🎳</button>
-        <button className="homepage-sport-icon">⛳</button>
-        <button className="homepage-sport-icon">...</button>
+      {/* ส่วนไอคอนกีฬา */}
+      <div className="sports-icons">
+        <button className="sport-btn">⚽</button>
+        <button className="sport-btn">🏀</button>
+        <button className="sport-btn">🏸</button>
+        <button className="sport-btn">🎾</button>
+        <button className="sport-btn">🏐</button>
+        <button className="sport-btn">🏓</button>
+        <button className="sport-btn">🥊</button>
+        <button className="sport-btn">🎳</button>
+        <button className="sport-btn">⛳</button>
+        <button className="sport-btn">...</button>
       </div>
     </div>
   );

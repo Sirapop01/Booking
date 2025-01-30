@@ -1,8 +1,21 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './RegisterCustomer.css';
-import registerImage from '../assets/threeman.png'; // ภาพนักกีฬา PNG
-import logo from '../assets/logo.png'; // โลโก้
+import registerImage from '../assets/threeman.png';
+import logo from '../assets/logo.png';
+
+// ตัวอย่างข้อมูลจังหวัด อำเภอ และตำบล
+const locationData = {
+  "กรุงเทพมหานคร": {
+    "เขตบางรัก": ["บางรัก", "สีลม", "มหาพฤฒาราม"],
+    "เขตปทุมวัน": ["ปทุมวัน", "รองเมือง", "ลุมพินี"]
+  },
+  "เชียงใหม่": {
+    "อำเภอเมืองเชียงใหม่": ["ช้างเผือก", "พระสิงห์", "ศรีภูมิ"],
+    "อำเภอหางดง": ["หนองควาย", "หางดง", "น้ำแพร่"]
+  }
+};
 
 function RegisterCustomer() {
   const navigate = useNavigate();
@@ -21,20 +34,49 @@ function RegisterCustomer() {
     subdistrict: '',
   });
 
+  const [districts, setDistricts] = useState([]);
+  const [subdistricts, setSubdistricts] = useState([]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+
+    // เมื่อเลือกจังหวัด อัปเดตรายการอำเภอ
+    if (name === "province") {
+      setDistricts(Object.keys(locationData[value] || {}));
+      setSubdistricts([]);
+      setFormData((prevData) => ({
+        ...prevData,
+        district: '',
+        subdistrict: '',
+      }));
+    }
+
+    // เมื่อเลือกอำเภอ อัปเดตรายการตำบล
+    if (name === "district") {
+      setSubdistricts(locationData[formData.province]?.[value] || []);
+      setFormData((prevData) => ({
+        ...prevData,
+        subdistrict: '',
+      }));
+    }
   };
 
-  const handleRegister = () => {
-    console.log('Registration data:', formData);
-  };
-
-  const handleGoBack = () => {
-    navigate('/login');
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:4000/api/auth/register", {
+        ...formData,
+        role: 'user'  // ส่งค่า role เป็น 'user' เสมอ
+      });
+      alert("✅ สมัครสมาชิกสำเร็จ!");
+      navigate("/login");
+    } catch (err) {
+      alert("❌ เกิดข้อผิดพลาด: " + (err.response?.data?.message || "ลองใหม่อีกครั้ง"));
+    }
   };
 
   return (
@@ -49,93 +91,52 @@ function RegisterCustomer() {
       <div className="right-side">
         <h1 className="register-heading">ลงทะเบียน</h1>
         <div className="form-container">
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="อีเมล"
-          />
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="รหัสผ่าน"
-          />
-          <input
-            type="password"
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            placeholder="ยืนยันรหัสผ่าน"
-          />
-          <div className="name-container">
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              placeholder="ชื่อ"
-            />
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              placeholder="นามสกุล"
-            />
-          </div>
-          <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-          >
-            <option value="">เพศ</option>
-            <option value="male">ชาย</option>
-            <option value="female">หญิง</option>
-          </select>
-          <input
-            type="tel"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            placeholder="เบอร์โทรศัพท์"
-          />
-          <input
-            type="text"
-            name="interestedSports"
-            value={formData.interestedSports}
-            onChange={handleChange}
-            placeholder="กีฬาที่สนใจ"
-          />
-          <div className="location-container">
-            <select
-              name="province"
-              value={formData.province}
-              onChange={handleChange}
-            >
-              <option value="">จังหวัด</option>
+          <form onSubmit={handleRegister}>
+            <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="อีเมล" required />
+            <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="รหัสผ่าน" required />
+            <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} placeholder="ยืนยันรหัสผ่าน" required />
+
+            <div className="name-container">
+              <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} placeholder="ชื่อ" required />
+              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} placeholder="นามสกุล" required />
+            </div>
+
+            <select name="gender" value={formData.gender} onChange={handleChange} required>
+              <option value="">เพศ</option>
+              <option value="male">ชาย</option>
+              <option value="female">หญิง</option>
             </select>
-            <select
-              name="district"
-              value={formData.district}
-              onChange={handleChange}
-            >
-              <option value="">อำเภอ</option>
-            </select>
-            <select
-              name="subdistrict"
-              value={formData.subdistrict}
-              onChange={handleChange}
-            >
-              <option value="">ตำบล</option>
-            </select>
-          </div>
-          <button className="register-button" onClick={handleRegister}>
-            ลงทะเบียน
-          </button>
-          <p className="login-link" onClick={handleGoBack}>
+
+            <input type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} placeholder="เบอร์โทรศัพท์" required />
+            <input type="text" name="interestedSports" value={formData.interestedSports} onChange={handleChange} placeholder="กีฬาที่สนใจ" />
+
+            <div className="location-container">
+              <select name="province" value={formData.province} onChange={handleChange} required>
+                <option value="">เลือกจังหวัด</option>
+                {Object.keys(locationData).map((province) => (
+                  <option key={province} value={province}>{province}</option>
+                ))}
+              </select>
+
+              <select name="district" value={formData.district} onChange={handleChange} required disabled={!districts.length}>
+                <option value="">เลือกอำเภอ</option>
+                {districts.map((district) => (
+                  <option key={district} value={district}>{district}</option>
+                ))}
+              </select>
+
+              <select name="subdistrict" value={formData.subdistrict} onChange={handleChange} required disabled={!subdistricts.length}>
+                <option value="">เลือกตำบล</option>
+                {subdistricts.map((subdistrict) => (
+                  <option key={subdistrict} value={subdistrict}>{subdistrict}</option>
+                ))}
+              </select>
+            </div>
+
+            <button type="submit" className="register-button">ลงทะเบียน</button>
+          </form>
+
+          <p className="login-link" onClick={() => navigate('/login')}>
             กลับไปลงชื่อเข้าใช้
           </p>
         </div>
