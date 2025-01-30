@@ -37,11 +37,13 @@
 
 /* โลโก้และ MatchWeb อยู่ตรงกลาง */
 .navbar-center {
+    min-width: 200px; /* กำหนดความกว้างขั้นต่ำให้โลโก้ */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-grow: 1;
-    margin-left: 60px;
+    white-space: nowrap;
 }
 
 .navbar-logo-img-homepage {
