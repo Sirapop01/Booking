@@ -5,11 +5,11 @@ body {
   padding: 0;
   background-color: #0b1120;
   color: #ffffff;
-  display: flex;
+  min-height: 100vh;
+  display: block; /* ใช้ block layout แทน flex */
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  overflow: hidden; /* ปิดการเลื่อนของหน้า */
+  overflow-x: hidden; /* ป้องกันการเลื่อนแนวนอน */
 }
 
 /* ====== Main Container ====== */
