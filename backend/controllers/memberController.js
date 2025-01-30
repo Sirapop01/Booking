@@ -11,6 +11,8 @@ exports.register = async (req, res) => {
       gender, phoneNumber, interestedSports, province, district, subdistrict,
     } = req.body;
 
+    const profileImage = req.file ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}` : null;
+
     // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
     if (password !== confirmPassword) {
       return res.status(400).json({ message: "รหัสผ่านกับยืนยันรหัสผ่านไม่ตรงกัน" });
@@ -37,6 +39,7 @@ exports.register = async (req, res) => {
       province,
       district,
       subdistrict,
+      profileImage,
       role : "user"
     });
 
@@ -147,4 +150,20 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+exports.updateProfileImage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!req.file) {
+      return res.status(400).json({ message: "ไม่มีไฟล์ที่อัปโหลด" });
+    }
 
+    const profileImage = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+
+    const updatedUser = await User.findByIdAndUpdate(id, { profileImage }, { new: true });
+
+    res.status(200).json({ message: "อัปโหลดรูปภาพสำเร็จ!", profileImage });
+  } catch (error) {
+    console.error("❌ Error updating profile image:", error);
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตรูปภาพ" });
+  }
+};
