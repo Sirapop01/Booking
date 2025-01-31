@@ -8,18 +8,18 @@ body1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* จัดให้อยู่ตรงกลางแนวตั้ง */
+    justify-content: center;
     min-height: 100vh; /* ให้เต็มหน้าจอ */
     margin: 0;
-    overflow : hidden;
+    overflow: hidden;
 }
 
 html {
     overflow: hidden; /* ปิดการเลื่อนของ HTML */
 }
 
-/* คอนเทนเนอร์หลักที่ครอบทุกอย่าง */
-.registration-success-container {
+/* คอนเทนเนอร์หลัก */
+.success-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -28,55 +28,56 @@ html {
     height: 100vh; /* ให้เต็มจอ */
 }
 
-/* ส่วนหัวของหน้า */
-.registration-header {
+/* ส่วนหัว */
+.success-header1 {
     text-align: center;
     width: 100%;
     margin-bottom: 20px;
-    top : -170px;
     position: relative;
+    top: -200px;
     background-color: #0d2235;
+    
 }
 
 /* กล่องโลโก้ */
-.registration-logo-container {
+.logo-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 5px;
 }
 
-/* โลโก้ */
-.registration-logo {
+.logo1 {
     width: 70px;
     height: 70px;
 }
 
-/* ชื่อเว็บไซต์ */
-.registration-title {
+.title1 {
     font-size: 28px;
     font-weight: bold;
     margin: 0;
 }
 
-/* เส้นคั่นใต้โลโก้ */
-.registration-divider {
+.divider1 {
     width: 90%;
     height: 2px;
     background-color: white;
     margin: 5px auto;
 }
 
-/* คำอธิบายใต้โลโก้ */
-.registration-subtitle {
+.subtitle1 {
     font-size: 16px;
-    opacity: 0.9;
     font-weight: bold;
+    opacity: 0.9;
     margin: 5px 0;
+    text-align: center;
+    right : -2px;
+    position: relative;
+    
 }
 
-/* กล่องแสดงผลการสมัครสำเร็จ */
-.registration-success-box {
+/* กล่องแจ้งเตือนสำเร็จ */
+.success-box {
     background: white;
     color: black;
     padding: 40px;
@@ -85,12 +86,11 @@ html {
     text-align: center;
     max-width: 600px;
     width: 95%;
-    top: -40px;
     position: relative;
+    top: -40px;
 }
 
-/* ไอคอนแจ้งเตือนสำเร็จ */
-.registration-success-icon {
+.success-icon {
     background: #28a745;
     display: inline-block;
     padding: 20px;
@@ -98,27 +98,25 @@ html {
     margin-bottom: 15px;
 }
 
-.registration-success-icon svg {
+.success-icon svg {
     width: 60px;
     height: 60px;
     color: white;
 }
 
-/* ข้อความแจ้งเตือน */
-.registration-success-title {
+.success-title {
     font-size: 28px;
     font-weight: bold;
     margin-bottom: 15px;
 }
 
-/* คำอธิบายผลการสมัคร */
-.registration-success-message {
+.success-message {
     font-size: 18px;
     color: #28a745;
 }
 
 /* ปุ่มยืนยัน */
-.registration-confirm-button {
+.confirm-button {
     background: #28a745;
     color: white;
     padding: 14px 30px;
@@ -131,7 +129,7 @@ html {
     transition: background 0.3s ease, transform 0.2s;
 }
 
-.registration-confirm-button:hover {
+.confirm-button:hover {
     background: #218838;
     transform: scale(1.05);
 }

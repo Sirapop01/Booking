@@ -58,15 +58,15 @@ const RegistrationForm = () => {
   };
 
   return (
-    <div className="registration-container">
-      <header className="registration-header">
+    <div className="registration-container1">
+      <header className="registration-header1">
         <h1>MatchWeb</h1>
         <p>ระบบลงทะเบียนสำหรับผู้ประกอบการ</p>
       </header>
-      <main className="registration-content">
+      <main className="registration-content1">
         <h2>ยืนยันข้อมูลการสมัครสมาชิกสำหรับผู้ประกอบการ</h2>
         <p>กรุณากรอกข้อมูลและตรวจสอบข้อมูลให้ครบถ้วน</p>
-        <form className="registration-form" onSubmit={handleSubmit}>
+        <form className="registration-form1" onSubmit={handleSubmit}>
           <div className="form-group">
             <label>
               เลขบัตรประชาชน *

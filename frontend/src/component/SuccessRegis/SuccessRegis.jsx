@@ -4,24 +4,24 @@ import logo from "../assets/logo.png"; // ตรวจสอบตำแหน�
 
 const RegistrationSuccess = () => {
   return (
-    <div className="registration-success-container">
+    <div className="success-container">
       {/* Header Section */}
-      <header className="registration-header">
-        <div className="registration-logo-container">
+      <header className="success-header1">
+        <div className="logo-container">
           {/* Logo Image */}
-          <img src={logo} alt="MatchWeb Logo" className="registration-logo" />
+          <img src={logo} alt="MatchWeb Logo" className="logo1" />
           {/* Logo Text */}
-          <h1 className="registration-title">MatchWeb</h1>
+          <h1 className="title1">MatchWeb</h1>
         </div>
         {/* Divider */}
-        <div className="registration-divider"></div>
+        <div className="divider1"></div>
         {/* Subtitle */}
-        <p className="registration-subtitle">ระบบลงทะเบียนสำหรับผู้ประกอบการ</p>
+        <p className="subtitle1">ระบบลงทะเบียนสำหรับผู้ประกอบการ</p>
       </header>
 
       {/* Success Card */}
-      <div className="registration-success-box">
-        <div className="registration-success-icon">
+      <div className="success-box">
+        <div className="success-icon">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -36,11 +36,11 @@ const RegistrationSuccess = () => {
             />
           </svg>
         </div>
-        <h2 className="registration-success-title">การลงทะเบียนเสร็จสมบูรณ์</h2>
-        <p className="registration-success-message">
+        <h2 className="success-title">การลงทะเบียนเสร็จสมบูรณ์</h2>
+        <p className="success-message">
           การสมัครสำหรับบัญชีผู้ใช้ผู้ประกอบการของท่านได้ถูกส่งเรียบร้อยแล้ว
         </p>
-        <button className="registration-confirm-button">ตกลง</button>
+        <button className="confirm-button">ตกลง</button>
       </div>
     </div>
   );
