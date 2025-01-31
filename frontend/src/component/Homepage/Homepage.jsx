@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '../Navbar/Navbar'; // นำ Navbar มาใช้
 import './Homepage.css';
+import { FaSearch } from "react-icons/fa";
 
 const Homepage = () => {
   return (
@@ -9,6 +10,7 @@ const Homepage = () => {
       <Navbar />
 
       {/* ส่วนค้นหาสถานที่ วันเวลา จำนวน */}
+      
       <div className="search-section">
         <input 
           type="text" 
