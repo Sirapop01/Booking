@@ -1,81 +1,89 @@
 @import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
 
 
-/*---------------- Search Section ----------------*/
 .search-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 900px;
-    margin: 40px auto;
-    position: relative;
-  }
-  
-  .search-input {
-    width: 100%;
-    padding: 12px 12px 12px 40px; 
-    font-size: 18px;
-    border-radius: 10px;
-    border: 2px solid #ccc;
-    margin-bottom: 20px;
-    color: #000; /* เปลี่ยนสีข้อความเป็นสีดำ */
-  }
-  
-  .search-input::placeholder {
-    color: #3b3b3b !important; /* บังคับให้ placeholder เป็นสีดำ */
-    opacity: 1; /* บาง browser อาจลด opacity ของ placeholder */
-  }
-
-  .date-time-container {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 10px;
-    align-items: center;
-    justify-content: right;
-    width: 47.5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 900px;
+  margin: 40px auto;
+  position: relative;
 }
 
-/* ปรับให้ช่องเลือกวันที่เล็กลง */
+/* ปรับตำแหน่งให้ช่องค้นหาอยู่ตรงกลาง */
+.search-input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: 2px solid #ccc;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+.search-input::placeholder {
+  color: #3b3b3b !important;
+  opacity: 1;
+}
+
+/* จัดตำแหน่ง date-time-container ให้อยู่ชิดซ้ายเท่ากับ search-input */
+.date-time-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start; /* ชิดซ้าย */
+  max-width: 900px; /* กำหนดความกว้างสูงสุดให้เท่ากับ .search-section */
+  width: 100%; /* ป้องกันการยืดของช่อง */
+}
+
 .date-input {
-    width: 140px; /* ลดขนาดลงจาก 180px เป็น 140px */
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    margin-bottom: 8px;
+  width: 140px !important; /* กำหนดขนาดตายตัว */
+  max-width: 140px; /* ป้องกันการขยาย */
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  margin-bottom: 8px;
 }
 
-/* ช่องเลือกเวลายังคงขนาดเดิม */
 .time-input {
-    width: 180px;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    margin-bottom: 8px;
+  width: 180px; /* คงขนาดของช่องเวลา */
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  margin-bottom: 8px;
 }
+
+/* ป้องกันการขยายของ input */
+.date-input, .time-input {
+  flex-shrink: 0; /* ป้องกันการขยาย */
+}
+
 
 /* ปรับไอคอน dropdown ให้ดูดีขึ้น */
 .date-input::-webkit-calendar-picker-indicator, 
 .time-input::-webkit-calendar-picker-indicator {
-    filter: invert(0.5);
-    cursor: pointer;
+  filter: invert(0.5);
+  cursor: pointer;
 }
 
 /* ปรับขนาดของ dropdown จำนวนคน */
 .people-select-value {
-    width: 150px;
-    padding: 17px;
-    font-size: 16px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    appearance: none;
-    background-color: #fff;
-    color: #000;
-    margin-bottom: 1px;
+  width: 150px;
+  padding: 17px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  appearance: none;
+  background-color: #fff;
+  color: #000;
+  margin-bottom: 1px;
 }
+
 
 
 /* ลดขนาด radio button และจัดข้อความไปทางขวา */
