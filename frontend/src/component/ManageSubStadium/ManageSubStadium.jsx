@@ -17,18 +17,18 @@ import addIcon from "../assets/icons/add.png"; // ปุ่มเพิ่ม
 function ManageSubStadium() {
   const navigate = useNavigate();
   const [sports, setSports] = useState([
-    { id: 1, name: "บาสเกตบอล", icon: basketballIcon, link: "/substadium/basketball" },
-    { id: 2, name: "ฟุตบอล", icon: footballIcon, link: "/substadium/football" },
-    { id: 3, name: "แบดมินตัน", icon: badmintonIcon, link: "/substadium/badminton" },
-    { id: 4, name: "เทเบิล เทนนิส", icon: tableTennisIcon, link: "/substadium/tabletennis" },
-    { id: 5, name: "เทนนิส", icon: tennisIcon, link: "/substadium/tennis" },
-    { id: 6, name: "กอล์ฟ", icon: golfIcon, link: "/substadium/golf" },
-    { id: 7, name: "วอลเลย์บอล", icon: volleyballIcon, link: "/substadium/volleyball" },
+    { id: 1, name: "บาสเกตบอล", icon: basketballIcon },
+    { id: 2, name: "ฟุตบอล", icon: footballIcon },
+    { id: 3, name: "แบดมินตัน", icon: badmintonIcon },
+    { id: 4, name: "เทเบิล เทนนิส", icon: tableTennisIcon },
+    { id: 5, name: "เทนนิส", icon: tennisIcon },
+    { id: 6, name: "กอล์ฟ", icon: golfIcon },
+    { id: 7, name: "วอลเลย์บอล", icon: volleyballIcon },
   ]);
 
   // State สำหรับป็อปอัพ
   const [showPopup, setShowPopup] = useState(false);
-  const [newSport, setNewSport] = useState({ name: "", icon: null, link: "" });
+  const [newSport, setNewSport] = useState({ name: "", icon: null });
 
   // ฟังก์ชันเปิดปิดป็อปอัพ
   const togglePopup = () => {
@@ -46,8 +46,8 @@ function ManageSubStadium() {
   // ฟังก์ชันบันทึกประเภทกีฬา
   const addNewSport = () => {
     if (newSport.name && newSport.icon) {
-      setSports([...sports, { id: sports.length + 1, ...newSport, link: `/substadium/${newSport.name}` }]);
-      setNewSport({ name: "", icon: null, link: "" });
+      setSports([...sports, { id: sports.length + 1, ...newSport }]);
+      setNewSport({ name: "", icon: null });
       togglePopup();
     }
   };
@@ -70,7 +70,11 @@ function ManageSubStadium() {
       {/* กรอบเลือกประเภทกีฬา */}
       <div className="sports-container">
         {sports.map((sport) => (
-          <div key={sport.id} className="sport-card" onClick={() => navigate(sport.link)}>
+          <div
+            key={sport.id}
+            className="sport-card"
+            onClick={() => navigate("/manage-substadium-details", { state: { sport } })}
+          >
             <img src={sport.icon} alt={sport.name} className="sport-icon" />
             <p>{sport.name}</p>
           </div>

@@ -1,9 +1,13 @@
 /*jsx managesubstadiumdetail*/
 import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./ManageSubStadiumDetails.css";
 import homeLogo from "../assets/logoalt.png";
 
 function ManageSubStadiumDetails() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const sport = location.state?.sport;
   const [courts, setCourts] = useState([
     { id: 1, name: "Court 1", status: "เปิด", owner: "Wichai Arena", phone: "0984230116", description: "", openTime: "13:00", closeTime: "19:00", price: "200 B", image: null },
     { id: 2, name: "Court 2", status: "เปิด", owner: "Wichai Arena", phone: "0984230116", description: "", openTime: "13:00", closeTime: "19:00", price: "200 B", image: null },
