@@ -69,46 +69,41 @@ const RegistrationForm = () => {
         <form className="registration-form1" onSubmit={handleSubmit}>
           <div className="form-group">
             <label>
-              เลขบัตรประชาชน *
+              เลขบัตรประชาชน *  {errors.idCard && <span className="error-message">{errors.idCard}</span>}
               <input type="text" name="idCard" value={formData.idCard} onChange={handleChange} />
-              {errors.idCard && <span className="error-message">{errors.idCard}</span>}
+             
             </label>
 
             <label>
-              ชื่อจริง *
+              ชื่อจริง * {errors.firstName && <span className="error-message">{errors.firstName}</span>}
               <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} />
-              {errors.firstName && <span className="error-message">{errors.firstName}</span>}
             </label>
 
             <label>
-              นามสกุล *
+              นามสกุล * {errors.lastName && <span className="error-message">{errors.lastName}</span>}
               <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
-              {errors.lastName && <span className="error-message">{errors.lastName}</span>}
             </label>
 
             <label>
-              วัน/เดือน/ปีเกิด *
+              วัน/เดือน/ปีเกิด * {errors.dob && <span className="error-message">{errors.dob}</span>}
               <input type="date" name="dob" value={formData.dob} onChange={handleChange} />
-              {errors.dob && <span className="error-message">{errors.dob}</span>}
             </label>
           </div>
 
           <div className="form-group">
             <label>
-              เบอร์โทรศัพท์มือถือ *
+              เบอร์โทรศัพท์มือถือ * {errors.phoneNumber && <span className="error-message">{errors.phoneNumber}</span>}
               <input type="text" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
-              {errors.phoneNumber && <span className="error-message">{errors.phoneNumber}</span>}
             </label>
 
             <label>
-              อีเมล *
+              อีเมล * {errors.email && <span className="error-message">{errors.email}</span>}
               <input type="email" name="email" value={formData.email} onChange={handleChange} />
-              {errors.email && <span className="error-message">{errors.email}</span>}
             </label>
 
             {/* รหัสผ่าน */}
             <label className="password-label">
-              รหัสผ่าน *
+              รหัสผ่าน * {errors.password && <span className="error-message">{errors.password}</span>}
             </label>
             <div className="password-container">
               <input
@@ -125,13 +120,12 @@ const RegistrationForm = () => {
                 {showPassword ? "ซ่อน" : "เเสดง"}
               </button>
             </div>
-            {errors.password && <span className="error-message">{errors.password}</span>}
+            
 
             {/* ยืนยันรหัสผ่าน */}
             <label>
-              ยืนยันรหัสผ่าน *
+              ยืนยันรหัสผ่าน * {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
               <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} />
-              {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
             </label>
           </div>
 
