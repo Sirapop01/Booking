@@ -4,13 +4,20 @@ import logo from '../assets/logo.png';
 
 const NavbarRegis = () => {
     return (
-        <div className="navbar">
-            <div className="navbar-container">
-                <img src={logo} alt="MatchWeb Logo" className="navbar-logo" />
-                <h1 className="navbar-title">MatchWeb</h1>
-                <div className="navbar-divider"></div> {/* เส้นคั่นกลาง */}
-                <p className="navbar-subtitle">การลงทะเบียนสำหรับผู้ประกอบการ</p>
+        <div className="navbar111">
+            <div className="navbar-container111">
+                <div className="navbar-left111">
+                    <img src={logo} alt="MatchWeb Logo" className="navbar-logo" />
+                    <h1 className="navbar-title111">MatchWeb</h1>
+                </div>
+                
+                <div className="navbar-right111">
+                    <p className="navbar-subtitle111">เพิ่มสนามสำหรับผู้ประกอบการ</p>
+                </div>
             </div>
+
+            {/* เส้นคั่นกลางแนวนอน */}
+            <div className="navbar11-divider"></div>
         </div>
     );
 };

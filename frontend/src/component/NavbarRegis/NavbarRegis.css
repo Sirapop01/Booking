@@ -1,47 +1,73 @@
-.navbar {
-    background: #0b2a4a; /* ✅ พื้นหลังสีน้ำเงินเข้ม */
-    padding: 6px 0; /* ✅ ลด padding ด้านบน-ล่างให้เล็กลง */
-    text-align: center;
-    position: relative;
-    color: white;
-    width: 100%; /* ✅ กว้างเต็มจอ */
-    height: 120px; /* ✅ ปรับความสูงของ Navbar ให้แคบลง */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* ✅ เพิ่มเงาให้ Navbar */
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+
+/* แถบเมนูหลัก */
+.navbar111 {
+    background-color: #0C2340; /* พื้นหลังสีน้ำเงินเข้ม */
+    color: white; /* ข้อความสีขาว */
+    padding: 15px 20px; /* ระยะห่างรอบขอบ */
+    width: 100%; /* เต็มความกว้าง */
+    height: 120px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-.navbar-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 800px; /* ✅ จำกัดความกว้างของเนื้อหา */
-    margin: 0 auto;
+/* คอนเทนเนอร์หลัก */
+.navbar-container111 {
+    display: flex; /* ใช้ Flexbox */
+    justify-content: space-between; /* ให้ด้านซ้าย-ขวาอยู่ห่างกัน */
+    align-items: center; /* จัดให้อยู่ตรงกลางแนวตั้ง */
+    width: 100%;
 }
 
+/* กลุ่มด้านซ้าย: โลโก้ + ชื่อ */
+.navbar-left111 {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* ระยะห่างระหว่างโลโก้กับข้อความ */
+}
+
+/* โลโก้ */
 .navbar-logo {
-    width: 40px; /* ✅ ลดขนาดโลโก้ให้พอดีกับ Navbar */
+    width: 70px; /* ปรับขนาดโลโก้ */
     height: auto;
-    margin-bottom: 2px;
+    position: relative;
+    right : -920px;
+    top : -5px;
 }
 
-.navbar-title {
-    font-size: 20px; /* ✅ ลดขนาดตัวอักษร */
+/* ชื่อ MatchWeb */
+.navbar-title111 {
+    font-size: 30px;
     font-weight: bold;
-    margin-bottom: 2px;
+    margin: 0;
+    position: relative;
+    right : -920px;
+    font-family: 'Inder', sans-serif;
+
 }
 
-.navbar-divider {
-    width: 500%; /* ✅ ทำให้เส้นคั่นเล็กลง */
-    height: 1px;
-    background-color: white;
-    margin: 3px 0;
-    border-radius: 1px;
+/* กลุ่มด้านขวา: ข้อความ */
+.navbar-right111 {
+    text-align: right;
+    font-family: 'Kanit', sans-serif;
 }
 
-.navbar-subtitle {
-    font-size: 15px; /* ✅ ลดขนาดฟอนต์ของ subtitle */
-    font-weight: 500;
-    opacity: 0.85;
+/* ข้อความด้านขวา */
+.navbar-subtitle111 {
+    font-size: 20px;
+    margin: 0;
+    position: relative;
+    left : -950px;
+    top : 75px;
+    font-family: 'Kanit', sans-serif;
+
+}
+
+.navbar11-divider {
+    width: 40%; /* ยาวเต็มบรรทัด */
+    height: 2px; /* ความสูงของเส้น */
+    background-color: white; /* สีของเส้น */
+    margin-top: 8px; /* ระยะห่างจากเนื้อหาด้านบน */
+    position: relative;
+    right: -660px;
 }
