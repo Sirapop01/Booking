@@ -1,5 +1,5 @@
-
-/* ====== Global Styles ====== */
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 body {
   font-family: 'Arial', sans-serif;
   margin: 0;
@@ -16,7 +16,7 @@ body {
 /* ====== Main Container (จัดให้อยู่ตรงกลาง) ====== */
 .registration-container1 {
   position:relative;
-  top:100px;
+  top:85px;
   width: 90%; /* ลดขนาดลงให้สมดุล */
   max-width: 1000px; /* กำหนดขนาดสูงสุดให้ไม่กว้างเกินไป */
   background-color: #ffffff;
@@ -29,17 +29,21 @@ body {
   align-items: center;
   justify-content: center; /* จัดเนื้อหาให้อยู่ตรงกลาง */
   margin: auto; /* ทำให้ฟอร์มอยู่กึ่งกลางของหน้า */
+  
 }
 
 
 /* ====== Header ====== */
 .registration-header1 {
   text-align: center;
-  background-color: #1c2536;
+  background-color:#1c2536;
   border-radius: 15px 15px 0 0;
   color: #ffffff;
   width: 100%;
   height: 120px; /* หรือกำหนดเป็น fixed height เช่น 120px */
+  font-family: 'Inder', sans-serif;
+  top : -10px;
+  position: relative;
 }
 
 .registration-header h1{
@@ -52,6 +56,10 @@ body {
   border-radius: 0 0 0 0;
   color: #ffffff;
   width: 100%;
+  
+  
+  
+  
 }
 
 .registration-header p{
@@ -62,6 +70,7 @@ body {
   margin-top: 0px;
   margin-bottom: 15px; 
   color: #ffffff; 
+  font-family: 'Kanit', sans-serif;
 }
 
 
@@ -73,6 +82,7 @@ body {
   margin-bottom: 5px; /* ลดระยะห่างด้านล่างของหัวข้อ */
  position: relative;
  top:-50px;
+ font-family: 'Kanit', sans-serif;
 }
 
 /* ====== Subtitle (ข้อความอธิบาย) ====== */
@@ -84,6 +94,7 @@ body {
   margin-top: 0px; /* ลดระยะห่างด้านบนของข้อความ */
   margin-bottom: 15px; /* ปรับระยะห่างด้านล่าง */
   color: #666; /* ปรับสีข้อความให้อ่านง่ายขึ้น */
+  font-family: 'Kanit', sans-serif;
 }
 
 /* ====== Content ====== */
@@ -94,6 +105,7 @@ body {
   flex-direction: column;
   align-items: center;
   flex-grow: 1;
+  font-family: 'Kanit', sans-serif;
 }
 
 /* ====== Form Layout (2 Columns) ====== */
@@ -104,6 +116,7 @@ body {
   gap: 20px;
   padding: 10px;
   justify-content: center;
+  
 }
 
 .form-group {
@@ -231,4 +244,7 @@ input[type="checkbox"] {
   .submit-button-container {
     margin-top: 0px; /* ปรับให้ปุ่มขยับขึ้น */
   }
+  
+  
+
 }

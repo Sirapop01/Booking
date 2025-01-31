@@ -1,50 +1,73 @@
-/* พื้นฐานของหน้า */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #0a2540;
-    color: #ffffff;
-    margin: 0;
-    padding: 0;
-  }
-  
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+
   /* รูปแบบของฟอร์ม */
-  .form-container {
+  .form-container099 {
     position: relative;
-    top: 150px;
+    top: 15px;
     max-width: 1200px;
     width: 1000px;
     margin: 50px auto;
     background-color: #ffffff;
     color: #000000;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
+
   
-  .header {
+  
+  .form-header099 {
+    background-color: #1c2536; /* พื้นหลังสีน้ำเงินเข้ม */
+    color: rgb(255, 255, 255); /* ข้อความสีขาว */
+    text-align: center;
+    padding: 20px;
+    border-radius: 15px 20px 0 0; /* ทำให้มีมุมโค้งด้านบน */
+    margin: 12px 12px 12px 12px; /* ป้องกันการมีระยะห่างของพื้นหลัง */
+    height: 80px;
+    
+}
+  .header099 {
     text-align: center;
     margin-bottom: 20px;
+    position: relative;
+    top : -40px;
   }
+
+
+  .logo099 {
+    width: 40px; /* ปรับขนาดโลโก้ */
+    height: auto;
+    margin-bottom: 10px;
+    position: relative;
+    left : -100px;
+    top : 50px;
+}
   
-  .header h1 {
-    font-size: 24px;
+  .header099 h1 {
+    font-size: 30px;
     margin: 0;
+    font-family: 'Inder', sans-serif;
   }
   
-  .header p {
+  .header099 p {
     font-size: 16px;
     margin: 5px 0 0;
+    position: relative;
+    top : 8px;
     color: #ffffff;
+    left : -17px;
+    font-family: 'Kanit', sans-serif;
   }
   
   /* เเก้ขนาดช่อง 3 ช่อง*/
-  .form-content {
+  .form-content099 {
     display: grid;
-    grid-template-columns: 2fr 2fr 2fr;
+    grid-template-columns: 1fr 2fr 2fr;
     gap: 20px;
   }
   
-  .form-section {
+  .form-section099 {
     background-color: #f9f9f9;
     padding: 15px;
     width: 90%;
@@ -52,7 +75,7 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
-  .image-section .image-upload {
+  .image-section099 .image-upload099 {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -61,28 +84,30 @@ body {
     border-radius: 8px;
     font-size: 48px;
     color: #aaaaaa;
+    font-family: 'Kanit', sans-serif;
   }
   
   /* การจัดการรูปภาพ */
-  .uploaded-images {
+  .uploaded-images099 {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-top: 15px;
   }
   
-  .uploaded-image-container {
+  .uploaded-image-container099 {
     position: relative;
   }
   
-  .uploaded-image {
+  .uploaded-image099 {
     max-width: 100px;
     max-height: 100px;
     border-radius: 8px;
     border: 1px solid #ddd;
+    
   }
   
-  .remove-image-button {
+  .remove-image-button099 {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -97,15 +122,17 @@ body {
     align-items: center;
     cursor: pointer;
     font-size: 20px;
+    font-family: 'Kanit', sans-serif;
   }
   
   .remove-image-button:hover {
     background-color: darkred;
   }
   
-  .image-upload span {
+  .image-upload099 span {
     font-size: 16px;
     color: #166CBF;
+    font-family: 'Kanit', sans-serif;
   }
   
   /* ข้อความแจ้งเตือน */
@@ -113,33 +140,37 @@ body {
     color: red;
     font-size: 14px;
     margin-top: 10px;
+    font-family: 'Kanit', sans-serif;
   }
   
   /* ฟิลด์อินพุต */
-  .field-section label {
+  .field-section099 label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
     color: #333333;
+    font-family: 'Kanit', sans-serif;
   }
   
-  .field-section input,
-  .field-section textarea {
+  .field-section099 input,
+  .field-section099 textarea {
     width: 90%;
     padding: 10px;
     margin-bottom: 15px;
     border: 1px solid #cccccc;
     border-radius: 4px;
     font-size: 14px;
+    font-family: 'Kanit', sans-serif;
   }
   
-  .field-section textarea {
+  .field-section099 textarea {
     resize: none;
     height: 80px;
     width: 90%;
+    
   }
   
-  .large-textarea {
+  .large-textarea099 {
     width: 90%;
     position: relative;
     top: 10px;
@@ -149,34 +180,40 @@ body {
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 14px;
+    font-family: 'Kanit', sans-serif;
   }
   
   /* ส่วนเพิ่มเติม */
-  .additional-section .checkbox-group {
+  .additional-section099 .checkbox-group099 {
     display: grid;
     position: relative;
     top: 8px;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-bottom: 15px;
+    font-family: 'Kanit', sans-serif;
   }
   
-  .additional-section .checkbox-group div {
+  .additional-section099 .checkbox-group099 div {
     display: flex;
     align-items: center;
+    font-family: 'Kanit', sans-serif;
   }
   
-  .additional-section input[type="checkbox"] {
+  .additional-section099 input[type="checkbox"] {
     margin-right: 8px;
+    font-family: 'Kanit', sans-serif;
   }
   
   /* ฟุตเตอร์ฟอร์ม */
-  .form-footer {
+  .form-footer099 {
     text-align: center;
     margin-top: 20px;
+    
+    
   }
   
-  .form-footer button {
+  .form-footer099 button {
     background-color: #007bff;
     color: #ffffff;
     padding: 10px 20px;
@@ -184,8 +221,15 @@ body {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-family: 'Kanit', sans-serif;
   }
   
-  .form-footer button:hover {
+  .form-footer099 button:hover {
     background-color: #0056b3;
+    
+  }
+
+  .form-section099  {
+    font-family: 'Kanit', sans-serif;
+    
   }
