@@ -3,7 +3,7 @@ body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #0b1120;
+  background: linear-gradient(to bottom, #0C2C4B, #00518E);
   color: #ffffff;
   min-height: 100vh;
   display: block; /* ใช้ block layout แทน flex */
@@ -14,9 +14,12 @@ body {
 
 /* ====== Main Container ====== */
 .registration-container {
+  position: relative;
+  left:320px;
+  top:20px;
   width: 100%;
   max-width: 1100px;
-  height: 90vh; /* ป้องกันการเลื่อน */
+  height: 87vh; /* ป้องกันการเลื่อน */
   background-color: #ffffff;
   color: #000000;
   padding: 30px;
