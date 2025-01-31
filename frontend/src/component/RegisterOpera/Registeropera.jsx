@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom"; 
 import "./Registeropera.css";
+import logo from '../assets/logo.png';
 
 
 const RegistrationForm = () => {
@@ -63,10 +64,17 @@ const RegistrationForm = () => {
      
 
       <div className="registration-container1">
-        <header className="registration-header1">
-          <h1>MatchWeb</h1>
-          <p>ระบบลงทะเบียนสำหรับผู้ประกอบการ</p>
-        </header>
+      <header className="registration-header1">
+         <h1>
+          <img 
+             src={logo} 
+             alt="MatchWeb Logo" 
+             style={{ height: "40px", verticalAlign: "middle", marginRight: "10px" }} 
+           />
+           MatchWeb
+        </h1>
+       <p>ระบบลงทะเบียนสำหรับผู้ประกอบการ</p>
+      </header>
         <main className="registration-content1">
           <h2>ยืนยันข้อมูลการสมัครสมาชิกสำหรับผู้ประกอบการ</h2>
           <p>กรุณากรอกข้อมูลและตรวจสอบข้อมูลให้ครบถ้วน</p>
