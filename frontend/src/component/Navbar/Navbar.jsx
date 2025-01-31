@@ -2,77 +2,106 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logo from '../assets/logo.png';
+import { jwtDecode } from 'jwt-decode';
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [decodedToken, setDecodedToken] = useState(null);
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      setIsLoggedIn(true);
-      setUsername(user);
+    // ดึง Token จาก Local Storage
+    const storedToken = localStorage.getItem("token");
+
+    if (storedToken) {
+      try {
+        // ถอดรหัส JWT Token
+        const decoded = jwtDecode(storedToken);
+        console.log("✅ Token Decoded:", decoded);
+        setDecodedToken(decoded);
+      } catch (error) {
+        console.error("❌ Error decoding token:", error);
+        setDecodedToken(null);
+      }
     }
   }, []);
 
-  const handleLoginClick = () => {
-    navigate('/login');
-  };
+  const isLoggedIn = !!decodedToken;
 
-  const handleRegisterClick = () => {
-    navigate('/RegisterChoice');
-  };
-
-  const handlePromotionClick = () => {
-    navigate('/promotion');
-  };
-
-  const handleFavoritesClick = () => {
-    navigate('/favorites');
-  };
-
+    // ฟังก์ชัน Logout พร้อมป๊อปอัปยืนยัน
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    setIsLoggedIn(false);
-    setUsername('');
-    navigate('/');
+    setShowLogoutPopup(true); // แสดงป๊อปอัปยืนยัน
+  };
+
+  const confirmLogout = () => {
+    localStorage.removeItem('token'); // ลบ Token ออกจาก LocalStorage
+    setDecodedToken(null); // รีเซ็ต Token ใน State
+    setIsDropdownOpen(false); // ปิด Dropdown
+    setShowLogoutPopup(false); // ปิดป๊อปอัป
+    navigate('/'); // Redirect ไปหน้าแรก
   };
 
   return (
-    <nav className="navbar-homepage">
-      <div className="navbar-left">
-        {isLoggedIn && (
-          <button className="navbar-button-homepage" onClick={handleFavoritesClick}>
-            รายการโปรด
+    <>
+      <nav className="navbar-homepage">
+        <div className="navbar-left">
+          <button className="navbar-button-homepage" onClick={() => navigate('/promotion')}>
+            โปรโมชั่น
           </button>
-        )}
-        <button className="navbar-button-homepage" onClick={handlePromotionClick}>
-          โปรโมชั่น
-        </button>
-      </div>
-      <div className="navbar-center">
-        <img src={logo} alt="logo" className="navbar-logo-img-homepage" />
-        <span className="navbar-title">MatchWeb</span>
-      </div>
-      <div className="navbar-links">
-        {isLoggedIn ? (
-          <div className="navbar-user">
-            <span className="username">{username}</span>
-            <button className="menu-icon" onClick={handleLogout}>☰</button>
+        </div>
+
+        <div className="navbar-center">
+          <img src={logo} alt="logo" className="navbar-logo-img-homepage" />
+          <span className="navbar-title">MatchWeb</span>
+        </div>
+
+        <div className="navbar-right">
+          {!isLoggedIn ? (
+            <div className="navbar-links"> {/* ✅ ตรวจสอบว่า div นี้ครอบปุ่มทั้งสองปุ่ม */}
+              <button className="navbar-link" onClick={() => navigate('/login')}>
+                เข้าสู่ระบบ
+              </button>
+              <button className="navbar-button" onClick={() => navigate('/RegisterChoice')}>
+                ลงทะเบียน
+              </button>
+            </div>
+          ) : (
+            <div className="dropdown">
+              <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                ☰
+              </button>
+              {isDropdownOpen && (
+                <div className="dropdown-menu">
+                  <button onClick={() => navigate('/profile')}>บัญชี</button>
+                  <button onClick={() => navigate('/history')}>ประวัติการจอง</button>
+                  <button onClick={() => navigate('/favorites')}>รายการโปรด</button>
+                  <button onClick={handleLogout}>ลงชื่อออก</button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </nav>
+
+      {/* ✅ Popup Logout กลางจอ */}
+      {showLogoutPopup && (
+        <div className="logout-popup-overlay" onClick={() => setShowLogoutPopup(false)}>
+          <div className="logout-popup" onClick={(e) => e.stopPropagation()}>
+            <p>คุณต้องการออกจากระบบหรือไม่?</p>
+            <div className="logout-buttons">
+              <button className="confirm-btn" onClick={confirmLogout}>ยืนยัน</button>
+              <button className="cancel-btn" onClick={() => setShowLogoutPopup(false)}>ยกเลิก</button>
+            </div>
           </div>
-        ) : (
-          <>
-            <button className="navbar-link" onClick={handleLoginClick}>
-              เข้าสู่ระบบ
-            </button>
-            <button className="navbar-button" onClick={handleRegisterClick}>
-              ลงทะเบียน
-            </button>
-          </>
-        )}
-      </div>
-    </nav>
+        </div>
+
+        
+      )}
+    </>
+
+    
   );
 };
 
