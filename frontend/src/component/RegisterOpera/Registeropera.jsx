@@ -74,6 +74,7 @@ const RegistrationForm = () => {
            MatchWeb
         </h1>
        <p>ระบบลงทะเบียนสำหรับผู้ประกอบการ</p>
+       
       </header>
         <main className="registration-content1">
           <h2>ยืนยันข้อมูลการสมัครสมาชิกสำหรับผู้ประกอบการ</h2>

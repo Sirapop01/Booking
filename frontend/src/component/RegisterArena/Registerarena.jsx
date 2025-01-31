@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./Registerarena.css";
+import logo from '../assets/logo.png';
 
 const MatchWebForm = () => {
   const [images, setImages] = useState([]);
@@ -16,15 +17,11 @@ const MatchWebForm = () => {
 
   const handleImageUpload = (event) => {
     const files = Array.from(event.target.files);
-
-    // ตรวจสอบว่ารูปภาพรวมทั้งหมดเกิน 4 หรือไม่
     if (images.length + files.length > 4) {
       setErrorMessage("สามารถใส่รูปได้สูงสุด 4 รูป");
       return;
     }
-
-    setErrorMessage(""); // ล้างข้อความข้อผิดพลาดเมื่อเงื่อนไขถูกต้อง
-
+    setErrorMessage("");
     const newImages = files.map((file) => {
       return new Promise((resolve) => {
         const reader = new FileReader();
@@ -32,28 +29,22 @@ const MatchWebForm = () => {
         reader.readAsDataURL(file);
       });
     });
-
     Promise.all(newImages).then((results) => {
       setImages((prevImages) => [...prevImages, ...results]);
     });
   };
 
-  // ฟังก์ชันลบรูปภาพ
   const handleRemoveImage = (index) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
-  // ฟังก์ชันตรวจสอบข้อมูลในฟอร์ม
   const handleSubmit = () => {
     const { fieldName, ownerName, phone, workingHours, location } = formData;
-
-    // ตรวจสอบว่าฟิลด์ที่จำเป็นครบถ้วนและมีรูปภาพอย่างน้อย 1 รูป
     if (!fieldName || !ownerName || !phone || !workingHours || !location || images.length < 1) {
       setFormErrors("กรุณากรอกข้อมูลที่จำเป็น");
       return;
     }
-
-    setFormErrors(""); // ล้างข้อความข้อผิดพลาดเมื่อฟอร์มถูกต้อง
+    setFormErrors("");
     alert("ดำเนินการสำเร็จ!");
   };
 
@@ -66,15 +57,20 @@ const MatchWebForm = () => {
   };
 
   return (
-    <div className="form-container">
-      <header className="header">
-        <h1>MatchWeb</h1>
-        <p>เพิ่มสนามสำหรับผู้ประกอบการ</p>
-      </header>
+    <div className="form-container099">
+      {/* ✅ ส่วนหัวที่ครอบด้วยสีน้ำเงิน พร้อมโลโก้ */}
+      <div className="form-header099">
+        <div className="header099">
+          <img src={logo} alt="MatchWeb Logo" className="logo099" />
+          <h1>MatchWeb</h1>
+          <p>เพิ่มสนามสำหรับผู้ประกอบการ</p>
+        </div>
+      </div>
 
-      <div className="form-content">
-        <div className="form-section image-section">
-          <div className="image-upload">
+      <div className="form-content099">
+        {/* ✅ ส่วนอัปโหลดรูปภาพ */}
+        <div className="form-section099 image-section099">
+          <div className="image-upload099">
             {images.length < 4 ? (
               <label htmlFor="imageInput">
                 <span>เพิ่มรูป {images.length}/4</span>
@@ -91,16 +87,16 @@ const MatchWebForm = () => {
               style={{ display: "none" }}
             />
           </div>
-          <div className="uploaded-images">
+          <div className="uploaded-images099">
             {images.map((image, index) => (
               <div key={index} className="uploaded-image-container">
                 <img
                   src={image}
                   alt={`Uploaded ${index}`}
-                  className="uploaded-image"
+                  className="uploaded-image099"
                 />
                 <button
-                  className="remove-image-button"
+                  className="remove-image-button099"
                   onClick={() => handleRemoveImage(index)}
                 >
                   -
@@ -108,10 +104,11 @@ const MatchWebForm = () => {
               </div>
             ))}
           </div>
-          {errorMessage && <p className="error-message">{errorMessage}</p>}
+          {errorMessage && <p className="error-message099">{errorMessage}</p>}
         </div>
 
-        <div className="form-section field-section">
+        {/* ✅ ส่วนฟอร์มข้อมูลสนาม */}
+        <div className="form-section099 field-section099">
           <label>ชื่อสนาม : *</label>
           <input
             type="text"
@@ -157,9 +154,10 @@ const MatchWebForm = () => {
           ></textarea>
         </div>
 
-        <div className="form-section additional-section">
+        {/* ✅ ส่วนเพิ่มเติม (สิ่งอำนวยความสะดวก + ข้อมูลเพิ่มเติม) */}
+        <div className="form-section099 additional-section099">
           <label>สิ่งอำนวยความสะดวก:</label>
-          <div className="checkbox-group">
+          <div className="checkbox-group099">
             <div>
               <input type="checkbox" id="parking" />
               <label htmlFor="parking">ที่จอดรถ</label>
@@ -189,15 +187,17 @@ const MatchWebForm = () => {
               <label htmlFor="other">อื่นๆ</label>
             </div>
           </div>
+
           <label>ข้อมูลสนาม / เงื่อนไขการจอง :</label>
           <textarea
-            className="large-textarea"
+            className="large-textarea099"
             placeholder="ระบุข้อมูลเพิ่มเติม"
           ></textarea>
         </div>
       </div>
 
-      <div className="form-footer">
+      {/* ✅ ฟุตเตอร์ฟอร์ม */}
+      <div className="form-footer099">
         {formErrors && <p className="error-message">{formErrors}</p>}
         <button onClick={handleSubmit}>ดำเนินการต่อ</button>
       </div>
