@@ -1,0 +1,47 @@
+.navbar {
+    background: #0b2a4a; /* ✅ พื้นหลังสีน้ำเงินเข้ม */
+    padding: 6px 0; /* ✅ ลด padding ด้านบน-ล่างให้เล็กลง */
+    text-align: center;
+    position: relative;
+    color: white;
+    width: 100%; /* ✅ กว้างเต็มจอ */
+    height: 120px; /* ✅ ปรับความสูงของ Navbar ให้แคบลง */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* ✅ เพิ่มเงาให้ Navbar */
+}
+
+.navbar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 800px; /* ✅ จำกัดความกว้างของเนื้อหา */
+    margin: 0 auto;
+}
+
+.navbar-logo {
+    width: 40px; /* ✅ ลดขนาดโลโก้ให้พอดีกับ Navbar */
+    height: auto;
+    margin-bottom: 2px;
+}
+
+.navbar-title {
+    font-size: 20px; /* ✅ ลดขนาดตัวอักษร */
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.navbar-divider {
+    width: 500%; /* ✅ ทำให้เส้นคั่นเล็กลง */
+    height: 1px;
+    background-color: white;
+    margin: 3px 0;
+    border-radius: 1px;
+}
+
+.navbar-subtitle {
+    font-size: 15px; /* ✅ ลดขนาดฟอนต์ของ subtitle */
+    font-weight: 500;
+    opacity: 0.85;
+}
