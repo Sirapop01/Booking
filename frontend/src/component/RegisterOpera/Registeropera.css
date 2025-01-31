@@ -1,4 +1,4 @@
-/* ====== Global Styles ====== */
+
 /* ====== Global Styles ====== */
 body {
   font-family: 'Arial', sans-serif;
@@ -15,8 +15,10 @@ body {
 
 /* ====== Main Container (จัดให้อยู่ตรงกลาง) ====== */
 .registration-container1 {
+  position:relative;
+  top:100px;
   width: 90%; /* ลดขนาดลงให้สมดุล */
-  max-width: 800px; /* กำหนดขนาดสูงสุดให้ไม่กว้างเกินไป */
+  max-width: 1000px; /* กำหนดขนาดสูงสุดให้ไม่กว้างเกินไป */
   background-color: #ffffff;
   color: #000000;
   padding: 30px;
