@@ -2,72 +2,94 @@
 
 .container1 {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   min-height: 100vh;
   background: linear-gradient(to right, #07213A 24%, #0C3B67 61%, #135BA0 90%);
-}
-
-.left-side {
-  width: 50%; 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: transparent; 
+  padding: 40px 20px;
   position: relative;
+  margin-top: 30px;
 }
 
-.image-container { 
-  width: 100vh;
-  height: 100vh;
-}
-
-.register-image {
-  width: 700px;
-  position: absolute;
-  top: 35%;
-  left: 25%;
-}
-
-.logo-on-image {
-  position: absolute;
-  top: 15%;
-  left: 60%;
-  transform: translate(-50%, -50%);
-  width: 200px; 
-}
-
-.logo-text-on-image {
-  position: absolute;
-  top: 20%;
-  left: 60%;
-  transform: translate(-50%, 0);
-  font-size: 55px;
-  font-weight: 500;
-  color: #ffffff;
-  font-family: 'Inder', sans-serif;
-  z-index: 10;
+.header {
   text-align: center;
+  margin-bottom: 20px;
+  width: 100%;
+  background: #0C3B67;
+  padding: 15px 0;
+  border-radius: 10px 10px 0 0;
+}
+
+.header img {
+  width: 80px;
+  display: block;
+  margin: 0 auto;
+}
+
+.header h1 {
+  color: white;
+  font-size: 22px;
+  margin-top: 5px;
+}
+
+.header p {
+  color: white;
+  font-size: 14px;
+  text-align: center;
+  margin-top: -5px;
 }
 
 .right-side {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
+  background: white;
+  padding: 50px;
+  border-radius: 15px;
+  max-width: 1100px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
 }
 
 .register-heading {
-  font-size: 40px;
-  color: #ffffff;
-  margin-bottom: 20px;
+  font-size: 26px;
+  color: #07213A;
+  margin-bottom: 15px;
+  text-align: center;
 }
 
-.form-container {
-  background-color: transparent;
-  padding: 0;
-  width: 100%;
-  max-width: 400px;
+.subtext {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #ddd;
+  color: #000;
+}
+
+.form-row > div {
+  display: flex;
+  flex-direction: column;
+  width: 48%;
+}
+
+label {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  position: relative;
 }
 
 input,
@@ -76,41 +98,57 @@ select {
   margin-bottom: 15px;
   padding: 12px;
   font-size: 16px;
-  border-radius: 5px;
+  border-radius: 10px;
   border: 1px solid #ccc;
-  background-color: #164169;
-  color: #ffffff; /* สีข้อความในช่อง input และ dropdown */
+  background-color: #f8f9fa;
+  color: #000;
   box-sizing: border-box;
-  height: 50px; /* ทำให้ dropdown มีความสูงเท่ากับ input */
+  height: 50px;
 }
 
 input::placeholder {
-  color: #000; /* สีข้อความ placeholder */
-  opacity: 0.7; /* ความโปร่งใสของ placeholder */
+  color: #666;
 }
 
-select {
-  color: #ffffff; /* สีข้อความที่แสดงใน dropdown */
-  appearance: none; /* ซ่อนลูกศร dropdown เริ่มต้น */
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z' fill='%23ffffff'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 16px;
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-left: 10px;
+  font-weight: bold;
+  position: absolute;
+  right: -140px;
+  white-space: nowrap;
 }
 
-select option {
-  color: #000000; /* สีข้อความในตัวเลือก dropdown */
+.location-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  margin-top: 5px;
+}
+
+.location-container select {
+  flex: 1;
+  min-width: 30%;
+  height: 50px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 25px;
 }
 
 .register-button {
-  background-color: #007bff;
+  background-color: #07213A;
   color: #ffffff;
-  padding: 15px;
+  padding: 12px 25px;
   border: none;
-  border-radius: 5px;
-  font-size: 18px;
+  border-radius: 10px;
+  font-size: 16px;
   font-weight: bold;
-  width: 100%;
   cursor: pointer;
 }
 
@@ -118,14 +156,10 @@ select option {
   background-color: #0056b3;
 }
 
-.location-container {
-  display: flex;
-  gap: 10px;
-}
-
 .login-link {
-  margin-top: 10px;
-  color: #ffffff;
+  margin-top: 15px;
+  color: #007bff;
   cursor: pointer;
   text-align: center;
+  font-size: 14px;
 }
