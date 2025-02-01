@@ -18,6 +18,7 @@ import ManageSubStadiumDetails from './component/ManageSubStadiumDetails/ManageS
 import SuccessRegis from  './component/SuccessRegis/SuccessRegis';
 import Discount from './component/Discount/Discount';
 import TestHome from './component/Test/TestHome';
+import OwnerLedger from './component/OwnerLedger/OwnerLedger';
 
 
 
@@ -45,6 +46,7 @@ function App() {
         <Route path="/manage-substadium-details" element={<ManageSubStadiumDetails />} />
         <Route path='/Discount' element={<Discount />} />
         <Route path='/SuccessRegis' element={<SuccessRegis />} />
+        <Route path='/Ownerledger' element={<OwnerLedger />} />
 
       </Routes>
     </BrowserRouter>
