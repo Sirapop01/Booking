@@ -11,28 +11,37 @@
   align-items: center;
 }
 
-/* ✅ หัวข้อ + โลโก้ */
-.page-title {
-  font-size: 32px;
-  margin-bottom: 20px;
-  color: #ffffff;
+/* ✅ ปรับหัวข้อ + โลโก้ให้แนวเดียวกัน */
+.page-header {
   display: flex;
-  align-items: center;
+  align-items: center; /* ✅ ทำให้โลโก้ + ข้อความอยู่กึ่งกลาง */
   justify-content: center;
+  margin-bottom: 20px;
 }
 
-.logo {
-  width: 40px;
-  height: 40px;
-  margin-right: 8px;
+/* ✅ ปรับขนาดหัวข้อ */
+.page-title {
+  font-size: 42px; /* ✅ ขยายขนาดให้สมดุลกับโลโก้ */
+  color: #ffffff;
+  font-weight: bold;
+  margin-left: 1px; /* ✅ ทำให้โลโก้กับข้อความมีระยะห่างที่พอดี */
 }
+
+/* ✅ ปรับขนาดและการจัดวางโลโก้ */
+.logo {
+  width: 100%; /* ✅ ขยายขนาดโลโก้ให้สมดุล */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+
 
 /* ✅ ตาราง */
 .stadium-table {
   width: 100%;
   max-width: 1000px;
   border-collapse: collapse;
-  margin: 0 auto;
   text-align: left;
   background-color: #13293D;
   color: #ffffff;
@@ -45,16 +54,16 @@
 .stadium-table thead th {
   background-color: #07213A;
   color: #ffffff;
-  font-size: 16px;
+  font-size: 18px;
   border-bottom: 2px solid #ffffff;
-  padding: 12px;
+  padding: 14px;
   text-align: center;
 }
 
 /* ✅ เซลล์ของตาราง */
 .stadium-table th, .stadium-table td {
   border: 2px solid #3A506B;
-  padding: 12px;
+  padding: 14px;
   text-align: center;
 }
 
@@ -81,7 +90,7 @@
 
 /* ✅ ปุ่ม toggle เปิด/ปิด */
 .toggle-btn {
-  padding: 6px 12px;
+  padding: 8px 16px;
   border: none;
   border-radius: 5px;
   font-size: 14px;
@@ -122,12 +131,12 @@
   border: 2px solid #555;
 }
 
-/* ✅ ปรับขนาดปุ่มให้เล็กลง */
+/* ✅ ปรับขนาดปุ่มให้เท่ากัน */
 .btn {
-  padding: 8px 16px; /* ลดขนาด padding */
-  font-size: 14px; /* ลดขนาดตัวอักษร */
+  padding: 10px 20px; /* ลดขนาด padding */
+  font-size: 16px; /* ลดขนาดตัวอักษร */
   border-radius: 6px; /* ลดความโค้งของมุม */
-  min-width: 130px; /* ลดความกว้างขั้นต่ำ */
+  min-width: 150px; /* ทำให้ปุ่มกว้างเท่ากัน */
   text-align: center;
   border: 2px solid black;
   background-color: white;
@@ -151,11 +160,11 @@
 }
 
 /* ✅ ปรับตำแหน่งปุ่มให้เรียงสมดุล */
-.button-container {
+.bottom-buttons {
   display: flex;
-  justify-content: center; /* จัดให้อยู่ตรงกลาง */
-  gap: 10px; /* ลดช่องว่างระหว่างปุ่ม */
-  margin-top: 10px;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
 }
 
 /* ✅ ปรับปุ่มกลับไปยัง Home */
@@ -163,10 +172,10 @@
   position: fixed;
   top: 20px;
   left: 20px;
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   background-color: white;
-  border-radius: 12px;
+  border-radius: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -181,6 +190,6 @@
 }
 
 .home-logo {
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
 }
