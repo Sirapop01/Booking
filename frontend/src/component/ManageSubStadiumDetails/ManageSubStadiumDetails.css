@@ -1,12 +1,29 @@
 /*css managesubstadiumdetail*/
 .manage-substadium-details {
     display: flex;
-    gap: 15px; /* ✅ ลดระยะห่างระหว่างช่องรูปภาพและรายละเอียด */
-    justify-content: center;
-    align-items: flex-start;
-    width: 90%;
-    margin: 20px auto;
-}
+    flex-direction: column;  /* แนวตั้ง */
+    width: 100%;
+    height: 100vh;  /* ใช้ความสูงเต็มของหน้าจอ */
+    overflow-y: auto;  /* เพิ่มการเลื่อนในแนวตั้ง */
+    padding: 20px;
+    box-sizing: border-box;  /* ให้ padding ไม่ทำให้ขนาดของคอนเทนเนอร์เกิน */
+  }
+
+/* ส่วนหัวของ "จัดการสนามย่อย" */
+.header-container {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .header-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 20px;
+    padding-top: 20px;
+  }
 
 /* ✅ ปิดการแสดงเคอร์เซอร์พิมพ์ (Text Cursor) */
 .manage-substadium-details,
@@ -45,15 +62,27 @@ table {
     margin-bottom: 20px;
 }
 
-/* ✅ ฝั่งซ้าย: รายการสนาม */
+/* กำหนดการจัดเรียงของส่วนภายใน */
+.content-container {
+    display: grid;  /* ใช้ grid */
+    grid-template-columns: 1fr 1fr;  /* คอลัมน์สองคอลัมน์ */
+    gap: 3px;  /* ระยะห่างระหว่างส่วน */
+    width: 100%;
+    box-sizing: border-box;  /* ให้ padding ไม่ทำให้ขนาดของคอนเทนเนอร์เกิน */
+  }
+  
+
+/* ฝั่งซ้าย: รายการสนาม */
 .courts-list {
-    flex: 1;
     background: white;
     color: black;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-}
+    max-width: 600px;
+    height: 500px;  /* กำหนดความสูงให้เหมาะสม */
+    overflow-y: auto;  /* เพิ่มการเลื่อนในแนวตั้ง */
+  }
 
 /* ตาราง */
 table {
@@ -160,14 +189,30 @@ th, td {
 }
 
 
+/* ฝั่งขวา: ข้อมูลสนาม */
 .court-details {
-    flex: 1;
     background: white;
     color: black;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     min-width: 300px;
+    max-height: 600px;  /* กำหนดความสูงสูงสุด */
+    overflow-y: auto;  /* เพิ่มการเลื่อนในแนวตั้ง */
+  }
+
+/* ✅ ปรับ Scrollbar ให้ดูดีขึ้น */
+.court-details::-webkit-scrollbar {
+    width: 8px;
+}
+
+.court-details::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.court-details::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 /* ✅ ปรับ input และ textarea */
@@ -351,3 +396,4 @@ th, td {
     background-color: gray;
     cursor: not-allowed;
 }
+

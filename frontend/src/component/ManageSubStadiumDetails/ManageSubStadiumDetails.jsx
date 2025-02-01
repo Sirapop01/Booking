@@ -114,12 +114,18 @@ const [courtToDelete, setCourtToDelete] = useState(null);
 
   return (
     <div className="manage-substadium-details">
+      
+    <div className="header-container">
+      <h1 className="header-title">จัดการสนามย่อย</h1>
+    </div>
+
       {/* ✅ ปุ่ม Home */}
       <a href="/" className="home-button">
         <img src={homeLogo} alt="Home" className="home-logo" />
       </a>
 
       {/* ✅ ฝั่งซ้าย: รายการสนาม */}
+      <div className="content-container">
       <div className="courts-list">
         <h1 className="section-title">รายการสนาม</h1>
         <table>
@@ -219,6 +225,7 @@ const [courtToDelete, setCourtToDelete] = useState(null);
             )}
           </div>
 
+          <p><strong>สนามหลัก:</strong> {editedCourt.stadiumName || " - "}</p>
           <p><strong>ชื่อสนาม:</strong> 
             <input 
               type="text" 
@@ -281,6 +288,7 @@ const [courtToDelete, setCourtToDelete] = useState(null);
                 </button>
             )}
         </div>
+      </div>
       </div>
       </div>
   );
