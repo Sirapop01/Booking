@@ -242,6 +242,7 @@ th, td {
     display: flex;
     justify-content: space-between;
     margin-top: 15px; /* ✅ ลดระยะห่าง */
+    gap: 500px;
 }
 
 .edit-btn {
@@ -262,6 +263,7 @@ th, td {
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
+    margin-left: 10px;  /* เพิ่มช่องว่างระหว่างปุ่มบันทึกและปุ่มยกเลิก */
 }
 
 /* ✅ ปรับขนาดปุ่มเมื่อ hover */
