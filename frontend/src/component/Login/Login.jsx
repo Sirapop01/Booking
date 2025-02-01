@@ -11,8 +11,8 @@ import axios from 'axios';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false); // State สำหรับ "จดจำฉัน"
-  const [showPassword, setShowPassword] = useState(false); // State สำหรับแสดง/ซ่อนรหัสผ่าน
+  const [rememberMe, setRememberMe] = useState(false); 
+  const [showPassword, setShowPassword] = useState(false); 
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -27,7 +27,7 @@ function Login() {
         if(response.data.message == "เข้าสู่ระบบสำเร็จ"){
 
           localStorage.setItem('token', response.data.token);
-
+          
           navigate("/");
         }else{
           alert("เข้าสู่ระบบไม่สำเร็จ");

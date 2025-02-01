@@ -1,0 +1,315 @@
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+
+/* ✅ Navbar หลัก */
+.navbar-homepage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #07213A;
+    padding: 20px 30px;
+    font-family: 'Inder', sans-serif;
+}
+
+/* ✅ ปุ่มด้านซ้าย (โปรโมชั่น + รายการโปรด) */
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* ระยะห่างระหว่างปุ่ม */
+}
+
+/* ✅ ปรับปุ่ม โปรโมชั่น + รายการโปรด */
+.navbar-button-homepage {
+    background-color: #fff;
+    color: #07213A;
+    border: 1px solid #07213A;
+    padding: 8px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    white-space: nowrap;
+    transition: background 0.3s ease-in-out;
+}
+
+.navbar-button-homepage:hover {
+    background-color: #d1d1d1;
+}
+
+/* ✅ โลโก้และ MatchWeb อยู่ตรงกลาง */
+.navbar-center {
+    min-width: 200px; /* กำหนดความกว้างขั้นต่ำให้โลโก้ */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.navbar-logo-img-homepage {
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+}
+
+.navbar-title {
+    color: white;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+/* ✅ ปุ่มด้านขวา (เข้าสู่ระบบ, ลงทะเบียน) */
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* ปุ่มเรียงแนวนอน */
+}
+
+/* ✅ ปุ่ม เข้าสู่ระบบ + ลงทะเบียน */
+.navbar-button,
+.navbar-link {
+    background-color: #fff;
+    color: #07213A;
+    border: 1px solid #07213A;
+    padding: 8px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    white-space: nowrap;
+    transition: background 0.3s ease-in-out;
+}
+
+.navbar-button:hover,
+.navbar-link:hover {
+    background-color: #d1d1d1;
+}
+
+/* ✅ ปรับสไตล์เมื่อผู้ใช้ล็อกอิน */
+.navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* ✅ ชื่อผู้ใช้ */
+.username {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* ✅ ปุ่มเมนู ☰ (Dropdown Icon) */
+.menu-icon {
+    background-color: #fff;
+    color: #07213A;
+    border: 1px solid #07213A;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out;
+}
+
+.menu-icon:hover {
+    background-color: #d1d1d1;
+}
+
+/* ✅ Dropdown Menu Container */
+.dropdown {
+    position: relative;
+}
+
+/* ✅ ปุ่มเมนู ☰ (Dropdown Icon) */
+.menu-icon {
+    background-color: #fff;
+    color: #07213A;
+    border: 1px solid #07213A;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out;
+}
+
+.menu-icon:hover {
+    background-color: #d1d1d1;
+}
+
+/* ✅ Dropdown Menu Container */
+.dropdown {
+    position: relative;
+}
+
+/* ✅ ปุ่มเมนู ☰ (Dropdown Icon) */
+.menu-icon {
+    background-color: #fff;
+    color: #07213A;
+    border: 1px solid #07213A;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out;
+}
+
+.menu-icon:hover {
+    background-color: #d1d1d1;
+}
+
+/* ✅ ปรับตำแหน่ง Dropdown Menu */
+.dropdown-menu {
+    position: absolute;
+    right: -10px;  /* ✅ ขยับออกจากขอบขวาเล็กน้อย */
+    top: 55px;  /* ✅ ลดตำแหน่งลงจากปุ่ม ☰ */
+    background-color: white;
+    border: 1px solid black; /* ✅ กรอบสีดำ */
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); /* ✅ เพิ่มเงาให้ดูมีมิติ */
+    display: flex;
+    flex-direction: column;
+    width: 180px;
+    padding: 5px 0;
+    z-index: 999;
+}
+
+/* ✅ ปรับสไตล์ของปุ่มใน Dropdown */
+.dropdown-menu button {
+    background: none;
+    border: none;
+    padding: 12px 16px;
+    text-align: left; /* ✅ ทำให้ตัวอักษรอยู่ชิดซ้าย */
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    color: black; /* ✅ เอาสีน้ำเงินออก */
+    font-weight: normal;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #ddd; /* ✅ เส้นแบ่งระหว่างปุ่ม */
+}
+
+/* ✅ ลบเส้นขอบของปุ่มสุดท้าย */
+.dropdown-menu button:last-child {
+    border-bottom: none;
+}
+
+/* ✅ เอฟเฟกต์ Hover ให้ดูสวยงาม */
+.dropdown-menu button:hover {
+    background-color: #f1f1f1;
+    border-radius: 5px;
+}
+
+/* ✅ ป๊อปอัปออกจากระบบ */
+.logout-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3); /* ✅ ฉากหลังมืด */
+    backdrop-filter: blur(5px); /* ✅ เอฟเฟกต์เบลอ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.logout-popup {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.logout-popup p {
+    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* ✅ ปุ่มใน Popup */
+.logout-buttons {
+    
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.confirm-btn {
+    background-color: #5bc0de;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    flex: 1;
+}
+
+.cancel-btn {
+    background-color: #5bc0de;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    flex: 1;
+}
+
+.confirm-btn:hover {
+    background-color:#31b0d5 ;
+}
+
+.cancel-btn:hover {
+    background-color: #c9302c;
+}
+
+
+
+/* ✅ Responsive Design */
+@media (max-width: 768px) {
+    .navbar-homepage {
+        padding: 15px 20px;
+    }
+    
+    .navbar-center {
+        margin-left: 20px;
+    }
+    
+    .navbar-logo-img-homepage {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .navbar-title {
+        font-size: 24px;
+    }
+    
+    .navbar-button-homepage,
+    .navbar-button,
+    .navbar-link {
+        font-size: 16px;
+        padding: 6px 14px;
+    }
+
+    .navbar-left {
+        gap: 8px;
+    }
+
+    .navbar-user {
+        gap: 10px;
+    }
+
+    .menu-icon {
+        padding: 5px 10px;
+        font-size: 18px;
+    }
+}

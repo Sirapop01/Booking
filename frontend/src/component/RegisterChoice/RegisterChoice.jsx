@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./RegisterChoice.css";
-import logo from "../assets/logo.png";
+import logo from "../assets/logomain.png";
 import background from "../assets/Blackground/Blackground.png";
 
 function RegisterChoice() {

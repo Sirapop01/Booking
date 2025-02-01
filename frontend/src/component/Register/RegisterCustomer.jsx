@@ -32,17 +32,32 @@ function RegisterCustomer() {
     province: '',
     district: '',
     subdistrict: '',
+    profileImage: null,
   });
 
   const [districts, setDistricts] = useState([]);
   const [subdistricts, setSubdistricts] = useState([]);
 
+  
+
+
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
+
+    if (name === "profileImage") {
+      setFormData((prevData) => ({
+        ...prevData,
+        profileImage: files[0], // เก็บไฟล์แรกที่เลือก
+      }));
+      return;
+    }
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+
 
     // เมื่อเลือกจังหวัด อัปเดตรายการอำเภอ
     if (name === "province") {
@@ -67,8 +82,28 @@ function RegisterCustomer() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+  
     try {
-      const response = await axios.post("http://localhost:4000/api/auth/register", formData);
+      const formDataToSend = new FormData();
+      
+      // เพิ่มค่าปกติลง FormData
+      Object.keys(formData).forEach((key) => {
+        if (key !== "profileImage") { // ป้องกันการส่งค่า null
+          formDataToSend.append(key, formData[key]);
+        }
+      });
+  
+      // ✅ เพิ่มไฟล์รูปภาพแค่ถ้ามีการเลือก
+      if (formData.profileImage) {
+        formDataToSend.append("profileImage", formData.profileImage);
+      }
+  
+      formDataToSend.append("role", "user");
+  
+      const response = await axios.post("http://localhost:4000/api/auth/register", formDataToSend, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+  
       alert("✅ สมัครสมาชิกสำเร็จ!");
       navigate("/login");
     } catch (err) {
@@ -128,6 +163,7 @@ function RegisterCustomer() {
                   <option key={subdistrict} value={subdistrict}>{subdistrict}</option>
                 ))}
               </select>
+              <input type="file" name="profileImage" onChange={handleChange} accept="image/*" required />
             </div>
 
             <button type="submit" className="register-button">ลงทะเบียน</button>

@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+
+/* ตั้งค่าสีพื้นหลัง */
+body1 {
+    background-color: #0d2235; /* สีน้ำเงินเข้ม */
+    color: white;
+    font-family: 'Inder', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* ให้เต็มหน้าจอ */
+    margin: 0;
+    overflow: hidden;
+}
+
+html, body {
+    overflow: hidden; /* ปิดการเลื่อน */
+    height: 100%; /* ให้เต็มจอ */
+}
+
+
+/* คอนเทนเนอร์หลัก */
+.success-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh; /* ให้เต็มจอ */
+}
+
+/* ส่วนหัว */
+.success-header1 {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 20px;
+    position: relative;
+    top: -200px;
+    background-color: #0d2235;
+    
+}
+
+/* กล่องโลโก้ */
+.logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.logo1 {
+    width: 70px;
+    height: 70px;
+}
+
+.title1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.divider1 {
+    width: 90%;
+    height: 2px;
+    background-color: white;
+    margin: 5px auto;
+}
+
+.subtitle1 {
+    font-size: 16px;
+    font-weight: bold;
+    opacity: 0.9;
+    margin: 5px 0;
+    text-align: center;
+    right : -2px;
+    position: relative;
+    
+}
+
+/* กล่องแจ้งเตือนสำเร็จ */
+.success-box {
+    background: white;
+    color: black;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    max-width: 600px;
+    width: 95%;
+    position: relative;
+    top: -120px;
+    font-family: 'Kanit', sans-serif;
+}
+
+.success-icon {
+    background: #28a745;
+    display: inline-block;
+    padding: 20px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    font-family: 'Kanit', sans-serif;
+    
+    
+}
+
+.success-icon svg {
+    width: 60px;
+    height: 60px;
+    color: white;
+}
+
+.success-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.success-message {
+    font-size: 18px;
+    color: #28a745;
+}
+
+/* ปุ่มยืนยัน */
+.confirm-button {
+    background: #28a745;
+    color: white;
+    padding: 14px 30px;
+    margin-top: 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.2s;
+    font-family: 'Kanit', sans-serif;
+}
+
+.confirm-button:hover {
+    background: #218838;
+    transform: scale(1.05);
+    font-family: 'Kanit', sans-serif;
+}
+
+

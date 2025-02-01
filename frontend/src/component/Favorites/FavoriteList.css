@@ -1,0 +1,145 @@
+/* ตั้งค่าพื้นหลังของทั้งหน้าจอให้เป็นสีขาว */
+body, html {
+    font-family: 'Arial', sans-serif;
+    background-color: white; /* ✅ พื้นหลังขาวเต็มจอ */
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* กำหนด container ให้เต็มจอ */
+  .container {
+    width: 100vw;  /* ✅ ปรับให้กว้างเต็มจอ */
+    height: 100vh; /* ✅ ปรับให้สูงเต็มจอ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* กล่องรายการโปรด */
+  .favorite-box {
+    width: 98%;  /* ✅ ปรับความกว้างให้พอดี */
+    height: 100vh; /* ✅ ลดขนาดให้อยู่กลางหน้าจอ */
+    background: white;
+    border: 2px solid black;
+    border-radius: 12px;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* หัวข้อ */
+  .title {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 2px solid black;
+    padding-bottom: 10px;
+    color: black;
+  }
+  
+  /* เมนูไอคอน + Dropdown */
+  .menu-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  
+  .menu-icon {
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  /* Dropdown Menu */
+  .dropdown-menu {
+    position: absolute;
+    top: 30px;
+    right: 0;
+    width: 150px;
+    background: white;
+    border: 1px solid black;
+    border-radius: 8px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+  }
+  
+  .dropdown-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .dropdown-menu li {
+    padding: 10px;
+    text-align: left;
+    cursor: pointer;
+  }
+  
+  .dropdown-menu li:hover {
+    background: #f0f0f0;
+  }
+  
+  /* รายการโปรด */
+  .favorite-list {
+    flex-grow: 1;
+    margin-top: 15px;
+    overflow-y: auto;
+    padding-right: 10px;
+  }
+  
+  /* กล่องแต่ละรายการ */
+  .favorite-item {
+    margin-left: 150px;
+    width: 80%;
+    height: 40px;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid black;
+    margin-bottom: 10px;
+    background: white;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    color: black;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  /* ไอคอนหัวใจ + ข้อความ */
+  .left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  /* ไอคอนหัวใจ (สามารถกดได้) */
+  .heart-icon {
+    color: gray;
+    font-size: 22px;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+  }
+  
+  .heart-icon.liked {
+    color: red;
+  }
+  
+  /* ปุ่มรายละเอียด */
+  .details-button {
+    background: #e0e0e0;
+    padding: 7px 15px;
+    border-radius: 5px;
+    font-size: 14px;
+    border: 1px solid black;
+    cursor: pointer;
+  }
+  
+  .details-button:hover {
+    background: #d0d0d0;
+  }

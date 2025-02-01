@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./UserProfile.css";
-import profilePic from "../assets/threeman.png";
+import defaultProfilePic from "../assets/threeman.png";
 import { FaPencilAlt } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
@@ -14,6 +14,8 @@ const UserProfile = () => {
   const navigate = useNavigate();
   const [decodedToken, setDecodedToken] = useState(null);
   const [token, setToken] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
+  const [newProfileImage, setNewProfileImage] = useState(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -35,14 +37,24 @@ const UserProfile = () => {
   }, []);
 
   const toggleEdit = () => {
-    if (isEditable) {
-      updateMemberData(); // ✅ เมื่อกดปิดโหมดแก้ไข ให้ส่งข้อมูลไป Backend
-    }
-    setIsEditable(!isEditable);
+    setIsEditable((prev) => !prev);
   };
+  
+  
 
   const handleChange = (e) => {
-    setMember({ ...member, [e.target.name]: e.target.value });
+    setMember((prevMember) => {
+      const updatedMember = { ...prevMember, [e.target.name]: e.target.value };
+      console.log("✏️ Member Updated Locally:", updatedMember);
+      return updatedMember;
+    });
+  };
+  
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setNewProfileImage(file); // ✅ เก็บไฟล์ไว้ แต่ยังไม่อัปเดต DB
+    setProfileImage(URL.createObjectURL(file)); // แสดง preview
+    uploadImage(file);
   };
 
   useEffect(() => {
@@ -54,24 +66,87 @@ const UserProfile = () => {
   const getMB = async () => {
     try {
       const res = await axios.get(`http://localhost:4000/api/auth/getinfo/${id}`);
-      setMember(res.data);
-      console.log("✅ Member Data:", res.data);
+      console.log("📥 Updated Member Data from DB:", res.data);
+  
+      // ✅ เช็คว่าข้อมูลเปลี่ยนหรือไม่ก่อนอัปเดต UI
+      setMember((prevMember) => {
+        if (JSON.stringify(prevMember) !== JSON.stringify(res.data)) {
+          console.log("🔄 Updating UI with New Data:", res.data);
+          return res.data;
+        }
+        return prevMember;
+      });
+  
+      setProfileImage(res.data.profileImage);
     } catch (error) {
       console.error("❌ Error fetching member data:", error);
     }
   };
-
-    // ✅ ฟังก์ชันอัปเดตข้อมูลไปที่ฐานข้อมูล
-    const updateMemberData = async () => {
-      try {
-        const response = await axios.put(`http://localhost:4000/api/auth/update/${id}`, member);
-        console.log("✅ Updated Member Data:", response.data);
-        alert("🎉 อัปเดตข้อมูลสำเร็จ!");
-      } catch (error) {
-        console.error("❌ Error updating member data:", error);
-        alert("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
+  
+  
+  const updateMemberData = async () => {
+    try {
+      let updatedData = { ...member };
+      let imageUrl = profileImage;
+  
+      // ✅ อัปโหลดรูปถ้ามีการเปลี่ยนแปลง
+      if (newProfileImage) {
+        const formData = new FormData();
+        formData.append("profileImage", newProfileImage);
+  
+        const uploadResponse = await axios.put(
+          `http://localhost:4000/api/auth/updateProfileImage/${id}`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+  
+        console.log("✅ Profile Image Updated:", uploadResponse.data);
+        imageUrl = uploadResponse.data.profileImage;
+        updatedData.profileImage = imageUrl;
+        
       }
-    };
+  
+      console.log("📤 Sending Updated Data:", updatedData);
+  
+      // ✅ อัปเดตข้อมูลผู้ใช้
+      const response = await axios.put(`http://localhost:4000/api/auth/update/${id}`, updatedData);
+  
+      console.log("✅ Updated Member Data:", response.data);
+      alert("🎉 อัปเดตข้อมูลสำเร็จ!");
+  
+      // ✅ โหลดข้อมูลใหม่จาก API ทันที
+      await getMB();
+  
+      // ✅ ปิดโหมดแก้ไข
+      setIsEditable(false);
+      setNewProfileImage(null);
+    } catch (error) {
+      console.error("❌ Error updating member data:", error);
+      alert("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
+    }
+  };
+
+  const uploadImage = async (file) => {
+      try {
+        const formData = new FormData();
+        formData.append("profileImage", file);
+        formData.append("id", id);
+  
+        const response = await axios.put(
+          `http://localhost:4000/api/auth/updateProfileImage/${id}`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+  
+        console.log("✅ Profile Image Updated:", response.data);
+        alert("🎉 อัปโหลดรูปภาพสำเร็จ!");
+        getMB(); // โหลดข้อมูลใหม่
+        setIsEditable(false);
+      } catch (error) {
+        console.error("❌ Error uploading image:", error);
+        alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
+      }
+  };
 
   const toggleLogout = () => {
     setShowLogoutModal(true); // ✅ Open the modal
@@ -102,9 +177,13 @@ const UserProfile = () => {
     <div className="profile-container">
       {/* เมนูด้านซ้าย */}
       <aside className="sidebar">
-        <div className="profile-image">
-          <img src={profilePic} alt="Profile" />
-        </div>
+      <div className="profile-image">
+        <img src={profileImage || defaultProfilePic} alt="Profile" />
+          {isEditable && (
+            <input type="file" accept="image/*" onChange={handleImageChange} />
+          )}
+      </div>
+
         <nav>
           <button>ประวัติการจอง</button>
           <button>รายการโปรด</button>
@@ -175,7 +254,7 @@ const UserProfile = () => {
           </div>
         </section>
 
-        {isEditable && <button className="save-button" onClick={toggleEdit}>บันทึก</button>}
+        {isEditable && <button className="save-button" onClick={updateMemberData}>บันทึก</button>}
         <button className="forgot-password">ลืมรหัสผ่าน ?</button>
       </main>
 

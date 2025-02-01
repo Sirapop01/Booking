@@ -1,49 +1,16 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import Navbar from '../Navbar/Navbar'; // นำ Navbar มาใช้
 import './Homepage.css';
-import logo from '../assets/logo.png';
+import { FaSearch } from "react-icons/fa";
 
 const Homepage = () => {
-  const navigate = useNavigate();
-
-  const handleLoginClick = () => {
-    navigate('/login');
-  };
-
-  const handleRegisterClick = () => {
-    navigate('/RegisterChoice');
-  };
-
-  const handlePromotionClick = () => {
-    navigate('/promotion');
-  };
-
   return (
     <div className="homepage-container">
-      {/* ส่วน Navbar */}
-            <nav className="navbar-homepage">
-        <div className="navbar-left">
-            <button className="navbar-button-homepage" onClick={handlePromotionClick}>
-            โปรโมชั่น
-            </button>
-        </div>
-        <div className="navbar-center">
-            <img src={logo} alt="logo" className="navbar-logo-img-homepage" />
-            <span className="navbar-title">MatchWeb</span>
-        </div>
-        <div className="navbar-links">
-            <button className="navbar-link" onClick={handleLoginClick}>
-            เข้าสู่ระบบ
-            </button>
-            <button className="navbar-button" onClick={handleRegisterClick}>
-            ลงทะเบียน
-            </button>
-        </div>
-        </nav>
-
-
+      {/* เรียกใช้ Navbar ที่แยกออกมา */}
+      <Navbar />
 
       {/* ส่วนค้นหาสถานที่ วันเวลา จำนวน */}
+      
       <div className="search-section">
         <input 
           type="text" 
@@ -52,14 +19,8 @@ const Homepage = () => {
         />
 
         <div className="date-time-container">
-          <input 
-            type="date" 
-            className="date-input" 
-          />
-          <input 
-            type="time" 
-            className="time-input" 
-          />
+          <input type="date" className="date-input" />
+          <input type="time" className="time-input" />
 
           <select className="people-select-value">
             <option>จำนวน</option>
@@ -86,7 +47,7 @@ const Homepage = () => {
         </div>
       </div>
 
-      {/* ส่วนไอคอนกีฬา (ใช้อีโมจิแทนการใช้ react-icons) */} 
+      {/* ส่วนไอคอนกีฬา */}
       <div className="sports-icons">
         <button className="sport-btn">⚽</button>
         <button className="sport-btn">🏀</button>
