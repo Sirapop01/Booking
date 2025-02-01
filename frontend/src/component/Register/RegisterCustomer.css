@@ -10,7 +10,6 @@
   padding: 40px 20px;
   position: relative;
   margin-top: 45px;
-
 }
 
 .header {
@@ -92,24 +91,38 @@ label {
   position: relative;
 }
 
+/* ปรับขอบ input ให้เป็นสีเทา */
 input,
 select {
   width: 100%;
-  margin-bottom: 15px;
+  height: 50px;
   padding: 12px;
   font-size: 16px;
   border-radius: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #aaa; /* เปลี่ยนจาก #ccc เป็นสีเทาเข้มขึ้น */
   background-color: #f8f9fa;
   color: #000;
   box-sizing: border-box;
-  height: 50px;
+  appearance: none;
 }
 
-input::placeholder {
-  color: #666;
+/* ปรับ input[type="file"] และ input[type="tel"] ให้มีความสม่ำเสมอ */
+input[type="file"],
+input[type="tel"] {
+  background-color: white !important; /* บังคับให้เป็นสีขาว */
+  border: 1px solid #aaa !important; /* ทำให้ขอบเป็นสีเทา */
+  padding: 10px;
+  cursor: pointer;
 }
 
+/* ปรับ input:focus ไม่ให้เปลี่ยนขอบสี */
+input:focus,
+select:focus {
+  border: 1px solid #aaa !important;
+  outline: none;
+}
+
+/* ปรับตำแหน่งจังหวัด อำเภอ ตำบล ให้อยู่ในบรรทัดเดียวกันกับวันเกิด */
 .location-container {
   display: flex;
   justify-content: space-between;
@@ -125,6 +138,7 @@ input::placeholder {
   height: 50px;
 }
 
+/* ปุ่มสมัคร */
 .button-container {
   display: flex;
   justify-content: center;
@@ -146,6 +160,7 @@ input::placeholder {
   background-color: #0056b3;
 }
 
+/* ปรับสีลิงก์ */
 .login-link {
   margin-top: 15px;
   color: #007bff;
