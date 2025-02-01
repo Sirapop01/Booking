@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import "./Registeropera.css";
 import logo from '../assets/logo.png';
 
-
+//Fix
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
     idCard: "",
