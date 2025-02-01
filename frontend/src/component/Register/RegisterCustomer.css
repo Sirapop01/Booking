@@ -9,7 +9,8 @@
   background: linear-gradient(to right, #07213A 24%, #0C3B67 61%, #135BA0 90%);
   padding: 40px 20px;
   position: relative;
-  margin-top: 30px;
+  margin-top: 45px;
+
 }
 
 .header {
@@ -70,7 +71,6 @@
   justify-content: space-between;
   gap: 40px;
   padding-bottom: 20px;
-  border-bottom: 2px solid #ddd;
   color: #000;
 }
 
@@ -110,23 +110,13 @@ input::placeholder {
   color: #666;
 }
 
-.error-message {
-  color: red;
-  font-size: 14px;
-  margin-left: 10px;
-  font-weight: bold;
-  position: absolute;
-  right: -140px;
-  white-space: nowrap;
-}
-
 .location-container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   gap: 20px;
   width: 100%;
-  margin-top: 5px;
+  margin-top: 8px;
 }
 
 .location-container select {
@@ -137,7 +127,7 @@ input::placeholder {
 
 .button-container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: 25px;
 }
 
