@@ -54,40 +54,34 @@ function ManageSubStadium() {
 
   return (
     <div className="manage-substadium-container">
-      {/* ปุ่มกลับหน้าแรก */}
+    {/* Header Container */}
+    <div className="header-container">
       <a href="/" className="home-button">
-        <img src={homeLogo} alt="Home" className="home-logo" />
+        <img src={homeLogo} alt="Home" className="home-logo1" />
       </a>
-
-      {/* หัวข้อ */}
       <h1 className="page-title">
         <img src={logo} alt="Logo" className="logo" />
         จัดการสนามย่อย
       </h1>
+    </div>
 
+      {/* Content Container */}
+    <div className="content-container1">
       <h2 className="subtitle">เลือกประเภทกีฬา</h2>
-
-      {/* กรอบเลือกประเภทกีฬา */}
       <div className="sports-container">
         {sports.map((sport) => (
-          <div
-            key={sport.id}
-            className="sport-card"
-            onClick={() => navigate("/manage-substadium-details", { state: { sport } })}
-          >
+          <div key={sport.id} className="sport-card" onClick={() => navigate("/manage-substadium-details", { state: { sport } })}>
             <img src={sport.icon} alt={sport.name} className="sport-icon" />
             <p>{sport.name}</p>
           </div>
         ))}
-
-        {/* ปุ่มเพิ่มประเภทกีฬา */}
         <div className="sport-card add-card" onClick={togglePopup}>
           <img src={addIcon} alt="เพิ่ม" className="sport-icon" />
         </div>
       </div>
-
-      {/* ปุ่มย้อนกลับ */}
-      <button className="btn-back" onClick={() => navigate(-1)}>ย้อนกลับ</button>
+      <button className="btn-back1" onClick={() => navigate(-1)}>ย้อนกลับ</button>
+    </div>
+  
 
       {/* ป็อปอัพเพิ่มประเภทกีฬา */}
       {showPopup && (
