@@ -13,7 +13,7 @@ const Navbar = () => {
 
   useEffect(() => {
     // ดึง Token จาก Local Storage
-    const storedToken = localStorage.getItem("token");
+    const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
 
     if (storedToken) {
       try {
@@ -96,12 +96,8 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-
-        
       )}
     </>
-
-    
   );
 };
 

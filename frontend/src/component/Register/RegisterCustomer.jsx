@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RegisterCustomer.css';
 import logo from '../assets/logo.png';
+import axios from 'axios';
 
 function RegisterCustomer() {
   const navigate = useNavigate();
@@ -20,19 +21,21 @@ function RegisterCustomer() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    confirmPassword: '',
+    confirmPassword: '', // ❌ ไม่ต้องเก็บใน DB แต่ใช้เช็คค่าที่กรอก
     firstName: '',
     lastName: '',
+    //gender: '', // ✅ เพิ่ม gender ให้ตรงกับ Schema
     phoneNumber: '',
-    birthdate: '',
+    birthdate: '', // ✅ เปลี่ยนจาก `dob` เป็น `birthdate`
     interestedSports: '',
     province: '',
     district: '',
     subdistrict: '',
     profileImage: null,
+    role: 'user', // ✅ เพิ่ม role (กำหนดค่าเริ่มต้นเป็น "user")
     gender: '',
   });
-
+  
   const [errors, setErrors] = useState({});
   const [districts, setDistricts] = useState([]);
   const [subdistricts, setSubdistricts] = useState([]);
@@ -83,13 +86,42 @@ function RegisterCustomer() {
     }));
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
+  
+    if (!validateForm()) {
+      return; // ✅ หยุดทำงาน ถ้าข้อมูลไม่ผ่านการตรวจสอบ
+    }
+  
+    try {
+      const formDataToSend = new FormData();
+  
+      // ✅ เพิ่มค่าปกติลง FormData
+      Object.keys(formData).forEach((key) => {
+        if (key !== "profileImage") {
+          formDataToSend.append(key, formData[key]);
+        }
+      });
+  
+      // ✅ เพิ่มไฟล์รูปภาพถ้ามีการอัปโหลด
+      if (formData.profileImage) {
+        formDataToSend.append("profileImage", formData.profileImage);
+      }
+  
+      formDataToSend.append("role", "user"); // ✅ กำหนด role เป็น "user"
+  
+      // ✅ ส่งข้อมูลไปยัง API
+      const response = await axios.post("http://localhost:4000/api/auth/register", formDataToSend, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+  
       alert("✅ สมัครสมาชิกสำเร็จ!");
       navigate("/login");
+    } catch (err) {
+      alert("❌ เกิดข้อผิดพลาด: " + (err.response?.data?.message || "ลองใหม่อีกครั้ง"));
     }
   };
+  
 
   return (
     <div className="container1">

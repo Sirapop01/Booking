@@ -25,8 +25,13 @@ function Login() {
       const response = await axios.post(
         "http://localhost:4000/api/auth/login", members );
         if(response.data.message == "เข้าสู่ระบบสำเร็จ"){
-
-          localStorage.setItem('token', response.data.token);
+          
+          if(rememberMe){
+            localStorage.setItem('token', response.data.token);
+          }else{
+            sessionStorage.setItem('token', response.data.token);
+          }
+          
           
           navigate("/");
         }else{

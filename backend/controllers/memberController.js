@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const User = require("../models/User"); // ตรวจสอบว่า import ถูกต้อง!
+const User = require("../models/User"); // Import User Model
+const BusinessOwner = require("../models/BusinessOwner"); // Import BusinessOwner Model
 const jwt = require("jsonwebtoken");
 const secret = "MatchWeb";
 
@@ -56,20 +57,35 @@ exports.login = async (req, res) => {
 
   try {
     const { email, password, } = req.body;
-
+    
     // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
     if (password == null || email == null) {
       return res.json({ message: "กรุณากรอกข้อมูลให้ครบถ้วน" });
     }
 
-    const exitResult = await User.findOne({ email });
+    const [existingUser, existingOwner] = await Promise.all([
+      User.findOne({ email }), // ค้นหาใน Collection `users`
+      BusinessOwner.findOne({ email }) // ค้นหาใน Collection `businessowners`
+  ]);
 
-    if(exitResult == null){
-      return res.json({message: "ไม่พบอีเมลนี้"});
-    }
+  let exitResult = null;
 
+  // ตรวจสอบว่าพบผู้ใช้หรือไม่
+  if (existingUser) {
+      exitResult = existingUser;
+  } else if (existingOwner) {
+      exitResult = existingOwner;
+  }
+
+  // ถ้าไม่พบผู้ใช้ในระบบ
+  if (!exitResult) {
+      return res.status(401).json({ message: "ไม่พบผู้ใช้ในระบบ" });
+  }
     
     const LoginOK = await bcrypt.compare(password, exitResult.password)
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("รหัสผ่านที่ถูกเข้ารหัสใหม่:", hashedPassword);
+
     if(LoginOK){
       const name = exitResult.firstName;
       const id = exitResult._id;

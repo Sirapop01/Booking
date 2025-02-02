@@ -18,7 +18,7 @@ const UserProfile = () => {
   const [newProfileImage, setNewProfileImage] = useState(null);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
+    const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
 
     if (storedToken) {
       try {
@@ -229,6 +229,16 @@ const UserProfile = () => {
               <label>อีเมล</label>
               <input type="email" name="email" value={member?.email || ""} readOnly />
             </div>
+            <div className="input-group">
+              <label>วัน/เดือน/ปีเกิด</label>
+              <input 
+                type="date" 
+                name="birthdate" 
+                value={member?.birthdate ? member.birthdate.substring(0, 10) : ""} 
+                onChange={handleChange} 
+                readOnly={!isEditable} 
+              />
+            </div>
           </div>
         </section>
 
@@ -260,18 +270,19 @@ const UserProfile = () => {
 
       {/* 🔹 Logout Popup Modal */}
       {showLogoutModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>ลงชื่อออก</h2>
-            <p>แน่ใจหรือไม่</p>
-            <div className="modal-buttons">
-              <button className="confirm-button" onClick={confirmLogout}>ตกลง</button>
-              <button className="cancel-button" onClick={() => setShowLogoutModal(false)}>ยกเลิก</button>
-            </div>
+        <div className="logout-popup-overlay" onClick={() => setShowLogoutModal(false)}>
+        <div className="logout-popup" onClick={(e) => e.stopPropagation()}>
+          <p>คุณต้องการออกจากระบบหรือไม่?</p>
+          <div className="logout-buttons">
+            <button className="confirm-btn" onClick={confirmLogout}>ยืนยัน</button>
+            <button className="cancel-btn" onClick={() => setShowLogoutModal(false)}>ยกเลิก</button>
           </div>
         </div>
+      </div>
       )}
     </div>
+
+    
   );
 };
 
