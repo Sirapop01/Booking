@@ -19,6 +19,7 @@ import SuccessRegis from  './component/SuccessRegis/SuccessRegis';
 import Discount from './component/Discount/Discount';
 import TestHome from './component/Test/TestHome';
 import OwnerLedger from './component/OwnerLedger/OwnerLedger';
+import Information from './component/Information/Information';
 
 
 
@@ -47,6 +48,7 @@ function App() {
         <Route path='/Discount' element={<Discount />} />
         <Route path='/SuccessRegis' element={<SuccessRegis />} />
         <Route path='/Ownerledger' element={<OwnerLedger />} />
+        <Route path='/Information' element={<Information />} />
 
       </Routes>
     </BrowserRouter>
