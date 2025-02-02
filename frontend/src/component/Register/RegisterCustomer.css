@@ -16,9 +16,6 @@
   text-align: center;
   margin-bottom: 20px;
   width: 100%;
-  background: #0C3B67;
-  padding: 15px 0;
-  border-radius: 10px 10px 0 0;
 }
 
 .header img {
@@ -28,13 +25,13 @@
 }
 
 .header h1 {
-  color: white;
-  font-size: 22px;
+  color: #07213A;
+  font-size: 26px;
   margin-top: 5px;
 }
 
 .header p {
-  color: white;
+  color: gray;
   font-size: 14px;
   text-align: center;
   margin-top: -5px;
@@ -42,107 +39,193 @@
 
 .right-side {
   background: white;
-  padding: 50px;
+  padding: 40px;
   border-radius: 15px;
-  max-width: 1100px;
+  max-width: 1000px;
   width: 100%;
   position: relative;
   z-index: 2;
-  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
 }
 
 .register-heading {
   font-size: 26px;
-  color: #07213A;
-  margin-bottom: 15px;
+  color: black;
+  margin-bottom: 10px;
   text-align: center;
 }
 
 .subtext {
   text-align: center;
-  color: #666;
+  color: gray;
   font-size: 14px;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
+}
+
+/* กล่อง input ของฟอร์ม */
+.form-container {
+  display: flex;
+  justify-content: flex-start; /* ขยับไปทางซ้าย */
+  gap: 40px;
+  margin-left: -30px; /* ลดระยะห่างไปทางซ้าย */
+  margin-top: -40px;
 }
 
 .form-row {
   display: flex;
   justify-content: space-between;
-  gap: 40px;
-  padding-bottom: 20px;
-  color: #000;
+  gap: 30px;
+  margin-bottom: 20px;
+  width: 100%;
 }
 
-.form-row > div {
+.form-column {
   display: flex;
   flex-direction: column;
   width: 48%;
 }
 
+/* กล่องรูปโปรไฟล์ + เพศ + เบอร์โทรศัพท์ */
+.profile-gender-phone-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: -40px;
+  margin-left: 10px;
+  width: 100%;
+  align-items: center; /* ทำให้กล่อง input ตรงกัน */
+}
+
+/* ปรับขนาดให้เท่ากัน */
+.profile-section, .gender-section{
+  display: flex;
+  flex-direction: column;
+  width: 220px; /* ลดขนาด */
+}
+
+.phone-section {
+  width: 220px;
+}
+
+.phone-section input[type="tel"] {
+  display: block;
+  margin-left: -270px; /* ✅ ขยับไปทางซ้าย */
+  width: 205%; /* ให้ขนาดกว้างเท่ากับอีเมล */
+  height: 44px;
+  padding: 10px 10px; /* ✅ ลด padding เพื่อให้ข้อความชิด */
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #aaa;
+  background-color: #ffffff;
+  color: black;
+  box-sizing: border-box;
+  text-align: left; /* ✅ จัดข้อความไปทางซ้าย */
+  margin-top: 10px;
+}
+
+.phone-section label {
+  display: block;
+  position: relative;
+  top: -2px; /* ขยับลง */
+  right: 271px;
+  width: 500px;
+}
+
+
+/* ปรับ input */
+.profile-section input[type="file"] {
+  width: 100%;
+  height: 44px;
+  padding: 10px 10px; /* ✅ ลด padding เพื่อให้ข้อความชิด */
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #aaa;
+  background-color: #ffffff;
+  color: black;
+  box-sizing: border-box;
+  text-align: left; /* ✅ จัดข้อความไปทางซ้าย */
+  margin-left: 10px;
+}
+
+.profile-section label {
+  display: block;
+  position: relative;
+  top: -2px; /* ขยับลง */
+  right: -10px;
+  width: 500px;
+}
+
+.gender-section select {
+  display: block;
+  width: 73%;
+  height: 44px;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #aaa;
+  background-color: #ffffff;
+  color: black;
+  box-sizing: border-box;
+  margin-left: -90px; /* ✅ ขยับ input ไปทางซ้าย */
+}
+
+
+.gender-section label {
+  display: block;
+  position: relative;
+  top: -8px; /* ขยับลง */
+  right: 90px;
+}
+
+
 label {
   font-weight: bold;
   font-size: 16px;
   margin-bottom: 5px;
+  color: black;
 }
 
-.input-container {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-/* ปรับขอบ input ให้เป็นสีเทา */
+/* ปรับ input ให้ดูดีขึ้น */
 input,
 select {
   width: 100%;
-  height: 50px;
-  padding: 12px;
-  font-size: 16px;
-  border-radius: 10px;
-  border: 1px solid #aaa; /* เปลี่ยนจาก #ccc เป็นสีเทาเข้มขึ้น */
-  background-color: #f8f9fa;
-  color: #000;
-  box-sizing: border-box;
-  appearance: none;
-}
-
-/* ปรับ input[type="file"] และ input[type="tel"] ให้มีความสม่ำเสมอ */
-input[type="file"],
-input[type="tel"] {
-  background-color: white !important; /* บังคับให้เป็นสีขาว */
-  border: 1px solid #aaa !important; /* ทำให้ขอบเป็นสีเทา */
+  height: 45px;
   padding: 10px;
-  cursor: pointer;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #aaa;
+  background-color: #ffffff;
+  color: black;
+  box-sizing: border-box;
 }
 
-/* ปรับ input:focus ไม่ให้เปลี่ยนขอบสี */
-input:focus,
-select:focus {
-  border: 1px solid #aaa !important;
-  outline: none;
+/* เอาเงาออก */
+.right-side,
+.form-container {
+  box-shadow: none !important;
 }
 
-/* ปรับตำแหน่งจังหวัด อำเภอ ตำบล ให้อยู่ในบรรทัดเดียวกันกับวันเกิด */
 .location-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start; /* ขยับไปซ้ายให้ตรงกับวันเกิด */
   align-items: center;
-  gap: 20px;
+  gap: 10px;
   width: 100%;
+  margin-left: 2px; /* ✅ ปรับระยะห่างให้ตรง */
   margin-top: 8px;
 }
 
 .location-container select {
   flex: 1;
   min-width: 30%;
-  height: 50px;
+  height: 45px;
+  text-align: center;
 }
 
-/* ปุ่มสมัคร */
+/* ปุ่มลงทะเบียน */
 .button-container {
   display: flex;
   justify-content: center;
-  margin-top: 25px;
+  margin-top: 20px;
 }
 
 .register-button {
@@ -167,4 +250,13 @@ select:focus {
   cursor: pointer;
   text-align: center;
   font-size: 14px;
+}
+
+.error-message-register {
+  color: red; /* เปลี่ยนสีข้อความเป็นสีแดง */
+  font-size: 16px; /* ลดขนาดฟอนต์ */
+  margin-left: 10px; /* ขยับให้ห่างจากข้อความ Label */
+  font-weight: bold; /* ไม่ให้ตัวหนาเท่ากับ Label */
+  display: inline; /* ทำให้ข้อความอยู่บรรทัดเดียวกัน */
+  position: relative;
 }
