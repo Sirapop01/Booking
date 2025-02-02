@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+
+.information-wrapper {
+    width: 100%;
+    height: 100vh;
+    background: #0a1a2a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.information-navbar {
+    width: 100%;
+    background: #0a1a2a;
+    padding: 10px 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.information-navbar-content {
+    display: flex;
+    align-items: center;
+}
+
+.information-logo {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.information-title {
+    font-size: 24px;
+    color: white;
+}
+
+.information-container {
+    width: 95%;
+    max-width: 1400px;
+    background: white;
+    padding: 70px;
+    border-radius: 20px;
+    text-align: center;
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.information-section {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    gap: 20px;
+    width: 100%;
+}
+
+.information-box {
+    background: white;
+    padding: 30px;
+    border: 2px solid black;
+    border-radius: 10px;
+    width: 32%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.information-label {
+    font-size: 16px;
+    color: black;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.information-upload {
+    border: 2px solid black;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.large-upload {
+    height: 200px;
+}
+
+.information-add {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.information-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+.information-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.information-next {
+    background-color: #00a6fb;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.information-cancel {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.file-input {
+    display: none;
+}
+
+.upload-label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.uploaded-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
