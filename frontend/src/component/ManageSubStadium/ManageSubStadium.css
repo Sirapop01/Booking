@@ -4,17 +4,26 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     width: 100%;
-    min-height: 100vh;
-    color: white;
+    height: 100vh;
+    overflow: auto; /* ✅ เพิ่มเลื่อน */
+}
+
+/* ✅ ให้ content-container แยกออกจาก header */
+.content-container1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
 }
 
 /* ✅ ปรับขนาดหัวข้อให้ใหญ่ขึ้น */
 .page-title {
     font-size: 48px; /* ขยายขนาด */
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 1%;
     color: white;
     display: flex;
     align-items: center;
@@ -23,6 +32,7 @@
 }
 
 .logo {
+    margin-top: 20px;
     width: 70px; /* ขยายโลโก้ */
     height: 70px;
     margin-right: 12px;
@@ -44,15 +54,14 @@
 .sports-container {
     background: white;
     border-radius: 15px;
-    padding: 50px; /* เพิ่ม padding ให้ใหญ่ขึ้น */
+    padding: 50px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 30px; /* เพิ่มช่องว่างระหว่างไอเท็ม */
-    max-width: 1100px; /* ขยายความกว้าง */
-    min-height: 400px; /* เพิ่มความสูงของกรอบ */
+    gap: 30px;
+    max-width: 1100px;
+    min-height: 400px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     border: 3px solid black;
-    position: relative;
 }
 
 /* การ์ดของกีฬา */
@@ -109,14 +118,14 @@
     text-decoration: none;
 }
 
-.home-logo {
+.home-logo1 {
     width: 40px;
     height: 40px;
 }
 
 /* ปุ่มย้อนกลับ */
-.btn-back {
-    margin-top: 30px;
+.btn-back1 {
+    margin-top: 20px;
     padding: 12px 24px;
     border: 2px solid black;
     border-radius: 8px;
@@ -124,7 +133,6 @@
     cursor: pointer;
     font-size: 18px;
     font-weight: bold;
-    font-family: 'Kanit', sans-serif;
 }
 
 .btn-back:hover {
