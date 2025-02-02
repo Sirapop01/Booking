@@ -2,9 +2,15 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom"; 
 import "./Registeropera.css";
 import logo from '../assets/logo.png';
+import { IoEyeSharp } from "react-icons/io5";
+import { FaEyeSlash } from "react-icons/fa";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 //Fix
 const RegistrationForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     idCard: "",
     firstName: "",
@@ -24,10 +30,10 @@ const RegistrationForm = () => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value, 
+    }));
 
     setErrors((prevErrors) => ({
       ...prevErrors,
@@ -51,13 +57,32 @@ const RegistrationForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      console.log("Form Data Submitted:", formData);
-      alert("สมัครสมาชิกสำเร็จ!");
+
+    if (!validateForm()) return; // ✅ ตรวจสอบข้อมูลก่อนส่ง
+
+    console.log("🚀 Data being sent to backend:", formData); // ✅ ตรวจสอบค่าก่อนส่ง
+
+    try {
+        const response = await axios.post("http://localhost:4000/api/business/register", 
+          { ...formData, role: "customer" }, // ✅ ส่ง data แยกจาก headers
+          { headers: { "Content-Type": "application/json" } } // ✅ headers แยกจาก body
+        );
+
+        if (response.data.success) {
+            alert("สมัครสมาชิกสำเร็จ! โปรดกรอกข้อมูลสนามและรอการอนุมัติ!");
+            navigate("/RegisterArena");
+        } else {
+            alert(response.data.message || "เกิดข้อผิดพลาดในการสมัครสมาชิก");
+        }
+    } catch (error) {
+        console.error("🚨 Error registering user:", error.response?.data || error);
+        alert("❌ เกิดข้อผิดพลาด: " + (error.response?.data?.message || "ลองใหม่อีกครั้ง"));
     }
-  };
+};
+
 
   return (
     <>
@@ -117,9 +142,10 @@ const RegistrationForm = () => {
               <label className="password-label">
                 รหัสผ่าน * {errors.password && <span className="error-message">{errors.password}</span>}
               </label>
+
               <div className="password-container">
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? "text" : "password"}  // ✅ เปลี่ยนระหว่าง "text" และ "password"
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
@@ -129,25 +155,36 @@ const RegistrationForm = () => {
                   className="toggle-password"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? "ซ่อน" : "แสดง"}
+                  {showPassword ? <IoEyeSharp /> : <FaEyeSlash />}  
                 </button>
               </div>
-              
+
               {/* ยืนยันรหัสผ่าน */}
               <label>
                 ยืนยันรหัสผ่าน * {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
-                <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} />
               </label>
+              <input
+                type={showPassword ? "text" : "password"}  // ✅ ใช้แสดง/ซ่อนเหมือนกัน
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+              />
             </div>
 
             <div className="form-terms">
               <label>
-                <input type="checkbox" name="acceptTerms" checked={formData.acceptTerms} onChange={handleChange} />
+                <input 
+                  type="checkbox" 
+                  name="acceptTerms" 
+                  checked={formData.acceptTerms} 
+                  onChange={handleChange} 
+                />
                 <span className="accept-text">ยอมรับ</span>
                 <Link to="/OperaRequri" className="highlight-conditions"> ข้อกำหนดและเงื่อนไข</Link>
               </label>
               {errors.acceptTerms && <span className="error-message">{errors.acceptTerms}</span>}
             </div>
+
 
             <div className="submit-button-container">
               <button type="submit" className="submit-button">ดำเนินการต่อ</button>

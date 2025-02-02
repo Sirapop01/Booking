@@ -1,35 +1,39 @@
-const Image = require("../models/Image");
+const multer = require("multer");
 const path = require("path");
+const Image = require("../models/Image"); // ✅ ตรวจสอบว่าโมเดลนี้มีอยู่
 
-// อัปโหลดไฟล์และบันทึกลง MongoDB
-const uploadImage = async (req, res) => {
-    if (!req.file) {
-        return res.status(400).json({ error: "No file uploaded" });
-    }
+// ✅ ตั้งค่า multer สำหรับจัดการไฟล์อัปโหลด
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // ✅ ไฟล์จะถูกเก็บในโฟลเดอร์ uploads/
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // ✅ ตั้งชื่อไฟล์เป็น timestamp
+  }
+});
 
-    const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+const upload = multer({ storage });
 
-    try {
-        const newImage = new Image({
-            filename: req.file.filename,
-            url: imageUrl
-        });
+// ✅ ฟังก์ชันอัปโหลดรูปภาพ
+exports.uploadProfileImage = async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded" });
+  }
 
-        await newImage.save();
-        res.status(201).json({ message: "Upload successful", imageUrl });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+  const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+
+  try {
+    const newImage = new Image({
+      filename: req.file.filename,
+      url: imageUrl
+    });
+
+    await newImage.save();
+    res.status(201).json({ message: "Upload successful", imageUrl });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
-// ดึงรูปภาพทั้งหมด
-const getImages = async (req, res) => {
-    try {
-        const images = await Image.find();
-        res.status(200).json(images);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-module.exports = { uploadImage, getImages };
+// ✅ Export multer `upload` object เพื่อใช้ใน Routes
+exports.upload = upload;
