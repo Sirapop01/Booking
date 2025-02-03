@@ -31,7 +31,7 @@ mongoose
 app.use("/uploads", express.static("uploads")); // ให้เข้าถึงรูปภาพผ่าน URL ได้
 app.use("/api/auth", authRoutes);
 app.use("/api/stadiums", stadiumRoutes); // ✅ เพิ่ม API ของสนามกีฬา
-app.use("/api/images", uploadRoutes); // เพิ่ม Route สำหรับการอัปโหลดรูป
+app.use("/api/upload", uploadRoutes); // เพิ่ม Route สำหรับการอัปโหลดรูป
 app.use("/api/business", businessRoutes);
 
 app.listen(PORT, () => {

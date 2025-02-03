@@ -7,28 +7,29 @@ const secret = "MatchWeb";
 
 exports.register = async (req, res) => {
   try {
+    console.log("📩 Register Request Body:", req.body);  // ✅ Debugging
+
     const {
       email, password, confirmPassword, firstName, lastName,
-      gender, phoneNumber, interestedSports, province, district, subdistrict,
+      gender, phoneNumber, birthdate, interestedSports, province, district, subdistrict,
+      profileImage
     } = req.body;
 
-    const profileImage = req.file ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}` : null;
+    if (!email || !password || !confirmPassword) {
+      return res.status(400).json({ message: "กรุณากรอกข้อมูลให้ครบถ้วน" });
+    }
 
-    // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
     if (password !== confirmPassword) {
       return res.status(400).json({ message: "รหัสผ่านกับยืนยันรหัสผ่านไม่ตรงกัน" });
     }
 
-    // ตรวจสอบว่าอีเมลถูกใช้ไปแล้วหรือไม่
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "อีเมลนี้ถูกใช้งานแล้ว" });
     }
 
-    // แฮชรหัสผ่านก่อนบันทึกลงฐานข้อมูล
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // บันทึกข้อมูลลง MongoDB
     const newUser = await User.create({
       email,
       password: hashedPassword,
@@ -36,18 +37,20 @@ exports.register = async (req, res) => {
       lastName,
       gender,
       phoneNumber,
+      birthdate,
       interestedSports,
       province,
       district,
       subdistrict,
-      profileImage,
+      profileImage, // ✅ รูปภาพมาจาก JSON ที่ส่งมาจาก Frontend
       role : "user"
     });
 
+    console.log("✅ User Registered Successfully:", newUser);
     res.status(201).json({ message: "สมัครสมาชิกสำเร็จ!", user: newUser });
 
   } catch (err) {
-    console.error("Error registering user:", err);
+    console.error("❌ Error registering user:", err);
     res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
   }
 };
