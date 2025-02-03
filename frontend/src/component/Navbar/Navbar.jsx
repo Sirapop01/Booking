@@ -29,10 +29,14 @@ const Navbar = () => {
   }, []);
 
   const isLoggedIn = !!decodedToken;
+  
+  
+
 
     // ฟังก์ชัน Logout พร้อมป๊อปอัปยืนยัน
   const handleLogout = () => {
     setShowLogoutPopup(true); // แสดงป๊อปอัปยืนยัน
+    
   };
 
   const confirmLogout = () => {
@@ -58,31 +62,45 @@ const Navbar = () => {
         </div>
 
         <div className="navbar-right">
-          {!isLoggedIn ? (
-            <div className="navbar-links"> {/* ✅ ตรวจสอบว่า div นี้ครอบปุ่มทั้งสองปุ่ม */}
-              <button className="navbar-link" onClick={() => navigate('/login')}>
-                เข้าสู่ระบบ
-              </button>
-              <button className="navbar-button" onClick={() => navigate('/RegisterChoice')}>
-                ลงทะเบียน
-              </button>
-            </div>
-          ) : (
-            <div className="dropdown">
-              <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-                ☰
-              </button>
-              {isDropdownOpen && (
-                <div className="dropdown-menu">
-                  <button onClick={() => navigate('/profile')}>บัญชี</button>
-                  <button onClick={() => navigate('/history')}>ประวัติการจอง</button>
-                  <button onClick={() => navigate('/favorites')}>รายการโปรด</button>
-                  <button onClick={handleLogout}>ลงชื่อออก</button>
-                </div>
-              )}
+      {!isLoggedIn ? (
+        <div className="navbar-links">
+          <button className="navbar-link" onClick={() => navigate("/login")}>
+            เข้าสู่ระบบ
+          </button>
+          <button className="navbar-button" onClick={() => navigate("/RegisterChoice")}>
+            ลงทะเบียน
+          </button>
+        </div>
+      ) : decodedToken?.role === "user" ? (
+        <div className="dropdown">
+          <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+            ☰
+          </button>
+          {isDropdownOpen && (
+            <div className="dropdown-menu">
+              <button onClick={() => navigate("/profile")}>บัญชี</button>
+              <button onClick={() => navigate("/history")}>ประวัติการจอง</button>
+              <button onClick={() => navigate("/favorites")}>รายการโปรด</button>
+              <button onClick={handleLogout}>ลงชื่อออก</button>
             </div>
           )}
         </div>
+      ) : (
+        <div className="dropdown">
+          <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+            ☰
+          </button>
+          {isDropdownOpen && (
+            <div className="dropdown-menu">
+              <button onClick={() => navigate("/profile")}>บัญชี</button>
+              <button onClick={() => navigate("/areana")}>สนามของฉัน</button>
+              <button onClick={() => navigate("/income")}>บัญชีรายรับ</button>
+              <button onClick={handleLogout}>ลงชื่อออก</button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
       </nav>
 
       {/* ✅ Popup Logout กลางจอ */}
