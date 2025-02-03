@@ -1,0 +1,126 @@
+.manage-account-container {
+  width: 100%;
+  height: 100vh;
+  background-color: #0b2c4d;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 32px;
+  margin: 20px 0;
+}
+
+/* 📌 แยก container สำหรับ user list และ user details */
+.account-content {
+  display: flex;
+  width: 80%;
+  height: 70vh;
+  gap: 20px; /* ✅ เพิ่มระยะห่าง */
+}
+
+/* 📌 รายการบัญชี (User List) */
+.user-list-container {
+  flex: 1;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-list {
+  width: 100%;
+  border-right: 2px solid black;
+  display: flex;
+  flex-direction: column;
+}
+
+.list-header {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  padding: 15px;
+  background: #ddd;
+  color: black;
+}
+
+.user-items {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.user-item {
+  padding: 15px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  color: black;
+  background: white;
+}
+
+.user-item:hover,
+.user-item.selected {
+  background: #58a6ff;
+  color: white;
+}
+
+/* 📌 รายละเอียดบัญชี (User Details) */
+.user-details-container {
+  flex: 2;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  color: black; /* ✅ เปลี่ยนสีตัวหนังสือเป็นสีดำ */
+}
+
+/* ✅ แก้ไขให้ข้อความเป็นสีดำ */
+.info-section p {
+  color: black;
+}
+
+/* 📌 Blacklisted Users */
+.user-item.blacklisted {
+  background: #ffb3b3;
+  color: red;
+}
+
+.blacklisted-text {
+  color: red;
+}
+
+/* 📌 ปุ่มดำเนินการ */
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  width: 80%;
+}
+
+.delete-button {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.blacklist-button {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* 📌 ปุ่มเมื่ออยู่ใน Blacklist */
+.blacklist-button.remove-blacklist {
+  background-color: red;
+}
+
+.blacklist-button:hover {
+  background-color: #333;
+}

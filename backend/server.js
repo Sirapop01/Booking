@@ -7,6 +7,7 @@ const authRoutes = require("./routes/authRoutes");
 const stadiumRoutes = require("./routes/stadiumRoutes"); // ✅ เพิ่ม Stadium Routes
 const uploadRoutes = require("./routes/uploadRoutes");
 const businessRoutes = require("./routes/businessRoutes");
+const manageAccountRoutes = require("./routes/manageAccountRoutes");
 
 const app = express();
 const PORT = 4000;
@@ -33,6 +34,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/stadiums", stadiumRoutes); // ✅ เพิ่ม API ของสนามกีฬา
 app.use("/api/upload", uploadRoutes); // เพิ่ม Route สำหรับการอัปโหลดรูป
 app.use("/api/business", businessRoutes);
+app.use("/api/manage-account", manageAccountRoutes);
 
 app.listen(PORT, () => {
   console.log(`🚀 Server started on port ${PORT}`);
