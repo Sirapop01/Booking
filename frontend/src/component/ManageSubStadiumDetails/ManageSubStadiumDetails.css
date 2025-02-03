@@ -43,18 +43,20 @@ table {
     left: 20px;
     width: 60px;
     height: 60px;
-    background-color: #ffffff;
-    border-radius: 10px;
+    background-color: white;
+    border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-}
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
 
-.home-logo {
+  .home-logo {
     width: 35px;
     height: 35px;
-}
+  }
 
 /* ✅ หัวข้อ "รายการสนาม" */
 .section-title {
