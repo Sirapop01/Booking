@@ -1,15 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+
 .ledger-page {
     background-color: #0c2c4a;
     color: white;
-    font-family: Arial, sans-serif;
+    font-family: 'Kanit', sans-serif;
     margin: 0;
     padding: 0;
     user-select: none;
     cursor: default;
-  }
-  
-  .home-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    overflow-y: auto;
+}
+
+.ledger-title {
+    font-size: 36px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.home-button {
     position: fixed;
     top: 20px;
     left: 20px;
@@ -23,149 +35,252 @@
     text-decoration: none;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
-  }
-  
-  .ledger-container {
+}
+
+.ledger-container {
     display: flex;
-    padding: 20px;
-    gap: 20px;
-    justify-content: center;
-    align-items: flex-start;
-  }
-  
-  .stadium-list {
-    width: 300px;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1100px;
     background: white;
     color: black;
-    padding: 10px;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.content-container2 {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+/* ✅ รายการสนาม */
+.stadium-list2 {
+    width: 280px;
+    background: white;
+    color: black;
+    padding: 15px;
     border-radius: 5px;
     text-align: center;
-    
-    user-select: none;
-    cursor: default;
     font-family: 'Kanit', sans-serif;
-  }
-  
-  .stadium-list h2 {
+    border: 2px solid black;
+}
+
+.stadium-list2 h2 {
     font-size: 24px;
     font-weight: bold;
     padding-bottom: 10px;
     border-bottom: 2px solid black;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  .stadium-list ul {
+}
+
+.stadium-list2 ul {
     list-style: none;
     padding: 0;
     margin: 0;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  .stadium-list li {
+}
+
+.stadium-list2 li {
     padding: 15px;
     font-size: 18px;
     border-bottom: 1px solid gray;
-    
-    user-select: none;
-    cursor: default;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  .stadium-list .selected {
+    cursor: pointer;
+}
+
+.stadium-list2 .selected {
     background-color: #2196F3;
     color: white;
     font-weight: bold;
-  }
-  
-  .ledger-details {
-    width: 800px;
-    background: white;
-    color: black;
-    padding: 20px;
-    border-radius: 5px;
-    text-align: center;
-    
-    user-select: none;
-    cursor: default;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  .ledger-details h2 {
-    font-size: 24px;
-    font-weight: bold;
-    padding-bottom: 10px;
-    border-bottom: 2px solid black;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  table {
+}
+
+/* ✅ ทำให้ตารางเลื่อนแนวตั้งได้ */
+.ledger-details {
+  flex: 1;
+  background: white;
+  color: black;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  border: 2px solid black;
+  overflow-y: auto; /* ✅ เปิดให้เลื่อนแนวตั้ง */
+  max-height: 400px; /* ✅ กำหนดความสูงของตาราง */
+}
+
+/* ✅ ทำให้ตารางไม่เสียรูป */
+.ledger-details table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ledger-details th,
+.ledger-details td {
+  border: 1px solid black;
+  padding: 15px;
+  text-align: center;
+  font-size: 18px;
+  white-space: nowrap; /* ✅ ป้องกันข้อความขึ้นบรรทัดใหม่ */
+}
+
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+/* ✅ กำหนดให้มี Scrollbar ด้านขวาของตาราง */
+.ledger-details::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ledger-details::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.ledger-details::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* ✅ จัดตำแหน่งหัวข้อ "รายละเอียด" ให้อยู่ตรงกลาง */
+.table-header {
+  display: flex;
+  justify-content: space-between; /* ✅ จัดวางให้อยู่ขวาและกึ่งกลาง */
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 2px solid black;
+  width: 100%;
+}
+
+/* ✅ จัดตำแหน่งหัวข้อ "รายละเอียด" ให้อยู่ตรงกลาง */
+.table-header h2 {
+  flex: 1; /* ✅ ขยายพื้นที่ให้เต็ม */
+  text-align: center; /* ✅ จัดให้อยู่กึ่งกลาง */
+  margin: 0;
+}
+
+/* ✅ จัดตำแหน่งปุ่ม Filter ไปทางขวา */
+.filter-container {
+  display: flex;
+  justify-content: flex-end; /* ✅ จัดไปทางขวาสุด */
+  align-items: center;
+  width: auto;
+}
+
+
+table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
-  }
-  
-  table, th, td {
+}
+
+table, th, td {
     border: 1px solid black;
     padding: 15px;
     text-align: center;
     font-size: 18px;
-    
-    user-select: none;
-    cursor: default;
-  }
-  
-  th {
+}
+
+th {
     background-color: #f2f2f2;
     font-weight: bold;
-  }
-  
-  .ledger-actions {
+}
+
+/* ✅ ปุ่มต่างๆ */
+.ledger-actions {
     display: flex;
     justify-content: space-between;
     padding-top: 20px;
     align-items: center;
-  }
-  
-  .delete-button {
-    background-color: red;
-    color: white;
-    padding: 15px;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  .add-button {
-    background-color: gray;
-    color: white;
-    padding: 15px;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  .manage-button {
-    background-color: #2196F3;
-    color: white;
-    padding: 15px;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  .total-box {
-    font-size: 22px;
-    font-weight: bold;
-    background-color: white;
-    padding: 15px;
-    border: 2px solid black;
-    border-radius: 5px;
-    
-    user-select: none;
-    cursor: default;
-    font-family: 'Kanit', sans-serif;
-  }
-  
+}
+
+.delete-button1 {
+  background-color: red;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  width: 120px;
+}
+
+.add-button1 {
+  background-color: gray;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  width: 120px;
+}
+
+.total-box {
+  font-size: 22px;
+  background-color: white;
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 5px;
+  text-align: center;
+  width: 200px;
+  color: black;
+}
+
+.manage-button {
+  background-color: #2196F3;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  width: 120px;
+}
+
+/* ✅ เมื่อคลิกที่แถวของตาราง เปลี่ยนเป็นแถบสีเทา */
+.selected-row {
+  background-color: #bdbdbd !important;
+}
+
+/* ✅ ปุ่ม Filter */
+.filter-container {
+  position: relative;
+  display: inline-block;
+}
+
+.filter-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.filter-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* ✅ Drop-down เมนู */
+.dropdown-menu {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: white;
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 150px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.dropdown-item {
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+}
+
+.dropdown-item:hover {
+  background: #bdbdbd;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}

@@ -33,6 +33,7 @@ function RegisterCustomer() {
     subdistrict: '',
     profileImage: null,
     role: 'user', // ✅ เพิ่ม role (กำหนดค่าเริ่มต้นเป็น "user")
+    gender: '',
   });
   
   const [errors, setErrors] = useState({});
@@ -41,7 +42,7 @@ function RegisterCustomer() {
 
   const validateForm = () => {
     let newErrors = {};
-    if (!formData.profileImage) newErrors.profileImage = "กรุณาอัปโหลดรูปโปรไฟล์";
+    if (!formData.profileImage) newErrors.profileImage = "กรุณาใส่รูปโปรไฟล์";
     if (!formData.firstName) newErrors.firstName = "กรุณากรอกชื่อจริง";
     if (!formData.lastName) newErrors.lastName = "กรุณากรอกนามสกุล";
     if (!formData.email) newErrors.email = "กรุณากรอกอีเมล";
@@ -53,6 +54,7 @@ function RegisterCustomer() {
     if (!formData.province || !formData.district || !formData.subdistrict) {
       newErrors.location = "กรุณากรอกข้อมูลให้ครบ";
     }
+    if (!formData.gender) newErrors.gender = "กรุณาเลือกเพศ";
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -60,7 +62,6 @@ function RegisterCustomer() {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-
     setFormData(prevState => {
       let updatedData = { ...prevState, [name]: files ? files[0] : value };
 
@@ -79,7 +80,6 @@ function RegisterCustomer() {
 
       return updatedData;
     });
-
     setErrors(prevErrors => ({
       ...prevErrors,
       [name]: value ? "" : prevErrors[name]
@@ -135,70 +135,50 @@ function RegisterCustomer() {
         <h1>MatchWeb</h1>
         <p>ระบบลงทะเบียนสำหรับผู้ใช้งาน</p>
       </header>
-
       <div className="right-side">
         <h2 className="register-heading">ยืนยันข้อมูลการสมัครสมาชิกสำหรับผู้ใช้งาน</h2>
         <p className="subtext">กรุณากรอกข้อมูลและตรวจสอบให้ครบถ้วน</p>
-
         <form onSubmit={handleRegister}>
-          <div className="form-row">
-            <div>
-              <label>
-                รูปโปรไฟล์ * {errors.profileImage && <span className="error-message">{errors.profileImage}</span>}
-              </label>
+          <div className="profile-gender-phone-container">
+            <div className="profile-section">
+              <label>รูปโปรไฟล์ *{errors.profileImage && <span className="error-message-register">{errors.profileImage}</span>}</label>
               <input type="file" name="profileImage" onChange={handleChange} />
-
-              <label>
-                ชื่อจริง * {errors.firstName && <span className="error-message">{errors.firstName}</span>}
-              </label>
-              <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} />
-
-              <label>
-                นามสกุล * {errors.lastName && <span className="error-message">{errors.lastName}</span>}
-              </label>
-              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
-
-              <label>
-                กีฬาที่สนใจ * {errors.interestedSports && <span className="error-message">{errors.interestedSports}</span>}
-              </label>
-              <input type="text" name="interestedSports" value={formData.interestedSports} onChange={handleChange} />
             </div>
-
-            <div>
-              <label>
-                เบอร์โทรศัพท์มือถือ * {errors.phoneNumber && <span className="error-message">{errors.phoneNumber}</span>}
-              </label>
+            <div className="gender-section">
+              <label>เพศ *{errors.gender && <span className="error-message-register">{errors.gender}</span>}</label>
+              <select name="gender" value={formData.gender} onChange={handleChange}>
+                <option value="">เลือกเพศ</option>
+                <option value="male">ชาย</option>
+                <option value="female">หญิง</option>
+                <option value="other">อื่นๆ</option>
+              </select>
+            </div>
+            <div className="phone-section">
+              <label>เบอร์โทรศัพท์มือถือ *{errors.phoneNumber && <span className="error-message-register">{errors.phoneNumber}</span>}</label>
               <input type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
-
-              <label>
-                อีเมล * {errors.email && <span className="error-message">{errors.email}</span>}
-              </label>
-              <input type="email" name="email" value={formData.email} onChange={handleChange} />
-
-              <label>
-                รหัสผ่าน * {errors.password && <span className="error-message">{errors.password}</span>}
-              </label>
-              <input type="password" name="password" value={formData.password} onChange={handleChange} />
-
-              <label>
-                ยืนยันรหัสผ่าน * {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
-              </label>
-              <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} />
             </div>
           </div>
 
-          <div className="form-row">
-            <div>
-              <label>
-                วัน/เดือน/ปีเกิด * {errors.birthdate && <span className="error-message">{errors.birthdate}</span>}
-              </label>
+          <div className="form-container">
+            <div className="form-column">
+              <label>ชื่อจริง *{errors.firstName && <span className="error-message-register">{errors.firstName}</span>}</label>
+              <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} />
+              <label>นามสกุล *{errors.lastName && <span className="error-message-register">{errors.lastName}</span>}</label>
+              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
+              <label>กีฬาที่สนใจ *{errors.interestedSports && <span className="error-message-register">{errors.interestedSports}</span>}</label>
+              <input type="text" name="interestedSports" value={formData.interestedSports} onChange={handleChange} />
+              <label>วัน/เดือน/ปีเกิด *{errors.birthdate && <span className="error-message-register">{errors.birthdate}</span>}</label>
               <input type="date" name="birthdate" value={formData.birthdate} onChange={handleChange} />
             </div>
 
-            <div>
-              <label>
-                จังหวัด / อำเภอ / ตำบล * {errors.location && <span className="error-message">{errors.location}</span>}
-              </label>
+            <div className="form-column">
+              <label>อีเมล *{errors.email && <span className="error-message-register">{errors.email}</span>}</label>
+              <input type="email" name="email" value={formData.email} onChange={handleChange} />
+              <label>รหัสผ่าน *{errors.password && <span className="error-message-register">{errors.password}</span>}</label>
+              <input type="password" name="password" value={formData.password} onChange={handleChange} />
+              <label>ยืนยันรหัสผ่าน *{errors.confirmPassword && <span className="error-message-register">{errors.confirmPassword}</span>}</label>
+              <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} />
+              <label>จังหวัด / อำเภอ / ตำบล *{errors.location && <span className="error-message-register">{errors.location}</span>}</label>
               <div className="location-container">
                 <select name="province" value={formData.province} onChange={handleChange}>
                   <option value="">จังหวัด</option>
@@ -206,14 +186,12 @@ function RegisterCustomer() {
                     <option key={province} value={province}>{province}</option>
                   ))}
                 </select>
-
                 <select name="district" value={formData.district} onChange={handleChange} disabled={!districts.length}>
                   <option value="">อำเภอ</option>
                   {districts.map((district) => (
                     <option key={district} value={district}>{district}</option>
                   ))}
                 </select>
-
                 <select name="subdistrict" value={formData.subdistrict} onChange={handleChange} disabled={!subdistricts.length}>
                   <option value="">ตำบล</option>
                   {subdistricts.map((subdistrict) => (
