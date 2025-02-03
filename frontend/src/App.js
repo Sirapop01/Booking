@@ -20,6 +20,7 @@ import Discount from './component/Discount/Discount';
 import TestHome from './component/Test/TestHome';
 import OwnerLedger from './component/OwnerLedger/OwnerLedger';
 import Information from './component/Information/Information';
+import ManageAccount from './component/ManageAccount/ManageAccount';
 
 
 
@@ -49,6 +50,7 @@ function App() {
         <Route path='/SuccessRegis' element={<SuccessRegis />} />
         <Route path='/Ownerledger' element={<OwnerLedger />} />
         <Route path='/Information' element={<Information />} />
+        <Route path='/ManageAccount' element={<ManageAccount />}/>
 
       </Routes>
     </BrowserRouter>

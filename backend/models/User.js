@@ -15,6 +15,7 @@ const UserSchema = new mongoose.Schema({
   subdistrict: { type: String, required: true },
   role: { type: String, required: true }, // ✅ แก้คำผิด
   profileImage: { type: String, required: false }, // ✅ เปลี่ยนเป็น required: false กรณีไม่มีอัปโหลด
+  status: { type: String, default: "active" } // "active" หรือ "blacklisted"
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", UserSchema);
