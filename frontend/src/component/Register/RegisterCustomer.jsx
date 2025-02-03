@@ -24,7 +24,7 @@ function RegisterCustomer() {
     confirmPassword: '', // ❌ ไม่ต้องเก็บใน DB แต่ใช้เช็คค่าที่กรอก
     firstName: '',
     lastName: '',
-    //gender: '', // ✅ เพิ่ม gender ให้ตรงกับ Schema
+    gender: '', // ✅ เพิ่ม gender ให้ตรงกับ Schema
     phoneNumber: '',
     birthdate: '', // ✅ เปลี่ยนจาก `dob` เป็น `birthdate`
     interestedSports: '',
@@ -88,40 +88,45 @@ function RegisterCustomer() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-  
-    if (!validateForm()) {
-      return; // ✅ หยุดทำงาน ถ้าข้อมูลไม่ผ่านการตรวจสอบ
-    }
-  
+
     try {
-      const formDataToSend = new FormData();
+      let userData = { ...formData }; // ✅ เก็บข้อมูลทั้งหมดในรูปแบบ JSON
+      let uploadedImageUrl = null;
   
-      // ✅ เพิ่มค่าปกติลง FormData
-      Object.keys(formData).forEach((key) => {
-        if (key !== "profileImage") {
-          formDataToSend.append(key, formData[key]);
-        }
-      });
-  
-      // ✅ เพิ่มไฟล์รูปภาพถ้ามีการอัปโหลด
       if (formData.profileImage) {
-        formDataToSend.append("profileImage", formData.profileImage);
+          let imageData = new FormData();
+          imageData.append("profileImage", formData.profileImage);
+  
+          console.log("📤 Uploading Image...");
+          const uploadResponse = await axios.post("http://localhost:4000/api/upload/uploadProfile", imageData, {
+              headers: { "Content-Type": "multipart/form-data" },
+          });
+  
+          console.log("✅ Uploaded Image:", uploadResponse.data);
+          uploadedImageUrl = uploadResponse.data.imageUrl; // ✅ เก็บค่ารูปที่อัปโหลด
+          userData.profileImage = uploadedImageUrl; // ✅ อัปเดตรูปภาพใน JSON
       }
   
-      formDataToSend.append("role", "user"); // ✅ กำหนด role เป็น "user"
+      // ✅ Debug JSON ก่อนส่งไป Backend
+      console.log("📤 Register Request JSON:", JSON.stringify(userData, null, 2));
   
-      // ✅ ส่งข้อมูลไปยัง API
-      const response = await axios.post("http://localhost:4000/api/auth/register", formDataToSend, {
-        headers: { "Content-Type": "multipart/form-data" },
+      // ✅ ส่งข้อมูลไป Backend ในรูปแบบ JSON
+      const response = await axios.post("http://localhost:4000/api/auth/register", userData, {
+          headers: { "Content-Type": "application/json" }, // ✅ ใช้ JSON แทน multipart/form-data
       });
   
       alert("✅ สมัครสมาชิกสำเร็จ!");
       navigate("/login");
-    } catch (err) {
-      alert("❌ เกิดข้อผิดพลาด: " + (err.response?.data?.message || "ลองใหม่อีกครั้ง"));
-    }
-  };
   
+  } catch (err) {
+      console.error("❌ Registration Error:", err);
+      alert("❌ เกิดข้อผิดพลาด: " + (err.response?.data?.message || "ลองใหม่อีกครั้ง"));
+  }
+  
+};
+
+
+
 
   return (
     <div className="container1">
