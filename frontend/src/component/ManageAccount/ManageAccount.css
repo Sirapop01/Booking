@@ -1,126 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+
 .manage-account-container {
-  width: 100%;
-  height: 100vh;
-  background-color: #0b2c4d;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-color: #0b2c4d;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Kanit', sans-serif;
 }
 
 .page-title {
-  font-size: 32px;
-  margin: 20px 0;
+    font-size: 64px;
+    margin: 20px 0;
+    font-family: 'Kanit', sans-serif;
+}
+
+/* 📌 ปุ่มกลับหน้า Home */
+.home-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.home-logo {
+    width: 50px;
+    height: 50px;
 }
 
 /* 📌 แยก container สำหรับ user list และ user details */
 .account-content {
-  display: flex;
-  width: 80%;
-  height: 70vh;
-  gap: 20px; /* ✅ เพิ่มระยะห่าง */
+    display: flex;
+    width: 80%;
+    height: 70vh;
+    gap: 20px;
 }
 
 /* 📌 รายการบัญชี (User List) */
 .user-list-container {
-  flex: 1;
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .user-list {
-  width: 100%;
-  border-right: 2px solid black;
-  display: flex;
-  flex-direction: column;
+    width: 100%;
+    border-right: 2px solid black;
+    display: flex;
+    flex-direction: column;
 }
 
 .list-header {
-  font-size: 20px;
-  font-weight: bold;
-  text-align: center;
-  padding: 15px;
-  background: #ddd;
-  color: black;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    padding: 15px;
+    background: #ddd;
+    color: black;
 }
 
 .user-items {
-  flex: 1;
-  overflow-y: auto;
+    flex: 1;
+    overflow-y: auto;
 }
 
 .user-item {
-  padding: 15px;
-  border-bottom: 1px solid #ccc;
-  cursor: pointer;
-  color: black;
-  background: white;
+    padding: 15px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+    color: black;
+    background: white;
 }
 
 .user-item:hover,
 .user-item.selected {
-  background: #58a6ff;
-  color: white;
+    background: #58a6ff;
+    color: white;
 }
 
 /* 📌 รายละเอียดบัญชี (User Details) */
 .user-details-container {
-  flex: 2;
-  background: white;
-  border-radius: 10px;
-  padding: 20px;
-  color: black; /* ✅ เปลี่ยนสีตัวหนังสือเป็นสีดำ */
+    flex: 2;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-/* ✅ แก้ไขให้ข้อความเป็นสีดำ */
+.user-header{
+  font-size: 32px;
+  text-align: center;
+}
+
+/* ✅ รูปโปรไฟล์ */
+.profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ✅ หัวข้อ "ข้อมูลส่วนตัว" */
+.details-header {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* ✅ จัดข้อมูลเป็น 3 คอลัมน์ */
+.info-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    width: 100%;
+}
+
 .info-section p {
-  color: black;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+}
+
+.info-section p strong {
+    font-weight: 700;
 }
 
 /* 📌 Blacklisted Users */
 .user-item.blacklisted {
-  background: #ffb3b3;
-  color: red;
+    background: #ffb3b3;
+    color: red;
 }
 
 .blacklisted-text {
-  color: red;
+    color: red;
 }
 
 /* 📌 ปุ่มดำเนินการ */
 .action-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-  width: 80%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    width: 100%;
 }
 
-.delete-button {
-  background-color: #ef4444;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 5px;
+.delete-button3 {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
 .blacklist-button {
-  background-color: black;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 5px;
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
 /* 📌 ปุ่มเมื่ออยู่ใน Blacklist */
 .blacklist-button.remove-blacklist {
-  background-color: red;
+    background-color: red;
 }
 
 .blacklist-button:hover {
-  background-color: #333;
+    background-color: #333;
 }

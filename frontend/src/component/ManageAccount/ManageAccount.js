@@ -73,32 +73,43 @@ const ManageAccount = () => {
         </div>
 
         {/* 📌 Container สำหรับ User Details */}
-        {selectedUser && (
-          <div className="user-details-container">
-            <div className="details-header">รายละเอียด</div>
-            <div className="profile-image">
-              <img src={selectedUser.profileImage || "https://via.placeholder.com/100"} alt="User Profile" />
-            </div>
-            <div className="info-section">
-              <p><strong>ชื่อ:</strong> {selectedUser.firstName}</p>
-              <p><strong>นามสกุล:</strong> {selectedUser.lastName}</p>
-              <p><strong>เพศ:</strong> {selectedUser.gender}</p>
-              <p><strong>หมายเลขโทรศัพท์:</strong> {selectedUser.phoneNumber}</p>
-              <p><strong>อีเมล:</strong> {selectedUser.email}</p>
-              <p><strong>สนใจกีฬา:</strong> {selectedUser.interestedSports}</p>
-              <p><strong>ที่อยู่:</strong> {`${selectedUser.subdistrict}, ${selectedUser.district}, ${selectedUser.province}`}</p>
-              <p><strong>สถานะ:</strong> <span className={selectedUser.status === "blacklisted" ? "blacklisted-text" : "active-text"}>{selectedUser.status}</span></p>
-            </div>
+          {selectedUser && (
+            <div className="user-details-container">
+              <div className="user-header">รายละเอียด</div>
+              {/* ✅ รูปโปรไฟล์ */}
+              <div className="profile-image">
+                <img src={selectedUser.profileImage || "https://via.placeholder.com/100"} alt="User Profile" />
+              </div>
 
-            {/* 📌 ปุ่มดำเนินการ */}
-            <div className="action-buttons">
-              <button className="delete-button" onClick={() => deleteUser(selectedUser._id)}>ลบบัญชี</button>
-              <button className={`blacklist-button ${selectedUser.status === "blacklisted" ? "remove-blacklist" : ""}`} onClick={() => toggleBlacklist(selectedUser._id)}>
-                {selectedUser.status === "blacklisted" ? "ยกเลิก Blacklist" : "เพิ่มใน Blacklist"}
-              </button>
+              {/* ✅ หัวข้อ "ข้อมูลส่วนตัว" */}
+              <div className="details-header">ข้อมูลส่วนตัว</div>
+
+              {/* ✅ ข้อมูลผู้ใช้แสดงแบบ 3 คอลัมน์ */}
+              <div className="info-section">
+                <p><strong>ชื่อ:</strong> {selectedUser.firstName}</p>
+                <p><strong>นามสกุล:</strong> {selectedUser.lastName}</p>
+                <p><strong>เพศ:</strong> {selectedUser.gender || "-"}</p>
+                <p><strong>หมายเลขโทรศัพท์:</strong> {selectedUser.phoneNumber}</p>
+                <p><strong>อีเมล:</strong> {selectedUser.email}</p>
+                <p><strong>สนใจกีฬา:</strong> {selectedUser.interestedSports || "-"}</p>
+                <p><strong>ที่อยู่:</strong> {`${selectedUser.subdistrict}, ${selectedUser.district}, ${selectedUser.province}`}</p>
+                <p><strong>สถานะ:</strong> 
+                  <span className={selectedUser.status === "blacklisted" ? "blacklisted-text" : "active-text"}>
+                    {selectedUser.status}
+                  </span>
+                </p>
+              </div>
+
+              {/* ✅ ปุ่มดำเนินการ */}
+              <div className="action-buttons">
+                <button className="delete-button3" onClick={() => deleteUser(selectedUser._id)}>ลบบัญชี</button>
+                <button className={`blacklist-button ${selectedUser.status === "blacklisted" ? "remove-blacklist" : ""}`} 
+                  onClick={() => toggleBlacklist(selectedUser._id)}>
+                  {selectedUser.status === "blacklisted" ? "ยกเลิก Blacklist" : "เพิ่มใน Blacklist"}
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
     </div>
   );
