@@ -41,6 +41,7 @@ const Navbar = () => {
 
   const confirmLogout = () => {
     localStorage.removeItem('token'); // ลบ Token ออกจาก LocalStorage
+    sessionStorage.removeItem('token');
     setDecodedToken(null); // รีเซ็ต Token ใน State
     setIsDropdownOpen(false); // ปิด Dropdown
     setShowLogoutPopup(false); // ปิดป๊อปอัป

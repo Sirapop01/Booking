@@ -60,28 +60,35 @@ const RegistrationForm = () => {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!validateForm()) return; // ✅ ตรวจสอบข้อมูลก่อนส่ง
-
-    console.log("🚀 Data being sent to backend:", formData); // ✅ ตรวจสอบค่าก่อนส่ง
-
+  
+    console.log("🚀 Data being sent to backend:", formData);
+  
     try {
-        const response = await axios.post("http://localhost:4000/api/business/register", 
-          { ...formData, role: "customer" }, // ✅ ส่ง data แยกจาก headers
-          { headers: { "Content-Type": "application/json" } } // ✅ headers แยกจาก body
-        );
-
-        if (response.data.success) {
-            alert("สมัครสมาชิกสำเร็จ! โปรดกรอกข้อมูลสนามและรอการอนุมัติ!");
-            navigate("/RegisterArena");
-        } else {
-            alert(response.data.message || "เกิดข้อผิดพลาดในการสมัครสมาชิก");
-        }
+      const response = await axios.post("http://localhost:4000/api/business/register", 
+        { ...formData, role: "customer" },
+        { headers: { "Content-Type": "application/json" } }
+      );
+  
+      if (response.data.success) {
+        // ✅ เก็บ Email ใน LocalStorage
+        localStorage.setItem("registeredEmail", formData.email);
+  
+        // ✅ ส่ง Email แจ้งเตือนให้ User
+       // await axios.post("http://localhost:4000/api/notifications/send-email", { email: formData.email });
+  
+        alert("สมัครสมาชิกสำเร็จ! โปรดกรอกข้อมูลสนามและรอการอนุมัติ!");
+        navigate("/RegisterArena");
+      } else {
+        alert(response.data.message || "เกิดข้อผิดพลาดในการสมัครสมาชิก");
+      }
     } catch (error) {
-        console.error("🚨 Error registering user:", error.response?.data || error);
-        alert("❌ เกิดข้อผิดพลาด: " + (error.response?.data?.message || "ลองใหม่อีกครั้ง"));
+      console.error("🚨 Error registering user:", error.response?.data || error);
+      alert("❌ เกิดข้อผิดพลาด: " + (error.response?.data?.message || "ลองใหม่อีกครั้ง"));
     }
-};
+  };
+  
 
 
   return (

@@ -53,3 +53,34 @@ exports.registerBusinessOwner = async (req, res) => {
         });
     }
 };
+
+// ✅ ค้นหา BusinessOwner ได้ทั้งจาก `id` หรือ `email`
+exports.findBusinessOwner = async (req, res) => {
+    try {
+      const { id, email } = req.query;
+  
+      if (!id && !email) {
+        return res.status(400).json({ message: "กรุณาใส่ ID หรือ Email" });
+      }
+  
+      let query = {};
+      if (id) query._id = id; // ✅ ค้นหาตาม `id`
+      if (email) query.email = email; // ✅ ค้นหาตาม `email`
+  
+      const owner = await BusinessOwner.findOne(query);
+  
+      if (!owner) {
+        return res.status(404).json({ message: "ไม่พบเจ้าของธุรกิจ" });
+      }
+  
+      res.json({ 
+        businessOwnerId: owner._id, 
+        email: owner.email, 
+        name: `${owner.firstName} ${owner.lastName}` 
+      });
+  
+    } catch (error) {
+      console.error("❌ Error fetching BusinessOwner:", error);
+      res.status(500).json({ message: "เกิดข้อผิดพลาด", error: error.message });
+    }
+  };

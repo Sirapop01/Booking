@@ -1,7 +1,12 @@
 const express = require("express");
-const router = express.Router();
-const uploadController = require("../controllers/uploadController");
+const { uploadProfileImage, uploadArenaImage, upload } = require("../controllers/uploadController");
 
-router.post("/uploadProfile", uploadController.upload.single("profileImage"), uploadController.uploadProfileImage);
+const router = express.Router();
+
+// ✅ API สำหรับอัปโหลดรูปโปรไฟล์
+router.post("/profile", upload.single("image"), uploadProfileImage);
+
+// ✅ API สำหรับอัปโหลดรูปสนามกีฬา
+router.post("/arena", upload.single("image"), uploadArenaImage);
 
 module.exports = router;
