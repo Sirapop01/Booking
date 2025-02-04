@@ -1,14 +1,13 @@
 const multer = require("multer");
 const path = require("path");
-const Image = require("../models/Image"); // ✅ ตรวจสอบว่ามีโมเดลนี้จริง
 
-// ✅ ตั้งค่า `multer`
+// ✅ ตั้งค่า `multer` สำหรับการอัปโหลดรูป
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, "uploads/"); // 📂 เก็บไฟล์ไว้ในโฟลเดอร์ `uploads`
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+    cb(null, Date.now() + path.extname(file.originalname)); // ตั้งชื่อไฟล์ให้ไม่ซ้ำ
   }
 });
 
@@ -24,18 +23,20 @@ exports.uploadProfileImage = async (req, res) => {
 
   const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
 
-  try {
-    const newImage = new Image({
-      filename: req.file.filename,
-      url: imageUrl
-    });
+  res.status(201).json({ message: "✅ Upload successful", imageUrl });
+};
 
-    await newImage.save();
-    res.status(201).json({ message: "✅ Upload successful", imageUrl });
-  } catch (error) {
-    console.error("❌ Error saving image to database:", error);
-    res.status(500).json({ error: error.message });
+// ✅ ฟังก์ชันอัปโหลดรูปสนามกีฬา
+exports.uploadArenaImage = async (req, res) => {
+  console.log("📂 Arena Image Upload Request:", req.file); // ✅ Debugging
+
+  if (!req.file) {
+    return res.status(400).json({ error: "❌ No file uploaded" });
   }
+
+  const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+
+  res.status(201).json({ message: "✅ Upload successful", imageUrl });
 };
 
 // ✅ ต้อง export `upload` ออกมา

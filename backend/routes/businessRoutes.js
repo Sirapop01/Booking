@@ -3,5 +3,6 @@ const BusinessOwner = require("../controllers/businessController"); // ✅ ต�
 const router = express.Router();
 
 router.post("/register", BusinessOwner.registerBusinessOwner); // ✅ ตรวจสอบว่าฟังก์ชันนี้ไม่ใช่ undefined
+router.get("/find-owner", BusinessOwner.findBusinessOwner);
 
 module.exports = router;

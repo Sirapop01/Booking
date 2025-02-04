@@ -11,7 +11,7 @@ import RegisterArena from './component/RegisterArena/Registerarena';
 import StadiumList from './component/StadiumList/StadiumList';
 import Resetpassword from './component/ResetPassword/ResetPassword';
 import FavoriteList from './component/Favorites/FavoritesList';
-import UserProfile from './component/UserProfile/UserProfile';
+import UserProfile from './component/ProfileCustomer/UserProfile';
 import ManageStadium from './component/ManageStadium/ManageStadium';
 import ManageSubStadium from './component/ManageSubStadium/ManageSubStadium';
 import ManageSubStadiumDetails from './component/ManageSubStadiumDetails/ManageSubStadiumDetails';

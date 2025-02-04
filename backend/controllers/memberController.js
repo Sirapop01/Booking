@@ -69,6 +69,8 @@ exports.login = async (req, res) => {
     const [existingUser, existingOwner] = await Promise.all([
       User.findOne({ email }), // ค้นหาใน Collection `users`
       BusinessOwner.findOne({ email }) // ค้นหาใน Collection `businessowners`
+
+    
   ]);
 
   let exitResult = null;

@@ -159,6 +159,7 @@ const UserProfile = () => {
       console.log("✅ API Response:", response.data);
 
       if (response.data.message === "ออกจากระบบเสร็จสิ้น") {
+        sessionStorage.clear();
         localStorage.clear();
         setMember({});
         navigate("/");
