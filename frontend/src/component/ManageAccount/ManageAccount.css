@@ -63,6 +63,7 @@
     flex-direction: column;
 }
 
+/* ✅ ปรับตำแหน่งของหัวข้อบัญชีผู้ใช้ */
 .list-header {
     font-size: 20px;
     font-weight: bold;
@@ -70,7 +71,25 @@
     padding: 15px;
     background: #ddd;
     color: black;
+    display: flex;
+    justify-content: space-between; /* ✅ กระจายตำแหน่ง */
+    align-items: center;
 }
+
+/* ✅ ไอคอนลูกศรข้างหัวข้อบัญชีผู้ใช้ */
+.header-forward-icon {
+    width: 20px;
+    height: 20px;
+    opacity: 0.8;
+    transition: transform 0.2s ease;
+}
+
+/* ✅ เมื่อ hover ให้ขยับลูกศรเล็กน้อย */
+.list-header:hover .header-forward-icon {
+    transform: translateX(5px);
+    opacity: 1;
+}
+
 
 .user-items {
     flex: 1;
@@ -141,7 +160,6 @@
 
 .info-section p {
     font-size: 16px;
-    font-weight: bold;
     color: black;
 }
 
