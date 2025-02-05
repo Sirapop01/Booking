@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import './Information.css';
 import logo from '../assets/logo.png';
+import homeLogo from "../assets/logoalt.png";
 
 const Navbar = () => {
     return (
         <nav className="information-navbar">
+            {/* ✅ ปุ่มกลับไปยังหน้า Home */}
+                  <a href="/" className="home-button">
+                    <img src={homeLogo} alt="Home Logo" className="home-logo" />
+                  </a>
             <div className="information-navbar-content">
                 <img src={logo} alt="Logo" className="information-logo" />
                 <h1 className="information-title">เพิ่มสนามใหม่</h1>

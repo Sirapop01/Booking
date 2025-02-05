@@ -20,9 +20,9 @@ exports.registerArena = async (req, res) => {
     try {
       console.log("📩 Register Arena Request Body:", req.body);  // ✅ Debugging
   
-      const { fieldName, ownerName, phone, workingHours, location, amenities, additionalInfo, businessOwnerId, images } = req.body;
+      const { fieldName, ownerName, phone, startTime, endTime, location, amenities, additionalInfo, businessOwnerId, images } = req.body;
   
-      if (!fieldName || !ownerName || !phone || !workingHours || !location || !images || images.length === 0) {
+      if (!fieldName || !ownerName || !phone || !startTime || !endTime || !location || !images || images.length === 0) {
         return res.status(400).json({ message: "กรุณากรอกข้อมูลให้ครบถ้วน" });
       }
   
@@ -37,7 +37,8 @@ exports.registerArena = async (req, res) => {
         fieldName,
         ownerName,
         phone,
-        workingHours,
+        startTime, 
+        endTime,
         location,
         amenities: amenities || [], // ป้องกันค่าว่าง
         additionalInfo: additionalInfo || "",

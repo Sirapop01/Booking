@@ -1,0 +1,384 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+
+/* 📌 โครงสร้างหลักของหน้า */
+.admin-payment-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #0b2840;
+    height: 100vh;
+    color: white;
+    font-family: "Kanit", sans-serif;
+}
+
+/* 🔙 ปุ่มกลับไปยังหน้า Home */
+.home-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.home-button:hover {
+    transform: scale(1.1);
+}
+
+.home-logo {
+    width: 35px;
+    height: 35px;
+}
+
+/* ✅ หัวข้อหลักของหน้า */
+.page-title3 {
+    font-size: 36px;
+    margin: 20px 0;
+}
+
+/* ✅ แยกคอนเทนเนอร์ออกเป็น 2 ส่วน */
+.payment-content {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 1200px;
+    height: 80vh;
+}
+
+/* 📜 รายชื่อผู้ใช้ */
+.user-list-container3 {
+    width: 30%;
+    background: white;
+    border-radius: 10px;
+    overflow-y: auto;
+}
+
+.user-list3 {
+    padding: 10px;
+}
+
+.list-header3 {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 15px;
+    text-align: center;
+    background: #e0e0e0;
+    border-bottom: 2px solid #ddd;
+}
+
+.user-item3 {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+    transition: background 0.3s;
+}
+
+.user-item3:hover {
+    background: #f1f1f1;
+}
+
+.user-item3.selected {
+    background-color: #008cff;
+    color: white;
+}
+
+/* 💳 คอนเทนเนอร์ตารางการจ่ายเงิน */
+.payment-table-container3 {
+    width: 68%;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.payment-table3 {
+    padding: 15px;
+}
+
+/* ✅ ส่วนหัวของตาราง */
+.table-header3 {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    background: #e0e0e0;
+    border-bottom: 2px solid #ddd;
+}
+
+/* ✅ ตาราง */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background: #e0e0e0;
+}
+
+/* ✅ แถวที่ถูกเลือก */
+.selected-row3 {
+    background: #b3e5fc;
+}
+
+/* ✅ ไม่มีรายการ */
+.no-data {
+    text-align: center;
+    font-size: 16px;
+    color: #999;
+    padding: 20px;
+}
+
+/* 🎯 ปุ่มจัดการ */
+.action-buttons3 {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 0;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+/* 🔳 ปุ่มแต่ละตัว */
+.action-buttons3 button {
+    flex: 1; /* ให้แต่ละปุ่มมีขนาดเท่ากัน */
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+/* 🎯 ปรับสีปุ่มให้ตรงกับต้นฉบับ */
+.reject-button {
+    background: red;
+    color: white;
+    font-family: 'Inder', sans-serif;
+}
+
+.reject-button:hover {
+    background: darkred;
+    font-family: 'Inder', sans-serif;
+}
+
+.confirm-button3 {
+    background: blue;
+    color: white;
+}
+
+.confirm-button3:hover {
+    background: darkblue;
+}
+
+.blacklist-button {
+    background: black;
+    color: white;
+    font-family: 'Inder', sans-serif;
+}
+
+.blacklist-button:hover {
+    background: #333;
+}
+
+.slip-button {
+    background: gray;
+    color: white;
+}
+
+.slip-button:hover {
+    background: darkgray;
+}
+
+/* ✅ ปรับตำแหน่ง Total Box */
+.total-box2 {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 15px;
+    font-size: 22px;
+    font-weight: bold;
+    color: black;
+    border-top: 2px solid #ddd;
+    margin-top: 10px;
+}
+
+/* 🖼 Pop-up พื้นหลัง */
+.slip-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* พื้นหลังมืด */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* 📌 กล่อง Pop-up */
+.slip-popup-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.slip-popup-content h2{
+    color: black;
+    font-family: "Kanit", sans-serif;
+}
+
+/* ❌ ปุ่มปิด (X) ใช้ไอคอน */
+.close-slip-popup {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.close-slip-popup:hover {
+    transform: scale(1.1);
+}
+
+/* 🖼 รูปสลิป */
+.slip-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* 📌 ถ้าไม่มีสลิป ให้แสดงข้อความ */
+.slip-popup-content p {
+    font-size: 18px;
+    color: #333;
+    margin-top: 20px;
+    font-family: "Kanit", sans-serif;
+}
+
+/* 🚫 Pop-up พื้นหลัง */
+.reject-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* พื้นหลังมืด */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* 📌 กล่อง Pop-up */
+.reject-popup-content {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    width: 450px;  /* ปรับขนาดให้พอดีกับ textarea */
+    max-width: 90%;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    font-family: "Kanit", sans-serif;
+}
+
+/* 📌 หัวข้อ pop-up */
+.reject-popup-content h2 {
+    color: black;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* ❌ ปุ่มปิด Pop-up */
+.close-reject-popup {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.close-reject-popup:hover {
+    transform: scale(1.1);
+}
+
+/* 📝 กล่องป้อนข้อความ */
+.reject-reason-input {
+    width: 100%;  /* ให้พอดีกับกล่อง */
+    height: 100px;
+    margin-top: 10px;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+    font-family: "Kanit", sans-serif;
+    box-sizing: border-box; /* ป้องกันขยายออกนอกกรอบ */
+}
+
+/* 🎯 ปุ่มจัดการ */
+.popup-buttons3 {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+}
+
+/* ✅ ปุ่มยืนยัน */
+.confirm-reject {
+    background: red;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.confirm-reject:hover {
+    background: darkred;
+}
+
+/* ❌ ปุ่มยกเลิก */
+.cancel-reject {
+    background: gray;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.cancel-reject:hover {
+    background: darkgray;
+}
+
+
+

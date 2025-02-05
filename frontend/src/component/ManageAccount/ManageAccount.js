@@ -2,16 +2,23 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./ManageAccount.css";
 import homeLogo from "../assets/logoalt.png";
+import arrowForwardIcon from "../assets/icons/arrow-ios-forward.png";
+import arrowBackwardIcon from "../assets/icons/arrow-ios-back.png";
 
 const ManageAccount = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [isOwnerMode, setIsOwnerMode] = useState(false);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [deleteInput, setDeleteInput] = useState("");
 
   // 📌 โหลดข้อมูลบัญชีจาก API
   useEffect(() => {
-    axios.get("http://localhost:4000/api/manage-account")
+    const apiUrl = isOwnerMode
+      ? "http://localhost:4000/api/manage-owner" // ✅ API สำหรับเจ้าของสนาม
+      : "http://localhost:4000/api/manage-account"; // ✅ API สำหรับบัญชีผู้ใช้
+
+    axios.get(apiUrl)
       .then(response => {
         setUsers(response.data);
         if (response.data.length > 0) {
@@ -19,12 +26,16 @@ const ManageAccount = () => {
         }
       })
       .catch(error => console.error("Error fetching users:", error));
-  }, []);
+  }, [isOwnerMode]);
 
   // 📌 ฟังก์ชันลบบัญชี (จะถูกเรียกเมื่อกดยืนยัน)
   const confirmDeleteUser = () => {
     if (deleteInput === "Delete") {
-      axios.delete(`http://localhost:4000/api/manage-account/${selectedUser._id}`)
+      const deleteUrl = isOwnerMode
+        ? `http://localhost:4000/api/manage-owner/${selectedUser._id}`
+        : `http://localhost:4000/api/manage-account/${selectedUser._id}`;
+
+      axios.delete(deleteUrl)
         .then(() => {
           setUsers(users.filter(user => user._id !== selectedUser._id));
           setSelectedUser(null);
@@ -35,6 +46,25 @@ const ManageAccount = () => {
     } else {
       alert("กรุณาพิมพ์ Delete ให้ถูกต้อง");
     }
+  };
+
+  // 📌 ฟังก์ชันตั้งหรือยกเลิก Blacklist
+  const toggleBlacklist = (id) => {
+    const blacklistUrl = isOwnerMode
+      ? `http://localhost:4000/api/manage-owner/blacklist/${id}`
+      : `http://localhost:4000/api/manage-account/blacklist/${id}`;
+
+    axios.put(blacklistUrl)
+      .then(() => {
+        setUsers(users.map(user =>
+          user._id === id ? { ...user, status: user.status === "blacklisted" ? "active" : "blacklisted" } : user
+        ));
+        setSelectedUser(prevUser => prevUser && prevUser._id === id
+          ? { ...prevUser, status: prevUser.status === "blacklisted" ? "active" : "blacklisted" }
+          : prevUser
+        );
+      })
+      .catch(error => console.error("Error toggling blacklist:", error));
   };
 
   return (
@@ -49,7 +79,14 @@ const ManageAccount = () => {
       <div className="account-content">
         {/* 📌 Container สำหรับ User List */}
         <div className="user-list-container">
-          <div className="list-header">บัญชีผู้ใช้</div>
+        <div className="list-header" onClick={() => setIsOwnerMode(!isOwnerMode)}>
+            <span>{isOwnerMode ? "บัญชีเจ้าของสนาม" : "บัญชีผู้ใช้"}</span>
+            <img
+              src={isOwnerMode ? arrowBackwardIcon : arrowForwardIcon} 
+              alt="Switch Mode"
+              className="header-forward-icon"
+            />
+          </div>
           <div className="user-items">
             {users.map((user) => (
               <div
@@ -89,6 +126,7 @@ const ManageAccount = () => {
                   {selectedUser.status}
                 </span>
               </p>
+              {isOwnerMode && <p><strong>สนามของ:</strong> {selectedUser.firstName}</p>}
             </div>
 
             {/* ✅ ปุ่มดำเนินการ */}
