@@ -20,23 +20,24 @@ const MatchWebForm = () => {
     fieldName: "",
     ownerName: "",
     phone: "",
-    workingHours: "",
+    startTime: "",  // ✅ เปลี่ยนจาก workingHours เป็น startTime & endTime
+    endTime: "",
     location: DEFAULT_LOCATION,
     businessOwnerId: "",
     additionalInfo: "",
-    amenities: []  // ✅ ตั้งค่าให้ amenities เป็น array เริ่มต้น
+    amenities: []
   });
 
 
   const getAmenityLabel = (key) => {
     const labels = {
-      parking: "ที่จอดรถ",
-      wifi: "WiFi",
-      locker: "ล็อคเกอร์",
-      shower: "ห้องอาบน้ำ",
-      rent: "อุปกรณ์เช่า",
-      shop: "ร้านค้า",
-      other: "อื่นๆ",
+      ที่จอดรถ: "ที่จอดรถ",
+      WiFi: "WiFi",
+      ล็อคเกอร์: "ล็อคเกอร์",
+      ห้องอาบน้ำ: "ห้องอาบน้ำ",
+      อุปกรณ์เช่า: "อุปกรณ์เช่า",
+      ร้านค้า: "ร้านค้า",
+      อื่นๆ: "อื่นๆ",
     };
     return labels[key] || key;
   };
@@ -115,19 +116,22 @@ const MatchWebForm = () => {
   // ✅ ฟังก์ชันส่งข้อมูลสนามกีฬาไปที่ Backend
   const handleSubmit = async () => {
     if (!validateForm()) return;
-
+  
     const arenaData = {
       ...formData,
+      location: {
+        type: "Point",
+        coordinates: mapLocation // ✅ เปลี่ยนรูปแบบให้ตรงกับ Schema
+      },
       amenities: formData.amenities,
       images,
     };
-
+  
     console.log("📩 Data to be sent:", arenaData);
-
+  
     try {
       const response = await axios.post("http://localhost:4000/api/arenas/register", arenaData);
       alert("✅ ดำเนินการสำเร็จ!");
-
       resetForm();
     } catch (error) {
       console.error("❌ Register Arena Failed:", error);
@@ -137,9 +141,9 @@ const MatchWebForm = () => {
 
   // ✅ ฟังก์ชันตรวจสอบว่าฟอร์มถูกต้องก่อนส่ง
   const validateForm = () => {
-    const { fieldName, ownerName, phone, workingHours, location, businessOwnerId } = formData;
+    const { fieldName, ownerName, phone, startTime, endTime, location, businessOwnerId } = formData;
 
-    if (!fieldName || !ownerName || !phone || !workingHours || !location || !businessOwnerId || images.length < 1) {
+    if (!fieldName || !ownerName || !phone || !startTime || !endTime || !location || !businessOwnerId || images.length < 1) {
       setFormErrors("กรุณากรอกข้อมูลให้ครบถ้วน");
       return false;
     }
@@ -153,10 +157,12 @@ const MatchWebForm = () => {
       fieldName: "",
       ownerName: "",
       phone: "",
-      workingHours: "",
-      location: "",
-      businessOwnerId: formData.businessOwnerId, // ✅ เก็บค่า Business Owner ไว้
+      startTime: "",  // ✅ เปลี่ยนจาก workingHours เป็น startTime & endTime
+      endTime: "",
+      location: DEFAULT_LOCATION,
+      businessOwnerId: "",
       additionalInfo: "",
+      amenities: []
     });
     setImages([]);
   };
@@ -191,8 +197,25 @@ const MatchWebForm = () => {
     }));
   };
 
+    // ✅ ฟังก์ชันจัดการการเปลี่ยนตำแหน่งแผนที่
+    useEffect(() => {
+      setFormData((prevData) => ({
+        ...prevData,
+        location: {
+          type: "Point",
+          coordinates: mapLocation // ✅ อัปเดตให้ตรงกับ Schema
+        },
+      }));
+    }, [mapLocation]);
+    
 
-
+      // ✅ ฟังก์ชันจัดการการเปลี่ยนแปลงค่าเวลา
+  const handleTimeChange = (time, type) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [type]: time || "", // ถ้าไม่มีค่าจะให้เป็น "" ป้องกัน undefined
+    }));
+  };
 
   return (
     <div className="form-container099">
