@@ -1,0 +1,215 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+/* 📌 โครงสร้างหลักของหน้า */
+.admin-payment-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #0b2840;
+    height: 100vh;
+    color: white;
+    font-family: "Kanit", sans-serif;
+}
+
+/* ✅ ปุ่ม Home */
+.home-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .home-logo {
+    width: 35px;
+    height: 35px;
+  }
+
+.page-title3 {
+    font-size: 36px;
+    margin: 20px 0;
+}
+
+/* ✅ คอนเทนเนอร์หลักที่แยกออกเป็น 2 ส่วน */
+.payment-content {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 1200px;
+    height: 80vh;
+    font-family: 'Kanit', sans-serif;
+}
+
+/* 🟦 รายชื่อบัญชีผู้ใช้ */
+.user-list-container3 {
+    width: 30%;
+    background: white;
+    border-radius: 10px;
+    overflow-y: auto;
+    font-family: 'Kanit', sans-serif;
+}
+
+.user-list3 {
+    padding: 10px;
+}
+
+.list-header3 {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 15px;
+    text-align: center;
+    border-bottom: 2px solid #ddd;
+    background: #e0e0e0;
+    font-family: 'Kanit', sans-serif;
+}
+
+.user-item3 {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+    transition: background 0.3s;
+    font-family: 'Kanit', sans-serif;
+}
+
+.user-item3:hover {
+    background: #f1f1f1;
+}
+
+.user-item3.selected {
+    background-color: #008cff;
+    color: white;
+}
+
+/* 📊 ตารางตรวจสอบการจ่ายเงิน */
+.payment-table-container3 {
+    width: 68%;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: 'Kanit', sans-serif;
+}
+
+.payment-table3 {
+    padding: 15px;
+}
+
+.table-header3 {
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+    padding-bottom: 10px;
+    text-align: center;
+    border-bottom: 2px solid #ddd;
+    font-family: 'Kanit', sans-serif;
+}
+
+/* ✅ ตาราง */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Kanit', sans-serif;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background: #e0e0e0;
+}
+
+/* ✅ แถวที่ถูกเลือก */
+.selected-row3 {
+    background: #b3e5fc;
+}
+
+/* ✅ ไม่มีรายการ */
+.no-data {
+    text-align: center;
+    font-size: 16px;
+    color: #999;
+    padding: 20px;
+    font-family: 'Kanit', sans-serif;
+}
+
+/* 🎯 ปุ่มดำเนินการ */
+.action-buttons3 {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 15px;
+    font-family: 'Kanit', sans-serif;
+}
+
+button {
+    padding: 10px 15px;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-family: 'Kanit', sans-serif;
+}
+
+/* ❌ ปุ่มลบ */
+.delete-button {
+    background: red;
+    color: white;
+    font-family: 'Kanit', sans-serif;
+}
+
+.delete-button:hover {
+    background: darkred;
+}
+
+/* ✅ ปุ่มยืนยัน */
+.confirm-button3 {
+    background: blue;
+    color: white;
+    font-family: 'Kanit', sans-serif;
+}
+
+.confirm-button3:hover {
+    background: darkblue;
+}
+
+/* 🚫 ปุ่ม Blacklist */
+.blacklist-button {
+    background: black;
+    color: white;
+    font-family: 'Kanit', sans-serif;
+}
+
+.blacklist-button:hover {
+    background: #333;
+}
+
+/* 🔄 ปุ่มสลิป */
+.slip-button {
+    background: gray;
+    color: white;
+    font-family: 'Kanit', sans-serif;
+}
+
+.slip-button:hover {
+    background: darkgray;
+}
+
+/* 💲 ยอดรวม */
+.total-box2 {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: right;
+    margin-top: 10px;
+    padding: 10px;
+    border-top: 2px solid #ddd;
+    font-family: 'Kanit', sans-serif;
+}
