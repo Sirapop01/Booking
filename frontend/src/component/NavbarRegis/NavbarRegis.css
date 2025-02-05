@@ -9,13 +9,18 @@
     width: 100%; /* เต็มความกว้าง */
     height: 120px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 /* คอนเทนเนอร์หลัก */
 .navbar-container111 {
     display: flex; /* ใช้ Flexbox */
-    justify-content: space-between; /* ให้ด้านซ้าย-ขวาอยู่ห่างกัน */
-    align-items: center; /* จัดให้อยู่ตรงกลางแนวตั้ง */
+    flex-direction: column;
+    align-items: center; /* จัดให้อยู่ตรงกลาง */
+    text-align: center;
     width: 100%;
 }
 
@@ -24,6 +29,7 @@
     display: flex;
     align-items: center;
     gap: 10px; /* ระยะห่างระหว่างโลโก้กับข้อความ */
+    justify-content: center;
 }
 
 /* โลโก้ */
@@ -31,8 +37,7 @@
     width: 70px; /* ปรับขนาดโลโก้ */
     height: auto;
     position: relative;
-    right : -920px;
-    top : -5px;
+    top : -10px;
 }
 
 /* ชื่อ MatchWeb */
@@ -40,16 +45,16 @@
     font-size: 30px;
     font-weight: bold;
     margin: 0;
-    position: relative;
-    right : -920px;
     font-family: 'Inder', sans-serif;
-
+    position: relative;
+    top: -5px;
 }
 
 /* กลุ่มด้านขวา: ข้อความ */
 .navbar-right111 {
-    text-align: right;
+    text-align: center;
     font-family: 'Kanit', sans-serif;
+    margin-top: 5px;
 }
 
 /* ข้อความด้านขวา */
@@ -57,17 +62,15 @@
     font-size: 20px;
     margin: 0;
     position: relative;
-    left : -950px;
-    top : 75px;
+    top: 15px;
     font-family: 'Kanit', sans-serif;
-
 }
 
+/* เส้นใต้ */
 .navbar11-divider {
-    width: 40%; /* ยาวเต็มบรรทัด */
-    height: 2px; /* ความสูงของเส้น */
-    background-color: white; /* สีของเส้น */
-    margin-top: 8px; /* ระยะห่างจากเนื้อหาด้านบน */
+    width: 50%; /* ยาวขึ้นสำหรับความสมดุล */
+    height: 2px;
+    background-color: white;
+    top: -32px;
     position: relative;
-    right: -660px;
 }

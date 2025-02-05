@@ -24,6 +24,7 @@ import Information from './component/Information/Information';
 import ManageAccount from './component/ManageAccount/ManageAccount';
 import AdminChat from './component/AdminChat/AdminChat';
 import Mapping from './component/Mapping/Mapping';
+import AdminPayment from './component/AdminPayment/AdminPayment';
 
 
 /**/ 
@@ -55,6 +56,7 @@ function App() {
         <Route path='/ManageAccount' element={<ManageAccount />}/>
         <Route path='/AdminChat' element={<AdminChat/>}/>
         <Route path='/map' element={<Mapping/>} />
+        <Route path='/AdminPayment' element={<AdminPayment/>}/>
 
       </Routes>
     </BrowserRouter>
