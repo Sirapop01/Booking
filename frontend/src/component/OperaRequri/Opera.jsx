@@ -1,20 +1,19 @@
 import React from "react";
 import "./Opera.css";
 import { useNavigate } from "react-router-dom";
+import NavbarRegis from "../NavbarRegis/NavbarRegis";
 
 const OperaRequri = () => {
   const navigate = useNavigate(); // ใช้ useNavigate เพื่อจัดการการนำทาง
 
   const handleConfirm = () => {
-    navigate("/RegisterOpera"); // เปลี่ยน URL กลับไปยัง RegisterOpera
+    navigate("/RegisterOpera"); // เปลี่ยน URL ไปยัง RegisterOpera
   };
 
   return (
-    <div className="container">
-      <header className="header">
-        <h1>MatchWeb</h1>
-        <p>ระบบลงทะเบียนสำหรับผู้ประกอบการ</p>
-      </header>
+    <div className="container8383">
+      <NavbarRegis /> {/* ✅ ใช้ NavbarRegis แทน Header เดิม */}
+
       <main className="main-content">
         <h2>ข้อกำหนดและเงื่อนไข</h2>
         <ol>
@@ -36,12 +35,12 @@ const OperaRequri = () => {
             เงื่อนไขการใช้เว็บไซต์นี้อาจมีการเปลี่ยนแปลงตามที่เห็นสมควรโดยไม่มีการแจ้งล่วงหน้า
           </li>
           <li>
-          ความรับผิดชอบของผู้ใช้ผู้ประกอบการรับผิดชอบต่อเนื้อหาทั้งหมดที่เผยแพร่บนเว็บไซต์ของตน หากพบว่าผู้ประกอบการละเมิดกฎเกณฑ์หรือข้อตกลง 
-          อาจมีการระงับหรือยกเลิกการให้บริการโดยไม่ต้องแจ้งให้ทราบล่วงหน้า
+            ความรับผิดชอบของผู้ใช้ผู้ประกอบการรับผิดชอบต่อเนื้อหาทั้งหมดที่เผยแพร่บนเว็บไซต์ของตน หากพบว่าผู้ประกอบการละเมิดกฎเกณฑ์หรือข้อตกลง 
+            อาจมีการระงับหรือยกเลิกการให้บริการโดยไม่ต้องแจ้งให้ทราบล่วงหน้า
           </li>
           <li>
-          การยินยอมการลงทะเบียนเพื่อเช่าเว็บไซต์ถือเป็นการยินยอมให้เราจัดเก็บและใช้งานข้อมูลส่วนตัวตามข้อกำหนดนี้
-          หากมีข้อสงสัยเพิ่มเติมเกี่ยวกับข้อกำหนดและเงื่อนไข โปรดติดต่อฝ่ายผู้พัฒนาเว็ปไซต์
+            การยินยอมการลงทะเบียนเพื่อเช่าเว็บไซต์ถือเป็นการยินยอมให้เราจัดเก็บและใช้งานข้อมูลส่วนตัวตามข้อกำหนดนี้
+            หากมีข้อสงสัยเพิ่มเติมเกี่ยวกับข้อกำหนดและเงื่อนไข โปรดติดต่อฝ่ายผู้พัฒนาเว็บไซต์
           </li>
         </ol>
         <button className="accept-button" onClick={handleConfirm}>
@@ -51,4 +50,5 @@ const OperaRequri = () => {
     </div>
   );
 };
+
 export default OperaRequri;
