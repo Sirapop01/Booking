@@ -21,6 +21,7 @@ import TestHome from './component/Test/TestHome';
 import OwnerLedger from './component/OwnerLedger/OwnerLedger';
 import Information from './component/Information/Information';
 import ManageAccount from './component/ManageAccount/ManageAccount';
+import HomepageOper from './component/HomepageOper/Homepageopera';
 
 
 
@@ -51,6 +52,7 @@ function App() {
         <Route path='/Ownerledger' element={<OwnerLedger />} />
         <Route path='/Information' element={<Information />} />
         <Route path='/ManageAccount' element={<ManageAccount />}/>
+        <Route path='/Homepageopera' element={<HomepageOper />}/>
 
       </Routes>
     </BrowserRouter>

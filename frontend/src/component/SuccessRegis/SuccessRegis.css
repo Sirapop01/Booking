@@ -15,10 +15,7 @@ body1 {
     overflow: hidden;
 }
 
-html, body {
-    overflow: hidden; /* ปิดการเลื่อน */
-    height: 100%; /* ให้เต็มจอ */
-}
+
 
 
 /* คอนเทนเนอร์หลัก */
