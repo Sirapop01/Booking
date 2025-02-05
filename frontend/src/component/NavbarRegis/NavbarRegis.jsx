@@ -12,7 +12,7 @@ const NavbarRegis = () => {
                 </div>
                 
                 <div className="navbar-right111">
-                    <p className="navbar-subtitle111">เพิ่มสนามสำหรับผู้ประกอบการ</p>
+                    <p className="navbar-subtitle111">ระบบลงทะเบียนสำหรับผู้ประกอบการ</p>
                 </div>
             </div>
 
