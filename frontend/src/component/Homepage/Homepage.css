@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 
 .search-section {
   display: flex;
@@ -19,6 +19,7 @@
   border: 2px solid #ccc;
   margin-bottom: 20px;
   color: #000;
+  font-family: 'Kanit', sans-serif;
 }
 
 .search-input::placeholder {
@@ -74,14 +75,19 @@
 /* ปรับขนาดของ dropdown จำนวนคน */
 .people-select-value {
   width: 150px;
-  padding: 17px;
+  padding: 10px 15px;
   font-size: 16px;
+  font-family: 'Kanit', sans-serif;
   border-radius: 10px;
   border: 1px solid #ccc;
   appearance: none;
   background-color: #fff;
   color: #000;
-  margin-bottom: 1px;
+  height: 45px;
+  line-height: normal;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
 }
 
 
@@ -103,6 +109,7 @@
     gap: 8px;
     font-size: 14px;
     flex-direction: row; /* ทำให้ข้อความอยู่ขวาของปุ่ม */
+    font-family: 'Kanit', sans-serif;
   }
   
   .booking-status input[type="radio"] {
@@ -135,11 +142,12 @@
   background-color: #07213A;
   color: #fff;
   border: none;
-  padding: 12px 24px; /* เพิ่มขนาดให้ใหญ่ขึ้น */
+  padding: 10px 24px; /* เพิ่มขนาดให้ใหญ่ขึ้น */
   border-radius: 5px;
   cursor: pointer;
   font-size: 18px;    /* เพิ่ม font-size */
   font-weight: bold;
+  font-family: 'Kanit', sans-serif;
 }
 
 .search-button:hover {

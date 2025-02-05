@@ -29,6 +29,7 @@
     font-weight: bold;
     white-space: nowrap;
     transition: background 0.3s ease-in-out;
+    font-family: 'Kanit', sans-serif;
 }
 
 .navbar-button-homepage:hover {
@@ -78,6 +79,7 @@
     font-weight: bold;
     white-space: nowrap;
     transition: background 0.3s ease-in-out;
+    font-family: 'Kanit', sans-serif;
 }
 
 .navbar-button:hover,
