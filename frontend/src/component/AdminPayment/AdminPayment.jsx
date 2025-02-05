@@ -2,19 +2,24 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./AdminPayment.css";
 import homeLogo from "../assets/logoalt.png";
+import closeIcon from "../assets/icons/close.png";
 
 const AdminPayment = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [transactions, setTransactions] = useState([]);
+  const [showSlipPopup, setShowSlipPopup] = useState(false);
+  const [slipImageUrl, setSlipImageUrl] = useState("");
+  const [showRejectPopup, setShowRejectPopup] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
 
   // ✅ โหลดรายชื่อบัญชีผู้ใช้
   useEffect(() => {
-    axios.get("http://localhost:4000/api/payment-users")
+    axios.get("http://localhost:4000/api/verify-payments/payment-users")
       .then(response => {
         setUsers(response.data);
         if (response.data.length > 0) {
-          setSelectedUser(response.data[0]); // เลือกบัญชีแรก
+          setSelectedUser(response.data[0]);
         }
       })
       .catch(error => console.error("Error fetching users:", error));
@@ -26,6 +31,11 @@ const AdminPayment = () => {
       axios.get(`http://localhost:4000/api/payment-history/${selectedUser._id}`)
         .then(response => setTransactions(response.data))
         .catch(error => console.error("Error fetching transactions:", error));
+
+      // ✅ โหลดรูปสลิปของผู้ใช้ที่เลือก
+      axios.get(`http://localhost:4000/api/payment-slip/${selectedUser._id}`)
+        .then(response => setSlipImageUrl(response.data.slipImageUrl))
+        .catch(error => console.error("Error fetching slip image:", error));
     }
   }, [selectedUser]);
 
@@ -34,27 +44,40 @@ const AdminPayment = () => {
     return transactions.reduce((total, transaction) => total + transaction.total, 0);
   };
 
-  // ✅ ฟังก์ชันลบรายการที่เลือก
-  const deleteSelected = () => {
-    const remainingTransactions = transactions.filter(t => !t.selected);
-    setTransactions(remainingTransactions);
+  // ✅ ฟังก์ชันเปิด Pop-up สลิป
+  const openSlipPopup = () => {
+    setShowSlipPopup(true);
   };
 
-  // ✅ ฟังก์ชันยืนยันการจ่ายเงิน
-  const confirmPayment = () => {
-    alert("ยืนยันการจ่ายเงินแล้ว! ✅");
+  // ✅ ฟังก์ชันปิด Pop-up สลิป
+  const closeSlipPopup = () => {
+    setShowSlipPopup(false);
   };
 
-  // ✅ ฟังก์ชันเพิ่มบัญชีเข้า Blacklist
-  const blacklistUser = () => {
-    axios.put(`http://localhost:4000/api/blacklist/${selectedUser._id}`)
-      .then(() => alert(`${selectedUser.username} ถูกเพิ่มใน Blacklist`))
-      .catch(error => console.error("Error blacklisting user:", error));
+  // ✅ ฟังก์ชันเปิด Pop-up Reject
+  const openRejectPopup = () => {
+    setShowRejectPopup(true);
   };
 
-  // ✅ ฟังก์ชันล้างการเลือก
-  const clearSelection = () => {
-    setTransactions(transactions.map(t => ({ ...t, selected: false })));
+  // ✅ ฟังก์ชันปิด Pop-up Reject
+  const closeRejectPopup = () => {
+    setShowRejectPopup(false);
+    setRejectReason("");
+  };
+
+  // ✅ ฟังก์ชันปฏิเสธการชำระเงิน (Reject)
+  const confirmReject = () => {
+    if (!rejectReason.trim()) {
+      alert("กรุณากรอกเหตุผลในการปฏิเสธการชำระเงิน ❌");
+      return;
+    }
+
+    axios.post(`http://localhost:4000/api/reject-payment/${selectedUser._id}`, { reason: rejectReason })
+      .then(() => {
+        alert(`การชำระเงินของ ${selectedUser.username} ถูกปฏิเสธแล้ว ✅`);
+        closeRejectPopup(); // ปิด Pop-up
+      })
+      .catch(error => console.error("Error rejecting payment:", error));
   };
 
   return (
@@ -95,7 +118,6 @@ const AdminPayment = () => {
                   <th>ยอดเงิน</th>
                   <th>เรียกเก็บ 10%</th>
                   <th>รวม</th>
-                  <th>เลือก</th>
                 </tr>
               </thead>
               <tbody>
@@ -103,44 +125,64 @@ const AdminPayment = () => {
                   <tr><td colSpan="6" className="no-data">ไม่มีรายการ</td></tr>
                 ) : (
                   transactions.map((transaction, index) => (
-                    <tr key={index} className={transaction.selected ? "selected-row3" : ""}>
+                    <tr key={index}>
                       <td>{transaction.dateTime}</td>
                       <td>{transaction.item}</td>
                       <td>{transaction.amount} $</td>
                       <td>{transaction.tax} $</td>
                       <td>{transaction.total} $</td>
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={transaction.selected || false}
-                          onChange={() => {
-                            setTransactions(transactions.map((t, i) =>
-                              i === index ? { ...t, selected: !t.selected } : t
-                            ));
-                          }}
-                        />
-                      </td>
                     </tr>
                   ))
                 )}
               </tbody>
             </table>
 
-            {/* 🛠 ปุ่มจัดการ */}
-            <div className="action-buttons3">
-              <button className="delete-button" onClick={deleteSelected}>ลบที่เลือก</button>
-              <button className="confirm-button3" onClick={confirmPayment}>ยืนยัน</button>
-              <button className="blacklist-button" onClick={blacklistUser}>Blacklist</button>
-              <button className="slip-button" onClick={clearSelection}>สลิป</button>
-            </div>
-
             {/* 💲 รวมยอดเงินทั้งหมด */}
             <div className="total-box2">
               <strong>Total: {calculateTotal()} $</strong>
             </div>
+
+            {/* 🛠 ปุ่มจัดการ */}
+            <div className="action-buttons3">
+              <button className="reject-button" onClick={openRejectPopup}>Reject</button>
+              <button className="confirm-button3">ยืนยัน</button>
+              <button className="blacklist-button">Blacklist</button>
+              <button className="slip-button" onClick={openSlipPopup}>สลิป</button>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* 🖼 Pop-up แสดงสลิป */}
+      {showSlipPopup && (
+        <div className="slip-popup">
+          <div className="slip-popup-content">
+            <img src={closeIcon} alt="Close" className="close-slip-popup" onClick={closeSlipPopup} />
+            <h2>สลิป</h2>
+            {slipImageUrl ? <img src={slipImageUrl} alt="Slip" className="slip-image" /> : <p>ไม่มีสลิป</p>}
+          </div>
+        </div>
+      )}
+
+      {/* 🚫 Pop-up ปฏิเสธการชำระเงิน */}
+      {showRejectPopup && (
+        <div className="reject-popup">
+          <div className="reject-popup-content">
+            <img src={closeIcon} alt="Close" className="close-reject-popup" onClick={closeRejectPopup} />
+            <h2>ปฏิเสธการชำระเงิน</h2>
+            <textarea
+              className="reject-reason-input"
+              placeholder="กรุณากรอกสาเหตุ..."
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+            />
+            <div className="popup-buttons3">
+              <button className="confirm-reject" onClick={confirmReject}>ยืนยัน</button>
+              <button className="cancel-reject" onClick={closeRejectPopup}>ยกเลิก</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
