@@ -1,76 +1,88 @@
 @import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 
-/* แถบเมนูหลัก */
+/* ✅ แถบเมนูหลัก */
 .navbar111 {
-    background-color: #0C2340; /* พื้นหลังสีน้ำเงินเข้ม */
-    color: white; /* ข้อความสีขาว */
-    padding: 15px 20px; /* ระยะห่างรอบขอบ */
-    width: 100%; /* เต็มความกว้าง */
-    height: 120px;
+    background-color: #0C2340;
+    color: white;
+    padding: 15px 20px;
+    width: 100%;
+    height: auto;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* ✅ จัดให้องค์ประกอบอยู่เรียงลงมา */
+    align-items: center;
+    text-align: center; /* ✅ จัดข้อความทั้งหมดให้อยู่ตรงกลาง */
+}
+
+/* ✅ คอนเทนเนอร์หลัก - จัดแนวนอน */
+.navbar-container111 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center; /* ✅ โลโก้ MatchWeb อยู่กึ่งกลาง */
+    width: 100%;
+    position: relative;
+}
+
+/* ✅ ปุ่มกลับหน้า Home - อยู่มุมซ้าย */
+.home-button111 {
+    position: absolute;
+    left: 20px; /* ✅ ชิดด้านซ้าย */
+    top: 50%;
+    transform: translateY(-50%); /* ✅ จัดให้ปุ่มอยู่ตรงกลางแนวตั้ง */
+    display: flex;
     align-items: center;
     justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 10px;
+    transition: 0.3s;
 }
 
-/* คอนเทนเนอร์หลัก */
-.navbar-container111 {
-    display: flex; /* ใช้ Flexbox */
-    flex-direction: column;
-    align-items: center; /* จัดให้อยู่ตรงกลาง */
-    text-align: center;
-    width: 100%;
+.home-button111:hover {
+    background: #f0f0f0;
 }
 
-/* กลุ่มด้านซ้าย: โลโก้ + ชื่อ */
+/* ✅ โลโก้ปุ่ม Home */
+.home-logo111 {
+    width: 30px;
+    height: 30px;
+}
+
+/* ✅ กลุ่มตรงกลาง: โลโก้ + ชื่อ */
 .navbar-left111 {
     display: flex;
     align-items: center;
-    gap: 10px; /* ระยะห่างระหว่างโลโก้กับข้อความ */
-    justify-content: center;
+    gap: 10px;
 }
 
-/* โลโก้ */
+/* ✅ โลโก้ */
 .navbar-logo {
-    width: 70px; /* ปรับขนาดโลโก้ */
+    width: 70px;
     height: auto;
-    position: relative;
-    top : -10px;
 }
 
-/* ชื่อ MatchWeb */
+/* ✅ ชื่อ MatchWeb */
 .navbar-title111 {
     font-size: 30px;
     font-weight: bold;
     margin: 0;
     font-family: 'Inder', sans-serif;
-    position: relative;
-    top: -5px;
 }
 
-/* กลุ่มด้านขวา: ข้อความ */
-.navbar-right111 {
-    text-align: center;
-    font-family: 'Kanit', sans-serif;
+/* ✅ เส้นคั่น */
+.navbar11-divider {
+    width: 50%; /* ✅ ทำให้เส้นสั้นลง */
+    height: 2px;
+    background-color: white;
     margin-top: 5px;
 }
 
-/* ข้อความด้านขวา */
-.navbar-subtitle111 {
-    font-size: 20px;
-    margin: 0;
-    position: relative;
-    top: 15px;
+/* ✅ ข้อความด้านล่าง */
+.navbar-right111 {
+    font-size: 16px;
+    margin-top: 5px;
     font-family: 'Kanit', sans-serif;
-}
-
-/* เส้นใต้ */
-.navbar11-divider {
-    width: 50%; /* ยาวขึ้นสำหรับความสมดุล */
-    height: 2px;
-    background-color: white;
-    top: -32px;
-    position: relative;
 }
