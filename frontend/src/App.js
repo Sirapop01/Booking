@@ -22,6 +22,7 @@ import OwnerLedger from './component/OwnerLedger/OwnerLedger';
 import Information from './component/Information/Information';
 import ManageAccount from './component/ManageAccount/ManageAccount';
 import AdminChat from './component/AdminChat/AdminChat';
+import AdminPayment from './component/AdminPayment/AdminPayment';
 
 
 
@@ -53,6 +54,7 @@ function App() {
         <Route path='/Information' element={<Information />} />
         <Route path='/ManageAccount' element={<ManageAccount />}/>
         <Route path='/AdminChat' element={<AdminChat/>}/>
+        <Route path='/AdminPayment' element={<AdminPayment/>}/>
 
       </Routes>
     </BrowserRouter>
