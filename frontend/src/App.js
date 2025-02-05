@@ -21,6 +21,7 @@ import TestHome from './component/Test/TestHome';
 import OwnerLedger from './component/OwnerLedger/OwnerLedger';
 import Information from './component/Information/Information';
 import ManageAccount from './component/ManageAccount/ManageAccount';
+import AdminChat from './component/AdminChat/AdminChat';
 
 
 
@@ -51,6 +52,7 @@ function App() {
         <Route path='/Ownerledger' element={<OwnerLedger />} />
         <Route path='/Information' element={<Information />} />
         <Route path='/ManageAccount' element={<ManageAccount />}/>
+        <Route path='/AdminChat' element={<AdminChat/>}/>
 
       </Routes>
     </BrowserRouter>
