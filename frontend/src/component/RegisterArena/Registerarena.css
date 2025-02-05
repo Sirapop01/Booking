@@ -13,6 +13,8 @@
     padding: 20px;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: auto; /* ✅ อนุญาตให้เลื่อนแนวตั้ง */
+    max-height: 90vh; /* ✅ จำกัดความสูงไม่ให้ล้นจอ */
   }
 
   
@@ -234,3 +236,22 @@
     font-family: 'Kanit', sans-serif;
     
   }
+
+  .react-time-picker {
+    max-width: 100px !important; /* ลดขนาดโดยรวม */
+    max-height: 50px;
+    border: none;
+  }
+  
+  .react-time-picker__inputGroup input {
+    width: 30px !important; /* ปรับขนาดช่องตัวเลข */
+    font-size: 14px;
+    text-align: center;
+    height: 20px;
+    border: none;
+  }
+  
+  .react-time-picker__clock {
+    width: 30px !important;
+  }
+  
