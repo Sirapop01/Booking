@@ -1,3 +1,5 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
 
 .container {
@@ -23,6 +25,7 @@
     width: 100%;
     max-width: 850px;
     padding: 20px;
+    font-family: 'Kanit', sans-serif;
 }
 
 /* โลโก้ */
@@ -38,6 +41,7 @@
     position: relative;
     top: -50px; /* ขยับขึ้นไปข้างบน */
     letter-spacing: 3px;
+    font-family: 'Kanit', sans-serif;
 }
 
 
@@ -50,6 +54,7 @@
     overflow: hidden; /* ป้องกันข้อความเกินขอบ */
     position: relative;
     top: -60px; /* ขยับขึ้นไปข้างบน */
+    font-family: 'Kanit', sans-serif;
 }
 
 
@@ -58,6 +63,7 @@
     font-size: 22px;
     font-weight: bold;
     margin-bottom: 25px;
+    font-family: 'Kanit', sans-serif;
 }
 
 /* กล่องปุ่ม */
@@ -67,6 +73,7 @@
     align-items: center;
     gap: 50px;
     margin-top: 20px;
+    font-family: 'Kanit', sans-serif;
 }
 
 /* ปุ่มสมัคร */
@@ -84,6 +91,7 @@
     width: 280px;
     text-align: center;
     box-shadow: 0px 4px 12px rgba(255, 255, 255, 0.4);
+    font-family: 'Kanit', sans-serif;
 }
 
 .customer-button:hover,
@@ -98,6 +106,7 @@
   align-items: flex-start; /* เปลี่ยนจาก center เป็น flex-start เพื่อให้อยู่แนวเดียวกัน */
   gap: 90px;
   margin-top: 15px;
+  font-family: 'Kanit', sans-serif;
 }
 
 /* ปรับคำอธิบายใต้ปุ่มให้ชัดขึ้น */
@@ -109,6 +118,7 @@
   display: flex;
   flex-direction: column;
   align-items: center; /* ทำให้ข้อความอยู่ตรงกลาง */
+  font-family: 'Kanit', sans-serif;
 }
 
 /* เส้นแบ่งตรงกลาง */
@@ -116,4 +126,5 @@
     width: 2px;
     height: 90px;
     background-color: #fff;
+   
 }
