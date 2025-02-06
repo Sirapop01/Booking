@@ -60,7 +60,7 @@ function ManageSubStadium() {
         <img src={homeLogo} alt="Home" className="home-logo1" />
       </a>
       <h1 className="page-title">
-        <img src={logo} alt="Logo" className="logo" />
+        <img src={logo} alt="Logo" className="logo-Managesub" />
         จัดการสนามย่อย
       </h1>
     </div>

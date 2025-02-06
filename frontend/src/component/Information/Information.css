@@ -1,160 +1,178 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 
+/* ✅ ปรับให้ HTML และ BODY เลื่อนได้ */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* ✅ ป้องกันการเลื่อนในแกน X */
+    overflow-y: auto; /* ✅ อนุญาตให้เลื่อนในแกน Y */
+    background: linear-gradient(to bottom, #0a1a2a, #004080);
+}
+
+/* ✅ ปรับให้ Wrapper เต็มหน้าจอและเลื่อนลงได้ */
 .information-wrapper {
     width: 100%;
-    height: 100vh;
-    background: #0a1a2a;
+    min-height: 100vh; /* ✅ ให้ wrapper ขยายเต็มความสูงหน้าจอ */
+    height: auto; /* ✅ ป้องกันการถูกบีบเมื่อมีเนื้อหามาก */
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 20px;
-    overflow-y: auto;
+    flex-grow: 1; /* ✅ ขยาย wrapper ตามเนื้อหา */
+    padding: 40px 0;
+    background: linear-gradient(to bottom, #0a1a2a, #004080); /* ✅ กำหนดพื้นหลังโดยตรง */
+    padding-bottom: 60px; /* ✅ เพิ่มระยะห่างด้านล่าง */
 }
 
-.information-navbar {
-    width: 100%;
-    background: #0a1a2a;
-    padding: 10px 0;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
-.home-button {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    width: 60px;
-    height: 60px;
-    background-color: white;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-  }
-
-  .home-logo {
-    width: 35px;
-    height: 35px;
-  }
-
-.information-navbar-content {
-    display: flex;
-    align-items: center;
-}
-
-.information-logo {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
-}
-
-.information-title {
-    font-size: 24px;
-    color: white;
-}
-
+/* ✅ ปรับให้ Container อยู่กึ่งกลาง */
 .information-container {
-    width: 95%;
-    max-width: 1400px;
+    width: 90%; /* ✅ ลดจาก 95% เป็น 85% */
+    max-width: 1200px; /* ✅ ลดขนาดจาก 1400px เป็น 1200px */
     background: white;
-    padding: 70px;
+    padding: 50px;
     border-radius: 20px;
     text-align: center;
-    margin-top: 60px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    margin: auto;
+    margin-top: 40px;
+    margin-bottom: 60px;
+    min-height: 600px; /* ✅ บังคับให้ container มีความสูง */
+    height: auto; /* ✅ ป้องกันการล็อกขนาด */
+    overflow: visible; /* ✅ ป้องกันการถูกตัด */
 }
 
+/* ✅ ปรับให้ Section รองรับการเลื่อน */
 .information-section {
     display: flex;
     justify-content: space-between;
-    padding: 20px;
     gap: 20px;
     width: 100%;
+    max-width: 1200px;
 }
 
+/* ✅ ปรับให้กล่องอยู่กึ่งกลาง */
 .information-box {
     background: white;
-    padding: 30px;
-    border: 2px solid black;
+    padding: 20px;
+    border: 1px solid black;
     border-radius: 10px;
     width: 32%;
-    height: auto;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     align-items: center;
+    min-height: 500px; /* ✅ ปรับความสูงของกล่อง */
+    height: auto; /* ✅ ป้องกันการล็อกขนาด */
+}
+
+/* ✅ ปรับการแสดงผลของ Input */
+.information-input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    color: black; /* ✅ กำหนดให้ตัวอักษรใน input เป็นสีดำ */
+    background: white; /* ✅ ทำให้ input มีพื้นหลังสีขาว */
 }
 
 .information-label {
     font-size: 16px;
-    color: black;
+    color: black; /* ✅ กำหนดให้ตัวอักษรใน label เป็นสีดำ */
     font-weight: bold;
     text-align: left;
     margin-bottom: 10px;
     width: 100%;
+    font-family: 'Kanit', sans-serif;
 }
 
-.information-upload {
-    border: 2px solid black;
-    border-radius: 10px;
+.information-label-container {
     display: flex;
     align-items: center;
-    justify-content: center;
-    height: 150px;
-    margin-top: 20px;
     width: 100%;
+    position: relative;
+    justify-content: flex-start; /* ✅ จัด label และ error ให้อยู่ฝั่งซ้าย */
 }
 
-.large-upload {
-    height: 200px;
-}
-
-.information-add {
-    font-size: 24px;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
-
-.information-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 2px solid black;
-    border-radius: 5px;
-}
-
+/* ✅ ปุ่ม */
 .information-buttons {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;  /* ✅ จัดปุ่มไปทางขวา */
     gap: 10px;
+    margin-top: 20px;
+    width: 100%;  /* ✅ ให้ปุ่มขยายตามความกว้าง container */
+}
+
+.information-next, .information-cancel {
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 .information-next {
     background-color: #00a6fb;
-    color: white;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
 .information-cancel {
     background-color: #ff4d4d;
-    color: white;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
+/* ✅ เอฟเฟกต์ Hover */
+.information-next:hover {
+    background-color: #0086c9;
+}
+
+.information-cancel:hover {
+    background-color: #e63939;
+}
+
+/* ✅ ปรับให้พื้นหลังเต็มและขยายอัตโนมัติ */
+.information-upload {
+    border: 1px solid black;
+    border-radius: 10px;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    min-height: 120px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+/* ✅ ขนาดพิเศษของกล่อง */
+.large-upload {
+    min-height: 160px;
+}
+
+/* ✅ ปรับให้รูปเต็มพื้นที่ */
+.uploaded-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* ✅ ปุ่ม + ซ้อนทับ */
+.information-add {
+    font-size: 30px;
+    color: black;
+    cursor: pointer;
+    position: absolute;
+    transition: 0.3s;
+}
+
+/* ✅ ปรับเมื่อมีรูปภาพ */
+.upload-label:has(.uploaded-image) .information-add {
+    display: none;
+}
+
+/* ✅ ปรับ input type file ให้ซ่อน */
 .file-input {
     display: none;
 }
@@ -168,9 +186,22 @@
     height: 100%;
 }
 
-.uploaded-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 10px;
+/* ✅ Responsive Design */
+@media (max-width: 1024px) {
+    .information-section {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .information-box {
+        width: 90%;
+    }
+}
+
+.error-message-information {
+    color: red;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline; /* ✅ ทำให้ข้อความอยู่ในบรรทัดเดียวกับหัวข้อ */
+    margin-left: 5px; /* ✅ เพิ่มระยะห่างเล็กน้อย */
 }
