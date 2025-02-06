@@ -1,45 +1,72 @@
 import React, { useState } from "react";
-import "./ResetPassword.css"; // ไฟล์ CSS สำหรับสไตล์
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./ResetPassword.css";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function ResetPassword() {
+  const { token } = useParams();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleReset = async (e) => {
     e.preventDefault();
-    // ตรวจสอบเงื่อนไข เช่น รหัสผ่านต้องตรงกัน 
+    setMessage("");
+
     if (newPassword !== confirmPassword) {
-      alert("รหัสผ่านไม่ตรงกัน กรุณาลองใหม่");
+      setMessage("❌ รหัสผ่านไม่ตรงกัน");
       return;
     }
-    // ถ้ารหัสผ่านทั้งสองช่องตรงกัน ก็ส่งไปยัง backend
-    console.log("New Password:", newPassword);
-    alert("เปลี่ยนรหัสผ่านสำเร็จ!");
-    // อาจนำไปเรียก API เพื่ออัปเดตรหัสผ่านในระบบ
+
+    try {
+      await axios.post(`http://localhost:4000/api/auth/reset-password/${token}`, { newPassword });
+      setMessage("✅ เปลี่ยนรหัสผ่านสำเร็จ! กำลังไปหน้า Login...");
+      setTimeout(() => navigate("/login"), 2000);
+    } catch (error) {
+      console.error(error);
+      setMessage("❌ ลิงก์หมดอายุหรือไม่ถูกต้อง");
+    }
   };
 
   return (
-    <div className="forgot-password-container">
+    <div className="reset-password-container">
       <h1 className="main-title">เปลี่ยนรหัสผ่านใหม่</h1>
-      <div className="forgot-password-box">
-        <h2>ลืมรหัสผ่าน</h2>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="password"
-            placeholder="รหัสผ่านใหม่"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="ยืนยันรหัสผ่าน"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-          <button type="submit">เปลี่ยนรหัสผ่านใหม่</button>
+      <div className="reset-password-box">
+        <h2>รีเซ็ตรหัสผ่าน</h2>
+        <form onSubmit={handleReset}>
+          <div className="input-group">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="กรอกรหัสผ่านใหม่"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+            />
+            <span onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+
+          <div className="input-group">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="ยืนยันรหัสผ่านใหม่"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+
+          <button type="submit">ยืนยัน</button>
         </form>
+        {message && <p className="message">{message}</p>}
       </div>
     </div>
   );

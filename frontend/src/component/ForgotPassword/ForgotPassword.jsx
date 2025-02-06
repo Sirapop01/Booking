@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "./ForgotPassword.css"
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage(""); 
+
     try {
-      // เรียกไปยัง API ที่ฝั่ง Backend
-      const response = await axios.post("http://localhost:4000/api/send-email", { email });
-      alert("ส่งอีเมลสำเร็จ!");
+      const response = await axios.post("http://localhost:4000/api/auth/forgot-password", { email });
+      setMessage("✅ กรุณาตรวจสอบอีเมลของคุณ!");
     } catch (error) {
       console.error(error);
-      alert("เกิดข้อผิดพลาดในการส่งอีเมล");
+      setMessage("❌ ไม่พบอีเมลนี้");
     }
   };
 
@@ -31,6 +34,7 @@ function ForgotPassword() {
           />
           <button type="submit">ส่ง</button>
         </form>
+        {message && <p className="message">{message}</p>}
       </div>
     </div>
   );

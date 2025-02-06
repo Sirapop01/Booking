@@ -41,7 +41,7 @@ function App() {
         <Route path="/login" element={<Login />} /> 
         <Route path="/customer-register" element={<RegisterCustomer/>} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<Resetpassword/>} />
+        <Route path="/reset-password/:token" element={<Resetpassword />} />
         <Route path="/OperaRequri" element={<OperaRequri/>} />
         <Route path="/RegisterOpera" element={<RegisterOpera/>} />
         <Route path="/RegisterArena" element={<RegisterArena/>} />
