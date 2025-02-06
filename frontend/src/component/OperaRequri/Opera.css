@@ -11,6 +11,8 @@ html, body {
     background-color: #0b1120;
     color: #ffffff;
     font-family: 'Inder', sans-serif;
+    display : flex;
+    min-height: 100vh;
   }
   
   /* Container */
