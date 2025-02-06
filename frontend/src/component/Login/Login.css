@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+
 /* Container หลัก */
 .login-container {
   display: flex;
@@ -25,6 +27,8 @@
   font-size: 24px;
   color: #FFFFFF;
   margin-bottom: 30px;
+  font-family: 'Inder', sans-serif;
+  font-weight: bold;
 }
 
 .login-bg-img {

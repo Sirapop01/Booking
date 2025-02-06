@@ -16,7 +16,7 @@ body {
 /* ====== Main Container (จัดให้อยู่ตรงกลาง) ====== */
 .registration-container1 {
   position:relative;
-  top:85px;
+  top:70px;
   width: 90%; /* ลดขนาดลงให้สมดุล */
   max-width: 1000px; /* กำหนดขนาดสูงสุดให้ไม่กว้างเกินไป */
   background-color: #ffffff;
