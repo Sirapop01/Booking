@@ -91,19 +91,19 @@ html, body {
 
 .information-label-container {
     display: flex;
-    justify-content: space-between; /* ✅ แบ่ง label และ error ไปคนละฝั่ง */
     align-items: center;
     width: 100%;
     position: relative;
+    justify-content: flex-start; /* ✅ จัด label และ error ให้อยู่ฝั่งซ้าย */
 }
 
 /* ✅ ปุ่ม */
 .information-buttons {
     display: flex;
-    justify-content: center; /* ✅ จัดให้อยู่ตรงกลาง */
+    justify-content: flex-end;  /* ✅ จัดปุ่มไปทางขวา */
     gap: 10px;
     margin-top: 20px;
-    margin-left: 0; /* ❌ ลบ margin-left: 1000px; ที่ทำให้ปุ่มเยื้องขวาเกินไป */
+    width: 100%;  /* ✅ ให้ปุ่มขยายตามความกว้าง container */
 }
 
 .information-next, .information-cancel {
@@ -202,9 +202,6 @@ html, body {
     color: red;
     font-size: 14px;
     font-weight: bold;
-    position: absolute;
-    right: 0; /* ✅ ให้ Error Message อยู่ด้านขวา */
-    top: 50%;
-    transform: translateY(-50%);
-    white-space: nowrap; /* ✅ ป้องกัน error ขึ้นบรรทัดใหม่ */
+    display: inline; /* ✅ ทำให้ข้อความอยู่ในบรรทัดเดียวกับหัวข้อ */
+    margin-left: 5px; /* ✅ เพิ่มระยะห่างเล็กน้อย */
 }
