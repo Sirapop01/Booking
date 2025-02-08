@@ -19,7 +19,13 @@ const PORT = process.env.PORT || 4000;
 
 // ✅ Middleware
 app.use(bodyParser.json());
-app.use(cors());
+// ✅ แก้ไข CORS ให้รองรับหลายพอร์ต
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:3001'],  // ✅ อนุญาต Frontend หลายพอร์ต
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // ✅ อนุญาตเมธอดต่าง ๆ
+  allowedHeaders: ['Content-Type', 'Authorization'],  // ✅ อนุญาตการส่ง Authorization Header
+  credentials: true  // ✅ อนุญาตส่ง Cookies หรือ Headers ที่เกี่ยวกับ Authentication
+}));
 app.use("/uploads", express.static("uploads")); // ✅ ให้สามารถเข้าถึงไฟล์ใน `uploads/` ได้จาก URL
 
 // ✅ เชื่อมต่อ MongoDB
@@ -41,6 +47,13 @@ app.use("/api/manage-account", manageAccountRoutes);
 app.use("/api/arenas", arenaRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/verify-payments", verifyPaymentRoutes);
+
+app.use((err, req, res, next) => {
+  if (err.name === 'UnauthorizedError') {
+    return res.status(401).json({ message: "Token ไม่ถูกต้องหรือหมดอายุ" });
+  }
+  next(err);
+});
 
 app.listen(PORT, () => {
   console.log(`🚀 Server started on port ${PORT}`);
