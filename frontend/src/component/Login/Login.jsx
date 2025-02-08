@@ -11,42 +11,70 @@ import axios from 'axios';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false); 
-  const [showPassword, setShowPassword] = useState(false); 
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const validateForm = () => {
+    if (!email) {
+      setErrorMessage("กรุณากรอกอีเมล");
+      return false;
+    }
+  
+    // ตรวจสอบรูปแบบอีเมล
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setErrorMessage("กรุณากรอกอีเมลให้ถูกต้อง");
+      return false;
+    }
+  
+    if (!password) {
+      setErrorMessage("กรุณากรอกรหัสผ่าน");
+      return false;
+    }
+  
+    setErrorMessage(''); // ลบข้อความ error ถ้าทุกอย่างถูกต้อง
+    return true;
+  };
+  
+
 
   const handleLogin = async () => {
-    let members = {
-      email,
-      password 
+  if (!validateForm()) {
+    return; // หยุดการทำงานหากการตรวจสอบล้มเหลว
+  }
+
+  let members = {
+    email,
+    password 
+  }
+
+  try {
+    const response = await axios.post("http://localhost:4000/api/auth/login", members);
+    
+    if (response.data.message === "เข้าสู่ระบบสำเร็จ") {
+      if (rememberMe) {
+        localStorage.setItem('token', response.data.token);
+      } else {
+        sessionStorage.setItem('token', response.data.token);
+      }
+      navigate("/");
+    } else {
+      setErrorMessage("อีเมลหรือรหัสผ่านไม่ถูกต้อง");  // แสดงข้อความเมื่อเข้าสู่ระบบไม่สำเร็จ
     }
 
-    try {
-      const response = await axios.post(
-        "http://localhost:4000/api/auth/login", members );
-        if(response.data.message == "เข้าสู่ระบบสำเร็จ"){
-          
-          if(rememberMe){
-            localStorage.setItem('token', response.data.token);
-          }else{
-            sessionStorage.setItem('token', response.data.token);
-          }
-          
-          
-          navigate("/");
-        }else{
-          alert("เข้าสู่ระบบไม่สำเร็จ");
-        }
-      console.log(response.data.message)
-    }catch (err){
-      console.log(err)
-    }
+    console.log(response.data.message);
+  } catch (err) {
+    console.log(err);
+    alert("เกิดข้อผิดพลาดในการเข้าสู่ระบบ กรุณาลองใหม่อีกครั้ง");  // จัดการข้อผิดพลาดทั่วไป เช่น เซิร์ฟเวอร์ล่ม
+  }
+};
 
-    console.log('Email:', email);
-    console.log('Password:', password);
-    console.log('Remember Me:', rememberMe);
+  const handleInputChange = (setter) => (e) => {
+    setter(e.target.value);
+    setErrorMessage(''); // ลบข้อความ error เมื่อผู้ใช้พิมพ์ใหม่
   };
-
 
 
   const togglePasswordVisibility = () => {
@@ -85,9 +113,10 @@ function Login() {
               className="login-toggle-password"
               onClick={togglePasswordVisibility}
             >
-              {showPassword ? <IoEyeSharp/>:<FaEyeSlash/>  } 
+              {showPassword ? <IoEyeSharp /> : <FaEyeSlash />}
             </button>
           </div>
+          {errorMessage && <p className="login-error-message">{errorMessage}</p>}
           <div className="login-remember-me">
             <input
               type="checkbox"
