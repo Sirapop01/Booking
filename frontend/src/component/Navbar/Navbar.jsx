@@ -72,7 +72,7 @@ const Navbar = () => {
             ลงทะเบียน
           </button>
         </div>
-      ) : decodedToken?.role === "user" ? (
+      ) : decodedToken?.role === "customer" ? (
         <div className="dropdown">
           <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
             ☰

@@ -32,7 +32,7 @@ function RegisterCustomer() {
     district: '',
     subdistrict: '',
     profileImage: null,
-    role: 'user', // ✅ เพิ่ม role (กำหนดค่าเริ่มต้นเป็น "user")
+    role: 'customer', // ✅ เพิ่ม role (กำหนดค่าเริ่มต้นเป็น "user")
     gender: '',
   });
 
@@ -95,13 +95,13 @@ function RegisterCustomer() {
 
       if (formData.profileImage) {
         let imageData = new FormData();
-        imageData.append("profileImage", formData.profileImage);
+        imageData.append("image", formData.profileImage);  // ✅ ชื่อฟิลด์ต้องเป็น "image"
 
         console.log("📤 Uploading Image...");
-        const uploadResponse = await axios.post("http://localhost:4000/api/upload/uploadProfile", imageData, {
+        const uploadResponse = await axios.post("http://localhost:4000/api/upload/profile", imageData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-
+        
         console.log("✅ Uploaded Image:", uploadResponse.data);
         uploadedImageUrl = uploadResponse.data.imageUrl; // ✅ เก็บค่ารูปที่อัปโหลด
         userData.profileImage = uploadedImageUrl; // ✅ อัปเดตรูปภาพใน JSON
