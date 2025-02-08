@@ -34,7 +34,7 @@ const Homepage = () => {
   }
 
   // เช็ค role จาก token ถ้าเป็น user ให้แสดง Homepage ถ้าไม่ใช่ให้แสดง HomepageOpera
-  if ( !decodedToken || decodedToken.role === "user") {
+  if ( !decodedToken || decodedToken.role === "customer") {
     return (
       <div className="homepage-container">
         <Navbar />

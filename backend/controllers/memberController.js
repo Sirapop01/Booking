@@ -46,7 +46,7 @@ exports.register = async (req, res) => {
       district,
       subdistrict,
       profileImage, // ✅ รูปภาพมาจาก JSON ที่ส่งมาจาก Frontend
-      role : "user"
+      role : "customer"
     });
 
     console.log("✅ User Registered Successfully:", newUser);
