@@ -1,127 +1,79 @@
-const Payment = require("../models/Payment");
+const jwt = require('jsonwebtoken');
 const User = require("../models/User");
+const Payment = require("../models/Payment");
+const secret = process.env.JWT_SECRET || "MatchWeb";  // ใช้ Secret เดียวกับ authController.js
 
-// ✅ ดึงรายชื่อผู้ใช้ที่มีการชำระเงิน
 exports.getPaymentUsers = async (req, res) => {
     try {
-      const users = await User.find({ _id: { $in: await Payment.distinct("userId") } })
-        .select("_id firstName lastName email");
-  
-      if (!users.length) {
-        return res.status(404).json({ error: "❌ ไม่พบผู้ใช้ที่มีการชำระเงิน" });
-      }
-  
-      res.json(users);
+        // ✅ ตรวจสอบ Token
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return res.status(401).json({ error: '❌ ไม่พบ Token ในคำขอ' });
+        }
+
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, secret);
+
+        // ✅ ดึงผู้ใช้ที่มี state = "payment"
+        const users = await User.find({ state: "payment" }).select("_id firstName lastName email");
+
+        if (!users.length) {
+            return res.status(404).json({ error: "❌ ไม่พบผู้ใช้ที่มีการชำระเงิน" });
+        }
+
+        res.json(users);
     } catch (error) {
-      res.status(500).json({ error: "เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้" });
+        if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+            return res.status(403).json({ error: '❌ Token ไม่ถูกต้องหรือหมดอายุ' });
+        }
+        console.error("Error fetching payment users:", error);
+        res.status(500).json({ error: "เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้" });
     }
-  };
-
-// ✅ ดึงรายการชำระเงินของผู้ใช้
-exports.getPaymentHistory = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    if (!userId) {
-      return res.status(400).json({ error: "❌ ต้องระบุ userId" });
-    }
-
-    const transactions = await Payment.find({ userId }).sort({ dateTime: -1 });
-
-    if (!transactions || transactions.length === 0) {
-      return res.status(404).json({ error: "❌ ไม่พบรายการชำระเงิน" });
-    }
-
-    res.json(transactions);
-  } catch (error) {
-    console.error("Error fetching payment history:", error);
-    res.status(500).json({ error: "เกิดข้อผิดพลาดในการดึงประวัติการชำระเงิน" });
-  }
 };
 
-// ✅ ยืนยันการชำระเงิน
-exports.confirmPayment = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    if (!userId) {
-      return res.status(400).json({ error: "❌ ต้องระบุ userId" });
-    }
 
-    const updated = await Payment.updateMany({ userId, status: "pending" }, { status: "confirmed" });
-
-    if (updated.modifiedCount === 0) {
-      return res.status(404).json({ error: "❌ ไม่พบการชำระเงินที่รอการยืนยัน" });
-    }
-
-    res.json({ message: "✅ การชำระเงินได้รับการยืนยันแล้ว" });
-  } catch (error) {
-    console.error("Error confirming payment:", error);
-    res.status(500).json({ error: "เกิดข้อผิดพลาดในการยืนยันการชำระเงิน" });
-  }
-};
-
-// ✅ ปฏิเสธการชำระเงิน
-exports.rejectPayment = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { reason } = req.body;
-
-    if (!userId) {
-      return res.status(400).json({ error: "❌ ต้องระบุ userId" });
-    }
-    if (!reason || reason.trim() === "") {
-      return res.status(400).json({ error: "❌ ต้องระบุเหตุผลในการปฏิเสธ" });
-    }
-
-    const updated = await Payment.updateMany(
-      { userId, status: "pending" },
-      { status: "rejected", rejectReason: reason }
-    );
-
-    if (updated.modifiedCount === 0) {
-      return res.status(404).json({ error: "❌ ไม่พบการชำระเงินที่รอการปฏิเสธ" });
-    }
-
-    res.json({ message: "🚫 การชำระเงินถูกปฏิเสธแล้ว" });
-  } catch (error) {
-    console.error("Error rejecting payment:", error);
-    res.status(500).json({ error: "เกิดข้อผิดพลาดในการปฏิเสธการชำระเงิน" });
-  }
-};
-
-// ✅ ดึงข้อมูลการชำระเงินของผู้ใช้
-exports.getPaymentUsers = async (req, res) => {
+exports.getPaymentDetails = async (req, res) => {
     try {
-      const usersWithPayments = await Payment.distinct("userId");
-      
-      if (!usersWithPayments.length) {
-        return res.status(404).json({ error: "❌ ไม่พบผู้ใช้ที่มีการชำระเงิน" });
-      }
-  
-      const users = await User.find({ _id: { $in: usersWithPayments } }).select("_id username email");
-      res.json(users);
-    } catch (error) {
-      res.status(500).json({ error: "เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้" });
-    }
-  };
-  
+        const { state, userId } = req.query;  // ใช้ query parameters
 
-// ✅ ดึงสลิปการโอนเงิน
+        if (!userId || state !== "payment") {
+            return res.status(400).json({ error: "❌ ต้องระบุ userId และ state ต้องเป็น 'payment'" });
+        }
+
+        const payments = await Payment.find({ userId, state }).sort({ dateTime: -1 });
+
+        if (!payments.length) {
+            return res.status(404).json({ error: "❌ ไม่พบรายการชำระเงิน" });
+        }
+
+        res.json(payments);
+    } catch (error) {
+        console.error("Error fetching payment details:", error);
+        res.status(500).json({ error: "เกิดข้อผิดพลาดในการดึงข้อมูลการชำระเงิน" });
+    }
+};
+
+
+
 exports.getPaymentSlip = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    if (!userId) {
-      return res.status(400).json({ error: "❌ ต้องระบุ userId" });
+    try {
+        const { state, userId } = req.query;  // ใช้ query parameters
+
+        if (!userId || state !== "payment") {
+            return res.status(400).json({ error: "❌ ต้องระบุ userId และ state ต้องเป็น 'payment'" });
+        }
+
+        const payment = await Payment.findOne({ userId, state }).select("slipImageUrl");
+
+        if (!payment || !payment.slipImageUrl) {
+            return res.status(404).json({ error: "❌ ไม่พบสลิปการโอนเงิน" });
+        }
+
+        res.json({ slipImageUrl: payment.slipImageUrl });
+    } catch (error) {
+        console.error("Error fetching slip image:", error);
+        res.status(500).json({ error: "เกิดข้อผิดพลาดในการดึงสลิปการโอนเงิน" });
     }
-
-    const payment = await Payment.findOne({ userId, status: "pending" }).select("slipImageUrl");
-
-    if (!payment || !payment.slipImageUrl) {
-      return res.status(404).json({ error: "❌ ไม่พบสลิปการโอนเงิน" });
-    }
-
-    res.json({ slipImageUrl: payment.slipImageUrl });
-  } catch (error) {
-    console.error("Error fetching payment slip:", error);
-    res.status(500).json({ error: "เกิดข้อผิดพลาดในการดึงสลิปการโอนเงิน" });
-  }
 };
+
+

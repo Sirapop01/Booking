@@ -5,16 +5,10 @@ const verifyPaymentController = require("../controllers/verifyPaymentController"
 // ✅ ดึงรายชื่อผู้ใช้ที่มีการชำระเงิน
 router.get("/payment-users", verifyPaymentController.getPaymentUsers);
 
-// ✅ ดึงรายการชำระเงินของผู้ใช้
-router.get("/payment-history/:userId", verifyPaymentController.getPaymentHistory);
+// ✅ ตรวจสอบให้แน่ใจว่ามี Route นี้
+router.get("/payment-details/:userId", verifyPaymentController.getPaymentDetails);
 
-// ✅ ยืนยันการชำระเงิน
-router.put("/confirm-payment/:userId", verifyPaymentController.confirmPayment);
-
-// ✅ ปฏิเสธการชำระเงิน
-router.post("/reject-payment/:userId", verifyPaymentController.rejectPayment);
-
-// ✅ ดึงสลิปการโอนเงิน
-router.get("/payment-slip/:userId", verifyPaymentController.getPaymentSlip);
+// ✅ หรือถ้าใช้ Query Parameters ต้องแน่ใจว่ารองรับใน Controller
+router.get("/payment-details", verifyPaymentController.getPaymentDetails);
 
 module.exports = router;
