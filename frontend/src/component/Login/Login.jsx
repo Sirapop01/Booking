@@ -141,7 +141,7 @@ function Login() {
             <a href="/forgot-password">ลืมรหัสผ่าน ?</a>
           </p>
           <p className="login-signup-link">
-            Don't have an Account? <a href="/customer-register">Sign Up</a>
+            Don't have an Account? <a href="/RegisterChoice">Sign Up</a>
           </p>
         </div>
       </div>
