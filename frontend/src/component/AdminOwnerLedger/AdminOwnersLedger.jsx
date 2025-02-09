@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./AdminOwnersLedger.css";
+import homeLogo from "../assets/logoalt.png";
 
 const AdminOwnersLedger = () => {
   const [owners, setOwners] = useState([]);
@@ -23,6 +24,10 @@ const AdminOwnersLedger = () => {
 
   return (
     <div className="admin-stadium-container">
+        {/* 🔙 Home Button */}
+              <a href="/" className="home-button">
+                <img src={homeLogo} alt="Home Logo" className="home-logo" />
+              </a>
       <h1 className="page-title">ตรวจสอบรายการบัญชี</h1>
 
       <div className="search-bar">
