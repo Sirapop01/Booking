@@ -7,18 +7,18 @@ const AdminOwnersLedger = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    // Fetch stadium owners from API
     axios.get("http://localhost:4000/api/business-owners")
       .then(response => {
+        console.log("Fetched Data:", response.data);  // ตรวจสอบข้อมูลที่ดึงมา
         setOwners(response.data);
       })
       .catch(error => {
-        console.error("Error fetching stadium owners:", error);
+        console.error("Error fetching business owners:", error);
       });
   }, []);
 
   const filteredOwners = owners.filter(owner =>
-    owner.name.toLowerCase().includes(searchTerm.toLowerCase())
+    `${owner.firstName || ""} ${owner.lastName || ""}`.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -39,7 +39,11 @@ const AdminOwnersLedger = () => {
         {filteredOwners.length > 0 ? (
           filteredOwners.map((owner, index) => (
             <div key={index} className="table-row">
-              <span className="owner-name">{owner.name}</span>
+              <span className="owner-name">
+                {owner.firstName && owner.lastName 
+                  ? `${owner.firstName} ${owner.lastName}`
+                  : "ไม่มีข้อมูลชื่อ"}
+              </span>
               <button className="check-button">ตรวจสอบ</button>
             </div>
           ))
