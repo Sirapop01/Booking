@@ -13,6 +13,7 @@ const manageAccountRoutes = require("./routes/manageAccountRoutes");
 const arenaRoutes = require("./routes/arenaRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const verifyPaymentRoutes = require("./routes/verifyPaymentRoutes"); // ✅ ตรวจสอบ Route
+const businessOwnerRoutes = require("./routes/businessOwnerRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -27,6 +28,7 @@ app.use(cors({
   credentials: true  // ✅ อนุญาตส่ง Cookies หรือ Headers ที่เกี่ยวกับ Authentication
 }));
 app.use("/uploads", express.static("uploads")); // ✅ ให้สามารถเข้าถึงไฟล์ใน `uploads/` ได้จาก URL
+app.use("/api/business-owners", businessOwnerRoutes);
 
 // ✅ เชื่อมต่อ MongoDB
 const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://Booking:Booking@cluster0.1cryq.mongodb.net/BookingDB"; // ✅ ต้องกำหนด Database Name
