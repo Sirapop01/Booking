@@ -26,6 +26,7 @@ import HomepageOper from './component/HomepageOper/Homepageopera';
 import AdminChat from './component/AdminChat/AdminChat';
 import Mapping from './component/Mapping/Mapping';
 import AdminPayment from './component/AdminPayment/AdminPayment';
+import AdminOwnersLedger from './component/AdminOwnerLedger/AdminOwnersLedger';
 
 
 
@@ -60,6 +61,7 @@ function App() {
         <Route path='/AdminChat' element={<AdminChat/>}/>
         <Route path='/map' element={<Mapping/>} />
         <Route path='/AdminPayment' element={<AdminPayment/>}/>
+        <Route path='/AdminOwnersLedger' element={<AdminOwnersLedger/>}/>
 
 
       </Routes>
