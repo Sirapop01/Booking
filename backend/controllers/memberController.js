@@ -10,20 +10,15 @@ const nodemailer = require("nodemailer");
 
 exports.register = async (req, res) => {
   try {
-    console.log("📩 Register Request Body:", req.body);  // ✅ Debugging
-
     const {
-      email, password, confirmPassword, firstName, lastName,
-      gender, phoneNumber, birthdate, interestedSports, province, district, subdistrict,
-      profileImage
+      email, password, firstName, lastName,
+      gender, phoneNumber, birthdate, interestedSports,
+      province, district, subdistrict, profileImage, role, location
     } = req.body;
 
-    if (!email || !password || !confirmPassword) {
+    // ตรวจสอบข้อมูลที่จำเป็น
+    if (!email || !password) {
       return res.status(400).json({ message: "กรุณากรอกข้อมูลให้ครบถ้วน" });
-    }
-
-    if (password !== confirmPassword) {
-      return res.status(400).json({ message: "รหัสผ่านกับยืนยันรหัสผ่านไม่ตรงกัน" });
     }
 
     const existingUser = await User.findOne({ email });
@@ -32,7 +27,9 @@ exports.register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const formattedBirthdate = new Date(birthdate);
 
+    // สร้างผู้ใช้ใหม่
     const newUser = await User.create({
       email,
       password: hashedPassword,
@@ -40,30 +37,31 @@ exports.register = async (req, res) => {
       lastName,
       gender,
       phoneNumber,
-      birthdate,
+      birthdate: formattedBirthdate,
       interestedSports,
       province,
       district,
       subdistrict,
-      profileImage, // ✅ รูปภาพมาจาก JSON ที่ส่งมาจาก Frontend
-      role : "customer"
+      profileImage,
+      role: role || "customer",
+      location  // ✅ ตรวจสอบว่ารูปแบบ location ถูกต้อง
     });
 
-    console.log("✅ User Registered Successfully:", newUser);
     res.status(201).json({ message: "สมัครสมาชิกสำเร็จ!", user: newUser });
 
   } catch (err) {
     console.error("❌ Error registering user:", err);
-    res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ", error: err.message });
   }
 };
 
-exports.login = async (req, res) => {
 
+
+exports.login = async (req, res) => {
 
   try {
     const { email, password, } = req.body;
-    
+
     // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
     if (password == null || email == null) {
       return res.json({ message: "กรุณากรอกข้อมูลให้ครบถ้วน" });
@@ -72,61 +70,61 @@ exports.login = async (req, res) => {
     const [existingUser, existingOwner] = await Promise.all([
       User.findOne({ email }), // ค้นหาใน Collection `users`
       BusinessOwner.findOne({ email }) // ค้นหาใน Collection `businessowners`
-  ]);
+    ]);
 
-  let exitResult = null;
+    let exitResult = null;
 
-  // ตรวจสอบว่าพบผู้ใช้หรือไม่
-  if (existingUser) {
+    // ตรวจสอบว่าพบผู้ใช้หรือไม่
+    if (existingUser) {
       exitResult = existingUser;
-  } else if (existingOwner) {
+    } else if (existingOwner) {
       exitResult = existingOwner;
-  }
+    }
 
-  // ถ้าไม่พบผู้ใช้ในระบบ
-  if (!exitResult) {
+    // ถ้าไม่พบผู้ใช้ในระบบ
+    if (!exitResult) {
       return res.status(401).json({ message: "ไม่พบผู้ใช้ในระบบ" });
-  }
-    
+    }
+
     const LoginOK = await bcrypt.compare(password, exitResult.password)
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("รหัสผ่านที่ถูกเข้ารหัสใหม่:", hashedPassword);
 
-    if(LoginOK){
+    if (LoginOK) {
       const name = exitResult.firstName;
       const id = exitResult._id;
       const role = exitResult.role;
-      const token = jwt.sign({email, name, id, role}, secret, { expiresIn : '1h'})
+      const token = jwt.sign({ email, name, id, role }, secret, { expiresIn: '1h' })
 
       //password 123456
       console.log("เข้าสู่ระบบสำเร็จ");
-      return res.json({message: "เข้าสู่ระบบสำเร็จ",token}
-        
+      return res.json({ message: "เข้าสู่ระบบสำเร็จ", token }
+
       );
-    }else{
+    } else {
       console.log("เข้าสู่ระบบไม่สำเร็จ");
-      return res.json({message: "เข้าสู่ระบบไม่สำเร็จ"});
+      return res.json({ message: "เข้าสู่ระบบไม่สำเร็จ" });
     }
 
-    } catch (err) {
-      console.error("Error Login user:", err);
-      res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
-    }
-}; 
+  } catch (err) {
+    console.error("Error Login user:", err);
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
+  }
+};
 
 exports.getMB = async (req, res) => {
   console.log("✅ GET Member Requested:", req.params.id);
   try {
-      const userData = await User.findById(req.params.id);  // ✅ ใช้ findById() แทน findOne()
-      
-      if (!userData) {
-          return res.status(404).json({ message: "ไม่พบข้อมูล" });
-      }
+    const userData = await User.findById(req.params.id);  // ✅ ใช้ findById() แทน findOne()
 
-      return res.status(200).json(userData);
+    if (!userData) {
+      return res.status(404).json({ message: "ไม่พบข้อมูล" });
+    }
+
+    return res.status(200).json(userData);
   } catch (error) {
-      console.error("❌ Error fetching user data:", error);
-      return res.status(500).json({ message: "เกิดปัญหาในระบบ" });
+    console.error("❌ Error fetching user data:", error);
+    return res.status(500).json({ message: "เกิดปัญหาในระบบ" });
   }
 };
 
