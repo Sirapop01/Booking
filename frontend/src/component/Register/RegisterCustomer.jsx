@@ -86,47 +86,76 @@ function RegisterCustomer() {
     }));
   };
 
+  // ✅ ฟังก์ชันสำหรับแปลงที่อยู่เป็นพิกัด (lat, lng) ด้วย OpenStreetMap Nominatim API
+  const getCoordinatesFromAddress = async (address) => {
+    try {
+      const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
+        params: { q: address, format: "json", limit: 1 }
+      });
+
+      if (response.data.length > 0) {
+        const { lat, lon } = response.data[0];
+        return { lat: parseFloat(lat), lng: parseFloat(lon) };
+      } else {
+        throw new Error("ไม่พบพิกัดสำหรับที่อยู่นี้");
+      }
+    } catch (error) {
+      console.error("❌ ไม่สามารถแปลงที่อยู่ได้:", error);
+      return null;
+    }
+  };
+
+  // ✅ ฟังก์ชันสำหรับจัดการการลงทะเบียน
   const handleRegister = async (e) => {
     e.preventDefault();
-
+  
+    if (!validateForm()) return;
+  
     try {
-      let userData = { ...formData }; // ✅ เก็บข้อมูลทั้งหมดในรูปแบบ JSON
-      let uploadedImageUrl = null;
-
+      let userData = { ...formData };
+      delete userData.confirmPassword;
+  
+      // ✅ อัปโหลดรูปโปรไฟล์
       if (formData.profileImage) {
-        let imageData = new FormData();
-        imageData.append("image", formData.profileImage);  // ✅ ชื่อฟิลด์ต้องเป็น "image"
-
-        console.log("📤 Uploading Image...");
+        const imageData = new FormData();
+        imageData.append("image", formData.profileImage);
+  
         const uploadResponse = await axios.post("http://localhost:4000/api/upload/profile", imageData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
-        
-        console.log("✅ Uploaded Image:", uploadResponse.data);
-        uploadedImageUrl = uploadResponse.data.imageUrl; // ✅ เก็บค่ารูปที่อัปโหลด
-        userData.profileImage = uploadedImageUrl; // ✅ อัปเดตรูปภาพใน JSON
+  
+        userData.profileImage = uploadResponse.data.imageUrl;
       }
-
-      // ✅ Debug JSON ก่อนส่งไป Backend
+  
+      // ✅ แปลงที่อยู่เป็นพิกัด (lat, lng)
+      const fullAddress = `${formData.subdistrict}, ${formData.district}, ${formData.province}`;
+      const coordinates = await getCoordinatesFromAddress(fullAddress);
+  
+      if (coordinates) {
+        userData.location = { 
+          type: "Point", 
+          coordinates: [coordinates.lng, coordinates.lat]  // ✅ เปลี่ยนเป็น [longitude, latitude]
+        };
+      } else {
+        alert("❌ ไม่สามารถหาพิกัดจากที่อยู่ได้ กรุณาตรวจสอบข้อมูลอีกครั้ง");
+        return;
+      }
+  
       console.log("📤 Register Request JSON:", JSON.stringify(userData, null, 2));
-
-      // ✅ ส่งข้อมูลไป Backend ในรูปแบบ JSON
+  
       const response = await axios.post("http://localhost:4000/api/auth/register", userData, {
-        headers: { "Content-Type": "application/json" }, // ✅ ใช้ JSON แทน multipart/form-data
+        headers: { "Content-Type": "application/json" },
       });
-
+  
       alert("✅ สมัครสมาชิกสำเร็จ!");
       navigate("/login");
-
+  
     } catch (err) {
       console.error("❌ Registration Error:", err);
       alert("❌ เกิดข้อผิดพลาด: " + (err.response?.data?.message || "ลองใหม่อีกครั้ง"));
     }
-
   };
-
-
-
+  
 
   return (
     <div className="container1">
