@@ -13,7 +13,9 @@ const manageAccountRoutes = require("./routes/manageAccountRoutes");
 const arenaRoutes = require("./routes/arenaRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const verifyPaymentRoutes = require("./routes/verifyPaymentRoutes"); // ✅ ตรวจสอบ Route
+const businessInfoRoutes = require('./routes/businessInfoRoutes');
 const businessOwnerRoutes = require("./routes/businessOwnerRoutes");
+
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -49,6 +51,7 @@ app.use("/api/manage-account", manageAccountRoutes);
 app.use("/api/arenas", arenaRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/verify-payments", verifyPaymentRoutes);
+app.use("/api/business-info", businessInfoRoutes);
 
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
