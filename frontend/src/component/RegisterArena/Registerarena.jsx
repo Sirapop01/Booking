@@ -95,7 +95,7 @@ const MatchWebForm = () => {
       formData.append("image", file);
 
       try {
-        const response = await axios.post("http://localhost:4000/api/upload/arena", formData, {
+        const response = await axios.post("http://localhost:4000/api/upload/images", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
