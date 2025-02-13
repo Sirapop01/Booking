@@ -13,76 +13,85 @@ const AdminPayment = () => {
   const [showRejectPopup, setShowRejectPopup] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
 
-  // ✅ โหลดรายชื่อบัญชีผู้ใช้
+  // ✅ Fetch JWT Token from LocalStorage
+  const token = localStorage.getItem("token");
+
+  // ✅ Load users with `state: "payment"`
   useEffect(() => {
-    axios.get("http://localhost:4000/api/verify-payments/payment-users")
-      .then(response => {
+    if (!token) return;
+
+    axios
+      .get("http://localhost:4000/api/verify-payments/payment-users", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
         setUsers(response.data);
         if (response.data.length > 0) {
-          setSelectedUser(response.data[0]);
+          setSelectedUser(response.data[0]); // Select first user automatically
         }
       })
-      .catch(error => console.error("Error fetching users:", error));
-  }, []);
+      .catch((error) =>
+        console.error("❌ Error fetching users:", error.response?.data || error.message)
+      );
+  }, [token]);
 
-  // ✅ โหลดรายการการจ่ายเงินของผู้ใช้ที่เลือก
+  // ✅ Load transactions and slip image for the selected user
   useEffect(() => {
-    if (selectedUser) {
-      axios.get(`http://localhost:4000/api/payment-history/${selectedUser._id}`)
-        .then(response => setTransactions(response.data))
-        .catch(error => console.error("Error fetching transactions:", error));
+    if (!selectedUser || !token) return;
 
-      // ✅ โหลดรูปสลิปของผู้ใช้ที่เลือก
-      axios.get(`http://localhost:4000/api/payment-slip/${selectedUser._id}`)
-        .then(response => setSlipImageUrl(response.data.slipImageUrl))
-        .catch(error => console.error("Error fetching slip image:", error));
-    }
-  }, [selectedUser]);
+    axios
+      .get(`http://localhost:4000/api/verify-payments/payment-details?state=payment&userId=${selectedUser._id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => setTransactions(response.data))
+      .catch((error) =>
+        console.error("❌ Error fetching transactions:", error.response?.data || error.message)
+      );
 
-  // ✅ คำนวณยอดรวม
+      axios.get(`http://localhost:4000/api/verify-payments/payment-slip?state=payment&userId=${selectedUser._id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(response => setSlipImageUrl(response.data.slipImageUrl))
+    .catch(error => console.error("❌ Error fetching slip image:", error.response?.data || error.message));
+    
+  }, [selectedUser, token]);
+
+  // ✅ Calculate Total Amount
   const calculateTotal = () => {
     return transactions.reduce((total, transaction) => total + transaction.total, 0);
   };
 
-  // ✅ ฟังก์ชันเปิด Pop-up สลิป
-  const openSlipPopup = () => {
-    setShowSlipPopup(true);
-  };
+  // ✅ Toggle Slip Popup
+  const toggleSlipPopup = () => setShowSlipPopup(!showSlipPopup);
 
-  // ✅ ฟังก์ชันปิด Pop-up สลิป
-  const closeSlipPopup = () => {
-    setShowSlipPopup(false);
-  };
+  // ✅ Toggle Reject Popup
+  const toggleRejectPopup = () => setShowRejectPopup(!showRejectPopup);
 
-  // ✅ ฟังก์ชันเปิด Pop-up Reject
-  const openRejectPopup = () => {
-    setShowRejectPopup(true);
-  };
-
-  // ✅ ฟังก์ชันปิด Pop-up Reject
-  const closeRejectPopup = () => {
-    setShowRejectPopup(false);
-    setRejectReason("");
-  };
-
-  // ✅ ฟังก์ชันปฏิเสธการชำระเงิน (Reject)
+  // ✅ Reject Payment
   const confirmReject = () => {
     if (!rejectReason.trim()) {
       alert("กรุณากรอกเหตุผลในการปฏิเสธการชำระเงิน ❌");
       return;
     }
 
-    axios.post(`http://localhost:4000/api/reject-payment/${selectedUser._id}`, { reason: rejectReason })
+    axios
+      .post(
+        `http://localhost:4000/api/verify-payments/reject-payment/${selectedUser._id}`,
+        { reason: rejectReason },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       .then(() => {
-        alert(`การชำระเงินของ ${selectedUser.username} ถูกปฏิเสธแล้ว ✅`);
-        closeRejectPopup(); // ปิด Pop-up
+        alert(`🚫 การชำระเงินของ ${selectedUser.firstName} ถูกปฏิเสธแล้ว!`);
+        toggleRejectPopup();
       })
-      .catch(error => console.error("Error rejecting payment:", error));
+      .catch((error) =>
+        console.error("❌ Error rejecting payment:", error.response?.data || error.message)
+      );
   };
 
   return (
     <div className="admin-payment-container">
-      {/* 🔙 ปุ่มกลับไปยังหน้า Home */}
+      {/* 🔙 Home Button */}
       <a href="/" className="home-button">
         <img src={homeLogo} alt="Home Logo" className="home-logo" />
       </a>
@@ -90,7 +99,7 @@ const AdminPayment = () => {
       <h1 className="page-title3">ตรวจสอบการจ่ายเงิน</h1>
 
       <div className="payment-content">
-        {/* 📜 รายชื่อผู้ใช้ */}
+        {/* 📜 User List */}
         <div className="user-list-container3">
           <div className="user-list3">
             <div className="list-header3">บัญชีผู้ใช้</div>
@@ -100,13 +109,13 @@ const AdminPayment = () => {
                 className={`user-item3 ${selectedUser?._id === user._id ? "selected" : ""}`}
                 onClick={() => setSelectedUser(user)}
               >
-                {user.username}
+                {user.firstName} {user.lastName}
               </div>
             ))}
           </div>
         </div>
 
-        {/* 📊 ตารางรายการจ่ายเงิน */}
+        {/* 📊 Payment Table */}
         <div className="payment-table-container3">
           <div className="payment-table3">
             <div className="table-header3">รายละเอียด</div>
@@ -122,11 +131,15 @@ const AdminPayment = () => {
               </thead>
               <tbody>
                 {transactions.length === 0 ? (
-                  <tr><td colSpan="6" className="no-data">ไม่มีรายการ</td></tr>
+                  <tr>
+                    <td colSpan="5" className="no-data">
+                      ไม่มีรายการ
+                    </td>
+                  </tr>
                 ) : (
                   transactions.map((transaction, index) => (
                     <tr key={index}>
-                      <td>{transaction.dateTime}</td>
+                      <td>{new Date(transaction.dateTime).toLocaleString()}</td>
                       <td>{transaction.item}</td>
                       <td>{transaction.amount} $</td>
                       <td>{transaction.tax} $</td>
@@ -137,38 +150,46 @@ const AdminPayment = () => {
               </tbody>
             </table>
 
-            {/* 💲 รวมยอดเงินทั้งหมด */}
+            {/* 💲 Total */}
             <div className="total-box2">
               <strong>Total: {calculateTotal()} $</strong>
             </div>
 
-            {/* 🛠 ปุ่มจัดการ */}
+            {/* 🛠 Action Buttons */}
             <div className="action-buttons3">
-              <button className="reject-button" onClick={openRejectPopup}>Reject</button>
+              <button className="reject-button" onClick={toggleRejectPopup}>
+                Reject
+              </button>
               <button className="confirm-button3">ยืนยัน</button>
               <button className="blacklist-button">Blacklist</button>
-              <button className="slip-button" onClick={openSlipPopup}>สลิป</button>
+              <button className="slip-button" onClick={toggleSlipPopup}>
+                สลิป
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 🖼 Pop-up แสดงสลิป */}
+      {/* 🖼 Slip Popup */}
       {showSlipPopup && (
         <div className="slip-popup">
           <div className="slip-popup-content">
-            <img src={closeIcon} alt="Close" className="close-slip-popup" onClick={closeSlipPopup} />
+            <img src={closeIcon} alt="Close" className="close-slip-popup" onClick={toggleSlipPopup} />
             <h2>สลิป</h2>
-            {slipImageUrl ? <img src={slipImageUrl} alt="Slip" className="slip-image" /> : <p>ไม่มีสลิป</p>}
+            {slipImageUrl ? (
+              <img src={slipImageUrl} alt="Slip" className="slip-image" />
+            ) : (
+              <p>ไม่มีสลิป</p>
+            )}
           </div>
         </div>
       )}
 
-      {/* 🚫 Pop-up ปฏิเสธการชำระเงิน */}
+      {/* 🚫 Reject Popup */}
       {showRejectPopup && (
         <div className="reject-popup">
           <div className="reject-popup-content">
-            <img src={closeIcon} alt="Close" className="close-reject-popup" onClick={closeRejectPopup} />
+            <img src={closeIcon} alt="Close" className="close-reject-popup" onClick={toggleRejectPopup} />
             <h2>ปฏิเสธการชำระเงิน</h2>
             <textarea
               className="reject-reason-input"
@@ -177,8 +198,12 @@ const AdminPayment = () => {
               onChange={(e) => setRejectReason(e.target.value)}
             />
             <div className="popup-buttons3">
-              <button className="confirm-reject" onClick={confirmReject}>ยืนยัน</button>
-              <button className="cancel-reject" onClick={closeRejectPopup}>ยกเลิก</button>
+              <button className="confirm-reject" onClick={confirmReject}>
+                ยืนยัน
+              </button>
+              <button className="cancel-reject" onClick={toggleRejectPopup}>
+                ยกเลิก
+              </button>
             </div>
           </div>
         </div>
