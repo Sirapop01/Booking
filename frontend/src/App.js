@@ -27,7 +27,7 @@ import AdminChat from './component/AdminChat/AdminChat';
 import Mapping from './component/Mapping/Mapping';
 import AdminPayment from './component/AdminPayment/AdminPayment';
 import AdminOwnersLedger from './component/AdminOwnerLedger/AdminOwnersLedger';
-
+import ProfileBusiness from './component/ProfileBusiness/BusinessProfile';
 
 
 /**/ 
@@ -62,6 +62,7 @@ function App() {
         <Route path='/map' element={<Mapping/>} />
         <Route path='/AdminPayment' element={<AdminPayment/>}/>
         <Route path='/AdminOwnersLedger' element={<AdminOwnersLedger/>}/>
+        <Route path='/OwnerProfile' element={<ProfileBusiness />} />
 
 
       </Routes>

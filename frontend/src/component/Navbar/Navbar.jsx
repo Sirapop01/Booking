@@ -29,14 +29,14 @@ const Navbar = () => {
   }, []);
 
   const isLoggedIn = !!decodedToken;
-  
-  
 
 
-    // ฟังก์ชัน Logout พร้อมป๊อปอัปยืนยัน
+
+
+  // ฟังก์ชัน Logout พร้อมป๊อปอัปยืนยัน
   const handleLogout = () => {
     setShowLogoutPopup(true); // แสดงป๊อปอัปยืนยัน
-    
+
   };
 
   const confirmLogout = () => {
@@ -46,6 +46,7 @@ const Navbar = () => {
     setIsDropdownOpen(false); // ปิด Dropdown
     setShowLogoutPopup(false); // ปิดป๊อปอัป
     navigate('/'); // Redirect ไปหน้าแรก
+    window.location.reload();
   };
 
   return (
@@ -62,46 +63,47 @@ const Navbar = () => {
           <span className="navbar-title">MatchWeb</span>
         </div>
 
+
         <div className="navbar-right">
-      {!isLoggedIn ? (
-        <div className="navbar-links">
-          <button className="navbar-link" onClick={() => navigate("/login")}>
-            เข้าสู่ระบบ
-          </button>
-          <button className="navbar-button" onClick={() => navigate("/RegisterChoice")}>
-            ลงทะเบียน
-          </button>
-        </div>
-      ) : decodedToken?.role === "customer" ? (
-        <div className="dropdown">
-          <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-            ☰
-          </button>
-          {isDropdownOpen && (
-            <div className="dropdown-menu">
-              <button onClick={() => navigate("/profile")}>บัญชี</button>
-              <button onClick={() => navigate("/history")}>ประวัติการจอง</button>
-              <button onClick={() => navigate("/favorites")}>รายการโปรด</button>
-              <button onClick={handleLogout}>ลงชื่อออก</button>
+          {!isLoggedIn ? (
+            <div className="navbar-links">
+              <button className="navbar-link" onClick={() => navigate("/login")}>
+                เข้าสู่ระบบ
+              </button>
+              <button className="navbar-button" onClick={() => navigate("/RegisterChoice")}>
+                ลงทะเบียน
+              </button>
+            </div>
+          ) : decodedToken?.role === "customer" ? (
+            <div className="dropdown">
+              <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                ☰
+              </button>
+              {isDropdownOpen && (
+                <div className="dropdown-menu">
+                  <button onClick={() => navigate("/profile")}>บัญชี</button>
+                  <button onClick={() => navigate("/history")}>ประวัติการจอง</button>
+                  <button onClick={() => navigate("/favorites")}>รายการโปรด</button>
+                  <button onClick={handleLogout}>ลงชื่อออก</button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="dropdown">
+              <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                ☰
+              </button>
+              {isDropdownOpen && (
+                <div className="dropdown-menu">
+                  <button onClick={() => navigate("/OwnerProfile")}>บัญชี</button>
+                  <button onClick={() => navigate("/areana")}>สนามของฉัน</button>
+                  <button onClick={() => navigate("/income")}>บัญชีรายรับ</button>
+                  <button onClick={handleLogout}>ลงชื่อออก</button>
+                </div>
+              )}
             </div>
           )}
         </div>
-      ) : (
-        <div className="dropdown">
-          <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-            ☰
-          </button>
-          {isDropdownOpen && (
-            <div className="dropdown-menu">
-              <button onClick={() => navigate("/profile")}>บัญชี</button>
-              <button onClick={() => navigate("/areana")}>สนามของฉัน</button>
-              <button onClick={() => navigate("/income")}>บัญชีรายรับ</button>
-              <button onClick={handleLogout}>ลงชื่อออก</button>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
       </nav>
 
       {/* ✅ Popup Logout กลางจอ */}

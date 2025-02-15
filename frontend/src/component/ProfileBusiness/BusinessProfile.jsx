@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import "./UserProfile.css";
+//import "./UserProfile.css";
 import defaultProfilePic from "../assets/threeman.png";
 import { FaPencilAlt } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const UserProfile = () => {
+const BusinessProfile = () => {
   const [isEditable, setIsEditable] = useState(false);
   const [id, setId] = useState("");
   const [member, setMember] = useState({});
@@ -26,6 +26,7 @@ const UserProfile = () => {
         setDecodedToken(decoded);
         setToken(storedToken);
         setId(decoded.id);
+        console.log("decoded", decodedToken)
         console.log("✅ Token Decoded ID:", decoded.id);
       } catch (error) {
         console.error("❌ Error decoding token:", error);
@@ -39,8 +40,8 @@ const UserProfile = () => {
   const toggleEdit = () => {
     setIsEditable((prev) => !prev);
   };
-  
-  
+
+
 
   const handleChange = (e) => {
     setMember((prevMember) => {
@@ -49,7 +50,7 @@ const UserProfile = () => {
       return updatedMember;
     });
   };
-  
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setNewProfileImage(file); // ✅ เก็บไฟล์ไว้ แต่ยังไม่อัปเดต DB
@@ -65,9 +66,9 @@ const UserProfile = () => {
 
   const getMB = async () => {
     try {
-      const res = await axios.get(`http://localhost:4000/api/auth/getinfo/${id}`);
+      const res = await axios.get(`http://localhost:4000/api/business/getinfo/${id}`);
       console.log("📥 Updated Member Data from DB:", res.data);
-  
+
       // ✅ เช็คว่าข้อมูลเปลี่ยนหรือไม่ก่อนอัปเดต UI
       setMember((prevMember) => {
         if (JSON.stringify(prevMember) !== JSON.stringify(res.data)) {
@@ -76,47 +77,47 @@ const UserProfile = () => {
         }
         return prevMember;
       });
-  
+
       setProfileImage(res.data.profileImage);
     } catch (error) {
       console.error("❌ Error fetching member data:", error);
     }
   };
-  
-  
+
+
   const updateMemberData = async () => {
     try {
       let updatedData = { ...member };
       let imageUrl = profileImage;
-  
+
       // ✅ อัปโหลดรูปถ้ามีการเปลี่ยนแปลง
       if (newProfileImage) {
         const formData = new FormData();
         formData.append("profileImage", newProfileImage);
-  
+
         const uploadResponse = await axios.put(
-          `http://localhost:4000/api/auth/updateProfileImage/${id}`,
+          `http://localhost:4000/api/upload/images/${id}`,
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
-  
+
         console.log("✅ Profile Image Updated:", uploadResponse.data);
         imageUrl = uploadResponse.data.profileImage;
         updatedData.profileImage = imageUrl;
-        
+
       }
-  
+
       console.log("📤 Sending Updated Data:", updatedData);
-  
+
       // ✅ อัปเดตข้อมูลผู้ใช้
-      const response = await axios.put(`http://localhost:4000/api/auth/update/${id}`, updatedData);
-  
+      const response = await axios.put(`http://localhost:4000/api/business/update/${id}`, updatedData);
+
       console.log("✅ Updated Member Data:", response.data);
       alert("🎉 อัปเดตข้อมูลสำเร็จ!");
-  
+
       // ✅ โหลดข้อมูลใหม่จาก API ทันที
       await getMB();
-  
+
       // ✅ ปิดโหมดแก้ไข
       setIsEditable(false);
       setNewProfileImage(null);
@@ -127,25 +128,25 @@ const UserProfile = () => {
   };
 
   const uploadImage = async (file) => {
-      try {
-        const formData = new FormData();
-        formData.append("profileImage", file);
-        formData.append("id", id);
-  
-        const response = await axios.put(
-          `http://localhost:4000/api/auth/updateProfileImage/${id}`,
-          formData,
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
-  
-        console.log("✅ Profile Image Updated:", response.data);
-        alert("🎉 อัปโหลดรูปภาพสำเร็จ!");
-        getMB(); // โหลดข้อมูลใหม่
-        setIsEditable(false);
-      } catch (error) {
-        console.error("❌ Error uploading image:", error);
-        alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
-      }
+    try {
+      const formData = new FormData();
+      formData.append("profileImage", file);
+      formData.append("id", id);
+
+      const response = await axios.put(
+        `http://localhost:4000/api/upload/images/${id}`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      console.log("✅ Profile Image Updated:", response.data);
+      alert("🎉 อัปโหลดรูปภาพสำเร็จ!");
+      getMB(); // โหลดข้อมูลใหม่
+      setIsEditable(false);
+    } catch (error) {
+      console.error("❌ Error uploading image:", error);
+      alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
+    }
   };
 
   const toggleLogout = () => {
@@ -175,34 +176,43 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="profile-container">
+    <div className="profile-container" style={{
+      overflowY: "hidden",
+      display: "flex",
+      minHeight: "100vh",
+    }}>
       {/* เมนูด้านซ้าย */}
-      <aside className="sidebar">
-      <div className="profile-image">
-        <img src={profileImage || defaultProfilePic} alt="Profile" />
-          {isEditable && (
-            <input type="file" accept="image/*" onChange={handleImageChange} />
-          )}
-      </div>
+      <aside
+        className="sidebar"
+        style={{
+          backgroundColor: "#0d1b2a", // น้ำเงินเข้มแบบเต็ม
+          height: "100vh", // เต็มความสูงของหน้าจอ
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          paddingTop: "8%"
+        }}
+      >
+
 
         <nav>
-          <button>ประวัติการจอง</button>
-          <button>รายการโปรด</button>
-          <button>ค้นหาสนาม</button>
-          <button>โปรโมชั่น</button>
-          <button>คูปอง</button>
+          <button>สนามของฉัน</button>
+          <button>บัญชีรายรับ</button>
+          <button>รีวิวทั้งหมด</button>
+          <button>ตรวจสอบการจ่ายเงิน</button>
+          <button className="logout-button" onClick={toggleLogout}>ลงชื่อออก</button>
         </nav>
-        <button className="logout-button" onClick={toggleLogout}>ลงชื่อออก</button>
+
       </aside>
 
       {/* ข้อมูลผู้ใช้ */}
       <main className="profile-content">
-        <h2>ข้อมูลผู้ใช้</h2>
+        <h2>ข้อมูลเจ้าของสนาม</h2>
 
         {/* ข้อมูลส่วนตัว */}
         <section className="user-info">
           <h3>
-            📌 ข้อมูลส่วนตัว 
+            📌 ข้อมูลส่วนตัว
             <FaPencilAlt className="edit-icon" onClick={toggleEdit} />
           </h3>
           <div className="form-grid">
@@ -215,76 +225,59 @@ const UserProfile = () => {
               <input type="text" name="lastName" value={member?.lastName || ""} onChange={handleChange} readOnly={!isEditable} />
             </div>
             <div className="input-group">
-              <label>เพศ</label>
-              <input type="text" name="gender" value={member?.gender || ""} onChange={handleChange} readOnly={!isEditable} />
+              <label>อีเมล</label>
+              <input type="email" name="email" value={member?.email || ""} readOnly />
             </div>
             <div className="input-group">
               <label>หมายเลขโทรศัพท์</label>
               <input type="text" name="phoneNumber" value={member?.phoneNumber || ""} onChange={handleChange} readOnly={!isEditable} />
             </div>
-            <div className="input-group">
-              <label>กีฬาที่สนใจ</label>
-              <input type="text" name="sport" value={member?.interestedSports || ""} onChange={handleChange} readOnly={!isEditable} />
-            </div>
-            <div className="input-group">
-              <label>อีเมล</label>
-              <input type="email" name="email" value={member?.email || ""} readOnly />
-            </div>
-            <div className="input-group">
-              <label>วัน/เดือน/ปีเกิด</label>
-              <input 
-                type="date" 
-                name="birthdate" 
-                value={member?.birthdate ? member.birthdate.substring(0, 10) : ""} 
-                onChange={handleChange} 
-                readOnly={!isEditable} 
-              />
-            </div>
+
+
           </div>
         </section>
 
         {/* บริเวณที่สนใจ */}
         <section className="location-info">
-          <h3>
-            📍 บริเวณที่สนใจ 
-            <FaPencilAlt className="edit-icon" onClick={toggleEdit} />
-          </h3>
+
           <div className="form-grid">
             <div className="input-group">
-              <label>ตำบล/แขวง</label>
-              <input type="text" name="subdistrict" value={member?.subdistrict || ""} onChange={handleChange} readOnly={!isEditable} />
+              <label>วัน/เดือน/ปีเกิด</label>
+              <input
+                type="date"
+                name="birthdate"
+                value={member?.birthdate ? member.birthdate.substring(0, 10) : ""}
+                onChange={handleChange}
+                readOnly={!isEditable}
+              />
             </div>
             <div className="input-group">
-              <label>อำเภอ/เขต</label>
-              <input type="text" name="district" value={member?.district || ""} onChange={handleChange} readOnly={!isEditable} />
-            </div>
-            <div className="input-group">
-              <label>จังหวัด</label>
-              <input type="text" name="province" value={member?.province || ""} onChange={handleChange} readOnly={!isEditable} />
+              <label>หมายเลขบัตรประชาชน</label>
+              <input type="idCard" name="idCard" value={member?.idCard || ""} readOnly />
             </div>
           </div>
         </section>
 
         {isEditable && <button className="save-button" onClick={updateMemberData}>บันทึก</button>}
-        <button className="forgot-password">ลืมรหัสผ่าน ?</button>
+        .
       </main>
 
       {/* 🔹 Logout Popup Modal */}
       {showLogoutModal && (
         <div className="logout-popup-overlay" onClick={() => setShowLogoutModal(false)}>
-        <div className="logout-popup" onClick={(e) => e.stopPropagation()}>
-          <p>คุณต้องการออกจากระบบหรือไม่?</p>
-          <div className="logout-buttons">
-            <button className="confirm-btn" onClick={confirmLogout}>ยืนยัน</button>
-            <button className="cancel-btn" onClick={() => setShowLogoutModal(false)}>ยกเลิก</button>
+          <div className="logout-popup" onClick={(e) => e.stopPropagation()}>
+            <p>คุณต้องการออกจากระบบหรือไม่?</p>
+            <div className="logout-buttons">
+              <button className="confirm-btn" onClick={confirmLogout}>ยืนยัน</button>
+              <button className="cancel-btn" onClick={() => setShowLogoutModal(false)}>ยกเลิก</button>
+            </div>
           </div>
         </div>
-      </div>
       )}
     </div>
 
-    
+
   );
 };
 
-export default UserProfile;
+export default BusinessProfile;
