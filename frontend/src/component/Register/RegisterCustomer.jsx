@@ -120,7 +120,7 @@ function RegisterCustomer() {
         const imageData = new FormData();
         imageData.append("image", formData.profileImage);
   
-        const uploadResponse = await axios.post("http://localhost:4000/api/upload/profile", imageData, {
+        const uploadResponse = await axios.post("http://localhost:4000/api/upload/images", imageData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
   

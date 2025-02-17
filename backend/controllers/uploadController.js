@@ -15,14 +15,16 @@ const upload = multer({ storage });
 
 exports.uploadImage = (req, res) => {
   if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
+    return res.status(400).json({ message: "No file uploaded" });
   }
 
-  // ตรวจสอบไฟล์ที่อัปโหลด
-  console.log('📸 Uploaded File:', req.file);
+  const serverUrl = "http://localhost:4000"; // เปลี่ยนตาม backend ของคุณ
+  const imageUrl = `${serverUrl}/uploads/${req.file.filename}`;
 
-  res.status(200).json({ imageUrl: `/uploads/${req.file.filename}` });
+  console.log("📸 Uploaded File:", req.file);
+  res.status(200).json({ imageUrl });
 };
+
 
 // ✅ ต้อง export `upload` ออกมา
 exports.upload = upload;
