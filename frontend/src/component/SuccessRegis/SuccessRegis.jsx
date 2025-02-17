@@ -2,9 +2,13 @@ import React from "react";
 import "./SuccessRegis.css"; // นำเข้า CSS
 import logo from "../assets/logo.png"; // ตรวจสอบตำแหน่งโลโก้ให้ถูกต้อง
 import NavbarRegis from "../NavbarRegis/NavbarRegis";
- 
+import { useNavigate } from "react-router-dom";
 
 const RegistrationSuccess = () => {
+    const navigate = useNavigate();
+    const handleBack = () =>{
+      navigate("/")
+    }
   return (
     <>
       {/* ✅ เพิ่ม Navbar ที่สร้างไว้ */}
@@ -32,7 +36,7 @@ const RegistrationSuccess = () => {
           <p className="success-message">
             การสมัครสำหรับบัญชีผู้ใช้ผู้ประกอบการของท่านได้ถูกส่งเรียบร้อยแล้ว
           </p>
-          <button className="confirm-button">ตกลง</button>
+          <button className="confirm-button" onClick={handleBack}>ตกลง</button>
         </div>
       </div>
     </>

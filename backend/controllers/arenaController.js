@@ -53,7 +53,7 @@ exports.getArenas = async (req, res) => {
   }
 };
 
-// ✅ ดึงข้อมูลสนามกีฬาโดยใช้ ID (JOIN BusinessOwner)
+// ✅ ดึงข้อมูลสนามกีฬาโดยใช้ ID (JOIN BusinessOwner) fix
 exports.getArenaById = async (req, res) => {
   try {
     const arena = await Arena.findById(req.params.id).populate("businessOwnerId", "firstName lastName email phoneNumber");

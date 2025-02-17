@@ -7,16 +7,16 @@ const router = express.Router();
 // ✅ API เพิ่มสนามกีฬา (รับ URL ของรูปภาพ)
 router.post("/register", registerArena);
 
-// ✅ API ดึงข้อมูลสนามกีฬา
-router.get("/", getArenas);
+// ✅ API ดึงข้อมูลสนามกีฬา fix
+router.get("/getArenas", getArenas);
 
 // ✅ API ดึงข้อมูลสนามเฉพาะ ID
-router.get("/:id", getArenaById);
+router.get("/getArenaById/:id", getArenaById);
 
 // ✅ API อัปเดตข้อมูลสนามกีฬา
-router.put("/:id", updateArena);
+router.put("/updateArena/:id", updateArena);
 
 // ✅ API ลบสนามกีฬา
-router.delete("/:id", deleteArena);
+router.delete("/deleteArena/:id", deleteArena);
 
 module.exports = router;

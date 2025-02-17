@@ -172,7 +172,7 @@ const Information = () => {
                 setUploadedImages([]);
                 setErrors({});
                 setErrorMessage('');
-                navigate("/");
+                navigate("/SuccessRegis");
             } catch (error) {
                 console.error('❌ Submission failed:', error.response ? error.response.data : error.message);
                 if (error.response && error.response.status === 400) {
