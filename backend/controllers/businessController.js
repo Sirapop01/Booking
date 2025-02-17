@@ -91,7 +91,7 @@ exports.findBusinessOwner = async (req, res) => {
   exports.getMB = async (req, res) => {
     console.log("✅ GET Member Requested:", req.params.id);
     try {
-      const BusinessData = await BusinessOwner.findById(req.params.id);  // ✅ ใช้ findById() แทน findOne()
+      const BusinessData = await BusinessOwner.findById(req.params.id);  // ✅ ใช้ findById() แทน findOne() fix
   
       if (!BusinessData) {
         return res.status(404).json({ message: "ไม่พบข้อมูล" });

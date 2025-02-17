@@ -1,7 +1,7 @@
 .stadium-list {
     display: grid;
     border: 2px solid black; /* กรอบสีดำ */
-    border-radius: 8px; /* มุมโค้งเล็กน้อย (ปรับได้) */
+    border-radius: 8px; /* มุมโค้งเล็กน้อย (ปรับได้) fix */ 
     gap: 16px;
     max-width: 1200px;
     margin: 0 auto;

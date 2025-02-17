@@ -42,7 +42,6 @@ const ListCard = () => {
             </div>
         </div>
 
-
     );
 };
 

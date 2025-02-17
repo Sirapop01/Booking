@@ -29,7 +29,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],  // ✅ อนุญาตการส่ง Authorization Header
   credentials: true  // ✅ อนุญาตส่ง Cookies หรือ Headers ที่เกี่ยวกับ Authentication
 }));
-app.use("/uploads", express.static("uploads")); // ✅ ให้สามารถเข้าถึงไฟล์ใน `uploads/` ได้จาก URL
+app.use("/uploads", express.static("uploads")); // ✅ ให้สามารถเข้าถึงไฟล์ใน `uploads/` ได้จาก URL fix
 app.use("/api/business-owners", businessOwnerRoutes);
 
 // ✅ เชื่อมต่อ MongoDB
