@@ -3,6 +3,7 @@ const BusinessOwner = require("../controllers/businessController"); // ✅ ต�
 const router = express.Router();
 
 router.post("/register", BusinessOwner.registerBusinessOwner); // ✅ ตรวจสอบว่าฟังก์ชันนี้ไม่ใช่ undefined
+router.get("/find-owner", BusinessOwner.findBusinessOwner); // ✅ ตรวจสอบว่าฟังก์ชันนี้ไม่ใช่ undefined
 router.get("/getinfo/:id", BusinessOwner.getMB);
 router.put("/update/:id", BusinessOwner.updateUser);
 router.post("/reset-password/:token", BusinessOwner.resetPassword);
