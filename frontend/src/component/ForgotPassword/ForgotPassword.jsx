@@ -25,7 +25,6 @@ function ForgotPassword() {
 
   return (
     <div className="forgot-password-container">
-      <NavbarRegis /> {/* แทรก NavbarRegis ตรงนี้ */}
       <h1 className="main-title">เปลี่ยนรหัสผ่านใหม่</h1>
       <div className="forgot-password-box">
         <h2>ลืมรหัสผ่าน</h2>
