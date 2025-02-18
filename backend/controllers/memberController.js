@@ -11,8 +11,8 @@ exports.register = async (req, res) => {
   try {
     const {
       email, password, firstName, lastName,
-      gender, phoneNumber, birthdate, interestedSports,
-      province, district, subdistrict, role, location
+      gender, phoneNumber, birthdate, interestedSports, role,
+      province, district, subdistrict
     } = req.body;
 
     if (!email || !password || !firstName || !lastName || !phoneNumber) {
@@ -30,6 +30,21 @@ exports.register = async (req, res) => {
     // ✅ รับ URL ของรูปจาก Cloudinary
     const profileImage = req.file ? req.file.path : null;
 
+    // ✅ ใช้ Nominatim หา lat, lng ตามตำแหน่งที่อยู่
+    const addressQuery = `${subdistrict}, ${district}, ${province}, Thailand`;
+    const nominatimRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${addressQuery}`);
+    const nominatimData = await nominatimRes.json();
+
+    if (!nominatimData.length) {
+      return res.status(400).json({ message: "ไม่พบพิกัดตำแหน่งจากที่อยู่ที่ระบุ" });
+    }
+
+    const { lat, lon } = nominatimData[0];
+    const location = {
+      type: 'Point',
+      coordinates: [parseFloat(lon), parseFloat(lat)],
+    };
+
     const newUser = await User.create({
       email,
       password: hashedPassword,
@@ -42,9 +57,9 @@ exports.register = async (req, res) => {
       province,
       district,
       subdistrict,
-      profileImage, // ✅ บันทึกรูปที่อัปโหลดเข้า MongoDB
-      role: role || "customer",
-      location: JSON.parse(location),
+      profileImage,
+      role: role || 'customer',
+      location,
     });
 
     res.status(201).json({ message: "สมัครสมาชิกสำเร็จ!", user: newUser });
@@ -53,6 +68,7 @@ exports.register = async (req, res) => {
     res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ", error: err.message });
   }
 };
+
 
 
 exports.login = async (req, res) => {

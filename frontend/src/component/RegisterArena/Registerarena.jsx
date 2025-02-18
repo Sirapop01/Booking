@@ -107,9 +107,9 @@ const MatchWebForm = () => {
       'location',
       JSON.stringify({
         type: 'Point',
-        coordinates: mapLocation,
+        coordinates: [mapLocation[1], mapLocation[0]], // สลับ lat กับ lng
       })
-    );
+    );    
     submitFormData.append('businessOwnerId', formData.businessOwnerId);
     submitFormData.append('additionalInfo', formData.additionalInfo);
     submitFormData.append('amenities', JSON.stringify(formData.amenities));

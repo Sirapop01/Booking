@@ -32,7 +32,7 @@ function RegisterCustomer() {
     district: '',
     subdistrict: '',
     profileImage: null,
-    role: 'customer'
+    role: 'customer',
   });
 
   const [errors, setErrors] = useState({});
@@ -50,7 +50,7 @@ function RegisterCustomer() {
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "รหัสผ่านไม่ตรงกัน";
     if (!formData.birthdate) newErrors.birthdate = "กรุณาเลือกวัน/เดือน/ปีเกิด";
     if (!formData.interestedSports) newErrors.interestedSports = "กรุณากรอกกีฬาที่สนใจ";
-    if (!formData.province || !formData.district || !formData.subdistrict) newErrors.location = "กรุณากรอกข้อมูลให้ครบ";
+    if (!formData.province || !formData.district || !formData.subdistrict) newErrors.location = "กรุณากรอกข้อมูลที่อยู่ให้ครบ";
     if (!formData.gender) newErrors.gender = "กรุณาเลือกเพศ";
 
     setErrors(newErrors);
@@ -59,53 +59,52 @@ function RegisterCustomer() {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    setFormData(prevState => {
-      let updatedData = { ...prevState, [name]: files ? files[0] : value };
+    setFormData(prev => {
+      let updated = { ...prev, [name]: files ? files[0] : value };
 
-      if (name === "province") {
+      if (name === 'province') {
         const selectedDistricts = Object.keys(locationData[value] || {});
         setDistricts(selectedDistricts);
         setSubdistricts([]);
-        updatedData.district = '';
-        updatedData.subdistrict = '';
+        updated.district = '';
+        updated.subdistrict = '';
       }
 
-      if (name === "district") {
+      if (name === 'district') {
         const selectedSubdistricts = locationData[formData.province]?.[value] || [];
         setSubdistricts(selectedSubdistricts);
-        updatedData.subdistrict = '';
+        updated.subdistrict = '';
       }
 
-      return updatedData;
+      return updated;
     });
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
+  
     if (!validateForm()) return;
-
+  
     try {
       const submitFormData = new FormData();
-
+  
       Object.entries(formData).forEach(([key, value]) => {
         if (key === "confirmPassword") return;
         submitFormData.append(key, value);
       });
-
-      const response = await axios.post("http://localhost:4000/api/auth/register", submitFormData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+  
+      await axios.post('http://localhost:4000/api/auth/register', submitFormData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
-
-      alert("✅ สมัครสมาชิกสำเร็จ!");
-      navigate("/login");
+  
+      alert('✅ สมัครสมาชิกสำเร็จ!');
+      navigate('/login');
     } catch (err) {
-      console.error("❌ Registration Error:", err);
-      alert("❌ เกิดข้อผิดพลาด: " + (err.response?.data?.message || "ลองใหม่อีกครั้ง"));
+      console.error('❌ Registration Error:', err);
+      alert('❌ เกิดข้อผิดพลาด: ' + (err.response?.data?.message || 'ลองใหม่อีกครั้ง'));
     }
   };
+  
   
 
   return (
