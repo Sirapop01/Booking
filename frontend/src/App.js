@@ -66,7 +66,8 @@ function App() {
         <Route path='/AdminPayment' element={<AdminPayment/>}/>
         <Route path='/AdminOwnersLedger' element={<AdminOwnersLedger/>}/>
         <Route path='/OwnerProfile' element={<ProfileBusiness />} />
-        <Route path="/BookingArena" element={<BookingArena />} />
+        <Route path="/BookingArena/:id" element={<BookingArena />} />
+
 
 
 
