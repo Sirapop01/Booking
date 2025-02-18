@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
 
 /* Container หลัก */
@@ -7,6 +8,7 @@
   align-items: center; /* จัดแนวกลางในแนวตั้ง */
   justify-content: center; /* จัดแนวกลางในแนวนอน */
   background: linear-gradient(to bottom, #0C2C4B, #00518E); /* พื้นหลังแบบไล่สี */
+  font-family: "Kanit", sans-serif;
 }
 
 /* ด้านซ้าย */
@@ -16,11 +18,13 @@
   align-items: center;
   justify-content: center;
   width: 50%;
+  font-family: "Kanit", sans-serif;
 }
 
 .login-logo {
   width: 100px;
   margin-bottom: 20px;
+  font-family: "Kanit", sans-serif;
 }
 
 .login-logo-text {
@@ -29,11 +33,13 @@
   margin-bottom: 30px;
   font-family: 'Inder', sans-serif;
   font-weight: bold;
+  font-family: "Kanit", sans-serif;
 }
 
 .login-bg-img {
   width: 80%;
   height: auto;
+  font-family: "Kanit", sans-serif;
 }
 
 /* ด้านขวา */
@@ -43,6 +49,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-family: "Kanit", sans-serif;
 }
 
 .login-form-container {
@@ -51,6 +58,7 @@
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* เพิ่มเงา */
   width: 80%;
+  font-family: "Kanit", sans-serif;
 }
 
 .login-heading {
@@ -59,12 +67,14 @@
   font-size: 32px;
   color: #FFFFFF;
   font-weight: bold;
+  font-family: "Kanit", sans-serif;
 }
 
 /* กล่องอินพุต */
 .login-input-group {
   margin-bottom: 20px;
   width: 100%;
+  font-family: "Kanit", sans-serif;
 }
 
 .login-input-group input {
@@ -77,10 +87,12 @@
   font-size: 16px;
   outline: none;
   box-sizing: border-box;
+  font-family: "Kanit", sans-serif;
 }
 
 .login-input-group input::placeholder {
   color: rgba(255, 255, 255, 0.7);
+  font-family: "Kanit", sans-serif;
 }
 
 /* กล่องพาสเวิร์ดพร้อมปุ่มตา */
@@ -176,10 +188,12 @@
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
+  font-family: 'Inder', sans-serif;
 }
 
 .login-button:hover {
   background-color: #1B82B1;
+  
 }
 
 /* Divider */
@@ -215,6 +229,7 @@
   color: #39BBDF;
   text-decoration: none;
   font-weight: bold;
+  
 }
 
 .login-signup-link a:hover {
