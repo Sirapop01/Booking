@@ -1,27 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 
-.ledger-page {
+.details-page {
   background-color: #0c2c4a;
   color: white;
   font-family: 'Kanit', sans-serif;
   margin: 0;
   padding: 0;
-  user-select: none;
-  cursor: default;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
-  overflow-y: auto;
 }
 
-.ledger-title {
+.details-title {
   font-size: 36px;
   font-weight: bold;
   margin: 20px 0;
 }
 
-.home-button {
+.details-home-button {
   position: fixed;
   top: 20px;
   left: 20px;
@@ -37,36 +34,35 @@
   transition: all 0.3s ease;
 }
 
-.home-button:hover {
+.details-home-button:hover {
   transform: scale(1.1);
 }
 
-.home-logo {
+.details-home-logo {
   width: 35px;
   height: 35px;
 }
 
-.ledger-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 1100px;
-  background: white;
+.details-container {
+  background-color: white;
   color: black;
   padding: 20px;
   border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1100px;
 }
 
-.content-container2 {
+.details-content-container {
   display: flex;
   gap: 20px;
   width: 100%;
   justify-content: space-between;
 }
 
-/* ✅ รายการสนาม */
-.stadium-list2 {
+/* ส่วนรายการสนาม */
+.details-stadium-list {
   width: 280px;
   background: white;
   color: black;
@@ -77,63 +73,75 @@
   border: 2px solid black;
 }
 
-.stadium-list2 h2 {
+.details-stadium-list h2 {
   font-size: 24px;
   font-weight: bold;
   padding-bottom: 10px;
   border-bottom: 2px solid black;
 }
 
-.stadium-list2 ul {
+.details-stadium-list ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.stadium-list2 li {
+.details-stadium-list li {
   padding: 15px;
   font-size: 18px;
   border-bottom: 1px solid gray;
   cursor: pointer;
 }
 
-.stadium-list2 .selected {
+.details-stadium-list .selected {
   background-color: #2196F3;
   color: white;
   font-weight: bold;
 }
 
-/* ✅ ทำให้ตารางเลื่อนแนวตั้งได้ */
-.ledger-details {
+/* ส่วนแสดงตาราง */
+.details-ledger {
   flex: 1;
   background: white;
   color: black;
-  padding: 0;
   border-radius: 5px;
   text-align: center;
   border: 2px solid black;
   display: flex;
   flex-direction: column;
-  max-height: 400px;
 }
 
-.table-wrapper {
+.details-table-wrapper {
   overflow-y: auto;
   max-height: 300px;
 }
 
-.ledger-details table {
+.details-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 2px solid black;
+}
+
+.details-table-header h2 {
+  margin: 0;
+  font-size: 24px;
+  flex: 1;
+  text-align: center;
+}
+
+/* ตาราง */
+table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.ledger-details th,
-.ledger-details td {
+th, td {
   border: 1px solid black;
-  padding: 15px;
+  padding: 12px;
   text-align: center;
   font-size: 16px;
-  white-space: nowrap;
 }
 
 th {
@@ -141,67 +149,20 @@ th {
   font-weight: bold;
 }
 
-/* ✅ Scrollbar */
-.table-wrapper::-webkit-scrollbar {
-  width: 8px;
+.details-selected-row {
+  background-color: #bdbdbd;
 }
 
-.table-wrapper::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-
-.table-wrapper::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* ✅ จัดตำแหน่งหัวข้อ "รายละเอียด" ให้อยู่ตรงกลาง */
-.table-header {
+/* ส่วนล่างของตาราง: รวมทั้งหมด & การจัดการ */
+.details-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  border-bottom: 2px solid black;
-}
-
-.table-header h2 {
-  flex: 1;
-  text-align: center;
-  margin: 0;
-}
-
-/* ✅ ปุ่มต่างๆ */
-.ledger-actions {
-  display: flex;
-  justify-content: space-between;
   padding: 10px;
   border-top: 2px solid black;
-  align-items: center;
 }
 
-.delete-button1 {
-  background-color: red;
-  color: white;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  width: 120px;
-  border-radius: 5px;
-}
-
-.add-button1 {
-  background-color: gray;
-  color: white;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  width: 120px;
-  border-radius: 5px;
-}
-
-.total-box {
+.details-total-box {
   font-size: 18px;
   background-color: white;
   padding: 10px;
@@ -209,9 +170,10 @@ th {
   border-radius: 5px;
   text-align: center;
   width: 200px;
+  color: black;
 }
 
-.manage-button {
+.details-manage-button {
   background-color: #2196F3;
   color: white;
   padding: 10px;
@@ -222,39 +184,34 @@ th {
   border-radius: 5px;
 }
 
-.manage-button:hover {
+.details-manage-button:hover {
   background-color: #1976D2;
 }
 
-/* ✅ เมื่อคลิกที่แถวของตาราง เปลี่ยนเป็นแถบสีเทา */
-.selected-row {
-  background-color: #bdbdbd !important;
-}
-
-/* ✅ ปุ่ม Filter */
-.filter-container {
+/* ปุ่ม Filter */
+.details-filter-container {
   position: relative;
   display: inline-block;
 }
 
-.filter-button {
+.details-filter-button {
   background: none;
   border: none;
   cursor: pointer;
   padding: 5px;
 }
 
-.filter-icon {
+.details-filter-icon {
   width: 24px;
   height: 24px;
 }
 
-/* ✅ Drop-down เมนู เหมือนหน้า Detail */
-.dropdown-menu {
+/* Dropdown Filter */
+.details-dropdown-menu {
   position: absolute;
   top: 40px;
   right: 0;
-  background-color: white;
+  background: white;
   border: 1px solid black;
   border-radius: 5px;
   width: 150px;
@@ -262,18 +219,31 @@ th {
   z-index: 10;
 }
 
-.dropdown-item {
+.details-dropdown-item {
   padding: 10px;
   text-align: center;
   cursor: pointer;
   border-bottom: 1px solid #ccc;
-  transition: background-color 0.3s;
 }
 
-.dropdown-item:hover {
-  background-color: #bdbdbd;
+.details-dropdown-item:hover {
+  background: #bdbdbd;
 }
 
-.dropdown-item:last-child {
+.details-dropdown-item:last-child {
   border-bottom: none;
+}
+
+/* Scrollbar สำหรับ Ledger Table */
+.details-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.details-table-wrapper::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.details-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
