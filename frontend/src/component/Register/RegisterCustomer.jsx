@@ -21,19 +21,18 @@ function RegisterCustomer() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    confirmPassword: '', // ❌ ไม่ต้องเก็บใน DB แต่ใช้เช็คค่าที่กรอก
+    confirmPassword: '',
     firstName: '',
     lastName: '',
-    gender: '', // ✅ เพิ่ม gender ให้ตรงกับ Schema
+    gender: '',
     phoneNumber: '',
-    birthdate: '', // ✅ เปลี่ยนจาก `dob` เป็น `birthdate`
+    birthdate: '',
     interestedSports: '',
     province: '',
     district: '',
     subdistrict: '',
     profileImage: null,
-    role: 'customer', // ✅ เพิ่ม role (กำหนดค่าเริ่มต้นเป็น "user")
-    gender: '',
+    role: 'customer',
   });
 
   const [errors, setErrors] = useState({});
@@ -51,9 +50,7 @@ function RegisterCustomer() {
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "รหัสผ่านไม่ตรงกัน";
     if (!formData.birthdate) newErrors.birthdate = "กรุณาเลือกวัน/เดือน/ปีเกิด";
     if (!formData.interestedSports) newErrors.interestedSports = "กรุณากรอกกีฬาที่สนใจ";
-    if (!formData.province || !formData.district || !formData.subdistrict) {
-      newErrors.location = "กรุณากรอกข้อมูลให้ครบ";
-    }
+    if (!formData.province || !formData.district || !formData.subdistrict) newErrors.location = "กรุณากรอกข้อมูลที่อยู่ให้ครบ";
     if (!formData.gender) newErrors.gender = "กรุณาเลือกเพศ";
 
     setErrors(newErrors);
@@ -62,99 +59,52 @@ function RegisterCustomer() {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    setFormData(prevState => {
-      let updatedData = { ...prevState, [name]: files ? files[0] : value };
+    setFormData(prev => {
+      let updated = { ...prev, [name]: files ? files[0] : value };
 
-      if (name === "province") {
+      if (name === 'province') {
         const selectedDistricts = Object.keys(locationData[value] || {});
         setDistricts(selectedDistricts);
         setSubdistricts([]);
-        updatedData = { ...updatedData, district: '', subdistrict: '' };
+        updated.district = '';
+        updated.subdistrict = '';
       }
 
-      if (name === "district") {
+      if (name === 'district') {
         const selectedSubdistricts = locationData[formData.province]?.[value] || [];
         setSubdistricts(selectedSubdistricts);
-        updatedData = { ...updatedData, subdistrict: '' };
+        updated.subdistrict = '';
       }
 
-      return updatedData;
+      return updated;
     });
-    setErrors(prevErrors => ({
-      ...prevErrors,
-      [name]: value ? "" : prevErrors[name]
-    }));
   };
 
-  // ✅ ฟังก์ชันสำหรับแปลงที่อยู่เป็นพิกัด (lat, lng) ด้วย OpenStreetMap Nominatim API
-  const getCoordinatesFromAddress = async (address) => {
-    try {
-      const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
-        params: { q: address, format: "json", limit: 1 }
-      });
-
-      if (response.data.length > 0) {
-        const { lat, lon } = response.data[0];
-        return { lat: parseFloat(lat), lng: parseFloat(lon) };
-      } else {
-        throw new Error("ไม่พบพิกัดสำหรับที่อยู่นี้");
-      }
-    } catch (error) {
-      console.error("❌ ไม่สามารถแปลงที่อยู่ได้:", error);
-      return null;
-    }
-  };
-
-  // ✅ ฟังก์ชันสำหรับจัดการการลงทะเบียน
   const handleRegister = async (e) => {
     e.preventDefault();
   
     if (!validateForm()) return;
   
     try {
-      let userData = { ...formData };
-      delete userData.confirmPassword;
+      const submitFormData = new FormData();
   
-      // ✅ อัปโหลดรูปโปรไฟล์
-      if (formData.profileImage) {
-        const imageData = new FormData();
-        imageData.append("image", formData.profileImage);
-  
-        const uploadResponse = await axios.post("http://localhost:4000/api/upload/images", imageData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-  
-        userData.profileImage = uploadResponse.data.imageUrl;
-      }
-  
-      // ✅ แปลงที่อยู่เป็นพิกัด (lat, lng)
-      const fullAddress = `${formData.subdistrict}, ${formData.district}, ${formData.province}`;
-      const coordinates = await getCoordinatesFromAddress(fullAddress);
-  
-      if (coordinates) {
-        userData.location = { 
-          type: "Point", 
-          coordinates: [coordinates.lng, coordinates.lat]  // ✅ เปลี่ยนเป็น [longitude, latitude]
-        };
-      } else {
-        alert("❌ ไม่สามารถหาพิกัดจากที่อยู่ได้ กรุณาตรวจสอบข้อมูลอีกครั้ง");
-        return;
-      }
-  
-      console.log("📤 Register Request JSON:", JSON.stringify(userData, null, 2));
-  
-      const response = await axios.post("http://localhost:4000/api/auth/register", userData, {
-        headers: { "Content-Type": "application/json" },
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === "confirmPassword") return;
+        submitFormData.append(key, value);
       });
   
-      alert("✅ สมัครสมาชิกสำเร็จ!");
-      navigate("/login");
+      await axios.post('http://localhost:4000/api/auth/register', submitFormData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
   
+      alert('✅ สมัครสมาชิกสำเร็จ!');
+      navigate('/login');
     } catch (err) {
-      console.error("❌ Registration Error:", err);
-      alert("❌ เกิดข้อผิดพลาด: " + (err.response?.data?.message || "ลองใหม่อีกครั้ง"));
+      console.error('❌ Registration Error:', err);
+      alert('❌ เกิดข้อผิดพลาด: ' + (err.response?.data?.message || 'ลองใหม่อีกครั้ง'));
     }
   };
+  
   
 
   return (
@@ -171,7 +121,11 @@ function RegisterCustomer() {
           <div className="profile-gender-phone-container">
             <div className="profile-section">
               <label>รูปโปรไฟล์ *{errors.profileImage && <span className="error-message-register">{errors.profileImage}</span>}</label>
-              <input type="file" name="profileImage" onChange={handleChange} />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setFormData({ ...formData, profileImage: e.target.files[0] })}
+              />
             </div>
             <div className="gender-section">
               <label>เพศ *{errors.gender && <span className="error-message-register">{errors.gender}</span>}</label>

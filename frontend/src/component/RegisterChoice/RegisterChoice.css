@@ -2,18 +2,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
 
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    position: fixed; /* เปลี่ยนจาก absolute เป็น fixed */
+    top: 0;
+    left: 0;
     width: 100vw;
+    height: 100vh;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    font-family: 'Inder', sans-serif;
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.7); /* เพิ่มความทึบเพื่อให้ตัวหนังสืออ่านง่าย */
+    z-index: 9999; /* กันไว้เผื่อหน้าอื่นมีอะไรซ้อน */
+    overflow: hidden; /* กันการเลื่อนภายใน container นี้ด้วย */
 }
 
 /* กล่องเนื้อหา */
@@ -22,13 +25,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    max-width: 850px;
+    width: 100vw;
+    height: 100vh;
     padding: 20px;
     font-family: 'Kanit', sans-serif;
     background-color: rgba(0, 0, 0, 0.5); /* กล่องเนื้อหาใสๆ เพิ่ม contrast */
     border-radius: 16px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
 }
 
 /* โลโก้ */

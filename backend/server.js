@@ -9,7 +9,6 @@ require("dotenv").config(); // ✅ ใช้ .env สำหรับ MONGO_URI
 // ✅ Import Routes
 const authRoutes = require("./routes/authRoutes");
 const stadiumRoutes = require("./routes/stadiumRoutes");
-const uploadRoutes = require("./routes/uploadRoutes");
 const businessRoutes = require("./routes/businessRoutes");
 const manageAccountRoutes = require("./routes/manageAccountRoutes");
 const arenaRoutes = require("./routes/arenaRoutes");
@@ -51,7 +50,6 @@ mongoose
 // ✅ กำหนด API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/stadiums", stadiumRoutes);
-app.use("/api/upload", uploadRoutes);
 app.use("/api/business", businessRoutes);
 app.use("/api/manage-account", manageAccountRoutes);
 app.use("/api/arenas", arenaRoutes);

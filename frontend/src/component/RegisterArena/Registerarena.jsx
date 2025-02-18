@@ -13,47 +13,46 @@ const DEFAULT_LOCATION = [13.736717, 100.523186]; // ✅ ค่าดีฟอ�
 
 const MatchWebForm = () => {
   const [images, setImages] = useState([]);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [formErrors, setFormErrors] = useState("");
-  const [mapLocation, setMapLocation] = useState(DEFAULT_LOCATION); // ✅ state ใหม่สำหรับแผนที่
+  const [errorMessage, setErrorMessage] = useState('');
+  const [formErrors, setFormErrors] = useState('');
+  const [mapLocation, setMapLocation] = useState(DEFAULT_LOCATION);
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    fieldName: "",
-    ownerName: "",
-    phone: "",
-    startTime: "",  // ✅ เปลี่ยนจาก workingHours เป็น startTime & endTime
-    endTime: "",
-    location: DEFAULT_LOCATION,
-    businessOwnerId: "",
-    additionalInfo: "",
-    amenities: []
-  });
 
+  const [formData, setFormData] = useState({
+    fieldName: '',
+    ownerName: '',
+    phone: '',
+    startTime: '',
+    endTime: '',
+    location: DEFAULT_LOCATION,
+    businessOwnerId: '',
+    additionalInfo: '',
+    amenities: [],
+  });
 
   const getAmenityLabel = (key) => {
     const labels = {
-      ที่จอดรถ: "ที่จอดรถ",
-      WiFi: "WiFi",
-      ล็อคเกอร์: "ล็อคเกอร์",
-      ห้องอาบน้ำ: "ห้องอาบน้ำ",
-      อุปกรณ์เช่า: "อุปกรณ์เช่า",
-      ร้านค้า: "ร้านค้า",
-      อื่นๆ: "อื่นๆ",
+      ที่จอดรถ: 'ที่จอดรถ',
+      WiFi: 'WiFi',
+      ล็อคเกอร์: 'ล็อคเกอร์',
+      ห้องอาบน้ำ: 'ห้องอาบน้ำ',
+      อุปกรณ์เช่า: 'อุปกรณ์เช่า',
+      ร้านค้า: 'ร้านค้า',
+      อื่นๆ: 'อื่นๆ',
     };
     return labels[key] || key;
   };
 
-  // ✅ ดึง Business Owner ID จาก Token หรือ Email ที่ลงทะเบียน
   useEffect(() => {
     const fetchBusinessOwner = async () => {
       try {
-        const Token = localStorage.getItem("token") || sessionStorage.getItem("token");
+        const Token = localStorage.getItem('token') || sessionStorage.getItem('token');
         let userData = {};
 
         if (Token) {
           userData = jwtDecode(Token);
         } else {
-          const registeredEmail = localStorage.getItem("registeredEmail");
+          const registeredEmail = localStorage.getItem('registeredEmail');
           if (registeredEmail) {
             userData.email = registeredEmail;
           }
@@ -61,7 +60,7 @@ const MatchWebForm = () => {
 
         if (!userData.id && !userData.email) return;
 
-        const response = await axios.get("http://localhost:4000/api/business/find-owner", {
+        const response = await axios.get('http://localhost:4000/api/business/find-owner', {
           params: { id: userData.id, email: userData.email },
         });
 
@@ -70,106 +69,97 @@ const MatchWebForm = () => {
             ...prevData,
             businessOwnerId: response.data.businessOwnerId,
           }));
-
-          console.log("✅ Business Owner Found:", response.data);
+          console.log('✅ Business Owner Found:', response.data);
         }
       } catch (error) {
-        console.error("🚨 Error fetching BusinessOwner:", error);
+        console.error('🚨 Error fetching BusinessOwner:', error);
       }
     };
 
     fetchBusinessOwner();
   }, []);
 
-  // ✅ ฟังก์ชันอัปโหลดรูปภาพไป Backend
-  const handleImageUpload = async (event) => {
+  // ✅ ฟังก์ชันเลือกไฟล์ -> เก็บไฟล์ไว้ใน state
+  const handleImageUpload = (event) => {
     const files = Array.from(event.target.files);
     if (images.length + files.length > 4) {
-      setErrorMessage("สามารถใส่รูปได้สูงสุด 4 รูป");
+      setErrorMessage('สามารถใส่รูปได้สูงสุด 4 รูป');
       return;
     }
-    setErrorMessage("");
-
-    const uploadedImages = [];
-    for (const file of files) {
-      const formData = new FormData();
-      formData.append("image", file);
-
-      try {
-        const response = await axios.post("http://localhost:4000/api/upload/images", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-
-        uploadedImages.push(response.data.imageUrl);
-      } catch (error) {
-        console.error("❌ Upload failed:", error);
-        setErrorMessage("เกิดข้อผิดพลาดในการอัปโหลดรูป");
-      }
-    }
-    setImages((prevImages) => [...prevImages, ...uploadedImages]);
+    setErrorMessage('');
+    setImages((prevImages) => [...prevImages, ...files]);
   };
 
-  // ✅ ฟังก์ชันลบรูปภาพที่อัปโหลด
   const handleRemoveImage = (index) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
-  // ✅ ฟังก์ชันส่งข้อมูลสนามกีฬาไปที่ Backend
   const handleSubmit = async () => {
     if (!validateForm()) return;
-  
-    const arenaData = {
-      ...formData,
-      location: {
-        type: "Point",
-        coordinates: mapLocation // ✅ เปลี่ยนรูปแบบให้ตรงกับ Schema
-      },
-      amenities: formData.amenities,
-      images,
-    };
-  
-    console.log("📩 Data to be sent:", arenaData);
-  
+
+    const submitFormData = new FormData();
+    submitFormData.append('fieldName', formData.fieldName);
+    submitFormData.append('ownerName', formData.ownerName);
+    submitFormData.append('phone', formData.phone);
+    submitFormData.append('startTime', formData.startTime);
+    submitFormData.append('endTime', formData.endTime);
+    submitFormData.append(
+      'location',
+      JSON.stringify({
+        type: 'Point',
+        coordinates: [mapLocation[1], mapLocation[0]], // สลับ lat กับ lng
+      })
+    );    
+    submitFormData.append('businessOwnerId', formData.businessOwnerId);
+    submitFormData.append('additionalInfo', formData.additionalInfo);
+    submitFormData.append('amenities', JSON.stringify(formData.amenities));
+
+
+    // ✅ อัปโหลดรูปภาพไปพร้อมกัน
+    for (const file of images) {
+      submitFormData.append('images', file);
+    }
+
     try {
-      const response = await axios.post("http://localhost:4000/api/arenas/register", arenaData);
-      alert("✅ ดำเนินการสำเร็จ!");
+      const response = await axios.post('http://localhost:4000/api/arenas/registerArena', submitFormData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      alert('✅ ดำเนินการสำเร็จ!');
       resetForm();
-      navigate("/Information")
+      navigate('/Information');
     } catch (error) {
-      console.error("❌ Register Arena Failed:", error);
-      setFormErrors("เกิดข้อผิดพลาดในการส่งข้อมูล");
+      console.error('❌ Register Arena Failed:', error);
+      setFormErrors('เกิดข้อผิดพลาดในการส่งข้อมูล');
     }
   };
 
-  // ✅ ฟังก์ชันตรวจสอบว่าฟอร์มถูกต้องก่อนส่ง
   const validateForm = () => {
     const { fieldName, ownerName, phone, startTime, endTime, location, businessOwnerId } = formData;
-
     if (!fieldName || !ownerName || !phone || !startTime || !endTime || !location || !businessOwnerId || images.length < 1) {
-      setFormErrors("กรุณากรอกข้อมูลให้ครบถ้วน");
+      setFormErrors('กรุณากรอกข้อมูลให้ครบถ้วน');
       return false;
     }
-    setFormErrors("");
+    setFormErrors('');
     return true;
   };
 
-  // ✅ ฟังก์ชัน Reset ฟอร์มหลังจาก Submit สำเร็จ
   const resetForm = () => {
     setFormData({
-      fieldName: "",
-      ownerName: "",
-      phone: "",
-      startTime: "",  // ✅ เปลี่ยนจาก workingHours เป็น startTime & endTime
-      endTime: "",
+      fieldName: '',
+      ownerName: '',
+      phone: '',
+      startTime: '',
+      endTime: '',
       location: DEFAULT_LOCATION,
-      businessOwnerId: "",
-      additionalInfo: "",
-      amenities: []
+      businessOwnerId: '',
+      additionalInfo: '',
+      amenities: [],
     });
     setImages([]);
   };
 
-  // ✅ ฟังก์ชันเก็บค่าจาก input
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -178,46 +168,32 @@ const MatchWebForm = () => {
     }));
   };
 
-  // ✅ ฟังก์ชันสำหรับจัดการการเลือก checkbox
   const handleCheckboxChange = (e) => {
     const { id, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      amenities: checked
-        ? [...(prevData.amenities || []), id]  // ✅ เพิ่มค่าเข้า array
-        : (prevData.amenities || []).filter(item => item !== id) // ✅ ลบออกจาก array
+      amenities: checked ? [...prevData.amenities, id] : prevData.amenities.filter((item) => item !== id),
     }));
   };
 
-
-  // ✅ ฟังก์ชันเก็บค่าข้อมูลเพิ่มเติม
-  const handleTextAreaChange = (e) => {
-    const { value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      additionalInfo: value
-    }));
-  };
-
-    // ✅ ฟังก์ชันจัดการการเปลี่ยนตำแหน่งแผนที่
-    useEffect(() => {
+    // ✅ ฟังก์ชันเก็บค่าข้อมูลเพิ่มเติม
+    const handleTextAreaChange = (e) => {
+      const { value } = e.target;
       setFormData((prevData) => ({
         ...prevData,
-        location: {
-          type: "Point",
-          coordinates: mapLocation // ✅ อัปเดตให้ตรงกับ Schema
-        },
+        additionalInfo: value
       }));
-    }, [mapLocation]);
-    
+    };
 
-      // ✅ ฟังก์ชันจัดการการเปลี่ยนแปลงค่าเวลา
-  const handleTimeChange = (time, type) => {
+  useEffect(() => {
     setFormData((prevData) => ({
       ...prevData,
-      [type]: time || "", // ถ้าไม่มีค่าจะให้เป็น "" ป้องกัน undefined
+      location: {
+        type: 'Point',
+        coordinates: mapLocation,
+      },
     }));
-  };
+  }, [mapLocation]);
 
   return (
     <div className="form-container099">
