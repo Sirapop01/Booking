@@ -6,10 +6,10 @@ import filterIcon from "../assets/icons/filter.png"; // ✅ ใช้ไอค�
 const OwnerLedger = () => {
   const [selectedStadium, setSelectedStadium] = useState("Wichai Arena");
   const [selectedRow, setSelectedRow] = useState(null);
-  const [selectedMonth, setSelectedMonth] = useState(""); // ✅ เก็บค่าของเดือนที่เลือก
-  const [showDropdown, setShowDropdown] = useState(false); // ✅ ควบคุมการแสดง Dropdown
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  const [ledgerData, setLedgerData] = useState([
+  const [ledgerData] = useState([
     { date: "01/01/2024 | 12:30", sport: "BasketBall", location: "Arena1", amount: 240 },
     { date: "15/02/2024 | 14:00", sport: "Badminton", location: "Court x2", amount: 160 },
     { date: "10/03/2024 | 16:15", sport: "Badminton", location: "Court1", amount: 80 },
@@ -59,7 +59,13 @@ const OwnerLedger = () => {
                 {/* ✅ Drop-down รายชื่อเดือน */}
                 {showDropdown && (
                   <div className="dropdown-menu">
-                    <div className="dropdown-item" onClick={() => setSelectedMonth("")}>
+                    <div
+                      className="dropdown-item"
+                      onClick={() => {
+                        setSelectedMonth("");
+                        setShowDropdown(false);
+                      }}
+                    >
                       ล่าสุด
                     </div>
                     {["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"].map((month, index) => (
@@ -71,7 +77,7 @@ const OwnerLedger = () => {
                           setShowDropdown(false);
                         }}
                       >
-                        {["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", 
+                        {["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
                           "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"][index]}
                       </div>
                     ))}
@@ -92,14 +98,14 @@ const OwnerLedger = () => {
               </thead>
               <tbody>
                 {filteredData.map((entry, index) => (
-                  <tr 
-                    key={index} 
+                  <tr
+                    key={index}
                     className={selectedRow === index ? "selected-row" : ""}
                     onClick={() => setSelectedRow(index)}
                   >
                     <td>{entry.date}</td>
                     <td>{entry.sport} - {entry.location}</td>
-                    <td>{entry.amount} B</td>
+                    <td>{entry.amount.toFixed(2)} B</td>
                     <td>{(entry.amount * 0.1).toFixed(2)} B</td>
                     <td>{(entry.amount * 0.9).toFixed(2)} B</td>
                   </tr>
