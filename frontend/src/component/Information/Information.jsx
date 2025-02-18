@@ -4,8 +4,11 @@ import NavbarRegis from "../NavbarRegis/NavbarRegis"; // นำ NavbarRegis ม�
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom'
+
+
+
 const Information = () => {
-    const [uploadedImages, setUploadedImages] = useState([]);
+    const [uploadedImages, setUploadedImages] = useState({});
     const [errorMessage, setErrorMessage] = useState('');
     const [isUploading, setIsUploading] = useState(false);
     const navigate = useNavigate();
@@ -19,172 +22,131 @@ const Information = () => {
     const [formData, setFormData] = useState({
         accountName: '',
         bank: '',
-        accountNumber: ''
+        accountNumber: '',
+        businessOwnerId: ''
     });
 
-    const [errors, setErrors] = useState({}); // ✅ State สำหรับเก็บข้อความ error
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         const fetchBusinessOwner = async () => {
             try {
                 const Token = localStorage.getItem("token") || sessionStorage.getItem("token");
-                let userData = {};
-
-                if (Token) {
-                    userData = jwtDecode(Token);
-                } else {
-                    const registeredEmail = localStorage.getItem("registeredEmail");
-                    if (registeredEmail) {
-                        userData.email = registeredEmail;
-                    }
+                if (!Token) {
+                    console.error("❌ No Token Found");
+                    return;
                 }
-
-                if (!userData.id && !userData.email) return;
-
+    
+                const userData = jwtDecode(Token);
+                console.log("🔍 Token Data:", userData);
+    
+                if (!userData.id && !userData.email) {
+                    console.error("❌ Missing userData.id or userData.email");
+                    return;
+                }
+    
                 const response = await axios.get("http://localhost:4000/api/business/find-owner", {
-                    params: { id: userData.id, email: userData.email },
+                    params: {
+                        id: userData.id || '',
+                        email: userData.email || '',
+                    },
                 });
-
+    
                 if (response.data && response.data.businessOwnerId) {
                     setFormData((prevData) => ({
                         ...prevData,
                         businessOwnerId: response.data.businessOwnerId,
                     }));
-
-                    console.log("✅ Business Owner Found:", response.data);
+                    console.log("✅ Business Owner Found:", response.data.businessOwnerId);
                 }
             } catch (error) {
-                console.error("🚨 Error fetching BusinessOwner:", error);
+                console.error("🚨 Error fetching BusinessOwner:", error.response?.data || error.message);
             }
         };
-
+    
         fetchBusinessOwner();
     }, []);
+    
+    
 
     const handleImageChange = async (event, type) => {
         const file = event.target.files[0];
-
+    
         if (file) {
+            setImages(prev => ({ ...prev, [type]: URL.createObjectURL(file) }));
+            setErrors(prev => ({ ...prev, [type]: '' }));
+    
             const formData = new FormData();
             formData.append('image', file);
-            formData.append('type', type);
-
-            setImages((prev) => ({
-                ...prev,
-                [type]: URL.createObjectURL(file),  // แสดงภาพตัวอย่างใน UI
-            }));
-
-            setErrors((prev) => ({ ...prev, [type]: '' }));
-
+            formData.append('folder', 'business-info');
+    
+            setIsUploading(true); // ✅ เริ่มอัปโหลด
+    
             try {
-                const response = await axios.post('http://localhost:4000/api/upload/images', formData, {
+                const response = await axios.post('http://localhost:4000/api/upload/single', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 });
-
-                console.log(`✅ Uploaded ${type}:`, response.data.imageUrl);
-
-                // บันทึก URL ลงใน uploadedImages โดยอัปเดตหรือเพิ่มข้อมูลใหม่
-                setUploadedImages((prev) => {
-                    const updatedImages = prev.filter(img => img.type !== type);
-                    return [...updatedImages, { type, url: response.data.imageUrl }];
+    
+                setUploadedImages(prev => {
+                    const updated = { ...prev, [type]: response.data.imageUrl };
+                    setErrors(errors => ({ ...errors, [type]: '' })); // ✅ เคลียร์ error
+                    return updated;
                 });
-
+    
+                console.log(`✅ Uploaded ${type}:`, response.data.imageUrl);
             } catch (error) {
-                console.error('❌ Upload failed:', error);
+                console.error(`❌ Upload ${type} failed:`, error);
                 setErrorMessage('เกิดข้อผิดพลาดในการอัปโหลดรูป');
+            } finally {
+                setIsUploading(false); // ✅ จบการอัปโหลด
             }
         }
     };
-
-
-
-
+    
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        setErrors(prev => ({ ...prev, [name]: '' })); // ✅ ล้าง error เมื่อมีการกรอกข้อมูล
+        setErrors(prev => ({ ...prev, [name]: '' }));
     };
 
     const validateForm = () => {
         let newErrors = {};
+        ['registration', 'idCard', 'idHolder', 'qrCode'].forEach(type => {
+            if (!uploadedImages[type]) newErrors[type] = `กรุณาอัปโหลดรูป ${type}`;
+        });
 
-        if (!images.registration) newErrors.registration = 'กรุณาอัปโหลดรูปหนังสือจดทะเบียน';
-        if (!images.idCard) newErrors.idCard = 'กรุณาอัปโหลดรูปบัตรประชาชน';
-        if (!images.idHolder) newErrors.idHolder = 'กรุณาอัปโหลดรูปผู้ถือบัตรประชาชน';
-        if (!images.qrCode) newErrors.qrCode = 'กรุณาอัปโหลดรูป QR Code';
-        if (!formData.accountName || !formData.bank || !formData.accountNumber) newErrors.dataTransfer = 'กรุณากรอกข้อมูลให้ครบถ้วน';
+        if (!formData.accountName || !formData.bank || !formData.accountNumber) {
+            newErrors.dataTransfer = 'กรุณากรอกข้อมูลให้ครบถ้วน';
+        }
 
         setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;  // คืนค่า true ถ้าไม่มี error
+        return Object.keys(newErrors).length === 0;
     };
-
 
     const handleSubmit = async () => {
-        if (validateForm()) {
-            try {
-                const Token = localStorage.getItem("token") || sessionStorage.getItem("token");
-                const userData = Token ? jwtDecode(Token) : {};
-
-                const getImageUrl = (type) => {
-                    const imageObj = uploadedImages.find(img => img.type === type);
-                    return imageObj ? imageObj.url : null;
-                };
-
-                const submissionData = {
-                    accountName: formData.accountName,
-                    bank: formData.bank,
-                    accountNumber: formData.accountNumber,
-                    businessOwnerId: formData.businessOwnerId || userData.id,
-                    images: {
-                        registration: getImageUrl('registration'),
-                        idCard: getImageUrl('idCard'),
-                        idHolder: getImageUrl('idHolder'),
-                        qrCode: getImageUrl('qrCode'),
-                    }
-                };
-
-                console.log('🔎 Submitting Data:', submissionData);
-
-                if (!submissionData.images.registration || !submissionData.images.idCard ||
-                    !submissionData.images.idHolder || !submissionData.images.qrCode) {
-                    setErrorMessage('กรุณาอัปโหลดรูปภาพให้ครบถ้วน');
-                    return;
-                }
-
-                const response = await axios.post('http://localhost:4000/api/business-info/submit', submissionData);
-                alert(`✅ ${response.data.message}`);
-
-                // รีเซตฟอร์ม
-                setFormData({
-                    accountName: '',
-                    bank: '',
-                    accountNumber: ''
-                });
-
-                setImages({
-                    registration: null,
-                    idCard: null,
-                    idHolder: null,
-                    qrCode: null
-                });
-
-                setUploadedImages([]);
-                setErrors({});
-                setErrorMessage('');
-                navigate("/SuccessRegis");
-            } catch (error) {
-                console.error('❌ Submission failed:', error.response ? error.response.data : error.message);
-                if (error.response && error.response.status === 400) {
-                    alert(error.response.data.message); // << ใช้ alert ตรงนี้ได้!
-                } else {
-                    setErrorMessage('เกิดข้อผิดพลาดในการส่งข้อมูล');
-                }
-            }
+        if (isUploading) {
+            alert('กรุณารอให้อัปโหลดรูปภาพเสร็จก่อน');
+            return;
+        }
+    
+        if (!validateForm()) return;
+    
+        try {
+            const submissionData = {
+                ...formData,
+                images: uploadedImages
+            };
+    
+            const response = await axios.post('http://localhost:4000/api/business-info/submit', submissionData);
+            alert(`✅ ${response.data.message}`);
+            navigate("/SuccessRegis");
+        } catch (error) {
+            console.error('❌ Submission failed:', error);
+            setErrorMessage('เกิดข้อผิดพลาดในการส่งข้อมูล');
         }
     };
-
-
+    
 
     return (
         <div className="information-container">

@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+
+body123023 {
+    margin: 0;
+    font-family: 'Kanit', sans-serif;
+    background: linear-gradient(135deg, #0b1e35, #1e3a5a);
+    color: white;
+  }
+  
+  .promotion-page {
+    min-height: 80vh; /* ลดความสูงลงนิดหน่อย */
+    width: 80%; /* ไม่เต็ม 100% ให้หุบเข้ามา */
+    max-width: 1200px; /* กำหนดไม่ให้เกิน 1200px */
+    margin: 70px auto; /* จัดตรงกลางและหุบขอบเข้ามา */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    border: 5px solid rgba(255, 255, 255, 0.8); /* กรอบขาวขุ่น */
+    border-radius: 25px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    background-color: rgba(11, 30, 53, 0.9);
+    backdrop-filter: blur(10px);
+  }
+  
+  
+  .promotion-title {
+    font-family: 'Inder', sans-serif;
+    font-size: 70px;
+    font-weight: 900;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #00c6ff, #0072ff, #0033cc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0px 0px 12px rgba(0, 183, 255, 0.8), 0px 0px 25px rgba(0, 114, 255, 0.6);
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    position: relative;
+    top: -100px;
+    animation: glowBlue 2s infinite alternate;
+  }
+  
+  @keyframes glowBlue {
+    0% {
+      text-shadow: 0px 0px 12px rgba(0, 183, 255, 0.8), 0px 0px 25px rgba(0, 114, 255, 0.6);
+    }
+    100% {
+      text-shadow: 0px 0px 18px rgba(0, 255, 255, 1), 0px 0px 35px rgba(0, 114, 255, 0.9);
+    }
+  }
+  
+  
+  .promotion-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 100%;
+    height: 4px;
+    background: rgba(30, 144, 255, 0.8);
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(30, 144, 255, 0.8);
+    font-family: 'Kanit', sans-serif;
+  }
+  
+  .promotion-card-container {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+    font-family: 'Kanit', sans-serif;
+  }
+  
+  .promotion-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-family: 'Kanit', sans-serif;
+  }
+  
+  .promotion-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    font-family: 'Kanit', sans-serif;
+  }
+  
+  .promotion-card-image {
+    width: 220px;
+    height: 290px;
+    object-fit: cover;
+    border-radius: 20px;
+    font-family: 'Kanit', sans-serif;
+  }
+  
+  .promotion-pin {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 28px;
+    color: red;
+    transform: rotate(15deg);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    font-family: 'Kanit', sans-serif;
+  }
+  
+  .promotion-booking-button {
+    background: linear-gradient(145deg, #1e90ff, #007acc);
+    color: white;
+    font-size: 18px;
+    padding: 12px 45px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    font-family: 'Kanit', sans-serif;
+  }
+  
+  .promotion-booking-button:hover {
+    background: linear-gradient(145deg, #007acc, #005fa3);
+    transform: translateY(-3px);
+    box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.4);
+    font-family: 'Kanit', sans-serif;
+  }
+  
+  .home-button111 {
+    position: fixed;
+    top: 50px;
+    left: 20px;
+    background-color: white;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    z-index: 999;
+    text-decoration: none;
+  }
+  
+  .home-button111:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  }
+  
+  .home-logo111 {
+    width: 35px;
+    height: 35px;
+  }
+  
