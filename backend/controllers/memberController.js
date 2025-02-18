@@ -7,17 +7,15 @@ const secret = "MatchWeb";
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 
-
 exports.register = async (req, res) => {
   try {
     const {
       email, password, firstName, lastName,
       gender, phoneNumber, birthdate, interestedSports,
-      province, district, subdistrict, profileImage, role, location
+      province, district, subdistrict, role, location
     } = req.body;
 
-    // ตรวจสอบข้อมูลที่จำเป็น
-    if (!email || !password) {
+    if (!email || !password || !firstName || !lastName || !phoneNumber) {
       return res.status(400).json({ message: "กรุณากรอกข้อมูลให้ครบถ้วน" });
     }
 
@@ -29,7 +27,9 @@ exports.register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const formattedBirthdate = new Date(birthdate);
 
-    // สร้างผู้ใช้ใหม่
+    // ✅ รับ URL ของรูปจาก Cloudinary
+    const profileImage = req.file ? req.file.path : null;
+
     const newUser = await User.create({
       email,
       password: hashedPassword,
@@ -42,19 +42,17 @@ exports.register = async (req, res) => {
       province,
       district,
       subdistrict,
-      profileImage,
+      profileImage, // ✅ บันทึกรูปที่อัปโหลดเข้า MongoDB
       role: role || "customer",
-      location  // ✅ ตรวจสอบว่ารูปแบบ location ถูกต้อง
+      location: JSON.parse(location),
     });
 
     res.status(201).json({ message: "สมัครสมาชิกสำเร็จ!", user: newUser });
-
   } catch (err) {
     console.error("❌ Error registering user:", err);
     res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ", error: err.message });
   }
 };
-
 
 
 exports.login = async (req, res) => {

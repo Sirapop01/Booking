@@ -1,22 +1,20 @@
 const express = require("express");
-const { registerArena, getArenas, getArenaById, updateArena, deleteArena } = require("../controllers/arenaController");
-const { upload } = require("../controllers/uploadController");
-
+const arenaController = require('../controllers/arenaController');
 const router = express.Router();
+const upload = require('../middlewares/upload');
 
-// ✅ API เพิ่มสนามกีฬา (รับ URL ของรูปภาพ)
-router.post("/register", registerArena);
+router.post('/registerArena', upload.array('images', 4), arenaController.registerArena);
 
 // ✅ API ดึงข้อมูลสนามกีฬา fix
-router.get("/getArenas", getArenas);
+router.get("/getArenas", arenaController.getArenas);
 
 // ✅ API ดึงข้อมูลสนามเฉพาะ ID
-router.get("/getArenaById/:id", getArenaById);
+router.get("/getArenaById/:id", arenaController.getArenaById);
 
 // ✅ API อัปเดตข้อมูลสนามกีฬา
-router.put("/updateArena/:id", updateArena);
+router.put("/updateArena/:id", arenaController.updateArena);
 
 // ✅ API ลบสนามกีฬา
-router.delete("/deleteArena/:id", deleteArena);
+router.delete("/deleteArena/:id", arenaController.deleteArena);
 
 module.exports = router;
