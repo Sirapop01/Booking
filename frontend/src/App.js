@@ -29,6 +29,9 @@ import AdminPayment from './component/AdminPayment/AdminPayment';
 import AdminOwnersLedger from './component/AdminOwnerLedger/AdminOwnersLedger';
 import OwnerLedgerDetails from './component/OwnerLedgerDetails/OwnerLedgerDetails';
 import ProfileBusiness from './component/ProfileBusiness/BusinessProfile';
+import BookingArena from './component/BookingArena/BookingArena';
+
+
 
 
 /**/ 
@@ -65,6 +68,8 @@ function App() {
         <Route path='/AdminOwnersLedger' element={<AdminOwnersLedger/>}/>
         <Route path='/OwnerLedgerdetail' element={<OwnerLedgerDetails/>}/>
         <Route path='/OwnerProfile' element={<ProfileBusiness />} />
+        <Route path="/BookingArena" element={<BookingArena />} />
+
 
 
       </Routes>
