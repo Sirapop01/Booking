@@ -13,31 +13,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// ✅ ฟังก์ชันอัปโหลดรูปโปรไฟล์
-exports.uploadProfileImage = async (req, res) => {
-  console.log("📂 File Upload Request:", req.file); // ✅ Debugging
-
+exports.uploadImage = (req, res) => {
   if (!req.file) {
-    return res.status(400).json({ error: "❌ No file uploaded" });
+    return res.status(400).json({ message: "No file uploaded" });
   }
 
-  const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+  const serverUrl = "http://localhost:4000"; // เปลี่ยนตาม backend ของคุณ
+  const imageUrl = `${serverUrl}/uploads/${req.file.filename}`;
 
-  res.status(201).json({ message: "✅ Upload successful", imageUrl });
+  console.log("📸 Uploaded File:", req.file);
+  res.status(200).json({ imageUrl });
 };
 
-// ✅ ฟังก์ชันอัปโหลดรูปสนามกีฬา
-exports.uploadArenaImage = async (req, res) => {
-  console.log("📂 Arena Image Upload Request:", req.file); // ✅ Debugging
-
-  if (!req.file) {
-    return res.status(400).json({ error: "❌ No file uploaded" });
-  }
-
-  const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
-
-  res.status(201).json({ message: "✅ Upload successful", imageUrl });
-};
 
 // ✅ ต้อง export `upload` ออกมา
 exports.upload = upload;

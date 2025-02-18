@@ -7,6 +7,7 @@ import Mapping from "../Mapping/Mapping"; // ✅ นำเข้า Mapping
 import TimePicker from "react-time-picker"; // ✅ นำเข้า Time Picker
 import "react-time-picker/dist/TimePicker.css"; // ✅ นำเข้า CSS
 import "react-clock/dist/Clock.css"; // ✅ นำเข้า Clock UI
+import { useNavigate } from "react-router-dom";
 
 const DEFAULT_LOCATION = [13.736717, 100.523186]; // ✅ ค่าดีฟอลต์ (กรุงเทพฯ)
 
@@ -15,7 +16,7 @@ const MatchWebForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [formErrors, setFormErrors] = useState("");
   const [mapLocation, setMapLocation] = useState(DEFAULT_LOCATION); // ✅ state ใหม่สำหรับแผนที่
-
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fieldName: "",
     ownerName: "",
@@ -95,7 +96,7 @@ const MatchWebForm = () => {
       formData.append("image", file);
 
       try {
-        const response = await axios.post("http://localhost:4000/api/upload/arena", formData, {
+        const response = await axios.post("http://localhost:4000/api/upload/images", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
@@ -133,6 +134,7 @@ const MatchWebForm = () => {
       const response = await axios.post("http://localhost:4000/api/arenas/register", arenaData);
       alert("✅ ดำเนินการสำเร็จ!");
       resetForm();
+      navigate("/Information")
     } catch (error) {
       console.error("❌ Register Arena Failed:", error);
       setFormErrors("เกิดข้อผิดพลาดในการส่งข้อมูล");

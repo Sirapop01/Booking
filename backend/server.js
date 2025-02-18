@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require("path");
+
 require("dotenv").config(); // ✅ ใช้ .env สำหรับ MONGO_URI
 
 // ✅ Import Routes
@@ -13,10 +15,16 @@ const manageAccountRoutes = require("./routes/manageAccountRoutes");
 const arenaRoutes = require("./routes/arenaRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const verifyPaymentRoutes = require("./routes/verifyPaymentRoutes"); // ✅ ตรวจสอบ Route
+const businessInfoRoutes = require('./routes/businessInfoRoutes');
 const businessOwnerRoutes = require("./routes/businessOwnerRoutes");
+
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+
+
+// เสิร์ฟไฟล์ภาพจากโฟลเดอร์ uploads
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ✅ Middleware
 app.use(bodyParser.json());
@@ -27,7 +35,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],  // ✅ อนุญาตการส่ง Authorization Header
   credentials: true  // ✅ อนุญาตส่ง Cookies หรือ Headers ที่เกี่ยวกับ Authentication
 }));
-app.use("/uploads", express.static("uploads")); // ✅ ให้สามารถเข้าถึงไฟล์ใน `uploads/` ได้จาก URL
+app.use("/uploads", express.static("uploads")); // ✅ ให้สามารถเข้าถึงไฟล์ใน `uploads/` ได้จาก URL fix
 app.use("/api/business-owners", businessOwnerRoutes);
 
 // ✅ เชื่อมต่อ MongoDB
@@ -49,6 +57,7 @@ app.use("/api/manage-account", manageAccountRoutes);
 app.use("/api/arenas", arenaRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/verify-payments", verifyPaymentRoutes);
+app.use("/api/business-info", businessInfoRoutes);
 
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {

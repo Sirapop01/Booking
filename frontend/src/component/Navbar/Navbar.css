@@ -8,6 +8,7 @@
     background-color: #07213A;
     padding: 20px 30px;
     font-family: 'Inder', sans-serif;
+    height: 100px; /* กำหนดความสูงแน่นอนให้ Navbar */
 }
 
 /* ✅ ปุ่มด้านซ้าย (โปรโมชั่น + รายการโปรด) */
@@ -38,13 +39,10 @@
 
 /* ✅ โลโก้และ MatchWeb อยู่ตรงกลาง */
 .navbar-center {
-    min-width: 200px; /* กำหนดความกว้างขั้นต่ำให้โลโก้ */
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
     align-items: center;
-    white-space: nowrap;
+    justify-content: center;
+    flex-grow: 1; /* ดันให้อยู่ตรงกลางได้ */
 }
 
 .navbar-logo-img-homepage {

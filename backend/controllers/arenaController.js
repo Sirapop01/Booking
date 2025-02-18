@@ -1,19 +1,6 @@
 const Arena = require("../models/Arena");
 const BusinessOwner = require("../models/BusinessOwner");
 
-// ✅ ฟังก์ชันอัปโหลดรูปภาพสนามกีฬา
-exports.uploadArenaImage = async (req, res) => {
-  console.log("📂 File Upload Request:", req.file); // ✅ Debugging
-
-  if (!req.file) {
-    return res.status(400).json({ error: "❌ No file uploaded" });
-  }
-
-  // ✅ URL ของรูปภาพที่อัปโหลด
-  const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
-
-  res.status(201).json({ message: "✅ Upload successful", imageUrl });
-};
 
 // ✅ ฟังก์ชัน Register สนามกีฬา (รับ URL ของรูปภาพ)
 exports.registerArena = async (req, res) => {
@@ -66,7 +53,7 @@ exports.getArenas = async (req, res) => {
   }
 };
 
-// ✅ ดึงข้อมูลสนามกีฬาโดยใช้ ID (JOIN BusinessOwner)
+// ✅ ดึงข้อมูลสนามกีฬาโดยใช้ ID (JOIN BusinessOwner) fix
 exports.getArenaById = async (req, res) => {
   try {
     const arena = await Arena.findById(req.params.id).populate("businessOwnerId", "firstName lastName email phoneNumber");
@@ -81,7 +68,7 @@ exports.getArenaById = async (req, res) => {
 
 // ✅ อัปเดตข้อมูลสนามกีฬา
 exports.updateArena = async (req, res) => {
-  try {
+  try {    
     const updatedArena = await Arena.findByIdAndUpdate(req.params.id, req.body, { new: true }).populate("businessOwnerId");
     if (!updatedArena) {
       return res.status(404).json({ message: "ไม่พบข้อมูลสนาม" });
