@@ -16,12 +16,8 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const verifyPaymentRoutes = require("./routes/verifyPaymentRoutes"); // ✅ ตรวจสอบ Route
 const businessInfoRoutes = require('./routes/businessInfoRoutes');
 const businessOwnerRoutes = require("./routes/businessOwnerRoutes");
-<<<<<<< HEAD
 const LedgerRoutes = require("./routes/ledgerRoutes");
-
-=======
 const uploadRoutes = require('./routes/uploadRoutes');
->>>>>>> eae2a36ee08dfd7e9010c5bd85d5735f6abcfa40
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -61,12 +57,8 @@ app.use("/api/arenas", arenaRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/verify-payments", verifyPaymentRoutes);
 app.use("/api/business-info", businessInfoRoutes);
-<<<<<<< HEAD
 app.use("/api/ledger", LedgerRoutes);
-=======
 app.use('/api/upload', uploadRoutes);
-
->>>>>>> eae2a36ee08dfd7e9010c5bd85d5735f6abcfa40
 
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
