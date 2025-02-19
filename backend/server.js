@@ -17,6 +17,7 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const verifyPaymentRoutes = require("./routes/verifyPaymentRoutes"); // ✅ ตรวจสอบ Route
 const businessInfoRoutes = require('./routes/businessInfoRoutes');
 const businessOwnerRoutes = require("./routes/businessOwnerRoutes");
+const LedgerRoutes = require("./routes/ledgerRoutes");
 
 
 const app = express();
@@ -58,6 +59,7 @@ app.use("/api/arenas", arenaRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/verify-payments", verifyPaymentRoutes);
 app.use("/api/business-info", businessInfoRoutes);
+app.use("/api/ledger", LedgerRoutes);
 
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
