@@ -9,7 +9,6 @@ require("dotenv").config(); // ✅ ใช้ .env สำหรับ MONGO_URI
 // ✅ Import Routes
 const authRoutes = require("./routes/authRoutes");
 const stadiumRoutes = require("./routes/stadiumRoutes");
-const uploadRoutes = require("./routes/uploadRoutes");
 const businessRoutes = require("./routes/businessRoutes");
 const manageAccountRoutes = require("./routes/manageAccountRoutes");
 const arenaRoutes = require("./routes/arenaRoutes");
@@ -17,8 +16,12 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const verifyPaymentRoutes = require("./routes/verifyPaymentRoutes"); // ✅ ตรวจสอบ Route
 const businessInfoRoutes = require('./routes/businessInfoRoutes');
 const businessOwnerRoutes = require("./routes/businessOwnerRoutes");
+<<<<<<< HEAD
 const LedgerRoutes = require("./routes/ledgerRoutes");
 
+=======
+const uploadRoutes = require('./routes/uploadRoutes');
+>>>>>>> eae2a36ee08dfd7e9010c5bd85d5735f6abcfa40
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -52,14 +55,18 @@ mongoose
 // ✅ กำหนด API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/stadiums", stadiumRoutes);
-app.use("/api/upload", uploadRoutes);
 app.use("/api/business", businessRoutes);
 app.use("/api/manage-account", manageAccountRoutes);
 app.use("/api/arenas", arenaRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/verify-payments", verifyPaymentRoutes);
 app.use("/api/business-info", businessInfoRoutes);
+<<<<<<< HEAD
 app.use("/api/ledger", LedgerRoutes);
+=======
+app.use('/api/upload', uploadRoutes);
+
+>>>>>>> eae2a36ee08dfd7e9010c5bd85d5735f6abcfa40
 
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {

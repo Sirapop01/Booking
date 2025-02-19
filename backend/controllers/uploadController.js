@@ -1,30 +1,35 @@
-const multer = require("multer");
-const path = require("path");
+const cloudinary = require('cloudinary').v2;
+const streamifier = require('streamifier');
 
-// ✅ ตั้งค่า `multer` สำหรับการอัปโหลดรูป
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // 📂 เก็บไฟล์ไว้ในโฟลเดอร์ `uploads`
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // ตั้งชื่อไฟล์ให้ไม่ซ้ำ
-  }
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const upload = multer({ storage });
+exports.uploadImage = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
 
-exports.uploadImage = (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ message: "No file uploaded" });
+    const folder = req.body.folder || 'default-folder';
+
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder },
+      (error, result) => {
+        if (error) {
+          console.error('Cloudinary Upload Error:', error);
+          return res.status(500).json({ message: 'Upload to Cloudinary failed', error });
+        }
+
+        res.status(200).json({ imageUrl: result.secure_url });
+      }
+    );
+
+    streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
+  } catch (error) {
+    console.error('❌ Upload Image Failed:', error);
+    res.status(500).json({ message: 'เกิดข้อผิดพลาดในการอัปโหลดรูป', error });
   }
-
-  const serverUrl = "http://localhost:4000"; // เปลี่ยนตาม backend ของคุณ
-  const imageUrl = `${serverUrl}/uploads/${req.file.filename}`;
-
-  console.log("📸 Uploaded File:", req.file);
-  res.status(200).json({ imageUrl });
 };
-
-
-// ✅ ต้อง export `upload` ออกมา
-exports.upload = upload;

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "./ForgotPassword.css"
+import "./ForgotPassword.css";
+import NavbarRegis from "../NavbarRegis/NavbarRegis";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -8,10 +9,13 @@ function ForgotPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage(""); 
+    setMessage("");
 
     try {
-      const response = await axios.post("http://localhost:4000/api/auth/forgot-password", { email });
+      const response = await axios.post(
+        "http://localhost:4000/api/auth/forgot-password",
+        { email }
+      );
       setMessage("✅ กรุณาตรวจสอบอีเมลของคุณ!");
     } catch (error) {
       console.error(error);

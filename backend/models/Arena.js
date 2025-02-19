@@ -13,7 +13,7 @@ const ArenaSchema = new mongoose.Schema(
         enum: ["Point"],
         required: true,
       },
-      coordinates: {
+      coordinates: { 
         type: [Number],
         required: true,
       },
