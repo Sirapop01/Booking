@@ -67,12 +67,14 @@ function App() {
         <Route path='/map' element={<Mapping/>} />
         <Route path='/AdminPayment' element={<AdminPayment/>}/>
         <Route path='/AdminOwnersLedger' element={<AdminOwnersLedger/>}/>
-        <Route path='/OwnerLedgerdetail' element={<OwnerLedgerDetails/>}/>
+        <Route path='/OwnerLedgerdetail/:ownerId' element={<OwnerLedgerDetails/>}/>
         <Route path='/OwnerProfile' element={<ProfileBusiness />} />
+        <Route path="/BookingArena/:id" element={<BookingArena />} />
         <Route path='/Promotion' element={<Promotion />} />
         <Route path="/BookingArena" element={<BookingArena />} />
         <Route path="/superadmin/login" element={<SuperAdminLogin />} />
         <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
+
 
 
       </Routes>
