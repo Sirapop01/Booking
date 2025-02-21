@@ -17,6 +17,8 @@ const verifyPaymentRoutes = require("./routes/verifyPaymentRoutes"); // ✅ ต�
 const businessInfoRoutes = require('./routes/businessInfoRoutes');
 const businessOwnerRoutes = require("./routes/businessOwnerRoutes");
 const uploadRoutes = require('./routes/uploadRoutes');
+const superAdminRoutes = require('./routes/superAdminRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -57,6 +59,8 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/verify-payments", verifyPaymentRoutes);
 app.use("/api/business-info", businessInfoRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/superadmin', superAdminRoutes);
+app.use('/api/admins', adminRoutes);
 
 
 app.use((err, req, res, next) => {
