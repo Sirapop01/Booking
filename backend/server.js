@@ -18,6 +18,7 @@ const businessInfoRoutes = require('./routes/businessInfoRoutes');
 const businessOwnerRoutes = require("./routes/businessOwnerRoutes");
 const LedgerRoutes = require("./routes/ledgerRoutes");
 const uploadRoutes = require('./routes/uploadRoutes');
+const adminLedgerRoutes = require("./routes/adminLedgerRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -59,6 +60,7 @@ app.use("/api/verify-payments", verifyPaymentRoutes);
 app.use("/api/business-info", businessInfoRoutes);
 app.use("/api/ledger", LedgerRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use("/api/admin-ledger", adminLedgerRoutes);
 
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
