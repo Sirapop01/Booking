@@ -66,7 +66,7 @@ function App() {
         <Route path='/map' element={<Mapping/>} />
         <Route path='/AdminPayment' element={<AdminPayment/>}/>
         <Route path='/AdminOwnersLedger' element={<AdminOwnersLedger/>}/>
-        <Route path='/OwnerLedgerdetail' element={<OwnerLedgerDetails/>}/>
+        <Route path='/OwnerLedgerdetail/:ownerId' element={<OwnerLedgerDetails/>}/>
         <Route path='/OwnerProfile' element={<ProfileBusiness />} />
         <Route path="/BookingArena/:id" element={<BookingArena />} />
         <Route path='/Promotion' element={<Promotion />} />
