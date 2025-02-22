@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 
-/* ✅ กำหนดพื้นหลังของหน้าเฉพาะ Stadium List */
+/* ✅ กำหนดพื้นหลังของหน้า Stadium List */
 .stadium-page-container {
   background-color: #0B2840;
   color: #ffffff;
@@ -14,72 +14,23 @@
   align-items: center;
 }
 
-.home-button {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 60px;
-  height: 60px;
-  background-color: white;
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-}
-
-.home-button:hover {
-  transform: scale(1.1);
-}
-
-.home-logo {
-  width: 35px;
-  height: 35px;
-}
-
-/* ✅ ปรับหัวข้อ + โลโก้ให้แนวเดียวกัน */
-.page-header {
-  display: flex;
-  align-items: center; 
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-/* ✅ ปรับขนาดหัวข้อ */
-.page-title {
-  font-size: 42px; 
-  color: #ffffff;
-  font-weight: bold;
-  margin-left: 10px; /* ✅ ปรับระยะห่างให้ดูสมดุล */
-}
-
-/* ✅ ปรับขนาดและการจัดวางโลโก้ */
-.logo {
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  margin-top: 5px;
-}
-
 /* ✅ ตาราง */
 .stadium-table {
   width: 100%;
-  max-width: 1000px;
+  max-width: 1100px;
   border-collapse: collapse;
-  text-align: left;
+  text-align: center;
   background-color: #13293D;
   color: #ffffff;
-  border: 2px solid #ffffff;
   border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  table-layout: fixed; /* ✅ ป้องกันขนาดคอลัมน์ผิดปกติ */
 }
 
 /* ✅ หัวตาราง */
 .stadium-table thead th {
-  background-color: #07213A;
+  background-color: #0A4F6E;
   color: #ffffff;
   font-size: 18px;
   border-bottom: 2px solid #ffffff;
@@ -87,11 +38,32 @@
   text-align: center;
 }
 
+/* ✅ กำหนดขนาดคอลัมน์ให้ชัดเจน */
+.stadium-table th:nth-child(1),
+.stadium-table td:nth-child(1) { width: 25%; } /* ชื่อสนาม */
+
+.stadium-table th:nth-child(2),
+.stadium-table td:nth-child(2) { width: 20%; } /* สถานะ */
+
+.stadium-table th:nth-child(3),
+.stadium-table td:nth-child(3) { width: 20%; } /* เปิด/ปิด */
+
+.stadium-table th:nth-child(4),
+.stadium-table td:nth-child(4) { width: 20%; } /* ตัวเลือก */
+
 /* ✅ เซลล์ของตาราง */
 .stadium-table th, .stadium-table td {
   border: 2px solid #3A506B;
   padding: 14px;
   text-align: center;
+  min-width: 150px;
+  white-space: nowrap; /* ✅ ป้องกันข้อความขึ้นบรรทัดใหม่ */
+}
+
+/* ✅ ปรับขนาดของชื่อสนาม */
+.stadium-name {
+  font-weight: bold;
+  color: rgb(0, 0, 0);
 }
 
 /* ✅ แถวของตาราง */
@@ -99,6 +71,7 @@
   cursor: pointer;
   user-select: none;
   transition: background-color 0.3s ease;
+  display: table-row; /* ✅ แก้ปัญหาข้อมูลไปกองรวมกัน */
 }
 
 /* ✅ ปรับสีเมื่อ hover */
@@ -118,27 +91,74 @@
   color: #ffffff;
 }
 
-/* ✅ ปุ่ม toggle เปิด/ปิด */
-.toggle-btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  font-size: 14px;
+/* ✅ ปรับตำแหน่งของสถานะให้อยู่ตรงกลาง */
+.status {
+  font-size: 16px;
   font-weight: bold;
-  transition: background 0.3s ease, transform 0.2s ease;
-  cursor: pointer;
+  color: black;
 }
+
+.status-toggle{
+  font-size: 16px;
+  font-weight: bold;
+  color: black;
+}
+
+.status-open {
+  color: #4CAF50;
+}
+
+.status-closed {
+  color: #FF4B4B;
+}
+
+/* ✅ บังคับให้คอลัมน์ "ตัวเลือก" อยู่กึ่งกลาง */
+.stadium-table td:nth-child(4) {
+  width: 100%;
+  height: auto; /* ✅ ให้คอลัมน์ขยายตามเนื้อหา */
+  padding: 0; /* ✅ ป้องกันช่องว่างที่อาจทำให้ปุ่มขยับ */
+  display: table-cell; /* ✅ ใช้ table-cell เพื่อให้ vertical-align ทำงาน */
+  vertical-align: middle; /* ✅ บังคับให้เนื้อหาอยู่ตรงกลางแนวตั้ง */
+}
+
+/* ✅ ปรับปุ่มให้แสดงอยู่กึ่งกลางจริงๆ */
+/* ✅ ปรับปุ่มให้มีขนาดพอดีกับเนื้อหา */
+.toggle-btn {
+  display: inline-block; /* ✅ ป้องกันการขยายเต็มคอลัมน์ */
+  width: auto; /* ✅ ปรับให้ปุ่มขยายตามเนื้อหา */
+  min-width: 100px; /* ✅ จำกัดขนาดปุ่มไม่ให้เล็กเกินไป */
+  max-width: 150px; /* ✅ ป้องกันปุ่มขยายยาวเกินไป */
+  padding: 6px 12px; /* ✅ ปรับ Padding ให้สมดุล */
+  font-size: 14px;
+  text-align: center;
+  border-radius: 5px;
+  font-family: 'Kanit', sans-serif;
+}
+
+/* ✅ ป้องกันปุ่มขยายเต็ม `<td>` */
+.action-buttons {
+  display: flex;
+  justify-content: center; /* ✅ ปุ่มอยู่กึ่งกลางแนวนอน */
+  align-items: center; /* ✅ ปุ่มอยู่กึ่งกลางแนวตั้ง */
+  width: 100%; /* ✅ คอลัมน์ต้องขยายเต็มพื้นที่ */
+  height: 100%;
+  padding: 0;
+}
+
+
+
 
 /* ✅ ปุ่มปิด */
 .btn-close {
   background-color: #FF4B4B;
   color: white;
-  border: 2px solid transparent;
+  border: 1px solid transparent;
+  box-shadow: 0px 4px 6px rgba(255, 75, 75, 0.3);
 }
 
 .btn-close:hover {
   background-color: #D32F2F;
-  transform: scale(1.05);
+  box-shadow: 0px 6px 10px rgba(255, 75, 75, 0.5);
 }
 
 /* ✅ ปุ่มเปิด */
@@ -146,11 +166,12 @@
   background-color: #4CAF50;
   color: white;
   border: 2px solid transparent;
+  box-shadow: 0px 4px 6px rgba(76, 175, 80, 0.3);
 }
 
 .btn-open:hover {
   background-color: #388E3C;
-  transform: scale(1.05);
+  box-shadow: 0px 6px 10px rgba(76, 175, 80, 0.5);
 }
 
 /* ✅ ปุ่มที่กดไม่ได้ */
@@ -159,6 +180,7 @@
   color: #ccc;
   cursor: not-allowed;
   border: 2px solid #555;
+  box-shadow: none;
 }
 
 /* ✅ ปรับขนาดปุ่มให้เท่ากัน */
@@ -166,7 +188,7 @@
   padding: 10px 20px; 
   font-size: 16px;
   border-radius: 6px;
-  min-width: 150px; 
+  min-width: 160px;
   text-align: center;
   border: 2px solid black;
   background-color: white;
@@ -179,7 +201,7 @@
 /* ✅ ปรับสีปุ่มเมื่อ hover */
 .btn:hover {
   background-color: #f0f0f0;
-  transform: scale(1.05);
+  transform: translateY(-2px);
 }
 
 /* ✅ ปุ่มที่กดไม่ได้ */
@@ -193,8 +215,8 @@
 .bottom-buttons {
   display: flex;
   justify-content: center;
-  gap: 10px;
-  margin-top: 15px;
+  gap: 20px;
+  margin-top: 20px;
 }
 
 /* ✅ ปรับปุ่มกลับไปยัง Home */
@@ -219,18 +241,9 @@
   transform: scale(1.1);
 }
 
-.home-logo {
-  width: 35px;
-  height: 35px;
+/* ✅ แก้ปัญหาข้อมูลไปกองรวมกัน */
+.stadium-table tr {
+  display: table-row;
 }
 
-/* ✅ ปรับสีให้แสดงสถานะสนาม */
-.status-open {
-  color: #4CAF50;
-  font-weight: bold;
-}
 
-.status-closed {
-  color: #FF4B4B;
-  font-weight: bold;
-}
