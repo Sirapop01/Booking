@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom"; // นำเข้า Link จาก react-router-dom
 import { useNavigate } from "react-router-dom"; // ✅ ใช้ useNavigate สำหรับเปลี่ยนหน้า
 import "./Homepageopera.css"; // นำเข้าไฟล์ CSS
 import Navbar from "../Navbar/Navbar";
@@ -11,6 +12,7 @@ const Homepageopera = () => {
 
   return (
     <>
+      <Navbar/>
       {/* ✅ Navbar คงเดิมตามเงื่อนไข */}
       <Navbar />
 
@@ -23,6 +25,9 @@ const Homepageopera = () => {
           {/* การจัดการสนาม */}
           <div className="menu-box77">
             <img src={stadiumIcon} alt="สนามของฉัน" className="menu-icon77" />
+            <Link to="/stadium-list">
+              <button className="menu-text77">สนามของฉัน</button>
+            </Link>
             <button className="menu-button77" onClick={() => navigate("/stadium-list")}>
               สนามของฉัน
             </button>
