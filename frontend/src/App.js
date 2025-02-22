@@ -31,6 +31,7 @@ import OwnerLedgerDetails from './component/OwnerLedgerDetails/OwnerLedgerDetail
 import ProfileBusiness from './component/ProfileBusiness/BusinessProfile';
 import Promotion from './component/Promotion/Promotion';
 import BookingArena from './component/BookingArena/BookingArena';
+import OwnerLedgerSummary from './component/OwnerLedgerSummary/OwnerLedgerSummary';
 
 
 
@@ -71,6 +72,7 @@ function App() {
         <Route path="/BookingArena/:id" element={<BookingArena />} />
         <Route path='/Promotion' element={<Promotion />} />
         <Route path="/BookingArena" element={<BookingArena />} />
+        <Route path="/OwnerLedgerSummary/:ownerId" element={<OwnerLedgerSummary />} />
 
 
 
