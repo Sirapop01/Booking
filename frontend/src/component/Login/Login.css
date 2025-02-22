@@ -103,18 +103,30 @@
 .login-toggle-password {
   position: absolute;
   top: 50%;
-  right: 15px;
+  right: -350px; /* ปรับให้ชิดขอบ input */
   transform: translateY(-50%);
-  background: none;
-  border: none;
+  background: none !important;
+  border: none !important;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 16px;
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
-.login-toggle-password:hover {
-  color: #FFFFFF;
+.login-toggle-password:hover,
+.login-toggle-password:focus,
+.login-toggle-password:active {
+  color: #ffffff !important;
+  background: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
+
 
 /* จดจำฉัน */
 .login-remember-me {

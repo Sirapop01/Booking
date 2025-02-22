@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./OwnerLedgerDetails.css";
 import homeLogo from "../assets/logoalt.png";
@@ -7,6 +7,7 @@ import filterIcon from "../assets/icons/filter.png";
 
 function OwnerLedgerDetails() {
   const { ownerId } = useParams();
+  const navigate = useNavigate();
   const [selectedStadium, setSelectedStadium] = useState(null);
   const [stadiums, setStadiums] = useState([]);
   const [ledgerData, setLedgerData] = useState([]);
@@ -151,9 +152,14 @@ function OwnerLedgerDetails() {
 
                 <div className="details-actions">
                   <div className="details-total-box">
-                    รวมทั้งหมด: {totalTaxAmount} B
+                    รวมค่าธรรมเนียมทั้งหมด: {totalTaxAmount} B
                   </div>
-                  <button className="details-manage-button">การจัดการ</button>
+                  <button 
+                    className="details-manage-button"
+                    onClick={() => navigate(`/OwnerLedgerSummary/${selectedStadium}`)}
+                  >
+                    การจัดการ
+                  </button>
                 </div>
               </>
             )}

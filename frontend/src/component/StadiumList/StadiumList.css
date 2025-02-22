@@ -4,8 +4,9 @@
 .stadium-page-container {
   background-color: #0B2840;
   color: #ffffff;
-  font-family: Arial, sans-serif;
+  font-family: 'Kanit', sans-serif;
   margin: 0;
+  margin-top: 100px;
   padding: 20px;
   min-height: 100vh;
   display: flex;
@@ -13,32 +14,55 @@
   align-items: center;
 }
 
+.home-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 60px;
+  height: 60px;
+  background-color: white;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.home-button:hover {
+  transform: scale(1.1);
+}
+
+.home-logo {
+  width: 35px;
+  height: 35px;
+}
+
 /* ✅ ปรับหัวข้อ + โลโก้ให้แนวเดียวกัน */
 .page-header {
   display: flex;
-  align-items: center; /* ✅ ทำให้โลโก้ + ข้อความอยู่กึ่งกลาง */
+  align-items: center; 
   justify-content: center;
   margin-bottom: 20px;
 }
 
 /* ✅ ปรับขนาดหัวข้อ */
 .page-title {
-  font-size: 42px; /* ✅ ขยายขนาดให้สมดุลกับโลโก้ */
+  font-size: 42px; 
   color: #ffffff;
   font-weight: bold;
-  margin-left: 1px; /* ✅ ทำให้โลโก้กับข้อความมีระยะห่างที่พอดี */
-  font-family: 'Kanit', sans-serif;
+  margin-left: 10px; /* ✅ ปรับระยะห่างให้ดูสมดุล */
 }
 
 /* ✅ ปรับขนาดและการจัดวางโลโก้ */
 .logo {
-  width: 100%; /* ✅ ขยายขนาดโลโก้ให้สมดุล */
-  height: 100%;
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
-  margin-top: 15px;
+  margin-top: 5px;
 }
-
 
 /* ✅ ตาราง */
 .stadium-table {
@@ -61,7 +85,6 @@
   border-bottom: 2px solid #ffffff;
   padding: 14px;
   text-align: center;
-  
 }
 
 /* ✅ เซลล์ของตาราง */
@@ -69,7 +92,6 @@
   border: 2px solid #3A506B;
   padding: 14px;
   text-align: center;
-  font-family: 'Kanit', sans-serif;
 }
 
 /* ✅ แถวของตาราง */
@@ -79,15 +101,18 @@
   transition: background-color 0.3s ease;
 }
 
-.open-row:hover {
+/* ✅ ปรับสีเมื่อ hover */
+.table-row:hover {
   background-color: #0A4F6E;
 }
 
+/* ✅ แถวที่ปิดอยู่ */
 .closed-row {
   background-color: #B0B0B0 !important;
   color: #ffffff;
 }
 
+/* ✅ แถวที่ถูกเลือก */
 .selected {
   background-color: #1E90FF !important;
   color: #ffffff;
@@ -102,7 +127,6 @@
   font-weight: bold;
   transition: background 0.3s ease, transform 0.2s ease;
   cursor: pointer;
-  font-family: 'Kanit', sans-serif;
 }
 
 /* ✅ ปุ่มปิด */
@@ -139,10 +163,10 @@
 
 /* ✅ ปรับขนาดปุ่มให้เท่ากัน */
 .btn {
-  padding: 10px 20px; /* ลดขนาด padding */
-  font-size: 16px; /* ลดขนาดตัวอักษร */
-  border-radius: 6px; /* ลดความโค้งของมุม */
-  min-width: 150px; /* ทำให้ปุ่มกว้างเท่ากัน */
+  padding: 10px 20px; 
+  font-size: 16px;
+  border-radius: 6px;
+  min-width: 150px; 
   text-align: center;
   border: 2px solid black;
   background-color: white;
@@ -150,7 +174,6 @@
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Kanit', sans-serif;
 }
 
 /* ✅ ปรับสีปุ่มเมื่อ hover */
@@ -199,4 +222,15 @@
 .home-logo {
   width: 35px;
   height: 35px;
+}
+
+/* ✅ ปรับสีให้แสดงสถานะสนาม */
+.status-open {
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+.status-closed {
+  color: #FF4B4B;
+  font-weight: bold;
 }

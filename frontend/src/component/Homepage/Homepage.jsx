@@ -50,8 +50,8 @@ const Homepage = () => {
     return (
       <div className="homepage-container">
         <Navbar />
-        <div className="search-section">
-          <input type="text" className="search-input" placeholder="ค้นหาสถานที่" />
+        <div className="search-section-homepage">
+          <input type="text" className="search-input-homepage" placeholder="ค้นหาสถานที่" />
           <div className="date-time-container">
             <input type="date" className="date-input" />
 
@@ -82,7 +82,7 @@ const Homepage = () => {
                 แสดงทั้งหมด
               </label>
             </div>
-            <button className="search-button">ค้นหา</button>
+            <button className="search-button-homepage">ค้นหา</button>
           </div>
         </div>
 
