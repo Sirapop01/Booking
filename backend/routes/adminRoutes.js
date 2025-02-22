@@ -1,8 +1,14 @@
 const express = require("express");
-const adminController = require("../controllers/adminController"); // ✅ Import เป็น Object
+const { registerAdmin } = require("../controllers/adminController");
+const upload = require("../middlewares/upload"); // ใช้ Multer สำหรับอัปโหลดไฟล์
+const { protect, superAdminAuth } = require("../middlewares/authMiddleware");
+
 const router = express.Router();
 
-router.post("/register", adminController.registerAdmin); // ✅ ใช้ adminController.registerAdmin
-router.post("/login", adminController.loginAdmin);
+// ✅ สมัคร Admin (เฉพาะ SuperAdmin)
+router.post("/register", protect, superAdminAuth, upload.fields([
+  { name: "profileImage", maxCount: 1 },
+  { name: "idCardImage", maxCount: 1 },
+]), registerAdmin);
 
 module.exports = router;

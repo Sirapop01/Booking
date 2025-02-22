@@ -34,6 +34,8 @@ import BookingArena from './component/BookingArena/BookingArena';
 import OwnerLedgerSummary from './component/OwnerLedgerSummary/OwnerLedgerSummary';
 import SuperAdminLogin from './component/SuperAdmin/SuperAdminLogin';
 import SuperAdminDashboard from './component/SuperAdminDashboard/SuperAdminDashboard';
+import ProtectedRoute from "./component/ProtectedRoute"; 
+import AdminRegister from "./component/AdminRegister/AdminRegister";
 
 
 /**/ 
@@ -76,7 +78,9 @@ function App() {
         <Route path="/OwnerLedgerSummary/:ownerId" element={<OwnerLedgerSummary />} />
         <Route path="/superadmin/login" element={<SuperAdminLogin />} />
         <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
-
+        <Route element={<ProtectedRoute role="superadmin" />}>
+          <Route path="/admin/register" element={<AdminRegister />} />
+        </Route>
 
       </Routes>
     </BrowserRouter>
