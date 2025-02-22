@@ -115,14 +115,20 @@ body123023 {
     background: linear-gradient(145deg, #1e90ff, #007acc);
     color: white;
     font-size: 18px;
-    padding: 12px 45px;
+    padding: 8px 25px !important; /* บังคับใช้ขนาด */
     border: none;
-    border-radius: 30px;
+    border-radius: 15px !important; /* ลดขนาดของขอบ */
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
     font-family: 'Kanit', sans-serif;
-  }
+    position: relative;
+    top: 50px;
+    width: 150px !important; /* กำหนดความกว้างแน่นอน */
+    padding: 10px !important; /* ลด padding ลง */
+    border-radius: 15px !important;
+}
+
   
   .promotion-booking-button:hover {
     background: linear-gradient(145deg, #007acc, #005fa3);
