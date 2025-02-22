@@ -12,7 +12,7 @@ function StadiumList() {
   const [ownerId, setOwnerId] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
     if (!token) {
         console.error("⚠️ ไม่พบ Token ใน localStorage");
