@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './NavbarStadiumlist.css';
 import logo from '../assets/logo.png';
+import homeLogo from '../assets/logoalt.png'; // นำเข้าไอคอน Home
 import { jwtDecode } from 'jwt-decode';
 
 const NavbarStadiumlist = () => {
@@ -44,11 +45,11 @@ const NavbarStadiumlist = () => {
   return (
     <>
       <nav className="navbar-homepage">
-        {/* มุมซ้าย: ปุ่ม Home */}
+        {/* มุมซ้าย: ปุ่ม Home (ไอคอน Home) */}
         <div className="navbar-left">
-          <button className="navbar-button-homepage" onClick={() => navigate('/')}>
-            Home
-          </button>
+          <a href="/" className="home-button">
+            <img src={homeLogo} alt="Home Logo" className="home-logo" />
+          </a>
         </div>
 
         {/* ตรงกลาง: โลโก้และข้อความ "สนามของฉัน" */}

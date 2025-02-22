@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode"; // ✅ ใช้ named export
 import "./StadiumList.css";
+import NavbarStadiumlist from "../NavbarStadiumlist/NavbarStadiumlist";
 import logo from "../assets/logo.png";
 import homeLogo from "../assets/logoalt.png";
 
@@ -73,15 +74,7 @@ function StadiumList() {
   return (
     <div className="stadium-page-container">
       {/* ✅ ปุ่มกลับไปยังหน้า Home */}
-      <a href="/" className="home-button">
-        <img src={homeLogo} alt="Home Logo" className="home-logo" />
-      </a>
-
-      {/* ✅ หัวข้อ + โลโก้ */}
-      <h1 className="page-header">
-        <img src={logo} alt="Logo" className="logo" />
-        <span className="page-title">สนามของฉัน</span>
-      </h1>
+      <NavbarStadiumlist />
 
       {/* ✅ แสดง Loading ขณะดึงข้อมูล */}
       {loading ? (
