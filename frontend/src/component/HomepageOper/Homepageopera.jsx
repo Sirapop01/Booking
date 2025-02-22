@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom"; // นำเข้า Link จาก react-router-dom
 import "./Homepageopera.css"; // นำเข้าไฟล์ CSS
 import Navbar from "../Navbar/Navbar";
 import stadiumIcon from "../assets/icons/stadiumicon.png"; // ไอคอนสนาม
@@ -8,7 +9,6 @@ import commentregisIcon from "../assets/icons/commentregisicon.png"; // ไอ�
 const Homepageopera = () => {
   return (
     <>
-      {/* ✅ Navbar คงเดิมตามเงื่อนไข */}
       <Navbar/>
 
       <div className="homepage-container77">
@@ -20,8 +20,9 @@ const Homepageopera = () => {
           {/* การจัดการสนาม */}
           <div className="menu-box77">
             <img src={stadiumIcon} alt="สนามของฉัน" className="menu-icon77" />
-            <p className="menu-text77">สนามของฉัน</p>
-            <button className="menu-subtext77">+ เพิ่มสนาม</button>
+            <Link to="/stadium-list">
+              <button className="menu-text77">สนามของฉัน</button>
+            </Link>
           </div>
 
           {/* ตรวจสอบบัญชี */}
@@ -41,8 +42,6 @@ const Homepageopera = () => {
           <img src={commentregisIcon} alt="รีวิวทั้งหมด" className="chat-icon77" />
           <button className="review-text77">รีวิวทั้งหมด</button>
         </div>
-
-       
       </div>
     </>
   );
