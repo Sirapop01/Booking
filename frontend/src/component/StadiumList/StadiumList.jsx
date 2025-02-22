@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode"; // ✅ ใช้ named export
+import { jwtDecode } from "jwt-decode";
 import "./StadiumList.css";
 import NavbarStadiumlist from "../NavbarStadiumlist/NavbarStadiumlist";
 
@@ -9,62 +9,60 @@ function StadiumList() {
   const navigate = useNavigate();
   const [stadiums, setStadiums] = useState([]);
   const [selectedStadium, setSelectedStadium] = useState(null);
-  const [ownerId, setOwnerId] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
     if (!token) {
-        console.error("⚠️ ไม่พบ Token ใน localStorage");
-        alert("Session หมดอายุ! กรุณาเข้าสู่ระบบใหม่");
-        navigate("/login"); 
-        return;
+      alert("Session หมดอายุ! กรุณาเข้าสู่ระบบใหม่");
+      navigate("/login");
+      return;
     }
 
     try {
-        const decoded = jwtDecode(token);
-        console.log("📌 Token Decoded:", decoded);
+      const decoded = jwtDecode(token);
+      const ownerId = decoded.id;
 
-        if (!decoded.id) {
-            console.error("⚠️ ไม่พบ ID ใน Token");
-            return;
+      if (!ownerId) {
+        console.error("⚠️ ไม่พบ ID ใน Token");
+        return;
+      }
+
+      const fetchStadiums = async () => {
+        try {
+          const response = await axios.get(`http://localhost:4000/api/stadium/getArenas?owner_id=${ownerId}`);
+          setStadiums(response.data);
+        } catch (error) {
+          console.error("⚠️ ไม่สามารถโหลดข้อมูลสนาม:", error);
         }
+      };
 
-        const ownerId = decoded.id;
-        console.log("🆔 ส่งค่า owner_id:", ownerId); // ✅ Debug ค่า owner_id ก่อนส่งไป Backend
-
-        const fetchStadiums = async () => {
-            try {
-                console.log(`🔍 Fetching stadiums for Owner ID: ${ownerId}`);
-                const response = await axios.get(`http://localhost:4000/api/stadium/getArenas?owner_id=${ownerId}`);
-                console.log("📌 API Response:", response.data);
-                setStadiums(response.data);
-            } catch (error) {
-                console.error("⚠️ ไม่สามารถโหลดข้อมูลสนาม:", error);
-            }
-        };
-
-        fetchStadiums();
+      fetchStadiums();
     } catch (error) {
-        console.error("⚠️ ไม่สามารถถอดรหัส Token:", error);
-        alert("Session ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่");
-        navigate("/login"); 
+      console.error("⚠️ ไม่สามารถถอดรหัส Token:", error);
+      alert("Session ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่");
+      navigate("/login");
     }
-  }, []);
+  }, [navigate]);
 
-  // ✅ เลือกสนาม
+  // ✅ เลือกแถวของสนาม
   const handleRowClick = (id) => {
     setSelectedStadium(id === selectedStadium ? null : id);
   };
 
-  // ✅ เปิด/ปิดสนาม
+  // ✅ เปิด/ปิดสถานะสนาม
   const toggleStadium = async (stadiumId, openState) => {
     try {
-      await axios.put(`http://localhost:4000/api/arenas/updateArena/${stadiumId}`, { open: openState });
-
+      // อัพเดทสถานะใน UI ทันที
       setStadiums((prev) =>
         prev.map((st) => (st._id === stadiumId ? { ...st, open: openState } : st))
       );
+
+      // ส่งคำขอไปยัง Backend
+      await axios.post(`http://localhost:4000/api/stadium/toggleStadium`, {
+        stadiumId,
+        open: openState,
+      });
     } catch (error) {
       console.error("⚠️ ไม่สามารถเปลี่ยนสถานะสนาม:", error);
     }
@@ -78,45 +76,50 @@ function StadiumList() {
       <table className="stadium-table">
         <thead>
           <tr>
-            <th style={{ width: "40%" }}>ชื่อสนาม</th>
+            <th style={{ width: "25%" }}>ชื่อสนาม</th>
             <th style={{ width: "20%" }}>สถานะ</th>
             <th style={{ width: "20%" }}>เปิด/ปิด</th>
-            <th style={{ width: "20%" }}>ตัวเลือก</th>
+            <th style={{ width: "25%" }}>ตัวเลือก</th>
           </tr>
         </thead>
         <tbody>
           {stadiums.length > 0 ? (
-            stadiums.map((stadium) => (
-              <tr
-                key={stadium._id}
-                className={`table-row ${selectedStadium === stadium._id ? "selected" : ""} 
-                  ${!stadium.open || stadium.status === "รอการยืนยัน" ? "closed-row" : ""}`}
-                onClick={() => handleRowClick(stadium._id)}
-              >
-                <td>{stadium.fieldName}</td>
-                <td className={stadium.status === "รอการยืนยัน" ? "pending-status" : ""}>
-                  {stadium.status}
-                </td>
-                <td className={stadium.open ? "status-open" : "status-closed"}>
-                  {stadium.open ? "✅ เปิด" : "❌ ปิด"}
-                </td>
-                <td>
-                  {stadium.status === "รอการยืนยัน" ? (
-                    <button className="toggle-btn btn-disabled" disabled>
-                      รอการยืนยัน
+            stadiums.map((stadium) => {
+              const isSelected = selectedStadium === stadium._id;
+              return (
+                <tr
+                  key={stadium._id}
+                  className={`table-row ${isSelected ? "selected" : ""}`}
+                  onClick={() => handleRowClick(stadium._id)}
+                >
+                  {/* ✅ คอลัมน์ 1: ชื่อสนาม */}
+                  <td className="stadium-name">{stadium.fieldName ?? "ไม่ระบุชื่อ"}</td>
+
+                  {/* ✅ คอลัมน์ 2: สถานะ (ตามค่าจริงจาก Backend) */}
+                  <td className="status">
+                    {stadium.open ? "✅ เปิดใช้งาน" : "❌ ปิด"}
+                  </td>
+
+                  {/* ✅ คอลัมน์ 3: เปิด / ปิด (จัดเรียงเป็นคอลัมน์) */}
+                  <td className="status-toggle">
+                    <span>{stadium.open ? "✅ เปิด" : "❌ ปิด"}</span>
+                  </td>
+
+                  {/* ✅ คอลัมน์ 4: ปุ่มเปิด/ปิดสนาม */}
+                  <td className="action-buttons">
+                    <button
+                      className={`toggle-btn ${stadium.open ? "btn-close" : "btn-open"}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleStadium(stadium._id, !stadium.open);
+                      }}
+                    >
+                      {stadium.open ? "❌ ปิดสนาม" : "✅ เปิดสนาม"}
                     </button>
-                  ) : stadium.open ? (
-                    <button className="toggle-btn btn-close" onClick={() => toggleStadium(stadium._id, false)}>
-                      ปิดสนาม
-                    </button>
-                  ) : (
-                    <button className="toggle-btn btn-open" onClick={() => toggleStadium(stadium._id, true)}>
-                      เปิดสนาม
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))
+                  </td>
+                </tr>
+              );
+            })
           ) : (
             <tr>
               <td colSpan="4" className="no-data">⚠️ ไม่มีสนามที่ลงทะเบียน</td>
