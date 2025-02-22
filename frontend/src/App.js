@@ -76,7 +76,6 @@ function App() {
         <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
 
 
-
       </Routes>
     </BrowserRouter>
   );
