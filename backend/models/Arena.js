@@ -11,9 +11,10 @@ const ArenaSchema = new mongoose.Schema(
       type: {
         type: String,
         enum: ["Point"],
+        default: "Point",
         required: true,
       },
-      coordinates: { 
+      coordinates: {
         type: [Number],
         required: true,
       },
@@ -26,11 +27,13 @@ const ArenaSchema = new mongoose.Schema(
     additionalInfo: { type: String, default: "" },
     amenities: { type: [String], default: [] },
     images: { type: [String], default: [] },
+    open: { type: Boolean, default: true }, // ✅ เพิ่มสถานะเปิด/ปิด
+    status: { type: String, default: "พร้อมใช้งาน" }, // ✅ เพิ่มสถานะของสนามกีฬา
   },
   { timestamps: true }
 );
 
-// สำคัญมาก: เพิ่ม Index รองรับ GeoJSON
+// ✅ สำคัญ! เพิ่ม Index เพื่อรองรับ GeoJSON
 ArenaSchema.index({ location: "2dsphere" });
 
 const Arena = mongoose.model("Arena", ArenaSchema);

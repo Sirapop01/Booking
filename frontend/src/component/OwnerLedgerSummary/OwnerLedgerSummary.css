@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+
+.summary-page {
+  background-color: #0c2c4a;
+  color: white;
+  font-family: 'Kanit', sans-serif;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+.summary-title {
+  font-size: 36px;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+/* 🔙 ปุ่มกลับ */
+.summary-back-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 60px;
+  height: 60px;
+  background-color: white;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.summary-back-button:hover {
+  transform: scale(1.1);
+}
+
+.summary-home-logo {
+  width: 35px;
+  height: 35px;
+}
+
+/* ✅ คอนเทนเนอร์หลัก */
+.summary-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1100px;
+  background: white;
+  color: black;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+/* ✅ ส่วนเลือกเดือน */
+.summary-month-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.summary-month-dropdown {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 2px solid black;
+  cursor: pointer;
+}
+
+/* ✅ กราฟข้อมูล */
+.summary-chart-container {
+  width: 100%;
+  max-width: 700px;
+  height: 300px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border: 2px solid black;
+  margin-bottom: 20px;
+}
+
+/* ✅ รายละเอียดรายรับ */
+.summary-details-box {
+  background: white;
+  border: 2px solid black;
+  padding: 15px;
+  border-radius: 10px;
+  width: 350px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.summary-details-box div {
+  margin-bottom: 10px;
+}
+
+/* ✅ ปุ่มดาวน์โหลดเอกสาร */
+.summary-download-button {
+  background-color: #0b3d91;
+  color: white;
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 10px;
+  width: 100%;
+  cursor: pointer;
+  border: none;
+  margin-top: 15px;
+}
+
+.summary-download-button:hover {
+  background-color: #072f6b;
+}
