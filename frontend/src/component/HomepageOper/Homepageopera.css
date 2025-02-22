@@ -112,4 +112,19 @@
   .skip-button77:hover {
     background-color: #2aa3d4;
   }
+
+  .menu-button77 {
+    background-color: #007bff; /* ปรับสีปุ่ม */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .menu-button77:hover {
+    background-color: #0056b3;
+  }
   
