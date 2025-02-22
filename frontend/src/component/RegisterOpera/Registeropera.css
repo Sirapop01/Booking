@@ -207,19 +207,28 @@ input[type="checkbox"] {
 
 .toggle-password {
   position: absolute;
-  right: 10px;
-  top: 50%;
+  right: -200px;
+  top: 55%;
   transform: translateY(-50%);
-  background: none;
-  border: none;
+  background: none !important;
+  border: none !important;
   font-size: 18px;
   cursor: pointer;
-  color: #007bff;
+  outline: none !important;
+  box-shadow: none !important;
+  color:#000000
 }
 
-.toggle-password:hover {
-  color: #0056b3;
+.toggle-password:hover,
+.toggle-password:focus,
+.toggle-password:active {
+  background: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color:#000000
 }
+
 
 /* ====== Responsive Design (Mobile) ====== */
 @media (max-width: 768px) {

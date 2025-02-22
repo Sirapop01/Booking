@@ -1,0 +1,47 @@
+.admin-register-container {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.admin-register-container h2{
+  color : #000
+}
+
+.admin-register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input, button {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+input {
+  width: 100%;
+}
+
+button {
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+}

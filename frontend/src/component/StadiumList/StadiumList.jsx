@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode"; // ✅ ใช้ named export
 import "./StadiumList.css";
-import logo from "../assets/logo.png";
-import homeLogo from "../assets/logoalt.png";
+import NavbarStadiumlist from "../NavbarStadiumlist/NavbarStadiumlist";
 
 function StadiumList() {
   const navigate = useNavigate();
@@ -26,9 +25,23 @@ function StadiumList() {
         const decoded = jwtDecode(token);
         console.log("📌 Token Decoded:", decoded);
 
-        if (!decoded.id) {
-            console.error("⚠️ ไม่พบ ID ใน Token");
-            return;
+
+      if (!decoded.id) {
+        console.error("⚠️ ไม่พบ ID ใน Token");
+        return;
+      }
+
+      setOwnerId(decoded.id);
+
+      // ✅ ดึงข้อมูลสนามของเจ้าของ
+      const fetchStadiums = async () => {
+        try {
+          const response = await axios.get(`http://localhost:4000/api/arenas/getArenas?owner_id=${decoded.id}`);
+          console.log("📌 API Response:", response.data);
+          setStadiums(response.data);
+        } catch (error) {
+          console.error("⚠️ ไม่สามารถโหลดข้อมูลสนาม:", error);
+
         }
 
         setOwnerId(decoded.id);
@@ -74,15 +87,8 @@ function StadiumList() {
   return (
     <div className="stadium-page-container">
       {/* ✅ ปุ่มกลับไปยังหน้า Home */}
-      <a href="/" className="home-button">
-        <img src={homeLogo} alt="Home Logo" className="home-logo" />
-      </a>
 
-      {/* ✅ หัวข้อ + โลโก้ */}
-      <h1 className="page-header">
-        <img src={logo} alt="Logo" className="logo" />
-        <span className="page-title">สนามของฉัน</span>
-      </h1>
+      <NavbarStadiumlist />
 
       {/* ✅ ตารางสนาม */}
       <table className="stadium-table">

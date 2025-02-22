@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // ✅ ใช้ useNavigate สำหรับเปลี่ยนหน้า
+import { Link } from "react-router-dom"; // นำเข้า Link จาก react-router-dom
 import "./Homepageopera.css"; // นำเข้าไฟล์ CSS
 import Navbar from "../Navbar/Navbar";
 import stadiumIcon from "../assets/icons/stadiumicon.png"; // ไอคอนสนาม
@@ -7,12 +7,9 @@ import moneyIcon from "../assets/icons/moneyregis.png"; // ไอคอนตร
 import commentregisIcon from "../assets/icons/commentregisicon.png"; // ไอคอนรีวิวทั้งหมด
 
 const Homepageopera = () => {
-  const navigate = useNavigate(); // ✅ ใช้ Hook สำหรับเปลี่ยนหน้า
-
   return (
     <>
-      {/* ✅ Navbar คงเดิมตามเงื่อนไข */}
-      <Navbar />
+      <Navbar/>
 
       <div className="homepage-container77">
         {/* ส่วนหัว */}
@@ -23,15 +20,15 @@ const Homepageopera = () => {
           {/* การจัดการสนาม */}
           <div className="menu-box77">
             <img src={stadiumIcon} alt="สนามของฉัน" className="menu-icon77" />
-            <button className="menu-button77" onClick={() => navigate("/stadium-list")}>
-              สนามของฉัน
-            </button>
+            <Link to="/stadium-list">
+              <button className="menu-text77">สนามของฉัน</button>
+            </Link>
           </div>
 
           {/* ตรวจสอบบัญชี */}
           <div className="menu-box77">
             <img src={moneyIcon} alt="ตรวจสอบบัญชี" className="menu-icon77" />
-            <button className="menu-button77">ตรวจสอบบัญชี</button>
+            <button className="menu-text77">ตรวจสอบบัญชี</button>
           </div>
 
           {/* รีวิวล่าสุด */}
