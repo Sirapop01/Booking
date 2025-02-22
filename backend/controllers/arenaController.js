@@ -66,26 +66,10 @@ exports.registerArena = async (req, res) => {
 // ✅ ดึงข้อมูลสนามกีฬาตาม `owner_id`
 exports.getArenas = async (req, res) => {
   try {
-    const { owner_id } = req.query;
-
-    if (!owner_id) {
-      return res.status(400).json({ message: "❌ owner_id is required" });
-    }
-
-    // ✅ ตรวจสอบว่า owner_id เป็น ObjectId ที่ถูกต้อง
-    if (!mongoose.Types.ObjectId.isValid(owner_id)) {
-      return res.status(400).json({ message: "⚠️ owner_id ไม่ถูกต้อง" });
-    }
-
-    const arenas = await Arena.find({ businessOwnerId: new mongoose.Types.ObjectId(owner_id) })
-      .populate("businessOwnerId", "firstName lastName email phoneNumber");
-
-    console.log("🔎 Fetched Arenas:", arenas); // ✅ Debug ที่ Backend
-
+    const arenas = await Arena.find().populate("businessOwnerId", "firstName lastName email phoneNumber");
     res.status(200).json(arenas);
   } catch (error) {
-    console.error("❌ Error fetching arenas:", error);
-    res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในระบบ", error: error.message });
+    res.status(500).json({ message: "เกิดข้อผิดพลาด", error: error.message });
   }
 };
 
