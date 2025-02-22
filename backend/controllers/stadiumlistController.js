@@ -4,7 +4,7 @@ const Arena = require("../models/Arena");
 exports.getArenas = async (req, res) => {
     try {
         const { owner_id } = req.query;
-        console.log("🆔 Received owner_id:", owner_id); // ✅ Debug owner_id ที่ได้รับ
+        console.log("🆔 Received owner_id:", owner_id);
 
         if (!owner_id) {
             return res.status(400).json({ message: "❌ owner_id is required" });
@@ -15,13 +15,13 @@ exports.getArenas = async (req, res) => {
         }
 
         const objectId = new mongoose.Types.ObjectId(owner_id);
-        console.log("🔍 MongoDB Querying with ObjectId:", objectId); // ✅ Debug ค่าที่ใช้ Query
+        console.log("🔍 Querying Arenas for owner:", objectId);
 
         const arenas = await Arena.find({ businessOwnerId: objectId })
             .populate("businessOwnerId", "firstName lastName email phoneNumber")
-            .lean(); // ✅ ใช้ lean() ให้ Query เร็วขึ้น
+            .lean();
 
-        console.log("📌 Fetched Arenas:", arenas); // ✅ Debug ข้อมูลสนามที่ดึงมา
+        console.log("📌 Fetched Arenas:", arenas);
 
         if (arenas.length === 0) {
             return res.status(404).json({ message: "⚠️ ไม่พบสนามที่คุณเป็นเจ้าของ" });

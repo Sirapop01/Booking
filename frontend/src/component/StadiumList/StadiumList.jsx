@@ -17,7 +17,7 @@ function StadiumList() {
     if (!token) {
         console.error("⚠️ ไม่พบ Token ใน localStorage");
         alert("Session หมดอายุ! กรุณาเข้าสู่ระบบใหม่");
-        navigate("/login"); // ✅ Redirect ไปหน้า Login
+        navigate("/login"); 
         return;
     }
 
@@ -30,12 +30,13 @@ function StadiumList() {
             return;
         }
 
-        setOwnerId(decoded.id);
+        const ownerId = decoded.id;
+        console.log("🆔 ส่งค่า owner_id:", ownerId); // ✅ Debug ค่า owner_id ก่อนส่งไป Backend
 
-        // ✅ ดึงข้อมูลสนามของเจ้าของ
         const fetchStadiums = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/api/arenas/getArenas?owner_id=${decoded.id}`);
+                console.log(`🔍 Fetching stadiums for Owner ID: ${ownerId}`);
+                const response = await axios.get(`http://localhost:4000/api/stadium/getArenas?owner_id=${ownerId}`);
                 console.log("📌 API Response:", response.data);
                 setStadiums(response.data);
             } catch (error) {
@@ -47,7 +48,7 @@ function StadiumList() {
     } catch (error) {
         console.error("⚠️ ไม่สามารถถอดรหัส Token:", error);
         alert("Session ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่");
-        navigate("/login"); // ✅ บังคับให้ Login ใหม่
+        navigate("/login"); 
     }
 }, []);
 
