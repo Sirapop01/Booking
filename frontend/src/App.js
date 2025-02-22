@@ -31,8 +31,10 @@ import OwnerLedgerDetails from './component/OwnerLedgerDetails/OwnerLedgerDetail
 import ProfileBusiness from './component/ProfileBusiness/BusinessProfile';
 import Promotion from './component/Promotion/Promotion';
 import BookingArena from './component/BookingArena/BookingArena';
-import SuperAdminLogin from './component/SuperAdminLogin/SuperAdminLogin';
+import SuperAdminLogin from './component/SuperAdmin/SuperAdminLogin';
 import SuperAdminDashboard from './component/SuperAdminDashboard/SuperAdminDashboard';
+import ProtectedRoute from "./component/ProtectedRoute"; 
+import AdminRegister from "./component/AdminRegister/AdminRegister";
 
 
 /**/ 
@@ -74,7 +76,9 @@ function App() {
         <Route path="/BookingArena" element={<BookingArena />} />
         <Route path="/superadmin/login" element={<SuperAdminLogin />} />
         <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
-
+        <Route element={<ProtectedRoute role="superadmin" />}>
+          <Route path="/admin/register" element={<AdminRegister />} />
+        </Route>
 
       </Routes>
     </BrowserRouter>
