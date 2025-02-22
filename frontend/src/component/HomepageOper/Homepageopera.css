@@ -3,83 +3,114 @@
 
 /* โครงสร้างหลัก */
 .homepage-container77 {
-  width: 1300px;
-  height: 700px;
-  margin-top: 150px;
-  margin-left: 320px;
+  width: 1250px; 
+  height: auto;
+  margin: 80px auto;
   text-align: center;
-  padding: 20px;
-  background-color: #ffffff;
+  padding: 40px;
+  background: #d0d0d0; /* ทำให้สีเทาเข้มขึ้นเล็กน้อย */
+  border-radius: 25px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.18); /* เพิ่มเงาให้นุ่มขึ้น */
+  transition: transform 0.3s ease-in-out, background 0.3s;
+  position: relative;
+  top: 50px;
+}
+
+.homepage-container77:hover {
+  transform: translateY(-5px);
+  background: #c6c6c6;
 }
 
 /* หัวข้อหลัก */
 .homepage-title77 {
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #000000;
-  font-family: 'Kanit';
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #222;
+  font-family: 'Kanit', sans-serif;
 }
 
 /* กล่องเมนู */
 .menu-container77 {
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 20px;
+  justify-content: center;
+  gap: 35px;
+  margin-bottom: 30px;
 }
 
-/* กล่องเมนูแต่ละอัน */
+/* กล่องเมนู */
 .menu-box77 {
-  background-color: #e0e0e0;
+  background: linear-gradient(145deg, #f0f0f0, #d4d4d4); /* ปรับให้ตัดกับพื้นหลัง */
   width: 30%;
-  padding: 20px;
+  padding: 35px;
   height: 500px;
-  border-radius: 10px;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease-in-out;
+}
+
+.menu-box77:hover {
+  transform: translateY(-5px);
+  background: linear-gradient(145deg, #e4e4e4, #c9c9c9);
 }
 
 /* ไอคอนเมนู */
 .menu-icon77 {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 10px;
+  width: 100px; 
+  height: 100px;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.menu-box77:hover .menu-icon77 {
+  transform: scale(1.08);
 }
 
 /* ข้อความในเมนู */
 .menu-text77 {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: bold;
-  color: #000000;
-  font-family: 'Kanit';
+  color: #222;
+  font-family: 'Kanit', sans-serif;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  transition: color 0.3s ease-in-out;
 }
 
-.menu-subtext77 {
-  font-size: 14px;
-  color: blue;
-  font-family: 'Kanit';
+.menu-text77:hover {
+  color: #007acc;
 }
 
 /* กล่องรีวิว */
 .review-box77 {
   width: 30%;
-  height: 120px;
-  background-color: #e0e0e0;
-  border-radius: 10px;
+  height: 500px;
+  background: linear-gradient(145deg, #f0f0f0, #d4d4d4);
+  border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease-in-out;
+}
+
+.review-box77:hover {
+  transform: translateY(-5px);
+  background: linear-gradient(145deg, #e4e4e4, #c9c9c9);
 }
 
 /* หัวข้อรีวิว */
 .review-title77 {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: bold;
-  color: #000000;
-  font-family: 'Kanit';
+  color: #222;
+  font-family: 'Kanit', sans-serif;
 }
 
 /* รีวิวทั้งหมด */
@@ -87,27 +118,65 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #d6d6d6;
-  padding: 10px;
-  border-radius: 10px;
+  background: #f0f0f0;
+  padding: 15px;
+  border-radius: 15px;
   margin-bottom: 20px;
-  width: 1000px;
+  width: 950px; /* ลดความกว้างลงเล็กน้อย */
   margin: auto;
+  box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.15);
 }
 
+/* ไอคอนรีวิว */
 .chat-icon77 {
-  width: 24px;
-  height: 24px;
-  margin-right: 8px;
+  width: 28px;
+  height: 28px;
+  margin-right: 10px;
 }
 
+/* ปรับแต่งข้อความ */
 .review-text77 {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: bold;
-  color: #000000;
-  font-family: 'Kanit';
+  color: #333;
+  font-family: 'Kanit', sans-serif;
+  transition: color 0.3s ease-in-out;
+}
+
+.review-text77:hover {
+  color: #007acc;
+}
+
+/* ปุ่ม Skip */
+.skip-button77 {
+  background: linear-gradient(145deg, #007acc, #1e90ff);
+  color: white;
+  font-size: 18px;
+  padding: 12px 40px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 3px 5px 12px rgba(0, 0, 0, 0.2);
+  font-family: 'Kanit', sans-serif;
 }
 
 .skip-button77:hover {
-  background-color: #2aa3d4;
+  background: linear-gradient(145deg, #005fa3, #007acc);
+  transform: scale(1.05);
+}
+
+/* เพิ่ม Animation เวลาคลิก */
+.skip-button77:active {
+  transform: scale(0.95);
+}
+
+/* ปรับให้มีผลเฉพาะหน้านี้ */
+.homepage-wrapper {
+  background-color: #ffffff;
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
