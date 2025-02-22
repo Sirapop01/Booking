@@ -103,7 +103,7 @@
 .login-toggle-password {
   position: absolute;
   top: 50%;
-  right: -250px; /* ปรับให้ชิดขอบ input */
+  right: -350px; /* ปรับให้ชิดขอบ input */
   transform: translateY(-50%);
   background: none !important;
   border: none !important;
