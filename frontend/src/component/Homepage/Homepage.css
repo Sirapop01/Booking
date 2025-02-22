@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 
-.search-section {
+.search-section-homepage {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,7 +11,7 @@
 }
 
 /* ปรับตำแหน่งให้ช่องค้นหาอยู่ตรงกลาง */
-.search-input {
+.search-input-homepage {
   width: 100%;
   padding: 12px 12px 12px 40px;
   font-size: 18px;
@@ -20,6 +20,7 @@
   margin-bottom: 20px;
   color: #000;
   font-family: 'Kanit', sans-serif;
+  margin-top: 100px;
 }
 
 .search-input::placeholder {
@@ -36,6 +37,7 @@
   justify-content: flex-start; /* ชิดซ้าย */
   max-width: 900px; /* กำหนดความกว้างสูงสุดให้เท่ากับ .search-section */
   width: 100%; /* ป้องกันการยืดของช่อง */
+  margin-left: 30px;
 }
 
 .date-input {
@@ -55,8 +57,8 @@
   padding: 10px;
   font-size: 16px;
   border-radius: 10px;
-  border: 1px solid #ccc;
-  background-color: #fff;
+  border: 1px solid #0a0a0a;
+  background-color: #0f0f0f;
   margin-bottom: 8px;
 }
 
@@ -223,17 +225,21 @@
   
 
 /* ปุ่มค้นหา */
-.search-button {
+.search-button-homepage {
   background-color: #07213A;
   color: #fff;
   border: none;
-  padding: 10px 24px; /* เพิ่มขนาดให้ใหญ่ขึ้น */
+  padding: 10px 16px; /* ลด padding ด้านข้าง */
   border-radius: 5px;
   cursor: pointer;
-  font-size: 18px;    /* เพิ่ม font-size */
+  font-size: 18px;
   font-weight: bold;
   font-family: 'Kanit', sans-serif;
+  width: auto; /* หรือใช้ width: 150px; เพื่อล็อกขนาด */
+  min-width: 120px; /* ป้องกันปุ่มเล็กเกินไป */
+  text-align: center;
 }
+
 
 .search-button:hover {
   background-color: #0c3259;

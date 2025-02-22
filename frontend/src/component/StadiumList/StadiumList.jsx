@@ -50,8 +50,7 @@ function StadiumList() {
         alert("Session ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่");
         navigate("/login"); 
     }
-}, []);
-
+  }, []);
 
   // ✅ เลือกสนาม
   const handleRowClick = (id) => {
@@ -73,8 +72,6 @@ function StadiumList() {
 
   return (
     <div className="stadium-page-container">
-      {/* ✅ ปุ่มกลับไปยังหน้า Home */}
-
       <NavbarStadiumlist />
 
       {/* ✅ ตารางสนาม */}
@@ -92,8 +89,7 @@ function StadiumList() {
             stadiums.map((stadium) => (
               <tr
                 key={stadium._id}
-                className={`table-row 
-                  ${selectedStadium === stadium._id ? "selected" : ""} 
+                className={`table-row ${selectedStadium === stadium._id ? "selected" : ""} 
                   ${!stadium.open || stadium.status === "รอการยืนยัน" ? "closed-row" : ""}`}
                 onClick={() => handleRowClick(stadium._id)}
               >
@@ -135,9 +131,7 @@ function StadiumList() {
           แก้ไข
         </a>
         <a href="/add_new_stadium" className="btn">เพิ่มสนามใหม่</a>
-        <button className="btn" onClick={() => navigate("/manage-sub-stadium")}>
-          จัดการสนามย่อย
-        </button>
+        <button className="btn" onClick={() => navigate("/manage-sub-stadium")}>จัดการสนามย่อย</button>
       </div>
     </div>
   );
