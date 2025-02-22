@@ -32,7 +32,7 @@ import ProfileBusiness from './component/ProfileBusiness/BusinessProfile';
 import Promotion from './component/Promotion/Promotion';
 import BookingArena from './component/BookingArena/BookingArena';
 import OwnerLedgerSummary from './component/OwnerLedgerSummary/OwnerLedgerSummary';
-import SuperAdminLogin from './component/SuperAdminLogin/SuperAdminLogin';
+import SuperAdminLogin from './component/SuperAdmin/SuperAdminLogin';
 import SuperAdminDashboard from './component/SuperAdminDashboard/SuperAdminDashboard';
 
 
