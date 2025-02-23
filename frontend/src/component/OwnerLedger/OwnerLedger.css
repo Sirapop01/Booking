@@ -6,13 +6,10 @@
   font-family: 'Kanit', sans-serif;
   margin: 0;
   padding: 0;
-  user-select: none;
-  cursor: default;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
-  overflow-y: auto;
 }
 
 .ledger-title {
@@ -47,15 +44,14 @@
 }
 
 .ledger-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 1100px;
-  background: white;
+  background-color: white;
   color: black;
   padding: 20px;
   border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1100px;
 }
 
 .content-container2 {
@@ -65,7 +61,6 @@
   justify-content: space-between;
 }
 
-/* ✅ รายการสนาม */
 .stadium-list2 {
   width: 280px;
   background: white;
@@ -103,59 +98,23 @@
   font-weight: bold;
 }
 
-/* ✅ ตาราง Ledger */
 .ledger-details {
   flex: 1;
   background: white;
   color: black;
-  padding: 0;
   border-radius: 5px;
   text-align: center;
   border: 2px solid black;
   display: flex;
   flex-direction: column;
-  max-height: 400px;
 }
 
-.ledger-details table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.ledger-details th,
-.ledger-details td {
-  border: 1px solid black;
-  padding: 15px;
-  text-align: center;
-  font-size: 16px;
-  white-space: nowrap;
-}
-
-th {
-  background-color: #f2f2f2;
-  font-weight: bold;
-}
-
-/* ✅ Scrollbar */
 .table-wrapper {
   overflow-y: auto;
   max-height: 300px;
+  padding: 10px;
 }
 
-.table-wrapper::-webkit-scrollbar {
-  width: 8px;
-}
-
-.table-wrapper::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 10px;
-}
-
-.table-wrapper::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* ✅ จัดตำแหน่งหัวข้อ "รายละเอียด" ให้อยู่ตรงกลาง */
 .table-header {
   display: flex;
   justify-content: space-between;
@@ -165,89 +124,63 @@ th {
 }
 
 .table-header h2 {
+  margin: 0;
+  font-size: 24px;
   flex: 1;
   text-align: center;
-  margin: 0;
 }
 
-/* ✅ เมื่อคลิกที่แถวของตาราง เปลี่ยนเป็นแถบสีเทา */
-.selected-row {
-  background-color: #bdbdbd !important;
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-/* ✅ ปุ่ม Filter */
-.filter-container {
-  position: relative;
-  display: inline-block;
-}
-
-.filter-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
-}
-
-.filter-icon {
-  width: 24px;
-  height: 24px;
-}
-
-/* ✅ Drop-down เมนู */
-.dropdown-menu {
-  position: absolute;
-  top: 40px;
-  right: 0;
-  background-color: white;
+th, td {
   border: 1px solid black;
-  border-radius: 5px;
-  width: 150px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 10;
-}
-
-.dropdown-item {
-  padding: 10px;
+  padding: 12px;
   text-align: center;
-  cursor: pointer;
-  border-bottom: 1px solid #ccc;
-  transition: background-color 0.3s;
+  font-size: 16px;
 }
 
-.dropdown-item:hover {
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.selected-row {
   background-color: #bdbdbd;
 }
 
-.dropdown-item:last-child {
-  border-bottom: none;
-}
-
-/* ✅ ส่วน Total Box และ ปุ่มการจัดการ ที่เพิ่มมาใหม่ */
 .ledger-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: auto;
   padding: 10px;
-  background-color: #f3f3f3;
-  border-top: 1px solid #ddd;
+  border-top: 2px solid black;
 }
 
-.total-text {
+.total-box {
   font-size: 18px;
+  background-color: white;
+  padding: 10px 15px;
+  border: 2px solid black;
+  border-radius: 5px;
+  text-align: center;
+  min-width: 200px;
+  color: black;
   font-weight: bold;
 }
 
 .manage-button6 {
-  background-color: #008cff;
+  background-color: #2196F3;
   color: white;
+  padding: 10px 20px;
   border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-size: 16px;
+  border-radius: 5px;
 }
 
 .manage-button6:hover {
-  background-color: #0073e6;
+  background-color: #1976D2;
 }

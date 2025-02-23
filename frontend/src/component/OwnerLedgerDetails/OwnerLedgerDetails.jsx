@@ -1,19 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import "./OwnerLedgerDetails.css";
 import homeLogo from "../assets/logoalt.png";
 import filterIcon from "../assets/icons/filter.png";
 
 function OwnerLedgerDetails() {
   const { ownerId } = useParams();
-  const navigate = useNavigate();
   const [selectedStadium, setSelectedStadium] = useState(null);
   const [stadiums, setStadiums] = useState([]);
   const [ledgerData, setLedgerData] = useState([]);
-  const [selectedRow, setSelectedRow] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showChart, setShowChart] = useState(false);
+  const pdfRef = useRef(); // สำหรับสร้าง PDF
 
   useEffect(() => {
     const fetchStadiums = async () => {
@@ -57,7 +60,28 @@ function OwnerLedgerDetails() {
     ? ledgerData.filter((entry) => getMonthFromDate(entry.dateTime) === selectedMonth)
     : ledgerData;
 
+  const totalAmount = filteredData.reduce((acc, entry) => acc + entry.amount, 0).toFixed(2);
   const totalTaxAmount = filteredData.reduce((acc, entry) => acc + entry.amount * 0.1, 0).toFixed(2);
+  const netAmount = (totalAmount - totalTaxAmount).toFixed(2);
+
+  const chartData = filteredData.map((entry) => ({
+    date: new Date(entry.dateTime).toLocaleDateString(),
+    amount: entry.amount,
+    tax: (entry.amount * 0.1).toFixed(2),
+  }));
+
+  // 📌 ฟังก์ชันสร้าง PDF
+  const generatePDF = () => {
+    const input = pdfRef.current;
+    html2canvas(input).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const imgWidth = 190;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+      pdf.save("รายละเอียดบัญชี.pdf");
+    });
+  };
 
   return (
     <div className="details-page">
@@ -91,32 +115,30 @@ function OwnerLedgerDetails() {
                 <button className="details-filter-button" onClick={() => setShowDropdown(!showDropdown)}>
                   <img src={filterIcon} alt="Filter" className="details-filter-icon" />
                 </button>
-
-                {showDropdown && (
-                  <div className="details-dropdown-menu">
-                    <div className="details-dropdown-item" onClick={() => setSelectedMonth("")}>
-                      ล่าสุด
-                    </div>
-                    {["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"].map((month, index) => (
-                      <div
-                        key={month}
-                        className="details-dropdown-item"
-                        onClick={() => {
-                          setSelectedMonth(month);
-                          setShowDropdown(false);
-                        }}
-                      >
-                        {["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
-                          "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"][index]}
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
             </div>
 
-            {filteredData.length === 0 ? (
-              <p className="no-data-message">❌ ไม่มีรายการ</p>
+            {showChart ? (
+              <div ref={pdfRef}>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="amount" fill="#2196F3" name="ยอดเงิน" />
+                    <Bar dataKey="tax" fill="#FF5733" name="เรียกเก็บ 10%" />
+                  </BarChart>
+                </ResponsiveContainer>
+
+                <div className="details-summary">
+                  <p>ผลประกอบการ: {totalAmount} B</p>
+                  <p>ค่าธรรมเนียม 10%: {totalTaxAmount} B</p>
+                  <p>รวม - 10%: {netAmount} B</p>
+                  <button className="details-pdf-button" onClick={generatePDF}>ไฟล์เอกสารรายละเอียด</button>
+                </div>
+              </div>
             ) : (
               <>
                 <div className="details-table-wrapper">
@@ -124,7 +146,7 @@ function OwnerLedgerDetails() {
                     <thead>
                       <tr>
                         <th>วัน/เวลา</th>
-                        <th>ลิสต์ (ล่าสุด)</th>
+                        <th>รายการ</th>
                         <th>จำนวน</th>
                         <th>ยอดเงิน</th>
                         <th>เรียกเก็บ 10%</th>
@@ -132,12 +154,8 @@ function OwnerLedgerDetails() {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredData.map((entry, index) => (
-                        <tr
-                          key={entry._id}
-                          className={selectedRow === index ? "details-selected-row" : ""}
-                          onClick={() => setSelectedRow(index)}
-                        >
+                      {filteredData.map((entry) => (
+                        <tr key={entry._id}>
                           <td>{new Date(entry.dateTime).toLocaleString()}</td>
                           <td>{entry.item}</td>
                           <td>{entry.quantity || "1"}</td>
@@ -150,19 +168,16 @@ function OwnerLedgerDetails() {
                   </table>
                 </div>
 
-                <div className="details-actions">
-                  <div className="details-total-box">
-                    รวมค่าธรรมเนียมทั้งหมด: {totalTaxAmount} B
-                  </div>
-                  <button 
-                    className="details-manage-button"
-                    onClick={() => navigate(`/OwnerLedgerSummary/${selectedStadium}`)}
-                  >
-                    การจัดการ
-                  </button>
+                {/* ✅ เพิ่ม Total Box กลับมา */}
+                <div className="details-total-box">
+                  รวมค่าธรรมเนียมทั้งหมด: {totalTaxAmount} B
                 </div>
               </>
             )}
+
+            <button className="details-manage-button" onClick={() => setShowChart(!showChart)}>
+              {showChart ? "กลับไปยังตาราง" : "การจัดการ"}
+            </button>
           </div>
         </div>
       </div>
