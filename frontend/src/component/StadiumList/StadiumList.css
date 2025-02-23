@@ -15,7 +15,7 @@
 }
 
 /* ✅ ตาราง */
-.stadium-table {
+.stadium-table-stadiumlist {
   width: 100%;
   max-width: 1100px;
   border-collapse: collapse;
@@ -29,7 +29,7 @@
 }
 
 /* ✅ หัวตาราง */
-.stadium-table thead th {
+.stadium-table-stadiumlist thead th {
   background-color: #0A4F6E;
   color: #ffffff;
   font-size: 18px;
@@ -39,20 +39,20 @@
 }
 
 /* ✅ กำหนดขนาดคอลัมน์ให้ชัดเจน */
-.stadium-table th:nth-child(1),
-.stadium-table td:nth-child(1) { width: 25%; } /* ชื่อสนาม */
+.stadium-table-stadiumlist th:nth-child(1),
+.stadium-table-stadiumlist td:nth-child(1) { width: 25%; } /* ชื่อสนาม */
 
-.stadium-table th:nth-child(2),
-.stadium-table td:nth-child(2) { width: 20%; } /* สถานะ */
+.stadium-table-stadiumlist th:nth-child(2),
+.stadium-table-stadiumlist td:nth-child(2) { width: 20%; } /* สถานะ */
 
-.stadium-table th:nth-child(3),
-.stadium-table td:nth-child(3) { width: 20%; } /* เปิด/ปิด */
+.stadium-table-stadiumlist th:nth-child(3),
+.stadium-table-stadiumlist td:nth-child(3) { width: 20%; } /* เปิด/ปิด */
 
-.stadium-table th:nth-child(4),
-.stadium-table td:nth-child(4) { width: 20%; } /* ตัวเลือก */
+.stadium-table-stadiumlist th:nth-child(4),
+.stadium-table-stadiumlist td:nth-child(4) { width: 20%; } /* ตัวเลือก */
 
 /* ✅ เซลล์ของตาราง */
-.stadium-table th, .stadium-table td {
+.stadium-table-stadiumlist th, .stadium-table-stadiumlist td {
   border: 2px solid #3A506B;
   padding: 14px;
   text-align: center;
@@ -61,44 +61,45 @@
 }
 
 /* ✅ ปรับขนาดของชื่อสนาม */
-.stadium-name {
+.stadium-name-stadiumlist {
   font-weight: bold;
   color: rgb(0, 0, 0);
 }
 
 /* ✅ แถวของตาราง */
-.table-row {
+.table-row-stadiumlist {
   cursor: pointer;
   user-select: none;
   transition: background-color 0.3s ease;
   display: table-row; /* ✅ แก้ปัญหาข้อมูลไปกองรวมกัน */
+  background-color: #f0f0f0;
 }
 
 /* ✅ ปรับสีเมื่อ hover */
-.table-row:hover {
+.table-row-stadiumlist:hover {
   background-color: #0A4F6E;
 }
 
 /* ✅ แถวที่ปิดอยู่ */
-.closed-row {
+.closed-row-stadiumlist {
   background-color: #B0B0B0 !important;
   color: #ffffff;
 }
 
 /* ✅ แถวที่ถูกเลือก */
-.selected {
+.selected-stadiumlist {
   background-color: #1E90FF !important;
   color: #ffffff;
 }
 
 /* ✅ ปรับตำแหน่งของสถานะให้อยู่ตรงกลาง */
-.status {
+.status-stadiumlist {
   font-size: 16px;
   font-weight: bold;
   color: black;
 }
 
-.status-toggle{
+.status-toggle-stadiumlist{
   font-size: 16px;
   font-weight: bold;
   color: black;
@@ -113,7 +114,7 @@
 }
 
 /* ✅ บังคับให้คอลัมน์ "ตัวเลือก" อยู่กึ่งกลาง */
-.stadium-table td:nth-child(4) {
+.stadium-table-stadiumlist td:nth-child(4) {
   width: 100%;
   height: auto; /* ✅ ให้คอลัมน์ขยายตามเนื้อหา */
   padding: 0; /* ✅ ป้องกันช่องว่างที่อาจทำให้ปุ่มขยับ */
@@ -123,7 +124,7 @@
 
 /* ✅ ปรับปุ่มให้แสดงอยู่กึ่งกลางจริงๆ */
 /* ✅ ปรับปุ่มให้มีขนาดพอดีกับเนื้อหา */
-.toggle-btn {
+.toggle-btn-stadiumlist {
   display: inline-block; /* ✅ ป้องกันการขยายเต็มคอลัมน์ */
   width: auto; /* ✅ ปรับให้ปุ่มขยายตามเนื้อหา */
   min-width: 100px; /* ✅ จำกัดขนาดปุ่มไม่ให้เล็กเกินไป */
@@ -136,7 +137,7 @@
 }
 
 /* ✅ ป้องกันปุ่มขยายเต็ม `<td>` */
-.action-buttons {
+.action-buttons-stadiumlist {
   display: flex;
   justify-content: center; /* ✅ ปุ่มอยู่กึ่งกลางแนวนอน */
   align-items: center; /* ✅ ปุ่มอยู่กึ่งกลางแนวตั้ง */
@@ -149,33 +150,33 @@
 
 
 /* ✅ ปุ่มปิด */
-.btn-close {
+.btn-close-stadiumlist {
   background-color: #FF4B4B;
   color: white;
   border: 1px solid transparent;
   box-shadow: 0px 4px 6px rgba(255, 75, 75, 0.3);
 }
 
-.btn-close:hover {
+.btn-close-stadiumlist:hover {
   background-color: #D32F2F;
   box-shadow: 0px 6px 10px rgba(255, 75, 75, 0.5);
 }
 
 /* ✅ ปุ่มเปิด */
-.btn-open {
+.btn-open-stadiumlist {
   background-color: #4CAF50;
   color: white;
   border: 2px solid transparent;
   box-shadow: 0px 4px 6px rgba(76, 175, 80, 0.3);
 }
 
-.btn-open:hover {
+.btn-open-stadiumlist:hover {
   background-color: #388E3C;
   box-shadow: 0px 6px 10px rgba(76, 175, 80, 0.5);
 }
 
 /* ✅ ปุ่มที่กดไม่ได้ */
-.btn-disabled {
+.btn-disabled-stadiumlist {
   background-color: #777;
   color: #ccc;
   cursor: not-allowed;
@@ -184,7 +185,7 @@
 }
 
 /* ✅ ปรับขนาดปุ่มให้เท่ากัน */
-.btn {
+.btn-stadiumlist {
   padding: 10px 20px; 
   font-size: 16px;
   border-radius: 6px;
@@ -199,20 +200,20 @@
 }
 
 /* ✅ ปรับสีปุ่มเมื่อ hover */
-.btn:hover {
+.btn-stadiumlist:hover {
   background-color: #f0f0f0;
   transform: translateY(-2px);
 }
 
 /* ✅ ปุ่มที่กดไม่ได้ */
-.btn.disabled {
+.btn-stadiumlist.disabled {
   background-color: #ddd !important;
   pointer-events: none;
   opacity: 0.6;
 }
 
 /* ✅ ปรับตำแหน่งปุ่มให้เรียงสมดุล */
-.bottom-buttons {
+.bottom-buttons-stadiumlist {
   display: flex;
   justify-content: center;
   gap: 20px;
@@ -220,7 +221,7 @@
 }
 
 /* ✅ ปรับปุ่มกลับไปยัง Home */
-.home-button {
+.home-button-stadiumlist {
   position: fixed;
   top: 20px;
   left: 20px;
@@ -236,13 +237,13 @@
   transition: all 0.3s ease;
 }
 
-.home-button:hover {
+.home-button-stadiumlist:hover {
   background-color: #f0f0f0;
   transform: scale(1.1);
 }
 
 /* ✅ แก้ปัญหาข้อมูลไปกองรวมกัน */
-.stadium-table tr {
+.stadium-table-stadiumlist tr {
   display: table-row;
 }
 

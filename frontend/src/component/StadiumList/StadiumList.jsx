@@ -73,7 +73,7 @@ function StadiumList() {
       <NavbarStadiumlist />
 
       {/* ✅ ตารางสนาม */}
-      <table className="stadium-table">
+      <table className="stadium-table-stadiumlist">
         <thead>
           <tr>
             <th style={{ width: "25%" }}>ชื่อสนาม</th>
@@ -89,26 +89,26 @@ function StadiumList() {
               return (
                 <tr
                   key={stadium._id}
-                  className={`table-row ${isSelected ? "selected" : ""}`}
+                  className={`table-row-stadiumlist ${isSelected ? "selected" : ""}`}
                   onClick={() => handleRowClick(stadium._id)}
                 >
                   {/* ✅ คอลัมน์ 1: ชื่อสนาม */}
-                  <td className="stadium-name">{stadium.fieldName ?? "ไม่ระบุชื่อ"}</td>
+                  <td className="stadium-name-stadiumlist">{stadium.fieldName ?? "ไม่ระบุชื่อ"}</td>
 
                   {/* ✅ คอลัมน์ 2: สถานะ (ตามค่าจริงจาก Backend) */}
-                  <td className="status">
+                  <td className="status-stadiumlist">
                     {stadium.open ? "✅ เปิดใช้งาน" : "❌ ปิด"}
                   </td>
 
                   {/* ✅ คอลัมน์ 3: เปิด / ปิด (จัดเรียงเป็นคอลัมน์) */}
-                  <td className="status-toggle">
+                  <td className="status-toggle-stadiumlist">
                     <span>{stadium.open ? "✅ เปิด" : "❌ ปิด"}</span>
                   </td>
 
                   {/* ✅ คอลัมน์ 4: ปุ่มเปิด/ปิดสนาม */}
-                  <td className="action-buttons">
+                  <td className="action-buttons-stadiumlist">
                     <button
-                      className={`toggle-btn ${stadium.open ? "btn-close" : "btn-open"}`}
+                      className={`toggle-btn-stadiumlist ${stadium.open ? "btn-close-stadiumlist" : "btn-open-stadiumlist"}`}
                       onClick={(e) => {
                         e.stopPropagation();
                         toggleStadium(stadium._id, !stadium.open);
@@ -122,19 +122,19 @@ function StadiumList() {
             })
           ) : (
             <tr>
-              <td colSpan="4" className="no-data">⚠️ ไม่มีสนามที่ลงทะเบียน</td>
+              <td colSpan="4" className="no-data-stadiumlist">⚠️ ไม่มีสนามที่ลงทะเบียน</td>
             </tr>
           )}
         </tbody>
       </table>
 
       {/* ✅ ปุ่มด้านล่าง */}
-      <div className="bottom-buttons">
-        <a href={selectedStadium ? `/edit/${selectedStadium}` : "#"} className={`btn ${selectedStadium ? "" : "disabled"}`}>
+      <div className="bottom-buttons-stadiumlist">
+        <a href={selectedStadium ? `/edit/${selectedStadium}` : "#"} className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`}>
           แก้ไข
         </a>
-        <a href="/add_new_stadium" className="btn">เพิ่มสนามใหม่</a>
-        <button className="btn" onClick={() => navigate("/manage-sub-stadium")}>จัดการสนามย่อย</button>
+        <a href="/add_new_stadium" className="btn-stadiumlist">เพิ่มสนามใหม่</a>
+        <button className="btn-stadiumlist" onClick={() => navigate("/manage-sub-stadium")}>จัดการสนามย่อย</button>
       </div>
     </div>
   );
