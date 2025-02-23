@@ -153,7 +153,7 @@ th {
   background-color: #bdbdbd;
 }
 
-/* ส่วนล่างของตาราง: รวมทั้งหมด & การจัดการ */
+/* ✅ จัดตำแหน่ง Total Box และ ปุ่มการจัดการให้อยู่ในแถวเดียวกัน */
 .details-actions {
   display: flex;
   justify-content: space-between;
@@ -162,25 +162,27 @@ th {
   border-top: 2px solid black;
 }
 
+/* ✅ ปรับขนาด Total Box */
 .details-total-box {
   font-size: 18px;
   background-color: white;
-  padding: 10px;
+  padding: 10px 15px;
   border: 2px solid black;
   border-radius: 5px;
   text-align: center;
-  width: 200px;
+  min-width: 200px;
   color: black;
+  font-weight: bold;
 }
 
+/* ✅ ปรับขนาดปุ่มให้ดูสมดุลกับ Total Box */
 .details-manage-button {
   background-color: #2196F3;
   color: white;
-  padding: 10px;
+  padding: 10px 20px;
   border: none;
   cursor: pointer;
   font-size: 16px;
-  width: 120px;
   border-radius: 5px;
 }
 

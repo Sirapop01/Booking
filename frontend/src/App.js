@@ -31,8 +31,7 @@ import OwnerLedgerDetails from './component/OwnerLedgerDetails/OwnerLedgerDetail
 import ProfileBusiness from './component/ProfileBusiness/BusinessProfile';
 import Promotion from './component/Promotion/Promotion';
 import BookingArena from './component/BookingArena/BookingArena';
-import OwnerLedgerSummary from './component/OwnerLedgerSummary/OwnerLedgerSummary';
-import SuperAdminLogin from './component/SuperAdminLogin/SuperAdminLogin';
+import SuperAdminLogin from './component/SuperAdmin/SuperAdminLogin';
 import SuperAdminDashboard from './component/SuperAdminDashboard/SuperAdminDashboard';
 
 
@@ -73,7 +72,6 @@ function App() {
         <Route path="/BookingArena/:id" element={<BookingArena />} />
         <Route path='/Promotion' element={<Promotion />} />
         <Route path="/BookingArena" element={<BookingArena />} />
-        <Route path="/OwnerLedgerSummary/:ownerId" element={<OwnerLedgerSummary />} />
         <Route path="/superadmin/login" element={<SuperAdminLogin />} />
         <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
 
