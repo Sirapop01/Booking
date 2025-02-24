@@ -1,14 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
-/*css managesubstadiumdetail*/
+
 .manage-substadium-details {
     display: flex;
-    flex-direction: column;  /* แนวตั้ง */
+    flex-direction: column;
     width: 100%;
-    height: 100vh;  /* ใช้ความสูงเต็มของหน้าจอ */
-    overflow-y: auto;  /* เพิ่มการเลื่อนในแนวตั้ง */
-    padding: 20px;
-    box-sizing: border-box;  /* ให้ padding ไม่ทำให้ขนาดของคอนเทนเนอร์เกิน */
-  }
+    height: 100vh;
+    overflow-y: auto;
+    padding: -9px;
+    padding-top: -100px; /* ✅ ปรับตามความสูงของ Navbar */
+    box-sizing: border-box;
+    background-color: rgb(228, 228, 228); /* ✅ เปลี่ยนพื้นหลังเป็นสีขาว */
+    color: black; /* ✅ ปรับตัวอักษรเป็นสีดำเพื่อให้อ่านง่าย */
+    
+    
+   
+    
+}
+
 
 /* ส่วนหัวของ "จัดการสนามย่อย" */
 .header-container {
@@ -31,9 +39,12 @@
 .manage-substadium-details,
 .courts-list,
 .court-details,
+
 table {
     user-select: none; /* ป้องกันการไฮไลต์ */
     cursor: default; /* ไม่แสดงเคอร์เซอร์พิมพ์ */
+    
+    
 }
 
 /* ✅ ปุ่ม Home */
@@ -69,40 +80,60 @@ table {
 
 /* กำหนดการจัดเรียงของส่วนภายใน */
 .content-container {
-    display: grid;  /* ใช้ grid */
-    grid-template-columns: 1fr 1fr;  /* คอลัมน์สองคอลัมน์ */
-    gap: 3px;  /* ระยะห่างระหว่างส่วน */
+    display: flex;
     width: 100%;
-    box-sizing: border-box;  /* ให้ padding ไม่ทำให้ขนาดของคอนเทนเนอร์เกิน */
-    font-family: 'Kanit', sans-serif;
-  }
-  
+    height: calc(100vh - 80px); /* ✅ ให้เต็มจอ โดยหัก Navbar ออก */
+    padding: 20px;
+    box-sizing: border-box;
+    gap: 20px;
+}
 
 /* ฝั่งซ้าย: รายการสนาม */
 .courts-list {
     background: white;
     color: black;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    max-width: 600px;
-    height: 500px;  /* กำหนดความสูงให้เหมาะสม */
-    overflow-y: auto;  /* เพิ่มการเลื่อนในแนวตั้ง */
+    border-radius: 15px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+    height: 100%;
+    overflow-y: auto;
     font-family: 'Kanit', sans-serif;
-  }
+}
+
 
 /* ตาราง */
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th, td {
+th {
+    background: #0b1e35; /* เปลี่ยนเป็นสีน้ำเงินเข้ม */
+    color: #000000; /* สีตัวอักษร */
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
     padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 2px solid #ffffff;
 }
 
+/* ✅ ขอบเส้นตาราง */
+th, td {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
+td {
+    text-align: center;
+    padding: 15px;
+    font-size: 16px;
+    border-bottom: 1px solid #ddd; /* เพิ่มเส้นแบ่ง */
+}
+tr:hover {
+    background-color: #f0f8ff; /* เปลี่ยนเป็นสีฟ้าอ่อนตอน hover */
+}
+
+/* ✅ แถวของตาราง (สลับสีเพิ่มความอ่านง่าย) */
+.table-row:nth-child(even) {
+    background: #f8f9fa;
+}
+.table-row:nth-child(odd) {
+    background: #ffffff;
+}
 /* ✅ ปรับตำแหน่งหัวข้อ "สถานะ" ให้ตรงกับปุ่ม */
 .status-header {
     text-align: right;
@@ -117,8 +148,26 @@ th, td {
 
 /* ✅ แถวของตาราง */
 .table-row {
-    cursor: pointer; /* เปลี่ยนเป็น pointer เมื่อโฮเวอร์ */
-    transition: background-color 0.3s ease;
+    cursor: pointer; 
+    transition: all 0.3s ease-in-out;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.table-row.selected {
+    background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    font-weight: bold;
+    transform: scale(1.02);
+    box-shadow: 0px 4px 12px rgba(0, 123, 255, 0.3);
+    border-radius: 10px;
+}
+.table-row:not(.selected):hover {
+    background: #e3f2fd;
+    transform: scale(1.02);
+    transition: background 0.2s ease-in-out;
+}
+.table-row.selected:hover {
+    transform: scale(1.05);
 }
 
 /* ✅ แถวที่ถูกเลือก */
@@ -133,23 +182,38 @@ th, td {
     color: #ffffff !important;
 }
 
-/* ✅ ปุ่มเปิด/ปิดสถานะ */
 .toggle-btn {
-    padding: 6px 12px;
-    border-radius: 5px;
-    cursor: pointer;
+    display: inline-block;
+    border-radius: 6px;
     font-size: 14px;
-    white-space: nowrap;
+    font-weight: bold;
+    padding: 8px 12px;
+    transition: 0.3s ease-in-out;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+    border: none;
+}
+
+/* ✅ Hover ให้ดูมีมิติ */
+.toggle-btn:hover {
+    transform: scale(1.05);
 }
 
 .btn-close {
-    background-color: red;
+    background-color: #ff4d4d;
     color: white;
+}
+.btn-close:hover {
+    background-color: #cc0000;
+    transform: scale(1.08);
 }
 
 .btn-open {
-    background-color: green;
+    background-color: #28a745;
     color: white;
+}
+.btn-open:hover {
+    background-color: #1e7e34;
+    transform: scale(1.08);
 }
 
 /* ✅ ฝั่งขวา: รายละเอียดสนาม */
@@ -198,16 +262,22 @@ th, td {
 
 /* ฝั่งขวา: ข้อมูลสนาม */
 .court-details {
+    flex: 1; /* ✅ ขยายให้เต็มพื้นที่ */
     background: white;
     color: black;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    min-width: 300px;
-    max-height: 600px;  /* กำหนดความสูงสูงสุด */
-    overflow-y: auto;  /* เพิ่มการเลื่อนในแนวตั้ง */
+    height: 100%; /* ✅ ให้สูงเท่ากับ .content-container */
+    overflow-y: auto; /* ✅ ทำให้ Scroll ได้ถ้ามีข้อมูลเยอะ */
     font-family: 'Kanit', sans-serif;
-  }
+    
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.15); /* ✅ เพิ่มมิติ */
+
+}
+
 
 /* ✅ ปรับ Scrollbar ให้ดูดีขึ้น */
 .court-details::-webkit-scrollbar {
@@ -285,20 +355,14 @@ th, td {
 }
 
 .add-btn {
-    background-color: white;
-    color: black;
-    padding: 10px 20px;
-    border: 2px solid black;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
+    background-color: #28a745;
+    color: white;
     font-weight: bold;
-    font-family: 'Kanit', sans-serif;
 }
 
-/* ✅ เปลี่ยนสีเมื่อ hover */
 .add-btn:hover {
-    background-color: #f0f0f0;
+    background-color: #1e7e34;
+    transform: scale(1.05);
 }
 .save-btn {
     background-color: #28a745;
@@ -321,15 +385,33 @@ th, td {
 }
 
 .delete-btn {
-    background: none;
+    width: 45px; /* ✅ ขยายปุ่มให้ใหญ่ขึ้น */
+    height: 45px;
+    background: #f3a7a7; /* ✅ ใช้สีแดงสด */
+    color: white;
     border: none;
     cursor: pointer;
-    font-size: 18px;
-    color: red;
+    border-radius: 50%; /* ✅ ทำให้เป็นปุ่มวงกลม */
+    font-size: 22px; /* ✅ ขยายขนาดตัว ❌ */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s ease-in-out;
+    box-shadow: 0px 3px 6px rgba(255, 0, 0, 0.3);
 }
 
+/* ✅ ปรับดีไซน์ตอน hover ของปุ่ม ❌ */
 .delete-btn:hover {
-    color: darkred;
+    background: #cc0000; /* ✅ สีแดงเข้มขึ้น */
+    transform: scale(1.1);
+    box-shadow: 0px 6px 12px rgba(255, 0, 0, 0.5);
+}
+
+/* ✅ ปรับปุ่ม "แก้ไขที่เลือก - เพิ่ม" ให้ดูสมดุล */
+.details-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* ✅ เพิ่มระยะห่าง */
 }
 
 /* ✅ ทำให้พื้นหลังมืดลง */
@@ -410,3 +492,70 @@ th, td {
     cursor: not-allowed;
 }
 
+.navbar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white; /* หรือสีที่ต้องการ */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* เพิ่มเงาเล็กน้อย */
+    z-index: 1000; /* ให้อยู่เหนือเนื้อหาอื่น */
+}
+
+.court-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f5f5f5;
+    padding: 10px 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    transition: 0.3s ease-in-out;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+.court-item.selected {
+    background: #007bff;
+    color: white;
+    box-shadow: 0px 6px 12px rgba(0, 123, 255, 0.3);
+    transform: scale(1.02);
+}
+
+.toggle-btn, .delete-btn {
+    width: 90px; /* ✅ ปรับให้ปุ่มใหญ่ขึ้น */
+    height: 40px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s ease-in-out;
+}
+
+.toggle-btn:hover, .delete-btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+.court-name {
+    font-weight: bold;
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #ddd;
+    text-align: center;
+}
+
+
+/* ✅ เมื่อ Hover รายการ Court */
+.court-item:hover {
+    background: #e0e0e0;
+    transform: scale(1.02);
+}
+
+.courts-list, .court-details {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15); /* ✅ เพิ่มเงา */
+}
