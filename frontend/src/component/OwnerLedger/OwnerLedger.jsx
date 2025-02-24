@@ -17,7 +17,7 @@ const OwnerLedger = () => {
   const [showChart, setShowChart] = useState(false);
   const pdfRef = useRef();
 
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
   const decoded = jwtDecode(token);
   const businessOwnerId = decoded.id;
 
