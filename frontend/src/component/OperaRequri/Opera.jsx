@@ -12,7 +12,7 @@ const OperaRequri = () => {
 
   return (
     <>
-      <NavbarRegis /> {/* ✅ แยก NavbarRegis ออกจาก container8383 */}
+      
       <div className="container8383">
         <main className="main-content">
           <h2>ข้อกำหนดและเงื่อนไข</h2>
