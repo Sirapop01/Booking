@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./ManageSubStadiumDetails.css";
 import homeLogo from "../assets/logoalt.png";
+import NavbarSub from "../NavbarSub/NavbarSub"; // ✅ IMPORT Navbar
 
 function ManageSubStadiumDetails() {
   const location = useLocation();
@@ -114,15 +115,9 @@ const [courtToDelete, setCourtToDelete] = useState(null);
 
   return (
     <div className="manage-substadium-details">
+      <NavbarSub /> {/* ✅ ใส่ Navbar ที่หายไป */} 
       
-    <div className="header-container">
-      <h1 className="header-title">จัดการสนามย่อย</h1>
-    </div>
 
-      {/* ✅ ปุ่ม Home */}
-      <a href="/" className="home-button">
-        <img src={homeLogo} alt="Home" className="home-logo" />
-      </a>
 
       {/* ✅ ฝั่งซ้าย: รายการสนาม */}
       <div className="content-container">
