@@ -190,7 +190,6 @@ th {
   background-color: #1976D2;
 }
 
-/* ปุ่ม Filter */
 .details-filter-container {
   position: relative;
   display: inline-block;
@@ -208,7 +207,10 @@ th {
   height: 24px;
 }
 
-/* Dropdown Filter */
+.details-filter-container {
+  position: relative;
+}
+
 .details-dropdown-menu {
   position: absolute;
   top: 40px;
@@ -217,8 +219,10 @@ th {
   border: 1px solid black;
   border-radius: 5px;
   width: 150px;
+  max-height: 200px; /* ✅ จำกัดความสูง */
+  overflow-y: auto; /* ✅ เพิ่ม Scrollbar */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 10;
+  z-index: 100; /* ✅ ให้ dropdown ลอยขึ้นมา */
 }
 
 .details-dropdown-item {
@@ -226,6 +230,7 @@ th {
   text-align: center;
   cursor: pointer;
   border-bottom: 1px solid #ccc;
+  transition: background-color 0.3s;
 }
 
 .details-dropdown-item:hover {
@@ -235,6 +240,7 @@ th {
 .details-dropdown-item:last-child {
   border-bottom: none;
 }
+
 
 /* Scrollbar สำหรับ Ledger Table */
 .details-table-wrapper::-webkit-scrollbar {
