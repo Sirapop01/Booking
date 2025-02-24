@@ -5,6 +5,7 @@ import badmintonPromo from './assets/badminton-promo.png';
 import boxingPromo from './assets/boxing-promo.png';
 import homeLogo from '../assets/logoalt.png'; // สมมติว่าโลโก้ home อยู่ path นี้
 
+
 const PromotionPage = () => {
   return (
     <div className="promotion-page">

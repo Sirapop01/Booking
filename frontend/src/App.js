@@ -35,6 +35,7 @@ import SuperAdminLogin from './component/SuperAdmin/SuperAdminLogin';
 import SuperAdminDashboard from './component/SuperAdminDashboard/SuperAdminDashboard';
 import ProtectedRoute from "./component/ProtectedRoute"; 
 import AdminRegister from "./component/AdminRegister/AdminRegister";
+import Addpromotion from "./component/AddPromo/Addpromotion";
 
 
 /**/ 
@@ -76,6 +77,7 @@ function App() {
         <Route path='/Promotion' element={<Promotion />} />
         <Route path="/BookingArena" element={<BookingArena />} />
         <Route path="/superadmin/login" element={<SuperAdminLogin />} />
+        <Route path="/Addpromotion" element={<Addpromotion/>} />
         <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
         <Route element={<ProtectedRoute role="superadmin" />}>
           <Route path="/admin/register" element={<AdminRegister />} />

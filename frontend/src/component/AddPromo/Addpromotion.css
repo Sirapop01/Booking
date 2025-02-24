@@ -1,0 +1,156 @@
+/* ตั้งค่าพื้นหลังและโครงสร้างหน้า */
+.promotion-container {
+    background-color: #0c2c4a;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: "Kanit", sans-serif;
+    color: white;
+  }
+  
+  /* ชื่อหัวข้อของหน้า */
+  .page-title {
+    font-size: 28px;
+    margin-top: 150px;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  /* กล่องฟอร์มหลัก */
+  .form-container {
+    background: white;
+    color: black;
+    width: 90%;
+    max-width: 1000px;
+    padding: 30px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  /* ส่วนอัปโหลดรูป */
+  .image-upload-section {
+    width: 40%;
+    text-align: center;
+  }
+  
+  .image-box {
+    width: 100%;
+    height: 250px;
+    border: 2px solid #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+  
+  /* เมื่ออัปโหลดแล้วให้แสดง */
+  .uploaded-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .uploaded-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* ปุ่มลบรูป */
+  .remove-image-button {
+    position: absolute;
+    top: 220px;
+    right: 1px;
+    background-color: rgba(255, 77, 77, 0.9);
+    color: white;
+    font-size: 14px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+    z-index: 10;
+  }
+  
+  .remove-image-button:hover {
+    
+    background-color: rgba(204, 0, 0, 1);
+  }
+  
+  /* ส่วนฟอร์มข้อมูลโปรโมชั่น */
+  .promotion-form {
+    width: 55%;
+  }
+  
+  .input-group {
+    margin-bottom: 15px;
+  }
+  
+  .input-group label {
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  /* ส่วนวันที่ */
+  .date-group {
+    margin-bottom: 15px;
+  }
+  
+  .date-group label {
+    font-size: 16px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .date-inputs {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .date-inputs input {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  /* ปุ่มยืนยัน */
+  .submit-button {
+    background-color: #0c2c4a;
+    color: white;
+    font-size: 18px;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .submit-button:hover {
+    background-color: #07325f;
+  }
+
+  .upload-icon {
+    width: 40px; /* ลดขนาดจาก 50px เป็น 40px */
+    height: 40px;
+    opacity: 0.7;
+  }
+  
