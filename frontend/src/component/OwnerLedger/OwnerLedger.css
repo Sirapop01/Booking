@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 
-.ledger-page {
+.owner-ledger-page {
   background-color: #0c2c4a;
   color: white;
   font-family: 'Kanit', sans-serif;
@@ -12,13 +12,13 @@
   align-items: center;
 }
 
-.ledger-title {
+.owner-ledger-title {
   font-size: 36px;
   font-weight: bold;
   margin: 20px 0;
 }
 
-.home-button {
+.owner-ledger-home-button {
   position: fixed;
   top: 20px;
   left: 20px;
@@ -34,7 +34,7 @@
   transition: all 0.3s ease;
 }
 
-.home-button:hover {
+.owner-ledger-home-button:hover {
   transform: scale(1.1);
 }
 
@@ -43,7 +43,7 @@
   height: 35px;
 }
 
-.ledger-container {
+.owner-ledger-container {
   background-color: white;
   color: black;
   padding: 20px;
@@ -54,14 +54,14 @@
   max-width: 1100px;
 }
 
-.content-container2 {
+.owner-ledger-content {
   display: flex;
   gap: 20px;
   width: 100%;
   justify-content: space-between;
 }
 
-.stadium-list2 {
+.owner-ledger-stadium-list {
   width: 280px;
   background: white;
   color: black;
@@ -72,33 +72,33 @@
   border: 2px solid black;
 }
 
-.stadium-list2 h2 {
+.owner-ledger-stadium-list h2 {
   font-size: 24px;
   font-weight: bold;
   padding-bottom: 10px;
   border-bottom: 2px solid black;
 }
 
-.stadium-list2 ul {
+.owner-ledger-stadium-list ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.stadium-list2 li {
+.owner-ledger-stadium-list li {
   padding: 15px;
   font-size: 18px;
   border-bottom: 1px solid gray;
   cursor: pointer;
 }
 
-.stadium-list2 .selected {
+.owner-ledger-stadium-list .selected {
   background-color: #2196F3;
   color: white;
   font-weight: bold;
 }
 
-.ledger-details {
+.owner-ledger-details {
   flex: 1;
   background: white;
   color: black;
@@ -109,13 +109,13 @@
   flex-direction: column;
 }
 
-.table-wrapper {
+.owner-ledger-table-wrapper {
   overflow-y: auto;
   max-height: 300px;
   padding: 10px;
 }
 
-.table-header {
+.owner-ledger-table-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -123,7 +123,7 @@
   border-bottom: 2px solid black;
 }
 
-.table-header h2 {
+.owner-ledger-table-header h2 {
   margin: 0;
   font-size: 24px;
   flex: 1;
@@ -151,7 +151,7 @@ th {
   background-color: #bdbdbd;
 }
 
-.ledger-footer {
+.owner-ledger-ledger-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -159,7 +159,7 @@ th {
   border-top: 2px solid black;
 }
 
-.total-box {
+.owner-ledger-total-box {
   font-size: 18px;
   background-color: white;
   padding: 10px 15px;
@@ -171,7 +171,7 @@ th {
   font-weight: bold;
 }
 
-.manage-button6 {
+.owner-ledger-manage-button {
   background-color: #2196F3;
   color: white;
   padding: 10px 20px;
@@ -181,6 +181,71 @@ th {
   border-radius: 5px;
 }
 
-.manage-button6:hover {
+.owner-ledger-manage-button:hover {
   background-color: #1976D2;
+}
+
+.owner-ledger-filter-container {
+  position: relative;
+  display: inline-block;
+}
+
+.owner-ledger-filter-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.owner-ledger-filter-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.owner-ledger-filter-container {
+  position: relative;
+}
+
+.owner-ledger-dropdown-menu {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: white;
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 150px;
+  max-height: 200px; /* ✅ จำกัดความสูง */
+  overflow-y: auto; /* ✅ เพิ่ม Scrollbar */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 100; /* ✅ ให้ dropdown ลอยขึ้นมา */
+}
+
+.owner-ledger-dropdown-item {
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+  transition: background-color 0.3s;
+}
+
+.owner-ledger-dropdown-item:hover {
+  background: #bdbdbd;
+}
+
+.owner-ledger-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+
+/* ✅ ปรับขนาด Total Box */
+.owner-ledger-total-box {
+  font-size: 18px;
+  background-color: white;
+  padding: 10px 15px;
+  border: 2px solid black;
+  border-radius: 5px;
+  text-align: center;
+  min-width: 200px;
+  color: black;
+  font-weight: bold;
 }

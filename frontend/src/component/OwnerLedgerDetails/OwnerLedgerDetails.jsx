@@ -56,6 +56,22 @@ function OwnerLedgerDetails() {
     return (date.getMonth() + 1).toString().padStart(2, "0");
   };
 
+  const months = [
+    { value: "", label: "ล่าสุด" },
+    { value: "01", label: "มกราคม" },
+    { value: "02", label: "กุมภาพันธ์" },
+    { value: "03", label: "มีนาคม" },
+    { value: "04", label: "เมษายน" },
+    { value: "05", label: "พฤษภาคม" },
+    { value: "06", label: "มิถุนายน" },
+    { value: "07", label: "กรกฎาคม" },
+    { value: "08", label: "สิงหาคม" },
+    { value: "09", label: "กันยายน" },
+    { value: "10", label: "ตุลาคม" },
+    { value: "11", label: "พฤศจิกายน" },
+    { value: "12", label: "ธันวาคม" },
+  ];
+
   const filteredData = selectedMonth
     ? ledgerData.filter((entry) => getMonthFromDate(entry.dateTime) === selectedMonth)
     : ledgerData;
@@ -112,11 +128,28 @@ function OwnerLedgerDetails() {
             <div className="details-table-header">
               <h2>รายละเอียด</h2>
               <div className="details-filter-container">
-                <button className="details-filter-button" onClick={() => setShowDropdown(!showDropdown)}>
-                  <img src={filterIcon} alt="Filter" className="details-filter-icon" />
-                </button>
-              </div>
-            </div>
+                  <button className="details-filter-button" onClick={() => setShowDropdown(!showDropdown)}>
+                      <img src={filterIcon} alt="Filter" className="details-filter-icon" />
+                        </button>
+              
+                      {showDropdown && (
+                        <div className="details-dropdown-menu">
+                          {months.map((month) => (
+                            <div
+                              key={month.value}
+                                className="details-dropdown-item"
+                                onClick={() => {
+                                  setSelectedMonth(month.value);
+                                  setShowDropdown(false);
+                                }}
+                              >
+                            {month.label}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
 
             {showChart ? (
               <div ref={pdfRef}>
