@@ -96,8 +96,8 @@ const Navbar = () => {
               {isDropdownOpen && (
                 <div className="dropdown-menu">
                   <button onClick={() => navigate("/OwnerProfile")}>บัญชี</button>
-                  <button onClick={() => navigate("/areana")}>สนามของฉัน</button>
-                  <button onClick={() => navigate("/income")}>บัญชีรายรับ</button>
+                  <button onClick={() => navigate("/stadium-list")}>สนามของฉัน</button>
+                  <button onClick={() => navigate("/Ownerledger")}>บัญชีรายรับ</button>
                   <button onClick={() => navigate("/addPromotion")}>เพิ่มโปรโมชั่น</button>
                   <button onClick={handleLogout}>ลงชื่อออก</button>
                 </div>
