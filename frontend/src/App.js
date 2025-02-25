@@ -64,6 +64,7 @@ function App() {
         <Route path='/Discount' element={<Discount />} />
         <Route path='/SuccessRegis' element={<SuccessRegis />} />
         <Route path='/Ownerledger' element={<OwnerLedger />} />
+        <Route path='/Ownerledger/:ownerId' element={<OwnerLedger />} />
         <Route path='/Information' element={<Information />} />
         <Route path='/ManageAccount' element={<ManageAccount />}/>
         <Route path='/Homepageopera' element={<HomepageOper />}/>
