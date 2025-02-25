@@ -59,7 +59,7 @@ function App() {
         <Route path='/FavoritesList' element={<FavoriteList />} />
         <Route path='/profile' element={<UserProfile />} />
         <Route path="/manage-stadium" element={<ManageStadium />} />
-        <Route path="/manage-sub-stadium" element={<ManageSubStadium />} />
+        <Route path="/manage-sub-stadium/:arenaId" element={<ManageSubStadium />} />
         <Route path="/manage-substadium-details" element={<ManageSubStadiumDetails />} />
         <Route path='/Discount' element={<Discount />} />
         <Route path='/SuccessRegis' element={<SuccessRegis />} />
