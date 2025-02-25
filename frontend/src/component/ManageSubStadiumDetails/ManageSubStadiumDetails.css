@@ -7,14 +7,10 @@
     height: 100vh;
     overflow-y: auto;
     padding: -9px;
-    padding-top: -100px; /* ✅ ปรับตามความสูงของ Navbar */
+    padding-top: 100px; /* ✅ ปรับตามความสูงของ Navbar */
     box-sizing: border-box;
     background-color: rgb(228, 228, 228); /* ✅ เปลี่ยนพื้นหลังเป็นสีขาว */
     color: black; /* ✅ ปรับตัวอักษรเป็นสีดำเพื่อให้อ่านง่าย */
-    
-    
-   
-    
 }
 
 
@@ -104,7 +100,7 @@ table {
 /* ตาราง */
 th {
     background: #0b1e35; /* เปลี่ยนเป็นสีน้ำเงินเข้ม */
-    color: #000000; /* สีตัวอักษร */
+    color: #ffffff; /* สีตัวอักษร */
     font-size: 18px;
     font-weight: bold;
     text-align: center;
@@ -136,8 +132,13 @@ tr:hover {
 }
 /* ✅ ปรับตำแหน่งหัวข้อ "สถานะ" ให้ตรงกับปุ่ม */
 .status-header {
-    text-align: right;
-    padding-right: 15px;
+    text-align: center;
+    padding-right: 40px;
+}
+
+.delete-header {
+    text-align: center;
+    padding-right: 0px;
 }
 
 /* ✅ ปรับปุ่มให้ชิดขวา */
