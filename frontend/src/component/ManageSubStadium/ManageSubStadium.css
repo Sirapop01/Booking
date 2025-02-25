@@ -1,113 +1,49 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
-/* Container หลัก */
-.manage-substadium-container {
+
+
+/* ✅ Container หลัก */
+.manage-substadium-page {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     width: 100%;
     height: 100vh;
-    overflow: auto; /* ✅ เพิ่มเลื่อน */
+    overflow: auto;
+    background-color: #f8f9fa; /* เปลี่ยนกลับเป็นสีเดิม */
 }
 
-/* ✅ ให้ content-container แยกออกจาก header */
-.content-container1 {
+/* ✅ Header Section */
+.substadium-header {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: center;
     width: 100%;
+    background-color: #07213A; /* เปลี่ยนกลับเป็นสีเดิมของ Navbar */
     padding: 20px 0;
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-
-
-/* ✅ ปรับขนาดหัวข้อให้ใหญ่ขึ้น */
-.page-title {
+.substadium-title {
     font-size: 48px;
     font-weight: bold;
-    color: white;
     display: flex;
-    align-items: center;  /* จัดโลโก้และข้อความให้อยู่กึ่งกลางแนวตั้ง */
-    justify-content: center;  /* จัดกึ่งกลางแนวนอน */
-    margin: 20px 0;
-    line-height: 1;  /* ลดความสูงของบรรทัดเพื่อให้ข้อความไม่สูงเกินไป */
+    align-items: center;
+    justify-content: center;
+    margin: 0;
     font-family: 'Kanit', sans-serif;
 }
 
-
-.logo-Managesub {
-    width: 90px; /* ขยายโลโก้ */
+.substadium-logo {
+    width: 90px;
     height: 90px;
     margin-right: 12px;
 }
 
-/* หัวข้อรอง (ย้ายไปซ้ายบนของกรอบขาว) */
-.subtitle {
-    font-size: 24px;
-    font-weight: bold;
-    color: rgb(255, 254, 254);
-    text-align: left;
-    width: 60%;
-    padding-left: 20px;
-    margin-bottom: 10px;
-    font-family: 'Kanit', sans-serif;
-}
-
-/* ✅ ปรับขนาดกรอบเลือกประเภทกีฬาให้ใหญ่ขึ้น */
-.sports-container {
-    background: white;
-    border-radius: 15px;
-    padding: 50px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 30px;
-    max-width: 1100px;
-    min-height: 400px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    border: 3px solid black;
-}
-
-/* การ์ดของกีฬา */
-.sport-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    border: 2px solid black;
-    border-radius: 10px;
-    width: 140px; /* ขยายขนาดการ์ดกีฬา */
-    height: 140px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-/* ✅ เมื่อโฮเวอร์จะเป็นสีเทาอ่อน */
-.sport-card:hover {
-    background-color: #e0e0e0;
-}
-
-.sport-card p {
-    margin-top: 10px;
-    color: black;
-    font-size: 18px; /* ขยายขนาดข้อความ */
-    font-weight: bold;
-    font-family: 'Kanit', sans-serif;
-}
-
-/* ไอคอนกีฬา */
-.sport-icon {
-    width: 55px; /* ขยายขนาดไอคอน */
-    height: 55px;
-}
-
-/* ปุ่มเพิ่มหมวดหมู่ */
-.add-card {
-    background: #f0f0f0;
-}
-
-/* ปุ่ม Home */
-.home-button {
+.substadium-home-button {
     position: fixed;
     top: 20px;
     left: 20px;
@@ -118,33 +54,109 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    text-decoration: none;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
-  }
+    cursor: pointer;
+}
 
-  .home-logo1 {
+.substadium-home-logo {
     width: 35px;
     height: 35px;
-  }
+}
 
-/* ปุ่มย้อนกลับ */
-.btn-back1 {
-    margin-top: 20px;
-    padding: 12px 24px;
-    border: 2px solid black;
-    border-radius: 8px;
-    background-color: white;
-    cursor: pointer;
-    font-size: 18px;
+/* ✅ Content Section */
+.substadium-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0;
+}
+
+.substadium-subtitle {
+    font-size: 26px;
     font-weight: bold;
+    color: #07213A;
+    text-align: left;
+    width: 60%;
+    padding-left: 20px;
+    margin-bottom: 15px;
+    font-family: 'Kanit', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-left: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(to right, #0056b3, #07213A);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    padding-bottom: 5px;
+    position: relative;
+    right : -100px;
+    top:50px;
 }
 
-.btn-back:hover {
-    background-color: #e0e0e0;
+.substadium-sports {
+    background: white;
+    border-radius: 15px;
+    padding: 100px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* จัดให้มี 4 คอลัมน์ต่อแถว */
+    gap: 20px;
+    max-width: 900px;
+    min-height: 400px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    border: none;
+    justify-items: center;
+    position: relative;
+    top : 50px;
 }
-/* ✅ ป็อปอัพเพิ่มประเภทกีฬา */
-.popup-overlay {
+
+.substadium-sport-card, .substadium-add-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 15px;
+    width: 180px;
+    height: 220px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    background: linear-gradient(145deg, #f0f0f0, #d9d9d9);
+    box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff;
+    font-family: 'Kanit', sans-serif; /* เปลี่ยนเป็นฟอนต์ Kanit */
+    font-size: 20px; /* เพิ่มขนาดตัวอักษร */
+    font-weight: bold; /* ทำให้ตัวหนา */
+    color: #07213A; /* เปลี่ยนสีข้อความให้ดูเด่น */
+    text-align: center; /* จัดให้อยู่ตรงกลาง */
+    margin-top: 10px; /* เพิ่มระยะห่างจากไอคอน */
+}
+
+.substadium-sport-card:hover, .substadium-add-card:hover {
+    background: linear-gradient(145deg, #e0e0e0, #c9c9c9);
+    transform: scale(1.05);
+}
+
+.substadium-sport-icon {
+    width: 70px;
+    height: 70px;
+}
+
+.substadium-add-card {
+    background: #f9f9f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.substadium-add-card img {
+    width: 70px;
+    height: 70px;
+}
+
+/* ✅ ปรับตำแหน่ง Popup ให้อยู่ตรงกลางของหน้าจอ */
+.substadium-popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -154,30 +166,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Kanit', sans-serif;
+    z-index: 1000;
 }
 
-.popup-box {
+.substadium-popup-box {
     background: white;
     padding: 30px;
-    border-radius: 10px;
+    border-radius: 15px;
     text-align: center;
-    width: 300px;
+    width: 400px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
 }
 
-.popup-box h3 {
-    margin-bottom: 15px;
-}
-
-.popup-box input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: 2px solid black;
-}
-
-.image-upload {
+.substadium-image-upload {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -191,39 +193,70 @@
     margin: auto;
 }
 
-.upload-placeholder {
+.substadium-upload-placeholder {
     font-size: 30px;
     color: black;
 }
 
-.uploaded-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.popup-buttons {
+.substadium-popup-buttons {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     margin-top: 15px;
+    gap: 15px;
 }
 
-.btn-save {
-    background-color: #4CAF50;
-    color: white;
-    padding: 8px 12px;
-    border: none;
+.substadium-btn-save, .substadium-btn-cancel {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
     cursor: pointer;
-    border-radius: 5px;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.substadium-btn-save {
+    background-color: #28a745;
+    color: white;
+}
+
+.substadium-btn-cancel {
+    background-color: #dc3545;
+    color: white;
+}
+
+.substadium-btn-save:hover {
+    background-color: #218838;
+}
+
+.substadium-btn-cancel:hover {
+    background-color: #c82333;
+}
+
+.substadium-btn-back {
+    margin-top: 20px;
+    padding: 12px 24px;
+    max-width: 200px; /* จำกัดความกว้าง */
+    width: 100%; /* ทำให้ปุ่มไม่ยืดเกิน */
+    border-radius: 25px;
+    background: linear-gradient(145deg, #0056b3, #003d80);
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.2);
+    border: none;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 20px auto; /* จัดให้อยู่กึ่งกลาง */
+    text-align: center;
+    position: relative;
+    top : 100px;
     font-family: 'Kanit', sans-serif;
 }
 
-.btn-cancel {
-    background-color: #f44336;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-family: 'Kanit', sans-serif;
+.substadium-btn-back:hover {
+    background: linear-gradient(145deg, #004494, #002f66);
+    transform: scale(1.05);
 }
+
+  

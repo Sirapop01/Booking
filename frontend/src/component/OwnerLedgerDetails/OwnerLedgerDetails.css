@@ -1,244 +1,321 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 
+html, body {
+    margin: 0;
+    padding: 0;
+    height: auto;
+    background: linear-gradient(to bottom, #0b1e35, #ffffff);
+}
+
+/* ✅ หน้าหลักของรายละเอียดบัญชี */
 .details-page {
-  background-color: #0c2c4a;
-  color: white;
-  font-family: 'Kanit', sans-serif;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    font-family: 'Kanit', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
+    top : 100px;
 }
 
-.details-title {
-  font-size: 36px;
-  font-weight: bold;
-  margin: 20px 0;
+/* ✅ พื้นหลังด้านบน */
+.details-background-top {
+    background: white;
+    width: 100%;
+    height: 140px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
 }
 
-.details-home-button {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 60px;
-  height: 60px;
-  background-color: white;
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-}
-
-.details-home-button:hover {
-  transform: scale(1.1);
-}
-
-.details-home-logo {
-  width: 35px;
-  height: 35px;
-}
-
+/* ✅ กล่องแสดงเนื้อหา */
 .details-container {
-  background-color: white;
-  color: black;
-  padding: 20px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1100px;
+    background: white;
+    color: black;
+    border-radius: 15px;
+    padding: 30px;
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 100px;
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease-in-out;
 }
 
+.details-container:hover {
+    transform: scale(1.01);
+}
+
+/* ✅ คอนเทนต์ภายใน */
 .details-content-container {
-  display: flex;
-  gap: 20px;
-  width: 100%;
-  justify-content: space-between;
+    display: flex;
+    gap: 25px;
+    width: 100%;
+    justify-content: space-between;
 }
 
-/* ส่วนรายการสนาม */
+/* ✅ กล่องรายการสนาม */
 .details-stadium-list {
-  width: 280px;
-  background: white;
-  color: black;
-  padding: 15px;
-  border-radius: 5px;
-  text-align: center;
-  font-family: 'Kanit', sans-serif;
-  border: 2px solid black;
+    width: 300px;
+    background: white;
+    color: black;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-family: 'Kanit', sans-serif;
+    border: 2px solid #2196F3;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .details-stadium-list h2 {
-  font-size: 24px;
-  font-weight: bold;
-  padding-bottom: 10px;
-  border-bottom: 2px solid black;
+    font-size: 22px;
+    font-weight: bold;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #2196F3;
 }
 
 .details-stadium-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .details-stadium-list li {
-  padding: 15px;
-  font-size: 18px;
-  border-bottom: 1px solid gray;
-  cursor: pointer;
+    padding: 15px;
+    font-size: 18px;
+    border-bottom: 1px solid gray;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.details-stadium-list li:hover {
+    background-color: #f2f2f2;
 }
 
 .details-stadium-list .selected {
-  background-color: #2196F3;
-  color: white;
-  font-weight: bold;
+    background: linear-gradient(to right, #2196F3, #1769aa);
+    color: white;
+    font-weight: bold;
 }
 
-/* ส่วนแสดงตาราง */
+/* ✅ กล่องแสดงตาราง */
 .details-ledger {
   flex: 1;
   background: white;
   color: black;
-  border-radius: 5px;
+  border-radius: 10px;
   text-align: center;
-  border: 2px solid black;
+  border: 2px solid #2196F3;
   display: flex;
   flex-direction: column;
+  padding: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
 }
 
+/* ✅ ตารางข้อมูล */
 .details-table-wrapper {
   overflow-y: auto;
-  max-height: 300px;
+  max-height: 350px;
+  border-radius: 10px;
 }
 
-.details-table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-bottom: 2px solid black;
-}
-
-.details-table-header h2 {
-  margin: 0;
-  font-size: 24px;
-  flex: 1;
-  text-align: center;
-}
-
-/* ตาราง */
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+th {
+  background: linear-gradient(to right, #2196F3, #1769aa);
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  padding: 16px;
+  text-align: center;
+  font-size: 18px;
+  border-bottom: 3px solid #0f5ba8;
+}
+
+/* ✅ ปรับระยะห่างและขนาดตัวอักษรในช่องตาราง */
+td {
+  padding: 14px;
+  text-align: center;
+  font-size: 17px;
+  color: #333;
+  border-bottom: 1px solid #ddd; /* ✅ ใช้เส้นขอบสีอ่อน */
 }
 
 th, td {
-  border: 1px solid black;
-  padding: 12px;
-  text-align: center;
-  font-size: 16px;
+    border: 1px solid black;
+    padding: 14px;
+    text-align: center;
+    font-size: 16px;
 }
 
 th {
-  background-color: #f2f2f2;
-  font-weight: bold;
+    background: #f2f2f2;
+    font-weight: bold;
 }
 
-.details-selected-row {
-  background-color: #bdbdbd;
+tr:nth-child(even) {
+  background: #f8f9fa;
 }
 
-/* ✅ จัดตำแหน่ง Total Box และ ปุ่มการจัดการให้อยู่ในแถวเดียวกัน */
-.details-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-top: 2px solid black;
+tr:nth-child(odd) {
+  background: #ffffff;
 }
 
-/* ✅ ปรับขนาด Total Box */
-.details-total-box {
-  font-size: 18px;
-  background-color: white;
-  padding: 10px 15px;
-  border: 2px solid black;
-  border-radius: 5px;
-  text-align: center;
-  min-width: 200px;
-  color: black;
-  font-weight: bold;
+/* ✅ เอฟเฟกต์ Hover */
+tr:hover {
+  background: #d9eafc;
+  transition: background 0.3s ease-in-out;
 }
 
-/* ✅ ปรับขนาดปุ่มให้ดูสมดุลกับ Total Box */
+thead tr:first-child th:first-child {
+  border-top-left-radius: 10px;
+}
+
+thead tr:first-child th:last-child {
+  border-top-right-radius: 10px;
+}
+
+/* ✅ ปรับมุมโค้งด้านล่างของตาราง */
+tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 10px;
+}
+
+/* ✅ Scrollbar */
+.details-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* ✅ ปุ่มต่างๆ */
+/* ✅ ปุ่ม "การจัดการ" */
 .details-manage-button {
-  background-color: #2196F3;
+  background: linear-gradient(to right, #2196F3, #1769aa);
   color: white;
-  padding: 10px 20px;
+  padding: 12px 25px;
   border: none;
   cursor: pointer;
   font-size: 16px;
-  border-radius: 5px;
+  border-radius: 25px;
+  transition: background 0.3s ease-in-out, transform 0.2s;
+  margin-top: 50px; /* ✅ เพิ่มระยะห่างด้านบน */
+  align-self: center; /* ✅ จัดให้ปุ่มอยู่ตรงกลาง */
 }
 
+/* ✅ เพิ่มเอฟเฟกต์ Hover */
 .details-manage-button:hover {
-  background-color: #1976D2;
+  background: linear-gradient(to right, #1769aa, #0e4a8a);
+  transform: scale(1.05);
 }
 
-/* ปุ่ม Filter */
+
+/* ✅ ปุ่มกรอง */
 .details-filter-container {
-  position: relative;
-  display: inline-block;
+  position: relative; /* ✅ ใช้เป็น Relative เพื่อให้ยึดกับตัวกล่อง */
+  display: flex;
+  justify-content: flex-end; /* ✅ ดันไปด้านขวา */
+  padding: 10px;
+  top : -80px;
+}
+
+.details-filter-container {
+  position: relative; /* ✅ ใช้เป็น Relative เพื่อให้ยึดกับตัวกล่อง */
+  display: flex;
+  justify-content: flex-end; /* ✅ ดันไปด้านขวา */
+  padding: 10px;
 }
 
 .details-filter-button {
-  background: none;
-  border: none;
+  background: white;
+  border: 2px solid #2196F3; /* ✅ ขอบสีฟ้า */
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  padding: 5px;
+  transition: all 0.3s ease;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 10px; /* ✅ ปรับให้อยู่ในกล่อง ไม่ใช่ขอบจอ */
+  right: 10px; /* ✅ ยึดขวาในกล่อง */
+}
+
+.details-filter-button:hover {
+  background: #2196F3;
+  transform: scale(1.1);
 }
 
 .details-filter-icon {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s ease-in-out;
+  filter: invert(25%) sepia(90%) saturate(2500%) hue-rotate(190deg);
 }
 
-/* Dropdown Filter */
+.details-filter-button:hover .details-filter-icon {
+  transform: rotate(20deg);
+  filter: invert(100%);
+}
+
+
+
+
+/* ✅ Dropdown เมนูกรอง */
 .details-dropdown-menu {
   position: absolute;
-  top: 40px;
+  top: 50px;
   right: 0;
   background: white;
-  border: 1px solid black;
-  border-radius: 5px;
-  width: 150px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 180px;
+  max-height: 200px;
+  overflow-y: auto;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 10;
+  z-index: 100;
+  padding: 10px;
 }
 
+/* ✅ รายการตัวเลือกใน Dropdown */
 .details-dropdown-item {
   padding: 10px;
   text-align: center;
   cursor: pointer;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #ddd;
+  transition: background 0.3s ease-in-out;
 }
 
 .details-dropdown-item:hover {
-  background: #bdbdbd;
+  background: #d9eafc;
 }
 
-.details-dropdown-item:last-child {
-  border-bottom: none;
-}
+/* ✅ ปรับตำแหน่งปุ่มให้เหมาะสมใน Mobile */
+@media (max-width: 768px) {
+  .details-filter-container {
+      top: 15px;
+      right: 10px;
+  }
 
-/* Scrollbar สำหรับ Ledger Table */
+  .details-filter-button {
+      padding: 8px 10px;
+  }
+
+  .details-dropdown-menu {
+      width: 150px;
+  }
+}ห
+
+/* ✅ Scrollbar */
 .details-table-wrapper::-webkit-scrollbar {
-  width: 8px;
+    width: 8px;
 }
 
 .details-table-wrapper::-webkit-scrollbar-thumb {
@@ -248,4 +325,39 @@ th {
 
 .details-table-wrapper::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+/* ✅ Responsive */
+@media (max-width: 768px) {
+  th, td {
+      font-size: 15px;
+      padding: 12px;
+  }
+
+  .details-table-wrapper {
+      max-height: 300px;
+  }
+}
+
+.details-pdf-button {
+  background: linear-gradient(to right, #2196F3, #1769aa); /* ✅ ไล่เฉดสีฟ้าเหมือนปุ่มอื่น */
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 25px;
+  transition: background 0.3s ease-in-out, transform 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* ✅ ทำให้กว้างเท่ากับปุ่มการจัดการ */
+  max-width: 300px; /* ✅ จำกัดขนาดปุ่ม */
+  margin: 10px auto; /* ✅ จัดให้อยู่กึ่งกลาง */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.details-pdf-button:hover {
+  background: linear-gradient(to right, #1769aa, #0e4a8a); /* ✅ เปลี่ยนสีเมื่อ hover */
+  transform: scale(1.05);
 }

@@ -17,7 +17,7 @@ const OwnerLedger = () => {
   const [showChart, setShowChart] = useState(false);
   const pdfRef = useRef();
 
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
   const decoded = jwtDecode(token);
   const businessOwnerId = decoded.id;
 
@@ -61,6 +61,22 @@ const OwnerLedger = () => {
     return (date.getMonth() + 1).toString().padStart(2, "0");
   };
 
+  const months = [
+    { value: "", label: "ล่าสุด" },
+    { value: "01", label: "มกราคม" },
+    { value: "02", label: "กุมภาพันธ์" },
+    { value: "03", label: "มีนาคม" },
+    { value: "04", label: "เมษายน" },
+    { value: "05", label: "พฤษภาคม" },
+    { value: "06", label: "มิถุนายน" },
+    { value: "07", label: "กรกฎาคม" },
+    { value: "08", label: "สิงหาคม" },
+    { value: "09", label: "กันยายน" },
+    { value: "10", label: "ตุลาคม" },
+    { value: "11", label: "พฤศจิกายน" },
+    { value: "12", label: "ธันวาคม" },
+  ];
+
   const filteredData = selectedMonth
     ? ledgerData.filter((entry) => getMonthFromDate(entry.dateTime) === selectedMonth)
     : ledgerData;
@@ -89,16 +105,16 @@ const OwnerLedger = () => {
   };
 
   return (
-    <div className="ledger-page">
-      <a href="/" className="home-button">
+    <div className="owner-ledger-page">
+      <a href="/" className="owner-ledger-home-button">
         <img src={homeLogo} alt="Home Logo" className="home-logo" />
       </a>
 
-      <h1 className="ledger-title">บัญชีรายการรับ</h1>
+      <h1 className="owner-ledger-title">บัญชีรายการรับ</h1>
 
-      <div className="ledger-container">
-        <div className="content-container2">
-          <div className="stadium-list2">
+      <div className="owner-ledger-container">
+        <div className="owner-ledger-content">
+          <div className="owner-ledger-stadium-list">
             <h2>สนาม</h2>
             <ul>
               {stadiums.map((stadium) => (
@@ -113,13 +129,30 @@ const OwnerLedger = () => {
             </ul>
           </div>
 
-          <div className="ledger-details">
-            <div className="table-header">
+          <div className="owner-ledger-details">
+            <div className="owner-ledger-table-header">
               <h2>รายละเอียด</h2>
-              <div className="filter-container">
-                <button className="filter-button" onClick={() => setShowDropdown(!showDropdown)}>
-                  <img src={filterIcon} alt="Filter" className="filter-icon" />
+              <div className="owner-ledger-filter-container">
+                <button className="owner-ledger-filter-button" onClick={() => setShowDropdown(!showDropdown)}>
+                  <img src={filterIcon} alt="Filter" className="owner-ledger-filter-icon" />
                 </button>
+
+                {showDropdown && (
+                  <div className="owner-ledger-dropdown-menu">
+                    {months.map((month) => (
+                      <div
+                        key={month.value}
+                        className="owner-ledger-dropdown-item"
+                        onClick={() => {
+                          setSelectedMonth(month.value);
+                          setShowDropdown(false);
+                        }}
+                      >
+                        {month.label}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -128,53 +161,58 @@ const OwnerLedger = () => {
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={chartData}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="amount" fill="#2196F3" name="ยอดเงิน" />
-                    <Bar dataKey="tax" fill="#FF5733" name="เรียกเก็บ 10%" />
-                  </BarChart>
-                </ResponsiveContainer>
-
-                {/* ✅ แสดงข้อมูลด้านล่างเฉพาะโหมดกราฟ */}
-                <div className="ledger-summary">
-                  <p>ผลประกอบการ: {totalAmount} B</p>
-                  <p>ค่าธรรมเนียม 10%: {totalTaxAmount} B</p>
-                  <p>รวม - 10%: {netAmount} B</p>
-                  <button className="ledger-pdf-button" onClick={generatePDF}>
-                    ไฟล์เอกสารรายละเอียด
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="table-wrapper">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>วัน/เวลา</th>
-                      <th>ลิสต์ (ล่าสุด)</th>
-                      <th>ยอดเงิน</th>
-                      <th>เรียกเก็บ 10%</th>
-                      <th>รวม</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {filteredData.map((entry) => (
-                      <tr key={entry._id}>
-                        <td>{new Date(entry.dateTime).toLocaleString()}</td>
-                        <td>{entry.item}</td>
-                        <td>{entry.amount.toFixed(2)} B</td>
-                        <td>{(entry.amount * 0.1).toFixed(2)} B</td>
-                        <td>{(entry.amount * 0.9).toFixed(2)} B</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            <button className="manage-button6" onClick={() => setShowChart(!showChart)}>
+                      <XAxis dataKey="date" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="amount" fill="#2196F3" name="ยอดเงิน" />
+                        <Bar dataKey="tax" fill="#FF5733" name="เรียกเก็บ 10%" />
+                      </BarChart>
+                    </ResponsiveContainer>
+            
+                            <div className="details-summary">
+                              <p>ผลประกอบการ: {totalAmount} B</p>
+                              <p>ค่าธรรมเนียม 10%: {totalTaxAmount} B</p>
+                              <p>รวม - 10%: {netAmount} B</p>
+                              <button className="details-pdf-button" onClick={generatePDF}>ไฟล์เอกสารรายละเอียด</button>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <div className="details-table-wrapper">
+                              <table>
+                                <thead>
+                                  <tr>
+                                    <th>วัน/เวลา</th>
+                                    <th>รายการ</th>
+                                    <th>จำนวน</th>
+                                    <th>ยอดเงิน</th>
+                                    <th>เรียกเก็บ 10%</th>
+                                    <th>รวม</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {filteredData.map((entry) => (
+                                    <tr key={entry._id}>
+                                      <td>{new Date(entry.dateTime).toLocaleString()}</td>
+                                      <td>{entry.item}</td>
+                                      <td>{entry.quantity || "1"}</td>
+                                      <td>{entry.amount.toFixed(2)} B</td>
+                                      <td>{(entry.amount * 0.1).toFixed(2)} B</td>
+                                      <td>{(entry.amount * 0.9).toFixed(2)} B</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+            
+                            {/* ✅ Total Box ✅ */}
+                          <div className="owner-ledger-total-box">
+                            <p><strong>รวมทั้งหมด:</strong> {totalAmount} B</p>
+                          </div>
+                          </>
+                        )}
+            <button className="owner-ledger-manage-button" onClick={() => setShowChart(!showChart)}>
               {showChart ? "กลับไปยังตาราง" : "การจัดการ"}
             </button>
           </div>

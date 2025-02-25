@@ -88,7 +88,7 @@ function StadiumList() {
       <table className="stadium-table-stadiumlist">
         <thead>
           <tr>
-            <th style={{ width: "25%" }}>ชื่อสนาม</th>
+            <th style={{ width: "40%" }}>ชื่อสนาม</th>
             <th style={{ width: "20%" }}>สถานะ</th>
             <th style={{ width: "20%" }}>เปิด/ปิด</th>
             <th style={{ width: "25%" }}>ตัวเลือก</th>

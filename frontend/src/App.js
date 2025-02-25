@@ -35,7 +35,8 @@ import SuperAdminLogin from './component/SuperAdmin/SuperAdminLogin';
 import SuperAdminDashboard from './component/SuperAdminDashboard/SuperAdminDashboard';
 import ProtectedRoute from "./component/ProtectedRoute"; 
 import AdminRegister from "./component/AdminRegister/AdminRegister";
-
+import Addpromotion from "./component/AddPromo/Addpromotion";
+import Promoowner from "./component/Promotionowner/Promoowner";
 
 /**/ 
 
@@ -58,7 +59,7 @@ function App() {
         <Route path='/FavoritesList' element={<FavoriteList />} />
         <Route path='/profile' element={<UserProfile />} />
         <Route path="/manage-stadium" element={<ManageStadium />} />
-        <Route path="/manage-sub-stadium" element={<ManageSubStadium />} />
+        <Route path="/manage-sub-stadium/:arenaId" element={<ManageSubStadium />} />
         <Route path="/manage-substadium-details" element={<ManageSubStadiumDetails />} />
         <Route path='/Discount' element={<Discount />} />
         <Route path='/SuccessRegis' element={<SuccessRegis />} />
@@ -76,6 +77,8 @@ function App() {
         <Route path='/Promotion' element={<Promotion />} />
         <Route path="/BookingArena" element={<BookingArena />} />
         <Route path="/superadmin/login" element={<SuperAdminLogin />} />
+        <Route path="/Addpromotion" element={<Addpromotion/>} />
+        <Route path="/Promoowner" element={<Promoowner/>} />
         <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
         <Route element={<ProtectedRoute role="superadmin" />}>
         <Route path="/admin/register" element={<AdminRegister />} />

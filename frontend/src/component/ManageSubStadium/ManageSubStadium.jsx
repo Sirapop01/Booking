@@ -1,114 +1,183 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 import "./ManageSubStadium.css";
-import logo from "../assets/logo.png"; // โลโก้ด้านบน
-import homeLogo from "../assets/logoalt.png"; // โลโก้ปุ่ม Home
-import { useNavigate } from "react-router-dom";
-
-// ไอคอนกีฬา
-import basketballIcon from "../assets/icons/basketball.png";
-import footballIcon from "../assets/icons/football.png";
-import badmintonIcon from "../assets/icons/badminton.png";
-import tableTennisIcon from "../assets/icons/tabletennis.png";
-import tennisIcon from "../assets/icons/tennis.png";
-import golfIcon from "../assets/icons/golf.png";
-import volleyballIcon from "../assets/icons/volleyball.png";
-import addIcon from "../assets/icons/add.png"; // ปุ่มเพิ่ม
+import logo from "../assets/logo.png";
+import homeLogo from "../assets/logoalt.png";
+import addIcon from "../assets/icons/add.png";
 
 function ManageSubStadium() {
   const navigate = useNavigate();
-  const [sports, setSports] = useState([
-    { id: 1, name: "บาสเกตบอล", icon: basketballIcon },
-    { id: 2, name: "ฟุตบอล", icon: footballIcon },
-    { id: 3, name: "แบดมินตัน", icon: badmintonIcon },
-    { id: 4, name: "เทเบิล เทนนิส", icon: tableTennisIcon },
-    { id: 5, name: "เทนนิส", icon: tennisIcon },
-    { id: 6, name: "กอล์ฟ", icon: golfIcon },
-    { id: 7, name: "วอลเลย์บอล", icon: volleyballIcon },
-  ]);
+  const { arenaId } = useParams();
 
-  // State สำหรับป็อปอัพ
+  const [sports, setSports] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
-  const [newSport, setNewSport] = useState({ name: "", icon: null });
+  const [confirmDelete, setConfirmDelete] = useState(null); // ✅ เพิ่ม state สำหรับยืนยันการลบ
+  const [newSport, setNewSport] = useState({ sportName: "", iconUrl: "", description: "" });
 
-  // ฟังก์ชันเปิดปิดป็อปอัพ
-  const togglePopup = () => {
-    setShowPopup(!showPopup);
-  };
+  console.log("🎯 arenaId:", arenaId);
 
-  // ฟังก์ชันอัปโหลดไอคอน
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setNewSport({ ...newSport, icon: URL.createObjectURL(file) });
+  useEffect(() => {
+    if (!arenaId) {
+      console.error("❌ arenaId เป็น undefined หรือ null");
+      navigate("/stadium-list");
     }
-  };
+  }, [arenaId, navigate]);
 
-  // ฟังก์ชันบันทึกประเภทกีฬา
+  useEffect(() => {
+    if (arenaId) {
+      axios.get(`http://localhost:4000/api/sports/${arenaId}`)
+        .then(response => setSports(response.data))
+        .catch(error => console.error("Error fetching sports:", error));
+    }
+  }, [arenaId]);
+
+  const togglePopup = () => setShowPopup(!showPopup);
+
+  // 📌 เพิ่มประเภทกีฬาใหม่
   const addNewSport = () => {
-    if (newSport.name && newSport.icon) {
-      setSports([...sports, { id: sports.length + 1, ...newSport }]);
-      setNewSport({ name: "", icon: null });
-      togglePopup();
+    if (!arenaId) {
+      console.error("❌ ไม่สามารถเพิ่มประเภทกีฬาได้ เพราะ arenaId เป็น undefined");
+      return;
+    }
+
+    if (newSport.sportName && newSport.iconUrl) {
+      console.log("🚀 กำลังส่งข้อมูลไป Backend:", { arenaId, ...newSport });
+
+      axios.post("http://localhost:4000/api/sports", {
+        arenaId,
+        sportName: newSport.sportName,
+        iconUrl: newSport.iconUrl,
+        description: newSport.description
+      })
+      .then(response => {
+        console.log("✅ บันทึกสำเร็จ:", response.data);
+        setSports([...sports, response.data]);
+        setNewSport({ sportName: "", iconUrl: "", description: "" });
+        togglePopup();
+      })
+      .catch(error => console.error("❌ บันทึกไม่สำเร็จ:", error));
+    } else {
+      console.error("⚠️ ข้อมูลไม่ครบ sportName หรือ iconUrl");
     }
   };
 
-  return (
-    <div className="manage-substadium-container">
-    {/* Header Container */}
-    <div className="header-container">
-      <a href="/" className="home-button">
-        <img src={homeLogo} alt="Home" className="home-logo1" />
-      </a>
-      <h1 className="page-title">
-        <img src={logo} alt="Logo" className="logo-Managesub" />
-        จัดการสนามย่อย
-      </h1>
-    </div>
+  // 📌 ลบประเภทกีฬา
+  const deleteSport = (sportId) => {
+    console.log("🚀 กำลังลบประเภทกีฬา ID:", sportId);
+    axios.delete(`http://localhost:4000/api/sports/${sportId}`)
+      .then(() => {
+        console.log("✅ ลบสำเร็จ");
+        setSports(sports.filter(sport => sport._id !== sportId));
+        setConfirmDelete(null);
+      })
+      .catch(error => console.error("❌ ลบไม่สำเร็จ:", error));
+  };
 
-      {/* Content Container */}
-    <div className="content-container1">
-      <h2 className="subtitle">เลือกประเภทกีฬา</h2>
-      <div className="sports-container">
-        {sports.map((sport) => (
-          <div key={sport.id} className="sport-card" onClick={() => navigate("/manage-substadium-details", { state: { sport } })}>
-            <img src={sport.icon} alt={sport.name} className="sport-icon" />
-            <p>{sport.name}</p>
-          </div>
-        ))}
-        <div className="sport-card add-card" onClick={togglePopup}>
-          <img src={addIcon} alt="เพิ่ม" className="sport-icon" />
-        </div>
-      </div>
-      <button className="btn-back1" onClick={() => navigate(-1)}>ย้อนกลับ</button>
-    </div>
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+  
+    const formData = new FormData();
+    formData.append("image", file); // ✅ ส่งไฟล์ไป API ของคุณ
+    formData.append("folder", "sports_icons"); // ✅ สามารถเปลี่ยนเป็นโฟลเดอร์อื่นได้
+  
+    try {
+      const response = await axios.post("http://localhost:4000/api/upload/single", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+  
+      const imageUrl = response.data.imageUrl;
+      console.log("✅ รูปอัปโหลดสำเร็จ:", imageUrl);
+  
+      // ✅ อัปเดต URL รูปภาพใน state
+      setNewSport({ ...newSport, iconUrl: imageUrl });
+  
+    } catch (error) {
+      console.error("❌ อัปโหลดรูปไม่สำเร็จ:", error);
+    }
+  };
   
 
-      {/* ป็อปอัพเพิ่มประเภทกีฬา */}
+  return (
+    <div className="manage-substadium-page">
+      <div className="substadium-header">
+        <a href="/" className="substadium-home-button">
+          <img src={homeLogo} alt="Home" className="substadium-home-logo" />
+        </a>
+        <h1 className="substadium-title">
+          <img src={logo} alt="Logo" className="substadium-logo" />
+          จัดการสนามย่อย
+        </h1>
+      </div>
+
+      <div className="substadium-content">
+        <h2 className="substadium-subtitle">เลือกประเภทกีฬา</h2>
+        <div className="substadium-sports">
+          {sports.map((sport) => (
+            <div key={sport._id} className="substadium-sport-card">
+              {/* ✅ ป้องกันการเปิดหน้ารายละเอียดโดยไม่ได้ตั้งใจ */}
+              <div className="sport-card-content" onClick={() => navigate("/manage-substadium-details", { state: { sport } })}>
+                <img src={sport.iconUrl} alt={sport.sportName} className="substadium-sport-icon" />
+                <p>{sport.sportName}</p>
+              </div>
+              {/* ✅ ปุ่มลบประเภทกีฬา */}
+              <button className="substadium-delete-btn" onClick={() => setConfirmDelete(sport._id)}>ลบ</button>
+            </div>
+          ))}
+          <div className="substadium-add-card" onClick={togglePopup}>
+            <img src={addIcon} alt="เพิ่ม" className="substadium-sport-icon" />
+          </div>
+        </div>
+        <button className="substadium-btn-back" onClick={() => navigate(-1)}>ย้อนกลับ</button>
+      </div>
+
       {showPopup && (
-        <div className="popup-overlay">
-          <div className="popup-box">
+        <div className="substadium-popup-overlay">
+          <div className="substadium-popup-box">
             <h3>เพิ่มประเภทกีฬา</h3>
             <input
               type="text"
               placeholder="ชื่อประเภทกีฬา"
-              value={newSport.name}
-              onChange={(e) => setNewSport({ ...newSport, name: e.target.value })}
+              value={newSport.sportName}
+              onChange={(e) => setNewSport({ ...newSport, sportName: e.target.value })}
             />
-            <label className="image-upload">
-              {newSport.icon ? (
-                <img src={newSport.icon} alt="New Sport" className="uploaded-image" />
+            <input
+              type="text"
+              placeholder="รายละเอียด"
+              value={newSport.description}
+              onChange={(e) => setNewSport({ ...newSport, description: e.target.value })}
+            />
+            <label className="substadium-image-upload">
+              {newSport.iconUrl ? (
+                <img src={newSport.iconUrl} alt="New Sport" className="substadium-uploaded-image" />
               ) : (
-                <span className="upload-placeholder">+</span>
+                <span className="substadium-upload-placeholder">+</span>
               )}
               <input type="file" accept="image/*" onChange={handleImageUpload} hidden />
             </label>
-            <div className="popup-buttons">
-              <button className="btn btn-save" onClick={addNewSport}>บันทึก</button>
-              <button className="btn btn-cancel" onClick={togglePopup}>ยกเลิก</button>
+
+            <div className="substadium-popup-buttons">
+              <button className="btn substadium-btn-save" onClick={addNewSport}>บันทึก</button>
+              <button className="btn substadium-btn-cancel" onClick={togglePopup}>ยกเลิก</button>
             </div>
           </div>
         </div>
       )}
+
+      {confirmDelete && (
+        <div className="substadium-popup-overlay">
+          <div className="substadium-popup-box">
+            <h3>ยืนยันการลบ</h3>
+            <p>คุณแน่ใจหรือไม่ว่าต้องการลบประเภทกีฬานี้?</p>
+            <div className="substadium-popup-buttons">
+              <button className="btn substadium-btn-save" onClick={() => deleteSport(confirmDelete)}>ยืนยัน</button>
+              <button className="btn substadium-btn-cancel" onClick={() => setConfirmDelete(null)}>ยกเลิก</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
