@@ -137,7 +137,10 @@ function StadiumList() {
         <a href="/add_new_stadium" className="btn-stadiumlist">เพิ่มสนามใหม่</a>
         <button 
           className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
-          onClick={() => navigate(`/manage-sub-stadium/${selectedStadium}`)} 
+          onClick={() => {
+            console.log("🏟️ กำลังส่ง arenaId ไปที่ ManageSubStadium:", selectedStadium);
+            navigate(`/manage-sub-stadium/${selectedStadium}`);
+          }} 
           disabled={!selectedStadium}>
           จัดการสนามย่อย
         </button>
