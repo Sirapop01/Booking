@@ -119,7 +119,7 @@ const Addpromotion = () => {
         headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
       });
 
-      alert("✅ เพิ่มโปรโมชั่นสำเร็จ!");
+      alert("เพิ่มโปรโมชั่นสำเร็จ!");
       setFormData({
         promotionTitle: "",
         description: "",
