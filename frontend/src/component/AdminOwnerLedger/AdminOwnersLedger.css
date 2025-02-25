@@ -1,6 +1,8 @@
+
+
 /* ✅ ตั้งค่าพื้นหลังเป็นสีขาว และจัดตรงกลาง */
 .admin-stadium-container {
-  background-color: white;
+  background: linear-gradient(to bottom, #0b1e35, #ffffff);
   color: black;
   min-height: 100vh;
   display: flex;
