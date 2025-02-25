@@ -1,40 +1,144 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { jwtDecode } from "jwt-decode"; // ✅ ใช้ jwtDecode เพื่อดึง ownerId
 import "./Addpromotion.css";
 import Navbar from "../Navbar/Navbar";
 import uploadIcon from "../assets/icons/add.png";
 
 const Addpromotion = () => {
   const [image, setImage] = useState(null);
+  const [file, setFile] = useState(null);
+  const [arenas, setArenas] = useState([]); // ✅ เก็บรายชื่อสนามของเจ้าของธุรกิจ
   const [formData, setFormData] = useState({
-    stadiumName: "",
+    promotionTitle: "",
+    description: "",
+    arenaId: "",
     type: "",
     discount: "",
     startDate: "",
     endDate: "",
-    timeRange: "",
+    startHour: "",
+    startMinute: "",
+    endHour: "",
+    endMinute: "",
   });
 
-  // อัปโหลดรูป
+  // 📌 ✅ ดึงข้อมูลสนามที่เป็นของเจ้าของธุรกิจเท่านั้น
+  useEffect(() => {
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+
+    if (!token) {
+      alert("Session หมดอายุ! กรุณาเข้าสู่ระบบใหม่");
+      window.location.href = "/login";
+      return;
+    }
+
+    try {
+      const decoded = jwtDecode(token);
+      const ownerId = decoded.id; // ✅ ดึง ownerId จาก token
+
+      if (!ownerId) {
+        console.error("⚠️ ไม่พบ ID ใน Token");
+        return;
+      }
+
+      const fetchArenas = async () => {
+        try {
+          const response = await axios.get(`http://localhost:4000/api/stadium/getArenas?owner_id=${ownerId}`);
+          setArenas(response.data);
+        } catch (error) {
+          console.error("⚠️ ไม่สามารถโหลดข้อมูลสนาม:", error);
+        }
+      };
+
+      fetchArenas();
+    } catch (error) {
+      console.error("⚠️ ไม่สามารถถอดรหัส Token:", error);
+      alert("Session ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่");
+      window.location.href = "/login";
+    }
+  }, []);
+
+  // 📌 อัปโหลดรูป
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImage(URL.createObjectURL(file));
+      setFile(file);
     }
   };
 
-  // ลบรูปภาพ
+  // 📌 ลบรูปภาพ
   const handleRemoveImage = () => {
-    console.log("ลบรูปแล้ว"); // ตรวจสอบว่าฟังก์ชันทำงาน
     setImage(null);
+    setFile(null);
   };
 
+  // 📌 ตรวจสอบค่า input และไม่ให้ endDate น้อยกว่า startDate
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === "endDate" && value < formData.startDate) {
+      alert("วันที่สิ้นสุดต้องไม่ย้อนหลังกว่าวันที่เริ่มต้น");
+      return;
+    }
+
+    if (name === "discount" && value < 0) {
+      alert("ไม่สามารถใส่จำนวนติดลบได้");
+      return;
+    }
+
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  // 📌 ตรวจสอบข้อมูลก่อนส่ง
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting: ", formData);
+
+    if (!formData.promotionTitle || !formData.arenaId || !formData.type || !formData.discount || !formData.startDate || !formData.endDate || !formData.startHour || !formData.startMinute || !formData.endHour || !formData.endMinute || !file) {
+      alert("กรุณากรอกข้อมูลให้ครบถ้วน และอัปโหลดรูปภาพ");
+      return;
+    }
+
+    const timeRange = `${formData.startHour}:${formData.startMinute} - ${formData.endHour}:${formData.endMinute}`;
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("promotionTitle", formData.promotionTitle);
+    formDataToSend.append("description", formData.description);
+    formDataToSend.append("arenaId", formData.arenaId);
+    formDataToSend.append("type", formData.type);
+    formDataToSend.append("discount", formData.discount);
+    formDataToSend.append("startDate", formData.startDate);
+    formDataToSend.append("endDate", formData.endDate);
+    formDataToSend.append("timeRange", timeRange);
+    formDataToSend.append("promotionImage", file);
+
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post("http://localhost:4000/api/promotions", formDataToSend, {
+        headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
+      });
+
+      alert("เพิ่มโปรโมชั่นสำเร็จ!");
+      setFormData({
+        promotionTitle: "",
+        description: "",
+        arenaId: "",
+        type: "",
+        discount: "",
+        startDate: "",
+        endDate: "",
+        startHour: "",
+        startMinute: "",
+        endHour: "",
+        endMinute: "",
+      });
+      setImage(null);
+      setFile(null);
+    } catch (error) {
+      console.error("เกิดข้อผิดพลาดในการเพิ่มโปรโมชั่น:", error.response?.data || error.message);
+      alert("เกิดข้อผิดพลาดในการเพิ่มโปรโมชั่น");
+    }
   };
 
   return (
@@ -55,13 +159,7 @@ const Addpromotion = () => {
             ) : (
               <label htmlFor="imageUpload" className="upload-label">
                 <img src={uploadIcon} alt="Upload" className="upload-icon" />
-                <input
-                  type="file"
-                  id="imageUpload"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  hidden
-                />
+                <input type="file" id="imageUpload" accept="image/*" onChange={handleImageUpload} hidden />
               </label>
             )}
           </div>
@@ -70,73 +168,50 @@ const Addpromotion = () => {
         <form className="promotion-form" onSubmit={handleSubmit}>
           <h2>ข้อมูลโปรโมชั่น</h2>
           <div className="input-group">
-            <label>ชื่่อสนาม: *</label>
-            <input
-              type="text"
-              name="stadiumName"
-              value={formData.stadiumName}
-              onChange={handleChange}
-              required
-            />
+            <label>ชื่อโปรโมชั่น : *</label>
+            <input type="text" name="promotionTitle" value={formData.promotionTitle} onChange={handleChange} required />
           </div>
 
           <div className="input-group">
-            <label>ประเภท: *</label>
-            <input
-              type="text"
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-              required
-            />
+            <label>รายละเอียดโปรโมชั่น :</label>
+            <input name="description" value={formData.description} onChange={handleChange} rows="3"/>
           </div>
 
           <div className="input-group">
-            <label>ลดราคา (%): *</label>
-            <input
-              type="number"
-              name="discount"
-              value={formData.discount}
-              onChange={handleChange}
-              required
-            />
+            <label>ชื่่อสนาม : *</label>
+            <select name="arenaId" value={formData.arenaId} onChange={handleChange} required>
+              <option value="">-- เลือกสนาม --</option>
+              {arenas.map((arena) => (
+                <option key={arena._id} value={arena._id}>{arena.fieldName}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="input-group">
+            <label>ประเภทสนาม: *</label>
+            <input type="text" name="type" value={formData.type} onChange={handleChange} required />
+          </div>
+
+          <div className="input-group">
+            <label>ลดราคา(%) : *</label>
+            <input type="number" name="discount" value={formData.discount} onChange={handleChange} required />
           </div>
 
           <div className="date-group">
-            <label>ระยะเวลา: *</label>
-            <div className="date-inputs">
-              <input
-                type="date"
-                name="startDate"
-                value={formData.startDate}
-                onChange={handleChange}
-                required
-              />
-              <span>ถึง</span>
-              <input
-                type="date"
-                name="endDate"
-                value={formData.endDate}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <label>ระยะเวลา : *</label>
+            <label>เริ่มต้น</label>
+            <input type="date" name="startDate" value={formData.startDate} onChange={handleChange} required />
+            <label>สิ้นสุด</label>
+            <input type="date" name="endDate" value={formData.endDate} onChange={handleChange} required />
           </div>
 
           <div className="input-group">
-            <label>ช่วงเวลา: *</label>
-            <input
-              type="text"
-              name="timeRange"
-              value={formData.timeRange}
-              onChange={handleChange}
-              required
-            />
+            <label>ช่วงเวลา : *</label>
+            <input type="time" name="startHour" value={formData.startHour} onChange={handleChange} required />
+            <input type="time" name="endHour" value={formData.endHour} onChange={handleChange} required />
           </div>
 
-          <button type="submit" className="submit-button">
-            ยืนยันโปรโมชั่น
-          </button>
+          <button type="submit" className="submit-button">ยืนยันโปรโมชั่น</button>
         </form>
       </div>
     </div>
