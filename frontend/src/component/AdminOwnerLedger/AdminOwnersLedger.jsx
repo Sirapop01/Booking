@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";  // ✅ ใช้สำหรับเปลี่ยนหน้า
 import "./AdminOwnersLedger.css";
 import homeLogo from "../assets/logoalt.png";
+import NavbarAdminLedger from "../NavbarAdminLedger/NavbarAdminLedger";
 
 const AdminOwnersLedger = () => {
   const [owners, setOwners] = useState([]);
@@ -30,12 +31,7 @@ const AdminOwnersLedger = () => {
 
   return (
     <div className="admin-stadium-container">
-      {/* 🔙 Home Button */}
-      <a href="/" className="home-button">
-        <img src={homeLogo} alt="Home Logo" className="home-logo" />
-      </a>
-
-      <h1 className="page-title">ตรวจสอบรายการบัญชี</h1>
+      <NavbarAdminLedger /> {/* ✅ ใช้ Navbar ที่เปลี่ยนชื่อใหม่ */}
 
       {/* 🔎 ค้นหาบัญชีเจ้าของสนาม */}
       <div className="search-bar">

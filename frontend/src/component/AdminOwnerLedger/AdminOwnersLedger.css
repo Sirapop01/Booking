@@ -1,110 +1,245 @@
+/* ✅ ตั้งค่าพื้นหลังเป็นสีขาว และจัดตรงกลาง */
 .admin-stadium-container {
-    background-color: #0a1e33;
-    color: white;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
+  background-color: white;
+  color: black;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
 
-  /* 🔙 ปุ่มกลับไปยังหน้า Home */
+/* 🔙 ปุ่มกลับไปยังหน้า Home */
 .home-button {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    width: 60px;
-    height: 60px;
-    background-color: white;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 60px;
+  height: 60px;
+  background-color: white;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  border: 2px solid #0a1e33;
 }
 
 .home-button:hover {
-    transform: scale(1.1);
+  transform: scale(1.1);
+  background-color: #f5f5f5;
 }
 
 .home-logo {
-    width: 35px;
-    height: 35px;
+  width: 35px;
+  height: 35px;
 }
-  
-  .page-title {
-    font-size: 52px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
+
+/* ✅ หัวข้อใหญ่ */
+.page-title {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #0a1e33;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* 🔍 ช่องค้นหา */
+.search-bar {
+  width: 80%;
+  max-width: 600px;
+  position: relative;
+  margin-bottom: 15px; /* ✅ ลดช่องว่างให้อยู่ใกล้ตาราง */
+  top: 100px; /* ✅ เอาออกให้มันอยู่ติดกับตาราง */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 12px 50px 12px 50px; /* ✅ เว้นที่สำหรับไอคอน */
+  font-size: 18px;
+  border-radius: 30px; /* ✅ มุมโค้ง */
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar input:focus {
+  border-color: #0a1e33;
+  box-shadow: 0px 4px 8px rgba(10, 30, 51, 0.3);
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px; /* ✅ ตำแหน่งไอคอน */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
   .search-bar {
-    width: 80%;
-    max-width: 600px;
-    margin-bottom: 20px;
+      max-width: 90%;
   }
-  
+
   .search-bar input {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: none;
-    background-color: #e0e0e0;
-    outline: none;
+      font-size: 16px;
+      padding: 12px 45px 12px 45px;
   }
-  
-  .table-container {
-    width: 80%;
-    max-width: 700px;
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
+
+  .search-icon {
+      width: 20px;
+      height: 20px;
   }
-  
-  .table-header {
-    background: #ffffff;
-    color: black;
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    padding: 15px;
-    border-bottom: 2px solid black;
-  }
-  
-  .table-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #d6d6d6;
-    padding: 15px;
-    border-bottom: 1px solid white;
-  }
-  
-  .owner-name {
-    font-size: 18px;
-    color: black;
-  }
-  
+}
+
+
+/* 📋 กล่องตาราง (ใหญ่ขึ้น) */
+.table-container {
+  width: 85%; /* ✅ เพิ่มความกว้างให้สมดุลกับหน้า */
+  max-width: 900px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #0a1e33;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+  position: relative;
+  top : 100px;
+}
+
+/* 🔘 หัวข้อตาราง */
+.table-header {
+  background: #0a1e33;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  padding: 20px;
+  border-bottom: 3px solid #062b4f;
+}
+
+/* ✅ แถวตาราง (จัดให้ชื่ออยู่ซ้าย ปุ่มอยู่ขวา) */
+.table-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9f9f9;
+  padding: 18px 20px; /* ✅ ปรับ Padding ให้ข้อความไม่ติดขอบ */
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.3s ease;
+  font-size: 18px;
+}
+
+/* ✅ ทำให้แถวสวยขึ้น และ hover มีสีเปลี่ยน */
+.table-row:nth-child(even) {
+  background: #eaeaea;
+}
+
+.table-row:hover {
+  background: #d6e4f0; /* ✅ เพิ่มเอฟเฟกต์ hover */
+}
+
+/* ✅ กล่องของชื่อ และปุ่มตรวจสอบ */
+.owner-info {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+/* ✅ ชื่อเจ้าของสนาม (อยู่ชิดซ้าย) */
+.owner-name {
+  font-size: 20px;
+  font-weight: 500;
+  color: #0a1e33;
+  padding-left: 15px;
+}
+
+/* ✅ ปุ่มตรวจสอบ (อยู่ชิดขวา) */
+/* ✅ ปรับปุ่มตรวจสอบให้ขนาดคงที่ */
+.check-button {
+  background: linear-gradient(135deg, #1e88e5, #0d47a1); /* ✅ ไล่สี */
+  color: white;
+  border: none;
+  padding: 12px 0; /* ✅ ปรับ Padding ให้อักษรอยู่ตรงกลาง */
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  margin-left: auto;
+  margin-right: 15px;
+  width: 140px; /* ✅ กำหนดขนาดปุ่มให้เท่ากันทุกรายการ */
+  text-align: center;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ✅ Hover Effect */
+.check-button:hover {
+  background: linear-gradient(135deg, #1565c0, #0b3a7e);
+  transform: scale(1.05);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ✅ เอฟเฟกต์ตอนกดปุ่ม */
+.check-button:active {
+  transform: scale(0.95);
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* ✅ Responsive Design (มือถือ) */
+@media (max-width: 768px) {
   .check-button {
-    background-color: #29b6f6;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
+      width: 120px; /* ✅ ปรับขนาดให้เหมาะกับมือถือ */
+      font-size: 16px;
   }
-  
-  .check-button:hover {
-    background-color: #0288d1;
+}
+
+/* ⚠️ กรณีไม่มีข้อมูล */
+.no-results {
+  text-align: center;
+  padding: 25px;
+  font-size: 20px;
+  color: #555;
+}
+
+/* ✅ Responsive Design */
+@media (max-width: 768px) {
+  .search-bar {
+      max-width: 90%;
   }
-  
-  .no-results {
-    text-align: center;
-    padding: 20px;
-    font-size: 18px;
-    color: black;
+
+  .search-bar input {
+      font-size: 16px;
+      padding: 12px 45px 12px 45px;
   }
-  
+
+  .table-container {
+      width: 95%;
+  }
+
+  .table-header {
+      font-size: 20px;
+      padding: 15px;
+  }
+
+  .table-row {
+      font-size: 16px;
+      padding: 12px 15px;
+  }
+
+  .check-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      min-width: 110px;
+  }
+}
