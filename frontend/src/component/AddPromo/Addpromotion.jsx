@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode"; // ✅ ใช้ jwtDecode เพื่อดึง ownerId
 import "./Addpromotion.css";
 import Navbar from "../Navbar/Navbar";
 import uploadIcon from "../assets/icons/add.png";
@@ -7,7 +8,7 @@ import uploadIcon from "../assets/icons/add.png";
 const Addpromotion = () => {
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
-  const [arenas, setArenas] = useState([]);
+  const [arenas, setArenas] = useState([]); // ✅ เก็บรายชื่อสนามของเจ้าของธุรกิจ
   const [formData, setFormData] = useState({
     promotionTitle: "",
     description: "",
@@ -22,21 +23,40 @@ const Addpromotion = () => {
     endMinute: "",
   });
 
-  // 📌 ดึงข้อมูลสนามจาก Arena API
+  // 📌 ✅ ดึงข้อมูลสนามที่เป็นของเจ้าของธุรกิจเท่านั้น
   useEffect(() => {
-    const fetchArenas = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:4000/api/arenas", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
-        setArenas(response.data);
-      } catch (error) {
-        console.error("เกิดข้อผิดพลาดในการดึงข้อมูลสนาม:", error.response?.data || error.message);
+    if (!token) {
+      alert("Session หมดอายุ! กรุณาเข้าสู่ระบบใหม่");
+      window.location.href = "/login";
+      return;
+    }
+
+    try {
+      const decoded = jwtDecode(token);
+      const ownerId = decoded.id; // ✅ ดึง ownerId จาก token
+
+      if (!ownerId) {
+        console.error("⚠️ ไม่พบ ID ใน Token");
+        return;
       }
-    };
-    fetchArenas();
+
+      const fetchArenas = async () => {
+        try {
+          const response = await axios.get(`http://localhost:4000/api/stadium/getArenas?owner_id=${ownerId}`);
+          setArenas(response.data);
+        } catch (error) {
+          console.error("⚠️ ไม่สามารถโหลดข้อมูลสนาม:", error);
+        }
+      };
+
+      fetchArenas();
+    } catch (error) {
+      console.error("⚠️ ไม่สามารถถอดรหัส Token:", error);
+      alert("Session ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่");
+      window.location.href = "/login";
+    }
   }, []);
 
   // 📌 อัปโหลดรูป
