@@ -1,0 +1,85 @@
+/* ✅ ทำให้ Navbar ติดขอบจอด้านบน และเพิ่มเงา */
+.navbar-admin-ledger {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* โลโก้และข้อความอยู่ตรงกลาง */
+    background-color: #0b1e35; /* พื้นหลังสีน้ำเงินเข้ม */
+    padding: 15px 0;
+    width: 100%;
+    position: fixed; /* ทำให้ Navbar ติดขอบจอ */
+    top: 0;
+    left: 0;
+    z-index: 1000; /* ให้ Navbar อยู่ด้านบนสุด */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* ✅ เพิ่มเงาเล็กน้อย */
+}
+
+/* ✅ ปุ่ม Home (อยู่ด้านซ้ายใน Navbar) */
+.ledger-home-button {
+    position: absolute;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* ✅ เพิ่มเงาให้ปุ่ม */
+}
+
+.ledger-home-button:hover {
+    transform: scale(1.1);
+    background-color: #f0f0f0;
+}
+
+.ledger-home-logo {
+    width: 35px;
+    height: 35px;
+}
+
+/* ✅ โลโก้ + ชื่ออยู่ตรงกลาง */
+.ledger-navbar-center {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ledger-main-logo {
+    width: 50px;
+    height: 50px;
+}
+
+.ledger-navbar-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+}
+
+/* ✅ ทำให้เนื้อหาหน้าเว็บไม่ถูกบัง */
+.admin-stadium-container {
+    padding-top: 80px; /* เผื่อพื้นที่ให้ Navbar ไม่ทับเนื้อหา */
+}
+
+/* ✅ Responsive Design */
+@media (max-width: 768px) {
+    .ledger-navbar-title {
+        font-size: 22px;
+    }
+
+    .ledger-main-logo {
+        width: 40px;
+        height: 40px;
+    }
+
+    .ledger-home-button {
+        width: 40px;
+        height: 40px;
+        left: 10px;
+    }
+
+    .ledger-home-logo {
+        width: 30px;
+        height: 30px;
+    }
+}
