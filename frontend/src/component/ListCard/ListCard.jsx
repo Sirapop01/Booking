@@ -26,7 +26,7 @@ const ListCard = () => {
     <div className="stadium-container">
       <h2 className="recommend-title">สถานที่แนะนำ</h2>
       <div className="stadium-list">
-        {stadiums.slice(0, 8).map((stadium) => (
+        {stadiums.slice(0, 10).map((stadium) => (
           <div
             key={stadium._id}
             className="stadium-card"

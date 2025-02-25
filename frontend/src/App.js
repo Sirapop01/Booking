@@ -54,7 +54,7 @@ function App() {
         <Route path="/OperaRequri" element={<OperaRequri/>} />
         <Route path="/RegisterOpera" element={<RegisterOpera/>} />
         <Route path="/RegisterArena" element={<RegisterArena/>} />
-        <Route path="/Registerarena/:stadiumId" element={<RegisterArena />} /> {/* ✅ รองรับแก้ไข */}
+        <Route path="/RegisterArena/:arenaId" element={<RegisterArena />} />  {/* สำหรับแก้ไขสนาม */}
         <Route path="/stadium-list" element={<StadiumList />} />
         <Route path='/FavoritesList' element={<FavoriteList />} />
         <Route path='/profile' element={<UserProfile />} />
@@ -81,7 +81,7 @@ function App() {
         <Route path="/Promoowner" element={<Promoowner/>} />
         <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
         <Route element={<ProtectedRoute role="superadmin" />}>
-          <Route path="/admin/register" element={<AdminRegister />} />
+        <Route path="/admin/register" element={<AdminRegister />} />
         </Route>
 
       </Routes>

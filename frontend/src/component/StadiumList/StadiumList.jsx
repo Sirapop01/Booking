@@ -9,7 +9,19 @@ function StadiumList() {
   const navigate = useNavigate();
   const [stadiums, setStadiums] = useState([]);
   const [selectedStadium, setSelectedStadium] = useState(null);
+  const ownerId = localStorage.getItem("ownerId") || sessionStorage.getItem("ownerId");
 
+  const handleEditStadium = () => {
+    if (selectedStadium) {
+        navigate(`/Registerarena/${selectedStadium}`); // นำทางไปยัง RegisterArena.jsx พร้อม arenaId
+    }
+  };
+
+  const handleAddNewStadium = () => {
+    navigate("/Registerarena"); // 📌 ไปที่ Registerarena โดยไม่มี ownerId
+};
+
+  
   useEffect(() => {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
@@ -130,21 +142,22 @@ function StadiumList() {
 
       {/* ✅ ปุ่มด้านล่าง */}
       <div className="bottom-buttons-stadiumlist">
-        <a href={selectedStadium ? `/Registerarena/${selectedStadium}` : "#"} 
-          className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`}>
-          แก้ไข
-        </a>
-        <a href="/add_new_stadium" className="btn-stadiumlist">เพิ่มสนามใหม่</a>
-        <button 
-          className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
-          onClick={() => {
-            console.log("🏟️ กำลังส่ง arenaId ไปที่ ManageSubStadium:", selectedStadium);
-            navigate(`/manage-sub-stadium/${selectedStadium}`);
-          }} 
-          disabled={!selectedStadium}>
-          จัดการสนามย่อย
-        </button>
-      </div>
+            <button 
+                className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
+                onClick={handleEditStadium} 
+                disabled={!selectedStadium}>
+                แก้ไข
+            </button>
+            <button onClick={handleAddNewStadium} className="btn-stadiumlist">
+                เพิ่มสนามใหม่
+            </button>
+            <button 
+                className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
+                onClick={() => navigate(`/manage-sub-stadium/${selectedStadium}`)} 
+                disabled={!selectedStadium}>
+                จัดการสนามย่อย
+            </button>
+        </div>
     </div>
   );
 }
