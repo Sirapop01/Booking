@@ -74,6 +74,31 @@ function ManageSubStadium() {
       .catch(error => console.error("❌ ลบไม่สำเร็จ:", error));
   };
 
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+  
+    const formData = new FormData();
+    formData.append("image", file); // ✅ ส่งไฟล์ไป API ของคุณ
+    formData.append("folder", "sports_icons"); // ✅ สามารถเปลี่ยนเป็นโฟลเดอร์อื่นได้
+  
+    try {
+      const response = await axios.post("http://localhost:4000/api/upload/single", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
+      });
+  
+      const imageUrl = response.data.imageUrl;
+      console.log("✅ รูปอัปโหลดสำเร็จ:", imageUrl);
+  
+      // ✅ อัปเดต URL รูปภาพใน state
+      setNewSport({ ...newSport, iconUrl: imageUrl });
+  
+    } catch (error) {
+      console.error("❌ อัปโหลดรูปไม่สำเร็จ:", error);
+    }
+  };
+  
+
   return (
     <div className="manage-substadium-page">
       <div className="substadium-header">
@@ -88,7 +113,7 @@ function ManageSubStadium() {
 
       <div className="substadium-content">
         <h2 className="substadium-subtitle">เลือกประเภทกีฬา</h2>
-        <p>📌 arenaId: <strong>{arenaId || "❌ ไม่มีข้อมูล"}</strong></p>
+        <p>arenaId: <strong>{arenaId || "❌ ไม่มีข้อมูล"}</strong></p>
         <div className="substadium-sports">
           {sports.map((sport) => (
             <div key={sport._id} className="substadium-sport-card">
@@ -130,13 +155,9 @@ function ManageSubStadium() {
               ) : (
                 <span className="substadium-upload-placeholder">+</span>
               )}
-              <input type="file" accept="image/*" onChange={(event) => {
-                const file = event.target.files[0];
-                if (file) {
-                  setNewSport({ ...newSport, iconUrl: URL.createObjectURL(file) });
-                }
-              }} hidden />
+              <input type="file" accept="image/*" onChange={handleImageUpload} hidden />
             </label>
+
             <div className="substadium-popup-buttons">
               <button className="btn substadium-btn-save" onClick={addNewSport}>บันทึก</button>
               <button className="btn substadium-btn-cancel" onClick={togglePopup}>ยกเลิก</button>
