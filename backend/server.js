@@ -26,6 +26,7 @@ const sportRoutes = require("./routes/sportRoutes");
 const app = express();
 const PORT = process.env.PORT || 4000;
 const promotionRoutes = require("./routes/promotionRoutes");
+const sportscategoriesRoutes = require("./routes/sportscategoriesRoutes"); // ✅ เพิ่ม Route
 
 // เสิร์ฟไฟล์ภาพจากโฟลเดอร์ uploads
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -69,7 +70,7 @@ app.use("/api/admin-ledger", adminLedgerRoutes);
 app.use("/api/stadium",stadiumlistRoutes);
 app.use("/api/sports", sportRoutes);
 app.use("/api/promotions", promotionRoutes);
-
+app.use("/api/sportscategories", sportscategoriesRoutes); // ✅ เพิ่ม Route ใหม่
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
     return res.status(401).json({ message: "Token ไม่ถูกต้องหรือหมดอายุ" });
