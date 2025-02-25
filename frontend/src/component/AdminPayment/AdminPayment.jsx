@@ -3,6 +3,8 @@ import axios from "axios";
 import "./AdminPayment.css";
 import homeLogo from "../assets/logoalt.png";
 import closeIcon from "../assets/icons/close.png";
+import NavbarAdmin from "../NavbarAdmin/NavbarAdmin";
+
 
 const AdminPayment = () => {
   const [users, setUsers] = useState([]);
@@ -91,12 +93,10 @@ const AdminPayment = () => {
 
   return (
     <div className="admin-payment-container">
-      {/* 🔙 Home Button */}
-      <a href="/" className="home-button">
-        <img src={homeLogo} alt="Home Logo" className="home-logo" />
-      </a>
+      {/* ✅ ใช้ NavbarAdmin แทน Home Button */}
+      <NavbarAdmin />
 
-      <h1 className="page-title3">ตรวจสอบการจ่ายเงิน</h1>
+     
 
       <div className="payment-content">
         {/* 📜 User List */}
