@@ -8,6 +8,7 @@ import uploadIcon from "../assets/icons/add.png";
 const Addpromotion = () => {
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
+  const [sportsTypes, setSportsTypes] = useState([]);
   const [arenas, setArenas] = useState([]); // ✅ เก็บรายชื่อสนามของเจ้าของธุรกิจ
   const [formData, setFormData] = useState({
     promotionTitle: "",
@@ -23,34 +24,39 @@ const Addpromotion = () => {
     endMinute: "",
   });
 
-  // 📌 ✅ ดึงข้อมูลสนามที่เป็นของเจ้าของธุรกิจเท่านั้น
+ 
+  // 📌 ✅ โหลดข้อมูลสนามของเจ้าของธุรกิจ
   useEffect(() => {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-
+  
     if (!token) {
       alert("Session หมดอายุ! กรุณาเข้าสู่ระบบใหม่");
       window.location.href = "/login";
       return;
     }
-
+  
     try {
       const decoded = jwtDecode(token);
-      const ownerId = decoded.id; // ✅ ดึง ownerId จาก token
-
+      const ownerId = decoded.id;
+  
       if (!ownerId) {
         console.error("⚠️ ไม่พบ ID ใน Token");
         return;
       }
-
+  
       const fetchArenas = async () => {
         try {
           const response = await axios.get(`http://localhost:4000/api/stadium/getArenas?owner_id=${ownerId}`);
-          setArenas(response.data);
+          if (response.data.length > 0) {
+            setArenas(response.data);
+          } else {
+            setArenas([]);
+          }
         } catch (error) {
           console.error("⚠️ ไม่สามารถโหลดข้อมูลสนาม:", error);
         }
       };
-
+  
       fetchArenas();
     } catch (error) {
       console.error("⚠️ ไม่สามารถถอดรหัส Token:", error);
@@ -58,8 +64,63 @@ const Addpromotion = () => {
       window.location.href = "/login";
     }
   }, []);
+  
+  // ✅ โหลดประเภทกีฬาหลังจากเลือกสนาม
+  useEffect(() => {
+    if (!formData.arenaId) {
+      setSportsTypes([]); // รีเซ็ตประเภทกีฬา
+      return;
+    }
+  
+    const fetchSportsTypes = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/api/sportscategories/sportscate?arenaId=${formData.arenaId}`);
 
-  // 📌 อัปโหลดรูป
+        if (response.data && response.data.length > 0) {
+          // ✅ ตรวจสอบค่าที่ซ้ำกันและเก็บเฉพาะค่าที่ไม่ซ้ำ
+          const uniqueSports = [...new Map(response.data.map(item => [item.sportName, item])).values()];
+          setSportsTypes(uniqueSports);
+        } else {
+          setSportsTypes([]); // ไม่มีข้อมูล
+        }
+      } catch (error) {
+        console.error("⚠️ ไม่สามารถโหลดข้อมูลประเภทกีฬา:", error);
+        setSportsTypes([]);
+      }
+    };
+    
+  
+    fetchSportsTypes();
+  }, [formData.arenaId]);
+  
+  // ✅ เปลี่ยนสนาม และโหลดประเภทกีฬาใหม่
+  const handleArenaChange = (e) => {
+    const selectedArenaId = e.target.value;
+  
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      arenaId: selectedArenaId || "",
+      type: "", // รีเซ็ตประเภทกีฬาเมื่อเปลี่ยนสนาม
+    }));
+  
+    if (!selectedArenaId) {
+      setSportsTypes([]); // รีเซ็ตประเภทกีฬา
+    }
+  };
+  
+  // ✅ ฟังก์ชันเปลี่ยนประเภทกีฬา
+  const handleTypeChange = (e) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      type: e.target.value, // กำหนดค่าที่เลือกให้ type
+    }));
+  };
+
+  const handleRemoveImage = () => {
+    setImage(null);
+    setFile(null);
+  };
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -68,37 +129,38 @@ const Addpromotion = () => {
     }
   };
 
-  // 📌 ลบรูปภาพ
-  const handleRemoveImage = () => {
-    setImage(null);
-    setFile(null);
-  };
-
-  // 📌 ตรวจสอบค่า input และไม่ให้ endDate น้อยกว่า startDate
   const handleChange = (e) => {
     const { name, value } = e.target;
-
+  
     if (name === "endDate" && value < formData.startDate) {
       alert("วันที่สิ้นสุดต้องไม่ย้อนหลังกว่าวันที่เริ่มต้น");
       return;
     }
-
+  
     if (name === "discount" && value < 0) {
       alert("ไม่สามารถใส่จำนวนติดลบได้");
       return;
     }
-
-    setFormData({ ...formData, [name]: value });
+  
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
-
-  // 📌 ตรวจสอบข้อมูลก่อนส่ง
+  
+  
+  
+  
+  // ✅ ตรวจสอบข้อมูลก่อนส่ง
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.promotionTitle || !formData.arenaId || !formData.type || !formData.discount || !formData.startDate || !formData.endDate || !formData.startHour || !formData.startMinute || !formData.endHour || !formData.endMinute || !file) {
       alert("กรุณากรอกข้อมูลให้ครบถ้วน และอัปโหลดรูปภาพ");
       return;
     }
+    
+    
 
     const timeRange = `${formData.startHour}:${formData.startMinute} - ${formData.endHour}:${formData.endMinute}`;
 
@@ -179,7 +241,7 @@ const Addpromotion = () => {
 
           <div className="input-group">
             <label>ชื่่อสนาม : *</label>
-            <select name="arenaId" value={formData.arenaId} onChange={handleChange} required>
+            <select name="arenaId" value={formData.arenaId} onChange={handleArenaChange} required>
               <option value="">-- เลือกสนาม --</option>
               {arenas.map((arena) => (
                 <option key={arena._id} value={arena._id}>{arena.fieldName}</option>
@@ -188,8 +250,13 @@ const Addpromotion = () => {
           </div>
 
           <div className="input-group">
-            <label>ประเภทสนาม: *</label>
-            <input type="text" name="type" value={formData.type} onChange={handleChange} required />
+            <label>ประเภทกีฬา : *</label>
+            <select name="type" value={formData.type} onChange={handleTypeChange} required>
+              <option value="">-- เลือกประเภทกีฬา --</option>
+              {sportsTypes.map((sport) => (
+                <option key={sport._id} value={sport.sportName}>{sport.sportName}</option>
+              ))}
+            </select>
           </div>
 
           <div className="input-group">
