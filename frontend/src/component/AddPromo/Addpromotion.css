@@ -6,7 +6,7 @@
   flex-direction: column;
   align-items: center;
   font-family: "Kanit", sans-serif;
-  color: white;
+  background: linear-gradient(to bottom, #0b1e35, #ffffff);
 }
 
 /* ชื่อหัวข้อของหน้า */
@@ -15,20 +15,29 @@
   margin-top: 150px;
   text-align: center;
   font-weight: bold;
+  color: white; /* ✅ ตั้งเป็นสีขาว */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* ✅ เพิ่มเงาให้ข้อความตัดกับพื้นหลัง */
 }
 
+
 /* กล่องฟอร์มหลัก */
-.form-container {
+.form-container, .details-container {
   background: white;
   color: black;
   width: 90%;
   max-width: 1000px;
   padding: 30px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  border-radius: 15px;
+  margin-top: 20px; 
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.25);
 }
+
+.form-container:hover, .details-container:hover {
+  transform: scale(1.02); /* ✅ ทำให้ขยายขึ้นเล็กน้อยเมื่อ hover */
+  box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.3); /* ✅ เงาเข้มขึ้น */
+}
+
 
 /* ส่วนอัปโหลดรูป */
 .image-upload-section {
@@ -159,4 +168,9 @@
   max-height: 700px; /* กำหนดความสูงให้เหมาะสม */
   overflow-y: auto; /* เปิดให้ Scroll ภายในกล่องสีขาว */
   padding-right: 10px; /* ป้องกันการติดขอบ */
+}
+
+.input-group input, .input-group select {
+  padding: 12px; /* ✅ เพิ่มความกว้างของ input */
+  border-radius: 5px;
 }
