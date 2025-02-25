@@ -1,12 +1,29 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Homepageopera.css";
 import Navbar from "../Navbar/Navbar";
-import stadiumIcon from "../assets/icons/stadiumicon.png"; // ไอคอนสนาม
-import moneyIcon from "../assets/icons/save-money.png"; // ไอคอนตรวจสอบบัญชี
-import commentregisIcon from "../assets/icons/commentregisicon.png"; // ไอคอนรีวิวทั้งหมด
+import stadiumIcon from "../assets/icons/stadiumicon.png";
+import moneyIcon from "../assets/icons/save-money.png";
+import commentregisIcon from "../assets/icons/commentregisicon.png";
+import { jwtDecode } from "jwt-decode"; // นำเข้า jwtDecode
 
 const Homepageopera = () => {
+  const navigate = useNavigate();
+  const [ownerId, setOwnerId] = useState(null);
+
+  useEffect(() => {
+    // ดึง Token จาก LocalStorage หรือ SessionStorage
+    const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (storedToken) {
+      try {
+        const decoded = jwtDecode(storedToken);
+        setOwnerId(decoded.id); // ดึงค่า ownerId จาก token
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -42,7 +59,17 @@ const Homepageopera = () => {
                 className="menu-icon77"
                 aria-label="ไอคอนตรวจสอบบัญชี"
               />
-              <button className="menu-text77" aria-label="ตรวจสอบบัญชี">
+              <button
+                className="menu-text77"
+                aria-label="ตรวจสอบบัญชี"
+                onClick={() => {
+                  if (ownerId) {
+                    navigate(`/Ownerledger/${ownerId}`);
+                  } else {
+                    alert("กรุณาเข้าสู่ระบบ");
+                  }
+                }}
+              >
                 ตรวจสอบบัญชี
               </button>
             </div>

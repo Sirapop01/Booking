@@ -21,8 +21,11 @@ const uploadRoutes = require('./routes/uploadRoutes');
 const superAdminRoutes = require('./routes/superAdminRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const adminLedgerRoutes = require("./routes/adminLedgerRoutes");
-const stadiumlistRoutes = require("./routes/stadiumlistRoutes");
+
+const stadiumlistRoutes = require("./routes/stadiumlistRoutes")
+const arenaManageRoutes = require("./routes/arenaManageRoutes");
 const sportRoutes = require("./routes/sportRoutes");
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 const promotionRoutes = require("./routes/promotionRoutes");
@@ -67,10 +70,15 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/superadmin', superAdminRoutes);
 app.use('/api/admins', adminRoutes);
 app.use("/api/admin-ledger", adminLedgerRoutes);
-app.use("/api/stadium",stadiumlistRoutes);
+
+app.use("/api/stadium",stadiumlistRoutes)
+app.use("/api/arena-manage", arenaManageRoutes); 
+
+
 app.use("/api/sports", sportRoutes);
 app.use("/api/promotions", promotionRoutes);
 app.use("/api/sportscategories", sportscategoriesRoutes); // ✅ เพิ่ม Route ใหม่
+
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
     return res.status(401).json({ message: "Token ไม่ถูกต้องหรือหมดอายุ" });

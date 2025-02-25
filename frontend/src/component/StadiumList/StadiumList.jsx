@@ -9,7 +9,19 @@ function StadiumList() {
   const navigate = useNavigate();
   const [stadiums, setStadiums] = useState([]);
   const [selectedStadium, setSelectedStadium] = useState(null);
+  const ownerId = localStorage.getItem("ownerId") || sessionStorage.getItem("ownerId");
 
+  const handleEditStadium = () => {
+    if (selectedStadium) {
+        navigate(`/Registerarena/${selectedStadium}`); // นำทางไปยัง RegisterArena.jsx พร้อม arenaId
+    }
+  };
+
+  const handleAddNewStadium = () => {
+    navigate("/Registerarena"); // 📌 ไปที่ Registerarena โดยไม่มี ownerId
+};
+
+  
   useEffect(() => {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
@@ -145,7 +157,7 @@ function StadiumList() {
             disabled={!selectedStadium}>
             จัดการสนามย่อย
         </button>
-      </div>
+        </div>
     </div>
   );
 }

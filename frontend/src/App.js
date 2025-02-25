@@ -54,7 +54,7 @@ function App() {
         <Route path="/OperaRequri" element={<OperaRequri/>} />
         <Route path="/RegisterOpera" element={<RegisterOpera/>} />
         <Route path="/RegisterArena" element={<RegisterArena/>} />
-        <Route path="/Registerarena/:stadiumId" element={<RegisterArena />} /> {/* ✅ รองรับแก้ไข */}
+        <Route path="/RegisterArena/:arenaId" element={<RegisterArena />} />  {/* สำหรับแก้ไขสนาม */}
         <Route path="/stadium-list" element={<StadiumList />} />
         <Route path='/FavoritesList' element={<FavoriteList />} />
         <Route path='/profile' element={<UserProfile />} />
@@ -64,6 +64,7 @@ function App() {
         <Route path='/Discount' element={<Discount />} />
         <Route path='/SuccessRegis' element={<SuccessRegis />} />
         <Route path='/Ownerledger' element={<OwnerLedger />} />
+        <Route path='/Ownerledger/:ownerId' element={<OwnerLedger />} />
         <Route path='/Information' element={<Information />} />
         <Route path='/ManageAccount' element={<ManageAccount />}/>
         <Route path='/Homepageopera' element={<HomepageOper />}/>
@@ -81,7 +82,7 @@ function App() {
         <Route path="/Promoowner" element={<Promoowner/>} />
         <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
         <Route element={<ProtectedRoute role="superadmin" />}>
-          <Route path="/admin/register" element={<AdminRegister />} />
+        <Route path="/admin/register" element={<AdminRegister />} />
         </Route>
 
       </Routes>
