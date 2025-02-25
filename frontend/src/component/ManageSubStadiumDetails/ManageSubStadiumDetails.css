@@ -94,18 +94,20 @@ table {
     height: 100%;
     overflow-y: auto;
     font-family: 'Kanit', sans-serif;
+    
 }
 
 
 /* ตาราง */
 th {
     background: #0b1e35; /* เปลี่ยนเป็นสีน้ำเงินเข้ม */
-    color: #ffffff; /* สีตัวอักษร */
+    color: rgb(0, 0, 0); /* สีตัวอักษร */
     font-size: 18px;
     font-weight: bold;
     text-align: center;
     padding: 12px;
-    border-bottom: 2px solid #ffffff;
+    border-bottom: 2px solid #141414;
+    
 }
 
 /* ✅ ขอบเส้นตาราง */
@@ -559,4 +561,37 @@ tr:hover {
     background: white;
     border-radius: 10px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15); /* ✅ เพิ่มเงา */
+}
+
+.add-court-btn {
+    background: linear-gradient(135deg, #07213A, #0B2C4A); /* ✅ ไล่เฉดสีน้ำเงินเข้ม */
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px; /* ✅ โค้งเล็กน้อย */
+    width: 100%; /* ✅ ขยายให้เต็มตาราง */
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0px 4px 10px rgba(7, 33, 58, 0.3); /* ✅ เพิ่มเงาสีน้ำเงิน */
+    margin-top: 10px;
+    position: relative;
+    top:300px;
+}
+
+/* ✅ เอฟเฟกต์ Hover */
+.add-court-btn:hover {
+    background: linear-gradient(135deg, #0B2C4A, #104060); /* ✅ เปลี่ยนเฉดสีให้เข้มขึ้น */
+    transform: scale(1.02); /* ✅ ขยายขึ้นเล็กน้อย */
+    box-shadow: 0px 6px 14px rgba(7, 33, 58, 0.5);
+}
+
+/* ✅ เอฟเฟกต์ตอนกด */
+.add-court-btn:active {
+    transform: scale(0.98);
+    box-shadow: 0px 2px 6px rgba(7, 33, 58, 0.3);
 }
