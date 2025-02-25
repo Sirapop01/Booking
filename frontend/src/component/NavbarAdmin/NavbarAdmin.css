@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+
+/* 🌍 Navbar หลัก */
+.navbar-admin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #07213A;
+    width: 100%;
+    height: 130px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/* 🔙 ปุ่ม Home */
+.navbar-home-button {
+    position: absolute;
+    left: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.navbar-home-button:hover {
+    transform: scale(1.1);
+}
+
+.navbar-home-logo {
+    width: 35px;
+    height: 35px;
+}
+
+/* ✅ หัวข้อหลัก */
+.navbar-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: white;
+    font-family: "Kanit", sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* 📌 โลโก้ */
+.navbar-logo {
+    width: 50px;
+    height: auto;
+}

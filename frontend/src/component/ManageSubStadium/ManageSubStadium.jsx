@@ -113,7 +113,6 @@ function ManageSubStadium() {
 
       <div className="substadium-content">
         <h2 className="substadium-subtitle">เลือกประเภทกีฬา</h2>
-        <p>arenaId: <strong>{arenaId || "❌ ไม่มีข้อมูล"}</strong></p>
         <div className="substadium-sports">
           {sports.map((sport) => (
             <div key={sport._id} className="substadium-sport-card">

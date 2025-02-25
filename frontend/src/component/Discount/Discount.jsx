@@ -16,7 +16,7 @@ const Promotion = () => {
   };
 
   return (
-    <div className="promotion-container">
+    <div className="promotion-container11">
       <div className="image-section">
           <img src={Promo} alt="Promo" className="promo" />
       </div>
