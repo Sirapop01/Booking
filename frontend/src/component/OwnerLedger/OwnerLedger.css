@@ -118,6 +118,7 @@
   align-items: center;
   padding: 10px;
   border-bottom: 2px solid #07213A; /* ขอบด้านล่างเข้ม */
+  color: #0071ce;
 }
 
 .owner-ledger-table-header h2 {
@@ -133,7 +134,8 @@
 /* ✅ ตารางข้อมูล */
 table {
   border-collapse: collapse;
-  border: solid 20px #07213A; /* ใช้สีของกรอบตามธีม */
+
+  border: none;
   width: 100%;
   border-radius: 100px; /* เพิ่มมุมโค้ง */
   color: white;
@@ -155,7 +157,6 @@ th {
   padding: 16px;
   font-size: 18px;
   border-bottom: 3px solid #0f5ba8;
-  
 }
 
 
@@ -308,4 +309,8 @@ th {
   padding: 10px 0;
 }
 
+
+.details-table-wrapper thead th{
+  background-color: #0e4a8a;
+}
 

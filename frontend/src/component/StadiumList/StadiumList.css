@@ -13,6 +13,60 @@
   top: 150px;
 }
 
+
+/* ✅ ตาราง */
+.stadium-table-stadiumlist {
+  width: 100%;
+  max-width: 1100px;
+  border-collapse: collapse;
+  text-align: center;
+  background: white;
+  color: #333;
+  border-radius: 15px; /* ทำให้ขอบของตารางเป็นโค้งมน */
+  overflow: hidden;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1); /* เพิ่มเงาเบาๆ ให้ขอบตาราง */
+  table-layout: fixed;
+}
+
+/* ✅ หัวตาราง */
+.stadium-table-stadiumlist thead th {
+  background: #0A1F44; /* ใช้สีเดียวกับ Navbar */
+  color: white;
+  font-size: 18px;
+  padding: 16px;
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 3px solid #07213A; /* เส้นขอบด้านล่างสีเข้ม */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* เพิ่มเงา */
+}
+
+/* ✅ เมื่อแถวถูกเลือก */
+.table-row-stadiumlist.selected {
+  background-color: rgba(0, 123, 255, 0.2); /* สีจางๆ ที่เกิดจากการเลือกแถว */
+  color: #0072ce;
+  border: none !important;
+  box-shadow: 0px 4px 12px rgba(0, 123, 255, 0.5); /* เพิ่มเงาให้เด่นยิ่งขึ้น */
+}
+
+/* ✅ ให้แถวที่ไม่ได้เลือกมีความชัดเจน */
+.table-row-stadiumlist {
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd; /* ขอบเบาๆ ระหว่างแถว */
+}
+
+/* ✅ ปรับให้เมื่อ hover แถวจะชัดขึ้น */
+.table-row-stadiumlist:hover {
+  background-color: #d3e5f3; /* สีฟ้าอ่อนๆ เพื่อให้เด่นเมื่อ hover */
+  cursor: pointer;
+  box-shadow: 0px 6px 16px rgba(0, 123, 255, 0.3); /* เงาเมื่อ hover */
+}
+
+/* ✅ ปรับให้แถวที่ถูกเลือกจะมีขอบหนากว่า */
+.table-row-stadiumlist.selected:hover {
+  background-color: rgba(0, 123, 255, 0.3);
+  box-shadow: 0px 6px 18px rgba(0, 123, 255, 0.7); /* เงาที่เด่นขึ้น */
+}
 /* ✅ ปุ่มสลับสถานะ */
 .toggle-btn-stadiumlist {
   display: inline-block;

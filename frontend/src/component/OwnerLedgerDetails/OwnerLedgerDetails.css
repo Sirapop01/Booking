@@ -158,6 +158,7 @@ td {
     background: #f9f9f9;
 }
 
+
 /* ✅ เอฟเฟกต์ Hover */
 tr:hover {
     background: #d9eafc;
@@ -335,4 +336,8 @@ tbody tr:last-child td:last-child {
 .details-pdf-button:hover {
     background: linear-gradient(to right, #1769aa, #0e4a8a);
     transform: scale(1.05);
+}
+
+.ledger-table thead th{
+    background-color: #0e4a8a;
 }
