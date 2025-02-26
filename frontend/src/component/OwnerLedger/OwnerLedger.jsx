@@ -7,6 +7,7 @@ import html2canvas from "html2canvas";
 import "./OwnerLedger.css";
 import homeLogo from "../assets/logoalt.png";
 import filterIcon from "../assets/icons/filter.png";
+import NavbarOwnerLedgerDetails from "../NavbarOwnerLedgerDetails/NavbarOwnerLedgerDetails";
 
 const OwnerLedger = () => {
   const [stadiums, setStadiums] = useState([]);
@@ -105,12 +106,8 @@ const OwnerLedger = () => {
   };
 
   return (
-    <div className="owner-ledger-page">
-      <a href="/" className="owner-ledger-home-button">
-        <img src={homeLogo} alt="Home Logo" className="home-logo" />
-      </a>
-
-      <h1 className="owner-ledger-title">บัญชีรายการรับ</h1>
+    <div className="admin-stadium-container"> 
+      <NavbarOwnerLedgerDetails />
 
       <div className="owner-ledger-container">
         <div className="owner-ledger-content">

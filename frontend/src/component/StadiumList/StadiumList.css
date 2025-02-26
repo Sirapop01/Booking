@@ -43,7 +43,7 @@
 .table-row-stadiumlist.selected {
   background-color: rgba(0, 123, 255, 0.2); /* สีจางๆ ที่เกิดจากการเลือกแถว */
   color: #0072ce;
-  border: 2px solid #0072ce;
+  border: none !important;
   box-shadow: 0px 4px 12px rgba(0, 123, 255, 0.5); /* เพิ่มเงาให้เด่นยิ่งขึ้น */
 }
 
