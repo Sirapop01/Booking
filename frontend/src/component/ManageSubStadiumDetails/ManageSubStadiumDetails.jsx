@@ -1,3 +1,6 @@
+import axios from "axios"; // ⬅️ เพิ่ม axios
+import { useParams } from "react-router-dom"; // ⬅️ ใช้ useParams() แทน useLocation()
+import { useEffect } from "react"; // ⬅️ ใช้ useEffect()
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import "./ManageSubStadiumDetails.css";
@@ -5,11 +8,18 @@ import NavbarStadiumlist from "../NavbarStadiumlist/NavbarStadiumlist";
 
 function ManageSubStadiumDetails() {
   const location = useLocation();
-  const sport = location.state?.sport;
-  const [courts, setCourts] = useState([
-    { id: 1, name: "Court 1", status: "เปิด", owner: "Wichai Arena", phone: "0984230116", description: "", openTime: "13:00", closeTime: "19:00", price: "200 B", images: [] },
-    { id: 2, name: "Court 2", status: "เปิด", owner: "Wichai Arena", phone: "0984230116", description: "", openTime: "13:00", closeTime: "19:00", price: "200 B", images: [] },
-  ]);
+  const { arenaId, sportId } = useParams();
+  console.log("arenaId:", arenaId, "sportId:", sportId);
+  const [courts, setCourts] = useState([]);
+
+useEffect(() => {
+  axios.get(`http://localhost:4000/api/substadiums/${arenaId}/${sportId}`)
+    .then(response => {
+      setCourts(response.data);
+    })
+    .catch(error => console.error("❌ Error fetching substadiums:", error));
+}, [arenaId, sportId]);
+
 
   const [selectedCourt, setSelectedCourt] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -31,45 +41,106 @@ function ManageSubStadiumDetails() {
     setEditedCourt(court || { id: null, name: "", status: "เปิด", owner: "", phone: "", description: "", openTime: "", closeTime: "", price: "", images: [] });
   };
 
-  // กดปุ่ม "เพิ่มสนาม"
   const handleAddClick = () => {
     setIsAdding(true);
     setIsEditing(true);
-    setEditedCourt({
-      id: null, name: "", status: "เปิด", owner: "", phone: "", description: "", openTime: "", closeTime: "", price: "", images: []
-    });
+  
+    const newCourt = {
+      id: null, // จะถูกแทนที่หลังจากบันทึกลงฐานข้อมูล
+      name: "",
+      status: "เปิด",
+      owner: "",
+      phone: "",
+      description: "",
+      openTime: "",
+      closeTime: "",
+      price: "",
+      images: []
+    };
+  
+    setEditedCourt(newCourt);
+    setSelectedCourt(newCourt); // ✅ เลือกสนามใหม่อัตโนมัติ
   };
+  
 
-  // กด "บันทึก" (เพิ่มหรือแก้ไข)
   const handleSaveClick = () => {
     if (isAdding) {
-      const newCourt = { ...editedCourt, id: courts.length + 1 };
-      setCourts([...courts, newCourt]);
+      axios.post("http://localhost:4000/api/substadiums", {
+        arenaId,
+        sportId,
+        ...editedCourt
+      })
+      .then(response => {
+        setCourts([...courts, response.data]); // อัปเดต UI
+        setIsAdding(false);
+        setIsEditing(false);
+        window.location.reload(); // ✅ รีเฟรชหน้าใหม่
+      })
+      .catch(error => console.error("❌ Failed to save substadium:", error));
     } else {
-      setCourts(courts.map(court => court.id === selectedCourt.id ? editedCourt : court));
+      axios.put(`http://localhost:4000/api/substadiums/${selectedCourt._id}`, editedCourt)
+      .then(response => {
+        setCourts(courts.map(court => court._id === selectedCourt._id ? response.data : court));
+        setIsEditing(false);
+        window.location.reload(); // ✅ รีเฟรชหน้าใหม่
+      })
+      .catch(error => console.error("❌ Failed to update substadium:", error));
     }
-
-    setIsEditing(false);
-    setIsAdding(false);
-    setSelectedCourt(null);
   };
-
+  
+  
   // เปิด popup ลบ
   const handleDeleteCourt = (e, courtId) => {
-    e.stopPropagation(); // ป้องกันการเลือกแถว
+    e.stopPropagation();
+  
+    console.log("🗑️ กำลังเตรียมลบสนามย่อย ID:", courtId); // ✅ เช็คค่า ID ที่ได้
+    if (!courtId) {
+      alert("❌ ไม่พบ ID ของสนาม กรุณารีเฟรชหน้าแล้วลองใหม่");
+      return;
+    }
+  
     setCourtToDelete(courtId);
     setIsDeletePopupOpen(true);
   };
+  
+  
 
-  // ยืนยันการลบ
-  const confirmDeleteCourt = () => {
-    if (deleteConfirmText === "Delete") {
-      setCourts(courts.filter(court => court.id !== courtToDelete));
-      setIsDeletePopupOpen(false);
-      setDeleteConfirmText("");
-    }
-  };
+// ✅ ฟังก์ชันยืนยันการลบสนาม
+const confirmDeleteCourt = async () => {
+  if (deleteConfirmText !== "Delete") return;
+  if (!courtToDelete) {
+    alert("❌ ไม่พบ ID ของสนาม กรุณารีเฟรชหน้าแล้วลองใหม่");
+    return;
+  }
 
+  try {
+    console.log("🗑️ กำลังลบสนามย่อย ID:", courtToDelete); // ✅ ตรวจสอบค่า ID ที่จะลบ
+
+    await axios.delete(`http://localhost:4000/api/substadiums/${courtToDelete}`);
+
+    setCourts((prevCourts) => prevCourts.filter((court) => court._id !== courtToDelete));
+    
+    // ✅ ปิดป็อปอัพอัตโนมัติ
+    setIsDeletePopupOpen(false);
+    setDeleteConfirmText("");
+    setCourtToDelete(null);
+
+    // ✅ แจ้งเตือนว่าลบสำเร็จ
+    alert("✅ ลบสนามย่อยสำเร็จ!");
+
+    // ✅ รีเฟรชหน้าหลังจาก 1 วินาที เพื่อให้เห็นผลชัดเจน
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  } catch (error) {
+    console.error("❌ Failed to delete substadium:", error);
+    alert("เกิดข้อผิดพลาดในการลบสนามย่อย");
+  }
+};
+
+
+
+  
   const toggleStatus = (courtId) => {
     setCourts(
       courts.map((court) =>
@@ -80,33 +151,41 @@ function ManageSubStadiumDetails() {
     );
   };
 
-  const handleImageUpload = (event) => {
-    const files = event.target.files;
-    if (!files.length) return;
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
   
-    const newImages = [...editedCourt.images];
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("folder", "substadium-images"); // ✅ กำหนด folder เพื่ออัปโหลดไปยัง Cloudinary
   
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          newImages.push(e.target.result);
-          setEditedCourt({ ...editedCourt, images: newImages });
-        };
-        reader.readAsDataURL(file);
-      }
+    try {
+      const response = await axios.post("http://localhost:4000/api/upload/single", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+  
+      // ✅ บันทึกลิงก์ของรูปภาพที่อัปโหลดสำเร็จลงใน state
+      setEditedCourt({ ...editedCourt, images: [...editedCourt.images, response.data.imageUrl] });
+    } catch (error) {
+      console.error("❌ Image upload failed:", error);
     }
   };
   
-  const handleRemoveImage = (index) => {
-    if (!isEditing) return; // ❌ ป้องกันการลบรูปหากไม่ได้กด "แก้ไข"
+  const handleRemoveImage = async (index) => {
+    if (!isEditing) return;
   
-    const updatedImages = [...editedCourt.images];
-    updatedImages.splice(index, 1);
-    setEditedCourt({ ...editedCourt, images: updatedImages });
-  };
+    const imageUrl = editedCourt.images[index];
   
+    try {
+      await axios.post("http://localhost:4000/api/delete-image", { imageUrl });
+  
+      const updatedImages = [...editedCourt.images];
+      updatedImages.splice(index, 1);
+      setEditedCourt({ ...editedCourt, images: updatedImages });
+    } catch (error) {
+      console.error("❌ Failed to delete image:", error);
+    }
+  };  
   
 
   return (
@@ -129,23 +208,28 @@ function ManageSubStadiumDetails() {
               </tr>
             </thead>
             <tbody>
-              {courts.map((court) => (
-                <tr key={court.id} className={selectedCourt?.id === court.id ? "selected" : ""} onClick={() => selectCourt(court)}>
-                  <td>{court.name}</td>
-                  <td>
-                    <button 
-                      className={court.status === "เปิด" ? "btn-open" : "btn-closed"} 
-                      onClick={(e) => { e.stopPropagation(); toggleStatus(court.id); }}
-                    >
-                      {court.status}
-                    </button>
-                  </td>
-                  <td>
-                    <button className="delete-btn" onClick={(e) => handleDeleteCourt(e, court.id)}>❌</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+                {courts.map((court) => (
+                  <tr key={court._id} className={selectedCourt?._id === court._id ? "selected" : ""} onClick={() => selectCourt(court)}>
+                    <td>{court.name}</td>
+                    <td>
+                      <button 
+                        className={court.status === "เปิด" ? "btn-open" : "btn-closed"} 
+                        onClick={(e) => { e.stopPropagation(); toggleStatus(court._id); }} // ✅ ใช้ `_id` แทน `id`
+                      >
+                        {court.status}
+                      </button>
+                    </td>
+                    <td>
+                      <button 
+                        className="delete-btn" 
+                        onClick={(e) => handleDeleteCourt(e, court._id)} // ✅ ใช้ `_id` แทน `id`
+                      >
+                        ❌
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
           </table>
         </div>
 
@@ -191,19 +275,19 @@ function ManageSubStadiumDetails() {
 
         {/* ✅ แสดงรูปภาพที่อัปโหลด */}
         <div className="image-gallery">
-          {editedCourt.images.map((image, index) => (
-            <div key={index} className="image-wrapper">
-              <img src={image} alt={`court-${index}`} className="stadium-image" />
-                <button 
-                  className="delete-image-btn" 
-                  onClick={() => handleRemoveImage(index)}
-                  disabled={!isEditing} // ❌ ปุ่มกดไม่ได้หากไม่ได้อยู่ในโหมด "แก้ไข"
-                >
-                  ❌
-                  </button>
-              </div>
+          {editedCourt?.images?.map((image, index) => (
+            <div key={image} className="image-wrapper"> {/* ✅ ใช้ image เป็น key */}
+              <img src={image} alt={`court-image-${index}`} className="stadium-image" />
+              <button 
+                className="delete-image-btn" 
+                onClick={() => handleRemoveImage(index)}
+                disabled={!isEditing} // ❌ ปุ่มกดไม่ได้หากไม่ได้อยู่ในโหมด "แก้ไข"
+              >
+                ❌
+              </button>
+            </div>
           ))}
-      </div>
+        </div>
 
             <p><strong>ชื่อสนาม:</strong> 
                   <input type="text" value={editedCourt.name} onChange={(e) => setEditedCourt({ ...editedCourt, name: e.target.value })} readOnly={!isEditing} />
