@@ -1,4 +1,7 @@
-.promotion-container {
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+
+.promotion-container66 {
   text-align: center;
   padding: 20px;
   background: linear-gradient(to bottom, #0c2c4a, #1a1a2e); /* พื้นหลังไล่สี */
@@ -6,15 +9,16 @@
   font-family: 'Kanit', sans-serif;
 }
 
-.promotion-title {
+.promotion-title66 {
   font-size: 36px;
   color: white;
-  margin-bottom: 20px;
+  margin-top: 100px;
+  margin-bottom: 8px;
   text-transform: uppercase;
 
 }
 
-.promotion-list {
+.promotion-list66 {
   display: flex; /* ใช้ Flexbox */
   flex-wrap: wrap; /* ให้ไหลลงบรรทัดใหม่เมื่อเต็มพื้นที่ */
   justify-content: center; /* จัดให้อยู่ตรงกลาง */
@@ -22,7 +26,7 @@
   padding: 20px;
 }
 
-.promotion-card {
+.promotion-card66 {
   width: 280px; /* กำหนดความกว้าง */
   background: white;
   border-radius: 12px;
@@ -31,49 +35,50 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.promotion-card:hover {
+.promotion-card66:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
-.promotion-image {
+.promotion-image66 {
   width: 100%;
   height: 180px;
   object-fit: cover;
   border-radius: 10px;
 }
 
-.promotion-details {
+.promotion-details66 {
   margin-top: 10px;
   text-align: left;
 }
 
-.promotion-details h2 {
+.promotion-details66 h2 {
   font-size: 22px;
   color: #1a1a2e;
   margin-bottom: 8px;
+  text-align: center;
 }
 
-.promotion-details p {
+.promotion-details66 p {
   font-size: 16px;
   margin: 4px 0;
   color: #444;
   text-align: center;
 }
 
-.discount {
+.discount66 {
   color: red;
   font-weight: bold;
   font-size: 18px;
 }
 
-.cancel-button-container {
+.cancel-button-container66 {
   display: flex;
   justify-content: center;
-  width: 200px; /* ให้คอนเทนเนอร์กว้างสุด เพื่อให้ปุ่มอยู่กลาง */
+  width: 100%; /* ให้คอนเทนเนอร์กว้างสุด เพื่อให้ปุ่มอยู่กลาง */
   margin-top: 10px;
 }
 
-.cancel-button {
+.cancel-button66 {
   background: red;
   color: white;
   border: none;
@@ -87,11 +92,11 @@
   text-align: center;
 }
 
-.cancel-button:hover {
+.cancel-button66:hover {
   background: darkred;
 }
 
-.add-promotion-button {
+.add-promotion-button66 {
   background: #008cff;
   color: white;
   padding: 15px 25px;
@@ -104,7 +109,7 @@
   width: 200px;
 }
 
-.add-promotion-button:hover {
+.add-promotion-button66:hover {
   background: #005bb5;
   transform: scale(1.05);
 }

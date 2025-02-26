@@ -198,6 +198,7 @@ const BusinessProfile = () => {
         <nav>
           <button onClick={() => navigate("/stadium-list")}>สนามของฉัน</button>
           <button onClick={() => navigate(`/Ownerledger/${id}`)}>บัญชีรายรับ</button>
+          <button onClick={() => navigate(`/Addpromotion`)}>เพิ่มโปรโมชั่น</button>
           <button>รีวิวทั้งหมด</button>
           <button>ตรวจสอบการจ่ายเงิน</button>
           <button className="logout-button" onClick={toggleLogout}>ลงชื่อออก</button>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode"; // ✅ ใช้ jwtDecode เพื่อดึง ownerId
+import { jwtDecode } from "jwt-decode"; // ใช้ jwtDecode เพื่อดึง ownerId
 import "./Addpromotion.css";
 import Navbar from "../Navbar/Navbar";
 import uploadIcon from "../assets/icons/add.png";
@@ -11,7 +11,7 @@ const Addpromotion = () => {
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
   const [sportsTypes, setSportsTypes] = useState([]);
-  const [arenas, setArenas] = useState([]); // ✅ เก็บรายชื่อสนามของเจ้าของธุรกิจ
+  const [arenas, setArenas] = useState([]); //  เก็บรายชื่อสนามของเจ้าของธุรกิจ
   const [formData, setFormData] = useState({
     promotionTitle: "",
     description: "",
@@ -27,7 +27,7 @@ const Addpromotion = () => {
   });
 
  
-  // 📌 ✅ โหลดข้อมูลสนามของเจ้าของธุรกิจ
+  //  โหลดข้อมูลสนามของเจ้าของธุรกิจ
   useEffect(() => {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
   
@@ -67,7 +67,7 @@ const Addpromotion = () => {
     }
   }, []);
   
-  // ✅ โหลดประเภทกีฬาหลังจากเลือกสนาม
+  //  โหลดประเภทกีฬาหลังจากเลือกสนาม
   useEffect(() => {
     if (!formData.arenaId) {
       setSportsTypes([]); // รีเซ็ตประเภทกีฬา
@@ -95,7 +95,7 @@ const Addpromotion = () => {
     fetchSportsTypes();
   }, [formData.arenaId]);
   
-  // ✅ เปลี่ยนสนาม และโหลดประเภทกีฬาใหม่
+  //  เปลี่ยนสนาม และโหลดประเภทกีฬาใหม่
   const handleArenaChange = (e) => {
     const selectedArenaId = e.target.value;
   
@@ -110,7 +110,7 @@ const Addpromotion = () => {
     }
   };
   
-  // ✅ ฟังก์ชันเปลี่ยนประเภทกีฬา
+  //  ฟังก์ชันเปลี่ยนประเภทกีฬา
   const handleTypeChange = (e) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -153,7 +153,7 @@ const Addpromotion = () => {
   
   
   
-  // ✅ ตรวจสอบข้อมูลก่อนส่ง
+  //  ตรวจสอบข้อมูลก่อนส่ง
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -190,15 +190,15 @@ const Addpromotion = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
   
-      console.log("✅ รูปถูกอัปโหลด:", uploadResponse.data);
+      console.log(" รูปถูกอัปโหลด:", uploadResponse.data);
       const imageUrl = uploadResponse.data.imageUrl;
   
       const timeRange = `${formData.startHour}:${formData.startMinute} - ${formData.endHour}:${formData.endMinute}`;
       
-      // ✅ ตรวจสอบค่า `type` ว่าถูกต้องหรือไม่
+      //  ตรวจสอบค่า `type` ว่าถูกต้องหรือไม่
     console.log("🟢 ประเภทกีฬา:", formData.sportName);
     
-      // ✅ ส่งข้อมูลโปรโมชั่นไปยัง Backend
+      //  ส่งข้อมูลโปรโมชั่นไปยัง Backend
       const formDataToSend = {
         ownerId,
         promotionTitle: formData.promotionTitle,
@@ -209,7 +209,7 @@ const Addpromotion = () => {
         startDate: formData.startDate,
         endDate: formData.endDate,
         timeRange,
-        imageUrl, // ✅ ใช้ URL จาก Cloudinary
+        imageUrl, //  ใช้ URL จาก Cloudinary
       };
   
       console.log("🚀 กำลังส่งโปรโมชั่นไปยัง Backend:", formDataToSend);
@@ -225,7 +225,7 @@ const Addpromotion = () => {
               confirmButtonColor: "#3085d6",
               confirmButtonText: "ตกลง",
             }).then(() => {
-              window.location.href = "/"; // ✅ เปลี่ยนหน้า
+              window.location.href = "/"; // เปลี่ยนหน้า
             });
     } catch (error) {
       Swal.fire({
@@ -235,7 +235,7 @@ const Addpromotion = () => {
         confirmButtonColor: "#3085d6",
         confirmButtonText: "ตกลง",
       }).then(() => {
-        window.location.reload(); // ✅ รีโหลดหน้า
+        window.location.reload(); //  รีโหลดหน้า
       });
     }
   };
