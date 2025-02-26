@@ -4,6 +4,8 @@ import { jwtDecode } from "jwt-decode"; // ✅ ใช้ jwtDecode เพื่�
 import "./Addpromotion.css";
 import Navbar from "../Navbar/Navbar";
 import uploadIcon from "../assets/icons/add.png";
+import Swal from "sweetalert2";
+
 
 const Addpromotion = () => {
   const [image, setImage] = useState(null);
@@ -155,51 +157,83 @@ const Addpromotion = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    if (!formData.promotionTitle || !formData.arenaId || !formData.type || !formData.discount || !formData.startDate || !formData.endDate || !formData.startHour || !formData.startMinute || !formData.endHour || !formData.endMinute || !file) {
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (!token) {
+      alert("Session หมดอายุ กรุณาเข้าสู่ระบบใหม่");
+      window.location.href = "/login";
+      return;
+    }
+  
+    let ownerId = "";
+    try {
+      const decoded = jwtDecode(token);
+      ownerId = decoded.id;
+    } catch (error) {
+      console.error("⚠️ ไม่สามารถถอดรหัส Token:", error);
+      alert("Session ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่");
+      window.location.href = "/login";
+      return;
+    }
+  
+    if (!formData.promotionTitle || !formData.arenaId || !formData.type || !formData.discount || !formData.startDate || !formData.endDate || !file) {
       alert("กรุณากรอกข้อมูลให้ครบถ้วน และอัปโหลดรูปภาพ");
       return;
     }
-    
-    
-
-    const timeRange = `${formData.startHour}:${formData.startMinute} - ${formData.endHour}:${formData.endMinute}`;
-
-    const formDataToSend = new FormData();
-    formDataToSend.append("promotionTitle", formData.promotionTitle);
-    formDataToSend.append("description", formData.description);
-    formDataToSend.append("arenaId", formData.arenaId);
-    formDataToSend.append("type", formData.type);
-    formDataToSend.append("discount", formData.discount);
-    formDataToSend.append("startDate", formData.startDate);
-    formDataToSend.append("endDate", formData.endDate);
-    formDataToSend.append("timeRange", timeRange);
-    formDataToSend.append("promotionImage", file);
-
+  
     try {
-      const token = localStorage.getItem("token");
-      await axios.post("http://localhost:4000/api/promotions", formDataToSend, {
-        headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` },
+      // ✅ อัปโหลดรูปภาพไปยัง Cloudinary ก่อน
+      const formDataImage = new FormData();
+      formDataImage.append("promotionImage", file);
+      
+      console.log("🚀 กำลังอัปโหลดรูปไปยัง Cloudinary...");
+      const uploadResponse = await axios.post("http://localhost:4000/api/promotions/upload", formDataImage, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
-
-      alert("เพิ่มโปรโมชั่นสำเร็จ!");
-      setFormData({
-        promotionTitle: "",
-        description: "",
-        arenaId: "",
-        type: "",
-        discount: "",
-        startDate: "",
-        endDate: "",
-        startHour: "",
-        startMinute: "",
-        endHour: "",
-        endMinute: "",
+  
+      console.log("✅ รูปถูกอัปโหลด:", uploadResponse.data);
+      const imageUrl = uploadResponse.data.imageUrl;
+  
+      const timeRange = `${formData.startHour}:${formData.startMinute} - ${formData.endHour}:${formData.endMinute}`;
+  
+      // ✅ ส่งข้อมูลโปรโมชั่นไปยัง Backend
+      const formDataToSend = {
+        ownerId,
+        promotionTitle: formData.promotionTitle,
+        description: formData.description,
+        stadiumId: formData.arenaId,
+        type: formData.type,
+        discount: formData.discount,
+        startDate: formData.startDate,
+        endDate: formData.endDate,
+        timeRange,
+        imageUrl, // ✅ ใช้ URL จาก Cloudinary
+      };
+  
+      console.log("🚀 กำลังส่งโปรโมชั่นไปยัง Backend:", formDataToSend);
+  
+      const response = await axios.post("http://localhost:4000/api/promotions", formDataToSend, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      setImage(null);
-      setFile(null);
+  
+      Swal.fire({
+              title: "เพิ่มโปรโมชั่นข้อมูลสำเร็จ!",
+              text: "เพิ่มโปรโมชั่นเรียบร้อย",
+              icon: "success",
+              confirmButtonColor: "#3085d6",
+              confirmButtonText: "ตกลง",
+            }).then(() => {
+              window.location.href = "/"; // ✅ เปลี่ยนหน้า
+            });
     } catch (error) {
-      console.error("เกิดข้อผิดพลาดในการเพิ่มโปรโมชั่น:", error.response?.data || error.message);
-      alert("เกิดข้อผิดพลาดในการเพิ่มโปรโมชั่น");
+      Swal.fire({
+        title: "เพิ่มโปรโมชั่นไม่สำเร็จ!",
+        text: "เพิ่มโปรโมชั่นไม่สำเร็จ",
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง",
+      }).then(() => {
+        window.location.reload(); // ✅ รีโหลดหน้า
+      });
     }
   };
 

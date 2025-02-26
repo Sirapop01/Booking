@@ -14,4 +14,4 @@ const PromotionSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }, // เวลาสร้าง
 });
 
-module.exports = mongoose.model("Promotion", PromotionSchema);
+module.exports = mongoose.model("promotions", PromotionSchema);
