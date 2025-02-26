@@ -1,96 +1,110 @@
-/* ✅ ตั้งค่าพื้นหลังและโครงสร้าง */
 .promotion-container {
-    background-color: #0c2c4a;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    font-family: "Kanit", sans-serif;
-    color: white;
-  }
-  
-  /* ✅ หัวข้อ */
-  .promotion-title {
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  /* ✅ กล่องแสดงรายการโปรโมชั่น */
-  .promotion-list {
-    width: 90%;
-    max-width: 600px;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    color: black;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* ✅ การ์ดโปรโมชั่น */
-  .promotion-card {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid #ddd;
-    padding: 15px;
-  }
-  
-  /* ✅ รูปภาพโปรโมชั่น */
-  .promotion-image {
-    width: 120px;
-    height: 100px;
-    border-radius: 8px;
-    object-fit: cover;
-    margin-right: 15px;
-  }
-  
-  /* ✅ รายละเอียดโปรโมชั่น */
-  .promotion-details h2 {
-    font-size: 20px;
-    margin: 0;
-  }
-  
-  .promotion-details p {
-    font-size: 16px;
-    margin: 5px 0;
-  }
-  
-  /* ✅ ป้ายลดราคา */
-  .discount {
-    font-size: 18px;
-    font-weight: bold;
-    color: green;
-  }
-  
-  /* ✅ ปุ่มยกเลิกโปรโมชั่น */
-  .cancel-button {
-    background: none;
-    border: none;
-    color: red;
-    font-size: 16px;
-    cursor: pointer;
-    font-weight: bold;
-    margin-top: 5px;
-  }
-  
-  .cancel-button:hover {
-    text-decoration: underline;
-  }
-  
-  /* ✅ ปุ่มเพิ่มโปรโมชั่น */
-  .add-promotion-button {
-    background: #0c2c4a;
-    color: white;
-    font-size: 18px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-  
-  .add-promotion-button:hover {
-    background: #07325f;
-  }
-  
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(to bottom, #0c2c4a, #1a1a2e); /* พื้นหลังไล่สี */
+  min-height: 100vh;
+  font-family: 'Kanit', sans-serif;
+}
+
+.promotion-title {
+  font-size: 36px;
+  color: white;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+
+}
+
+.promotion-list {
+  display: flex; /* ใช้ Flexbox */
+  flex-wrap: wrap; /* ให้ไหลลงบรรทัดใหม่เมื่อเต็มพื้นที่ */
+  justify-content: center; /* จัดให้อยู่ตรงกลาง */
+  gap: 20px; /* ระยะห่างระหว่างการ์ด */
+  padding: 20px;
+}
+
+.promotion-card {
+  width: 280px; /* กำหนดความกว้าง */
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.promotion-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+.promotion-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.promotion-details {
+  margin-top: 10px;
+  text-align: left;
+}
+
+.promotion-details h2 {
+  font-size: 22px;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+}
+
+.promotion-details p {
+  font-size: 16px;
+  margin: 4px 0;
+  color: #444;
+  text-align: center;
+}
+
+.discount {
+  color: red;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.cancel-button-container {
+  display: flex;
+  justify-content: center;
+  width: 200px; /* ให้คอนเทนเนอร์กว้างสุด เพื่อให้ปุ่มอยู่กลาง */
+  margin-top: 10px;
+}
+
+.cancel-button {
+  background: red;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-top: 12px;
+  font-size: 16px;
+  width: 200px;
+  transition: background 0.3s ease;
+  text-align: center;
+}
+
+.cancel-button:hover {
+  background: darkred;
+}
+
+.add-promotion-button {
+  background: #008cff;
+  color: white;
+  padding: 15px 25px;
+  border: none;
+  cursor: pointer;
+  margin-top: 25px;
+  border-radius: 8px;
+  font-size: 18px;
+  transition: background 0.3s ease, transform 0.2s ease;
+  width: 200px;
+}
+
+.add-promotion-button:hover {
+  background: #005bb5;
+  transform: scale(1.05);
+}

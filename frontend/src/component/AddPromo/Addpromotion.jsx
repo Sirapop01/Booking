@@ -16,7 +16,7 @@ const Addpromotion = () => {
     promotionTitle: "",
     description: "",
     arenaId: "",
-    type: "",
+    sportName: "",
     discount: "",
     startDate: "",
     endDate: "",
@@ -102,7 +102,7 @@ const Addpromotion = () => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       arenaId: selectedArenaId || "",
-      type: "", // รีเซ็ตประเภทกีฬาเมื่อเปลี่ยนสนาม
+      sportName: "", // รีเซ็ตประเภทกีฬาเมื่อเปลี่ยนสนาม
     }));
   
     if (!selectedArenaId) {
@@ -114,7 +114,7 @@ const Addpromotion = () => {
   const handleTypeChange = (e) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      type: e.target.value, // กำหนดค่าที่เลือกให้ type
+      sportName: e.target.value, // กำหนดค่าที่เลือกให้ type
     }));
   };
 
@@ -175,7 +175,7 @@ const Addpromotion = () => {
       return;
     }
   
-    if (!formData.promotionTitle || !formData.arenaId || !formData.type || !formData.discount || !formData.startDate || !formData.endDate || !file) {
+    if (!formData.promotionTitle || !formData.arenaId || !formData.sportName || !formData.discount || !formData.startDate || !formData.endDate || !file) {
       alert("กรุณากรอกข้อมูลให้ครบถ้วน และอัปโหลดรูปภาพ");
       return;
     }
@@ -194,14 +194,17 @@ const Addpromotion = () => {
       const imageUrl = uploadResponse.data.imageUrl;
   
       const timeRange = `${formData.startHour}:${formData.startMinute} - ${formData.endHour}:${formData.endMinute}`;
-  
+      
+      // ✅ ตรวจสอบค่า `type` ว่าถูกต้องหรือไม่
+    console.log("🟢 ประเภทกีฬา:", formData.sportName);
+    
       // ✅ ส่งข้อมูลโปรโมชั่นไปยัง Backend
       const formDataToSend = {
         ownerId,
         promotionTitle: formData.promotionTitle,
         description: formData.description,
         stadiumId: formData.arenaId,
-        type: formData.type,
+        sportName: formData.sportName,
         discount: formData.discount,
         startDate: formData.startDate,
         endDate: formData.endDate,
@@ -285,7 +288,7 @@ const Addpromotion = () => {
 
           <div className="input-group">
             <label>ประเภทกีฬา : *</label>
-            <select name="type" value={formData.type} onChange={handleTypeChange} required>
+            <select name="sportName" value={formData.sportName} onChange={handleTypeChange} required>
               <option value="">-- เลือกประเภทกีฬา --</option>
               {sportsTypes.map((sport) => (
                 <option key={sport._id} value={sport.sportName}>{sport.sportName}</option>
