@@ -30,6 +30,7 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const promotionRoutes = require("./routes/promotionRoutes");
 const sportscategoriesRoutes = require("./routes/sportscategoriesRoutes"); // ✅ เพิ่ม Route
+const subStadiumRoutes = require("./routes/subStadiumRoutes");
 
 // เสิร์ฟไฟล์ภาพจากโฟลเดอร์ uploads
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -77,7 +78,8 @@ app.use("/api/arena-manage", arenaManageRoutes);
 
 app.use("/api/sports", sportRoutes);
 app.use("/api/promotions", promotionRoutes);
-app.use("/api/sportscategories", sportscategoriesRoutes); // ✅ เพิ่ม Route ใหม่
+app.use("/api/sportscategories", sportscategoriesRoutes);
+app.use("/api/substadiums", subStadiumRoutes);
 
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {

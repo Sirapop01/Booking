@@ -117,7 +117,7 @@ function ManageSubStadium() {
           {sports.map((sport) => (
             <div key={sport._id} className="substadium-sport-card">
               {/* ✅ ป้องกันการเปิดหน้ารายละเอียดโดยไม่ได้ตั้งใจ */}
-              <div className="sport-card-content" onClick={() => navigate("/manage-substadium-details", { state: { sport } })}>
+              <div className="sport-card-content" onClick={() => navigate(`/manage-substadium-details/${arenaId}/${sport._id}`)}>
                 <img src={sport.iconUrl} alt={sport.sportName} className="substadium-sport-icon" />
                 <p>{sport.sportName}</p>
               </div>
