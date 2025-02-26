@@ -1,84 +1,73 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 
+/* ✅ คอนเทนเนอร์หลัก */
 .owner-ledger-page {
-  background-color: #0c2c4a;
-  color: white;
   font-family: 'Kanit', sans-serif;
-  margin: 0;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: relative;
+  top : 100px;
+  
 }
 
-.owner-ledger-title {
-  font-size: 36px;
-  font-weight: bold;
-  margin: 20px 0;
-}
-
-.owner-ledger-home-button {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 60px;
-  height: 60px;
-  background-color: white;
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-}
-
-.owner-ledger-home-button:hover {
-  transform: scale(1.1);
-}
-
-.home-logo {
-  width: 35px;
-  height: 35px;
-}
-
+/* ✅ คอนเทนเนอร์ภายใน */
 .owner-ledger-container {
-  background-color: white;
+  background: white;
   color: black;
-  padding: 20px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
+  border-radius: 15px;
+  padding: 30px;
   width: 100%;
-  max-width: 1100px;
+  max-width: 1200px;
+  margin-top: 100px;
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease-in-out;
 }
 
+/* ✅ เมื่อ hover ที่ container */
+.owner-ledger-container:hover {
+  transform: scale(1.01);
+}
+
+/* ✅ ส่วนของเนื้อหา */
 .owner-ledger-content {
   display: flex;
   gap: 20px;
   width: 100%;
   justify-content: space-between;
 }
+/* ✅ เปลี่ยนกรอบของ .owner-ledger-stadium-list และ .owner-ledger-details เป็นสีฟ้า */
+.owner-ledger-stadium-list, 
+.owner-ledger-details {
+  border: 3px solid #2196F3 !important; /* ✅ กำหนดกรอบสีฟ้า /
+  border-radius: 10px; / ✅ ทำให้ขอบโค้ง /
+  box-shadow: 0px 4px 10px rgba(33, 150, 243, 0.3); / ✅ เพิ่มเงา */
+  background: white;
+}
 
+/* ✅ ปรับแต่ง .owner-ledger-stadium-list เพิ่มเติม */
 .owner-ledger-stadium-list {
   width: 280px;
   background: white;
   color: black;
   padding: 15px;
-  border-radius: 5px;
+  border-radius: 10px; /* ✅ ทำให้เข้ากับดีไซน์ */
   text-align: center;
   font-family: 'Kanit', sans-serif;
-  border: 2px solid black;
 }
 
+
+
+/* ✅ ชื่อในตาราง */
 .owner-ledger-stadium-list h2 {
   font-size: 24px;
   font-weight: bold;
   padding-bottom: 10px;
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid #07213A; /* ขอบด้านล่างสีเข้ม */
 }
 
+/* ✅ รายการในตาราง */
 .owner-ledger-stadium-list ul {
   list-style: none;
   padding: 0;
@@ -88,39 +77,47 @@
 .owner-ledger-stadium-list li {
   padding: 15px;
   font-size: 18px;
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid #ddd; /* ขอบที่อ่อนลง */
   cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
 }
 
+/* ✅ เมื่อแถวถูกเลือก */
 .owner-ledger-stadium-list .selected {
   background-color: #2196F3;
   color: white;
   font-weight: bold;
+  box-shadow: 0px 4px 12px rgba(33, 150, 243, 0.4);
 }
 
+/* ✅ รายละเอียดของ ledger */
 .owner-ledger-details {
-  flex: 1;
+  border: 3px solid #0071ce !important; /* ✅ กำหนดกรอบสีฟ้า */
+  border-radius: 10px; /* ✅ ทำให้ขอบโค้ง */
+  box-shadow: 0px 4px 10px rgba(33, 150, 243, 0.3); /* ✅ เพิ่มเงา */
+  padding: 15px;
   background: white;
-  color: black;
-  border-radius: 5px;
-  text-align: center;
-  border: 2px solid black;
-  display: flex;
-  flex-direction: column;
+  width: 100%; /* ✅ ให้เต็ม parent container */
+  max-width: 800px; /* ✅ ป้องกันไม่ให้กว้างเกินไป */
+  margin: 0 auto; /* ✅ จัดให้อยู่ตรงกลาง */
+  text-align: center; /* ✅ ให้เนื้อหาตรงกลาง */
 }
 
+
+/* ✅ ตารางในรายละเอียด */
 .owner-ledger-table-wrapper {
   overflow-y: auto;
   max-height: 300px;
   padding: 10px;
 }
 
+/* ✅ หัวตาราง */
 .owner-ledger-table-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid #07213A; /* ขอบด้านล่างเข้ม */
 }
 
 .owner-ledger-table-header h2 {
@@ -128,98 +125,142 @@
   font-size: 24px;
   flex: 1;
   text-align: center;
+  color: #07213A; /* สีเข้มตามธีม */
+  padding: 0; /* เอา padding ออกเพื่อให้ชิดกับตาราง */
+  margin-bottom: -10px; /* เพิ่มระยะห่างเล็กน้อยระหว่างหัวข้อกับตาราง */
 }
 
+/* ✅ ตารางข้อมูล */
 table {
-  width: 100%;
   border-collapse: collapse;
+  border: solid 20px #07213A; /* ใช้สีของกรอบตามธีม */
+  width: 100%;
+  border-radius: 100px; /* เพิ่มมุมโค้ง */
+  color: white;
 }
+
 
 th, td {
-  border: 1px solid black;
+  border: solid ; /* ✅ ใช้เส้นบางๆภายในแต่ไม่ให้เด่นเกินไป */
   padding: 12px;
   text-align: center;
-  font-size: 16px;
+  font-size: 17px;
+  color: #333;
 }
 
 th {
-  background-color: #f2f2f2;
+  background: linear-gradient(to right, #2196F3, #1769aa);
+  color: white;
+  font-weight: bold;
+  padding: 16px;
+  font-size: 18px;
+  border-bottom: 3px solid #0f5ba8;
+  
+}
+
+
+
+/* ✅ แถวที่ถูกเลือก */
+.selected-row {
+  background-color: #e3f2fd;
   font-weight: bold;
 }
 
-.selected-row {
-  background-color: #bdbdbd;
-}
-
+/* ✅ ฟุตเตอร์สำหรับรวมยอด */
 .owner-ledger-ledger-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  border-top: 2px solid black;
+  border-top: 2px solid #07213A; /* ขอบด้านบนเข้ม */
 }
 
 .owner-ledger-total-box {
   font-size: 18px;
   background-color: white;
   padding: 10px 15px;
-  border: 2px solid black;
+  border: 2px solid #07213A;
   border-radius: 5px;
   text-align: center;
   min-width: 200px;
-  color: black;
+  color: #07213A;
   font-weight: bold;
 }
 
 .owner-ledger-manage-button {
-  background-color: #2196F3;
-  color: white;
-  padding: 10px 20px;
   border: none;
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 5px;
+  background: linear-gradient(to right, #2196F3, #1769aa);
+  color: white;
+  padding: 12px 25px;
+  border-radius: 25px;
+  transition: background 0.3s ease-in-out, transform 0.2s;
+  margin-top: 20px;
+  align-self: center;
 }
 
 .owner-ledger-manage-button:hover {
-  background-color: #1976D2;
+  background: linear-gradient(to right, #1769aa, #0e4a8a);
+  transform: scale(1.05);
 }
-
+/* ✅ ตัวกรอง (Dropdown) */
 .owner-ledger-filter-container {
-  position: relative;
-  display: inline-block;
+  position: relative; /* ✅ ใช้เป็น Relative เพื่อให้ยึดกับตัวกล่อง */
+  display: flex;
+  justify-content: flex-end; /* ✅ ดันไปด้านขวา */
+  padding: 10px;
+  top : -80px;
 }
 
 .owner-ledger-filter-button {
-  background: none;
-  border: none;
+  background: white;
+  border: 2px solid #2196F3; /* ✅ ขอบสีฟ้า */
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  padding: 5px;
+  transition: all 0.3s ease;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 30px; /* ✅ ปรับให้อยู่ในกล่อง ไม่ใช่ขอบจอ */
+  right: -40px; /* ✅ ยึดขวาในกล่อง */
+}
+
+.owner-ledger-filter-button:hover{
+  background: #07acdf;
+  transform: scale(1.1);
 }
 
 .owner-ledger-filter-icon {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s ease-in-out;
+  filter: invert(25%) sepia(90%) saturate(2500%) hue-rotate(190deg);
 }
 
-.owner-ledger-filter-container {
-  position: relative;
+.owner-ledger-filter-button:hover .owner-ledger-filter-icon{
+  transform: rotate(20deg);
+  filter: invert(100%);
 }
 
+/* ✅ เมนู dropdown */
 .owner-ledger-dropdown-menu {
   position: absolute;
-  top: 40px;
-  right: 0;
+  top: 80px;
+  right: -40px;
   background: white;
-  border: 1px solid black;
+  border: 1px solid #ccc;
   border-radius: 5px;
   width: 150px;
-  max-height: 200px; /* ✅ จำกัดความสูง */
-  overflow-y: auto; /* ✅ เพิ่ม Scrollbar */
+  max-height: 200px;
+  overflow-y: auto;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 100; /* ✅ ให้ dropdown ลอยขึ้นมา */
+  z-index: 100;
 }
 
+/* ✅ รายการใน dropdown */
 .owner-ledger-dropdown-item {
   padding: 10px;
   text-align: center;
@@ -229,23 +270,42 @@ th {
 }
 
 .owner-ledger-dropdown-item:hover {
-  background: #bdbdbd;
+  background: #f5f5f5;
 }
 
 .owner-ledger-dropdown-item:last-child {
   border-bottom: none;
 }
 
-
 /* ✅ ปรับขนาด Total Box */
 .owner-ledger-total-box {
   font-size: 18px;
   background-color: white;
   padding: 10px 15px;
-  border: 2px solid black;
+  border: 2px solid #07213A;
   border-radius: 5px;
   text-align: center;
   min-width: 200px;
-  color: black;
+  color: #07213A;
   font-weight: bold;
 }
+
+.owner-ledger-table-header {
+  border-bottom: none !important;
+  box-shadow: none !important; /* ✅ ลบเงา */
+  padding : 50px;
+}
+
+/* ✅ เลือกแถวที่มี "รวมทั้งหมด" */
+/* ✅ ลบเส้นขอบออกจากกล่อง "รวมทั้งหมด" */
+.owner-ledger-total-box {
+  border: none !important; /* ✅ ลบกรอบ */
+  background: white !important; /* ✅ ให้พื้นหลังกลืนกับตาราง */
+  box-shadow: none !important; /* ✅ ลบเงา */
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  padding: 10px 0;
+}
+
+
