@@ -88,7 +88,7 @@ function StadiumList() {
       <table className="stadium-table-stadiumlist">
         <thead>
           <tr>
-            <th style={{ width: "40%" }}>ชื่อสนาม</th>
+            <th style={{ width: "25%" }}>ชื่อสนาม</th>
             <th style={{ width: "20%" }}>สถานะ</th>
             <th style={{ width: "20%" }}>เปิด/ปิด</th>
             <th style={{ width: "25%" }}>ตัวเลือก</th>
@@ -142,21 +142,21 @@ function StadiumList() {
 
       {/* ✅ ปุ่มด้านล่าง */}
       <div className="bottom-buttons-stadiumlist">
-            <a href={selectedStadium ? `/Registerarena/${selectedStadium}` : "#"} 
-            className={`btn-stadiumlist btn-edit ${selectedStadium ? "" : "disabled"}`}>
-            แก้ไข
-            </a>
-
-        <a href="/add_new_stadium" className="btn-stadiumlist btn-add-stadium">
-        เพิ่มสนามใหม่
-        </a>
-
-        <button 
-            className={`btn-stadiumlist btn-action-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
-            onClick={() => navigate(`/manage-sub-stadium/${selectedStadium}`)} 
-            disabled={!selectedStadium}>
-            จัดการสนามย่อย
-        </button>
+            <button 
+                className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
+                onClick={handleEditStadium} 
+                disabled={!selectedStadium}>
+                แก้ไข
+            </button>
+            <button onClick={handleAddNewStadium} className="btn-stadiumlist">
+                เพิ่มสนามใหม่
+            </button>
+            <button 
+                className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
+                onClick={() => navigate(`/manage-sub-stadium/${selectedStadium}`)} 
+                disabled={!selectedStadium}>
+                จัดการสนามย่อย
+            </button>
         </div>
     </div>
   );
