@@ -4,10 +4,9 @@ const Arena = require("../models/Arena"); // นำเข้า Model สนา�
 // ✅ [POST] เพิ่มโปรโมชั่นใหม่
 exports.createPromotion = async (req, res) => {
   try {
-    const { ownerId, stadiumId, promotionTitle, description, discount, startDate, endDate, timeRange } = req.body;
-    const promotionImageUrl = req.file ? `/uploads/${req.file.filename}` : "";
+    const { ownerId, stadiumId, promotionTitle, description, discount, startDate, endDate, timeRange, imageUrl } = req.body;
 
-    if (!ownerId || !stadiumId || !promotionTitle || !discount || !startDate || !endDate || !timeRange || !promotionImageUrl) {
+    if (!ownerId || !stadiumId || !promotionTitle || !discount || !startDate || !endDate || !timeRange || !imageUrl) {
       return res.status(400).json({ error: "กรุณากรอกข้อมูลให้ครบถ้วน" });
     }
 
@@ -19,7 +18,6 @@ exports.createPromotion = async (req, res) => {
       return res.status(400).json({ error: "วันที่สิ้นสุดต้องไม่น้อยกว่าวันที่เริ่มต้น" });
     }
 
-    // ตรวจสอบว่าสนามกีฬามีอยู่จริง
     const stadiumExists = await Arena.findById(stadiumId);
     if (!stadiumExists) {
       return res.status(404).json({ error: "ไม่พบสนามกีฬาที่เลือก" });
@@ -34,16 +32,17 @@ exports.createPromotion = async (req, res) => {
       startDate,
       endDate,
       timeRange,
-      promotionImageUrl,
+      promotionImageUrl: imageUrl, // ✅ ใช้ URL ที่อัปโหลดไปยัง Cloudinary
     });
 
     await newPromotion.save();
     res.status(201).json({ message: "เพิ่มโปรโมชั่นสำเร็จ", promotion: newPromotion });
   } catch (error) {
-    console.error(error);
+    console.error("❌ เกิดข้อผิดพลาดในการเพิ่มโปรโมชั่น:", error);
     res.status(500).json({ error: "เกิดข้อผิดพลาดในการเพิ่มโปรโมชั่น" });
   }
 };
+
 
 
 // ✅ [GET] ดึงรายการโปรโมชั่นทั้งหมด

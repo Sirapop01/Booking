@@ -21,11 +21,9 @@ const uploadRoutes = require('./routes/uploadRoutes');
 const superAdminRoutes = require('./routes/superAdminRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const adminLedgerRoutes = require("./routes/adminLedgerRoutes");
-
 const stadiumlistRoutes = require("./routes/stadiumlistRoutes")
 const arenaManageRoutes = require("./routes/arenaManageRoutes");
 const sportRoutes = require("./routes/sportRoutes");
-
 const app = express();
 const PORT = process.env.PORT || 4000;
 const promotionRoutes = require("./routes/promotionRoutes");
