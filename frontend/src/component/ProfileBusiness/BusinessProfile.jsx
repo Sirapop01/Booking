@@ -196,8 +196,8 @@ const BusinessProfile = () => {
 
 
         <nav>
-          <button>สนามของฉัน</button>
-          <button>บัญชีรายรับ</button>
+          <button onClick={() => navigate("/stadium-list")}>สนามของฉัน</button>
+          <button onClick={() => navigate(`/Ownerledger/${id}`)}>บัญชีรายรับ</button>
           <button>รีวิวทั้งหมด</button>
           <button>ตรวจสอบการจ่ายเงิน</button>
           <button className="logout-button" onClick={toggleLogout}>ลงชื่อออก</button>
@@ -246,7 +246,7 @@ const BusinessProfile = () => {
               <input
                 type="date"
                 name="birthdate"
-                value={member?.birthdate ? member.birthdate.substring(0, 10) : ""}
+                value={member?.dob ? member.dob.substring(0, 10) : ""}
                 onChange={handleChange}
                 readOnly={!isEditable}
               />
