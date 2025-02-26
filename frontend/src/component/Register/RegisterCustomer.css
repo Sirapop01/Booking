@@ -68,15 +68,15 @@
 }
 
 /* กล่อง input ของฟอร์ม */
-.form-container {
+.form-container1414{
   display: flex;
   justify-content: flex-start; /* ขยับไปทางซ้าย */
   gap: 40px;
-  margin-left: -30px; /* ลดระยะห่างไปทางซ้าย */
-  margin-top: -40px;
+  margin-left: 15px; /* ลดระยะห่างไปทางซ้าย */
+  margin-top: 50px;
 }
 
-.form-row {
+.form-row{
   display: flex;
   justify-content: space-between;
   gap: 30px;
@@ -84,10 +84,13 @@
   width: 100%;
 }
 
+
+
 .form-column {
   display: flex;
   flex-direction: column;
   width: 48%;
+
 }
 
 /* กล่องรูปโปรไฟล์ + เพศ + เบอร์โทรศัพท์ */
@@ -99,6 +102,7 @@
   margin-left: 10px;
   width: 100%;
   align-items: center; /* ทำให้กล่อง input ตรงกัน */
+ 
 }
 
 /* ปรับขนาดให้เท่ากัน */
@@ -107,7 +111,7 @@
   flex-direction: column;
   width: 220px; /* ลดขนาด */
   position: relative;
-  left :-18px;
+  left :-1px;
 }
 
 .gender-section{
@@ -118,7 +122,7 @@
 .phone-section {
   width: 220px;
   position: relative;
-  left : -48px;
+  left : 10px;
 }
 
 .phone-section input[type="tel"] {

@@ -134,6 +134,7 @@
 /* ✅ ตารางข้อมูล */
 table {
   border-collapse: collapse;
+
   border: none;
   width: 100%;
   border-radius: 100px; /* เพิ่มมุมโค้ง */
@@ -308,6 +309,8 @@ th {
   padding: 10px 0;
 }
 
+
 .details-table-wrapper thead th{
   background-color: #0e4a8a;
 }
+

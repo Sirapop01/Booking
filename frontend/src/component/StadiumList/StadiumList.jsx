@@ -85,7 +85,7 @@ function StadiumList() {
       <NavbarStadiumlist />
 
       {/* ✅ ตารางสนาม */}
-      <table className="stadium-table-stadiumlist">
+      <table className="stadium-table-stadiumlist11">
         <thead>
           <tr>
             <th style={{ width: "25%" }}>ชื่อสนาม</th>
@@ -101,7 +101,7 @@ function StadiumList() {
               return (
                 <tr
                   key={stadium._id}
-                  className={`table-row-stadiumlist ${isSelected ? "selected" : ""}`}
+                  className={`table-row-stadiumlist3131 ${isSelected ? "selected" : ""}`}
                   onClick={() => handleRowClick(stadium._id)}
                 >
                   {/* ✅ คอลัมน์ 1: ชื่อสนาม */}
