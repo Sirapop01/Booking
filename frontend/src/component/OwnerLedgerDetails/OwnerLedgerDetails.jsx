@@ -198,6 +198,11 @@ function OwnerLedgerDetails() {
                   </tbody>
                 </table>
               )}
+
+                        <div className="details-total-boxs">
+                          <p><strong>รวมทั้งหมด:</strong> {totalAmount} B</p>
+                        </div>
+
               <button className="details-manage-button" onClick={() => setShowChart(!showChart)}>
                 {showChart ? "กลับไปยังตาราง" : "การจัดการ"}
               </button>

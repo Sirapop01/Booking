@@ -13,60 +13,6 @@
   top: 150px;
 }
 
-/* ✅ ตาราง */
-.stadium-table-stadiumlist {
-  width: 100%;
-  max-width: 1100px;
-  border-collapse: collapse;
-  text-align: center;
-  background: white;
-  color: #333;
-  border-radius: 15px; /* ทำให้ขอบของตารางเป็นโค้งมน */
-  overflow: hidden;
-  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1); /* เพิ่มเงาเบาๆ ให้ขอบตาราง */
-  table-layout: fixed;
-}
-
-/* ✅ หัวตาราง */
-.stadium-table-stadiumlist thead th {
-  background: #0A1F44; /* ใช้สีเดียวกับ Navbar */
-  color: white;
-  font-size: 18px;
-  padding: 16px;
-  text-align: center;
-  font-weight: bold;
-  border-bottom: 3px solid #07213A; /* เส้นขอบด้านล่างสีเข้ม */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* เพิ่มเงา */
-}
-
-/* ✅ เมื่อแถวถูกเลือก */
-.table-row-stadiumlist.selected {
-  background-color: rgba(0, 123, 255, 0.2); /* สีจางๆ ที่เกิดจากการเลือกแถว */
-  color: #0072ce;
-  border: 2px solid #0072ce;
-  box-shadow: 0px 4px 12px rgba(0, 123, 255, 0.5); /* เพิ่มเงาให้เด่นยิ่งขึ้น */
-}
-
-/* ✅ ให้แถวที่ไม่ได้เลือกมีความชัดเจน */
-.table-row-stadiumlist {
-  transition: all 0.3s ease;
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #ddd; /* ขอบเบาๆ ระหว่างแถว */
-}
-
-/* ✅ ปรับให้เมื่อ hover แถวจะชัดขึ้น */
-.table-row-stadiumlist:hover {
-  background-color: #d3e5f3; /* สีฟ้าอ่อนๆ เพื่อให้เด่นเมื่อ hover */
-  cursor: pointer;
-  box-shadow: 0px 6px 16px rgba(0, 123, 255, 0.3); /* เงาเมื่อ hover */
-}
-
-/* ✅ ปรับให้แถวที่ถูกเลือกจะมีขอบหนากว่า */
-.table-row-stadiumlist.selected:hover {
-  background-color: rgba(0, 123, 255, 0.3);
-  box-shadow: 0px 6px 18px rgba(0, 123, 255, 0.7); /* เงาที่เด่นขึ้น */
-}
-
 /* ✅ ปุ่มสลับสถานะ */
 .toggle-btn-stadiumlist {
   display: inline-block;
@@ -186,51 +132,33 @@
   margin-top: 30px;
 }
 
-/* ✅ ปุ่มกลับ Home */
-.home-button-stadiumlist {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 60px;
-  height: 60px;
-  background-color: white;
-  border-radius: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease-in-out;
+
+
+/* ✅ เมื่อแถวถูกเลือก จะมีสีพื้นหลังที่แตกต่าง */
+.table-row-stadiumlist3131.selected {
+  background-color: rgba(0, 26, 255, 0.3); /* สีพื้นหลังสีเขียวสด */
+  color: #0300cc; /* เปลี่ยนสีตัวหนังสือเป็นเขียวเข้ม */
+  border: 3px solid #0804ec; /* เพิ่มขอบสีส้มแดง */
+  box-shadow: 0px 4px 15px rgba(31, 12, 197, 0.7); /* เพิ่มเงาให้แถวที่เลือก */
 }
 
-.home-button-stadiumlist:hover {
-  background-color: #f0f0f0;
-  transform: scale(1.1);
+/* ✅ เมื่อ hover แถว */
+.table-row-stadiumlist3131:hover {
+  background-color: #410ece; /* สีพื้นหลังที่เด่น สีส้มแดง */
+  color: rgb(255, 255, 255); /* เปลี่ยนสีตัวหนังสือให้เป็นสีขาวเมื่อ hover */
+  cursor: pointer; /* เปลี่ยนเคอร์เซอร์เป็นมือชี้ */
 }
 
-/* เมื่อแถวถูกเลือก จะมีสีพื้นหลังที่แตกต่างและขอบที่หนาขึ้น */
-.table-row-stadiumlist.selected {
-  background-color: rgba(0, 123, 255, 0.2); /* สีจางๆ ที่เกิดจากการเลือกแถว */
-  color: #0072ce; /* เพิ่มสีฟ้าที่เข้มขึ้นเพื่อให้เด่น */
-  border: 2px solid #0072ce; /* เพิ่มขอบสีฟ้าที่เข้มขึ้นเพื่อให้เด่น */
-  box-shadow: 0px 4px 12px rgba(0, 123, 255, 0.5); /* เพิ่มเงาให้เด่นยิ่งขึ้น */
+/* ✅ เมื่อแถวถูกเลือกแล้ว hover จะมีสีพื้นหลังที่เข้มขึ้น */
+.table-row-stadiumlist3131.selected:hover {
+  background-color: rgba(0, 38, 255, 0.6); /* สีที่เข้มขึ้นเมื่อเลือก */
+  box-shadow: 0px 6px 18px rgba(38, 0, 255, 0.8); /* เพิ่มเงาที่เข้มขึ้นเมื่อเลือก */
 }
 
-/* ให้แถวที่ไม่ได้เลือกมีความชัดเจน */
-.table-row-stadiumlist {
-  transition: all 0.3s ease;
-  background-color: #f8f9fa;
-}
 
-/* ปรับให้เมื่อ hover แถวจะชัดขึ้น */
-.table-row-stadiumlist:hover {
-  background-color: #e3f2fd; /* ใช้สีฟ้าอ่อนๆ เพื่อให้เด่นเมื่อ hover */
-  cursor: pointer; /* เปลี่ยนเคอร์เซอร์ให้เป็นมือชี้เพื่อบ่งชี้ว่าคลิกได้ */
-}
 
-/* กำหนดให้แถวที่ถูกเลือกจะมีขอบหนากว่า */
-.table-row-stadiumlist.selected:hover {
-  background-color: rgba(0, 123, 255, 0.3); /* สีที่จางลงเล็กน้อย */
-  box-shadow: 0px 6px 15px rgba(0, 123, 255, 0.6); /* เพิ่มเงาเมื่อเลือก */
-}
+
+
+
+
 

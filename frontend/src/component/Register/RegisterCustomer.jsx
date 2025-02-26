@@ -142,7 +142,7 @@ function RegisterCustomer() {
             </div>
           </div>
 
-          <div className="form-container">
+          <div className="form-container1414">
             <div className="form-column">
               <label>ชื่อจริง *{errors.firstName && <span className="error-message-register">{errors.firstName}</span>}</label>
               <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} />
