@@ -85,7 +85,7 @@ function StadiumList() {
       <NavbarStadiumlist />
 
       {/* ✅ ตารางสนาม */}
-      <table className="stadium-table-stadiumlist11">
+      <table className="stadium-table-stadiumlist">
         <thead>
           <tr>
             <th style={{ width: "25%" }}>ชื่อสนาม</th>

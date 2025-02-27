@@ -131,32 +131,6 @@ html, body {
     margin-top: 10px;
 }
 
-table {
-  border-collapse: separate; /* เปลี่ยนจาก collapse เป็น separate เพื่อให้แสดงกรอบได้ดีขึ้น */
-  border-spacing: 0; /* เพิ่มระยะห่างระหว่างเซลล์ในตาราง */
-  border: 0px solid #ffffff; /* ความหนาของกรอบ */
-  width: 100%;
-  border-radius: 10px; /* มุมโค้ง */
-}
-
-th, td {
-    padding: 14px;
-    text-align: center;
-    font-size: 16px;
-    color: #333;
-    border: 1px solid #ccc;
-}
-
-th {
-    background:#1769aa;
-    color: white;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-td {
-    background: #f9f9f9;
-}
 
 
 /* ✅ เอฟเฟกต์ Hover */
