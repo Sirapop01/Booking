@@ -66,12 +66,19 @@ exports.registerArena = async (req, res) => {
 // ✅ ดึงข้อมูลสนามกีฬาตาม `owner_id`
 exports.getArenas = async (req, res) => {
   try {
-    const arenas = await Arena.find().populate("businessOwnerId", "firstName lastName email phoneNumber");
-    res.status(200).json(arenas);
+      const { owner_id } = req.query;
+      console.log("📢 Owner ID ที่รับมา:", owner_id); // ✅ Debugging
+
+      const arenas = await Arena.find({ owner_id });
+      console.log("✅ สนามที่โหลดจาก DB:", arenas); // ✅ Debugging
+
+      res.json(arenas);
   } catch (error) {
-    res.status(500).json({ message: "เกิดข้อผิดพลาด", error: error.message });
+      console.error("❌ Error loading arenas:", error);
+      res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการโหลดสนาม" });
   }
 };
+
 
 // ✅ ดึงข้อมูลสนามกีฬาโดยใช้ `arena_id`
 exports.getArenaById = async (req, res) => {
@@ -138,3 +145,39 @@ exports.deleteArena = async (req, res) => {
     res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในระบบ", error: error.message });
   }
 };
+
+exports.toggleStadiumStatus = async (req, res) => {
+  try {
+      const { arenaId, open } = req.body;
+      console.log("📢 รับค่า:", { arenaId, open }); // ✅ Debugging
+
+      if (!mongoose.Types.ObjectId.isValid(arenaId)) {
+          return res.status(400).json({ message: "⚠️ arenaId ไม่ถูกต้อง" });
+      }
+
+      // ✅ ตรวจสอบว่ามีสนามก่อนอัปเดต
+      const existingArena = await Arena.findById(arenaId);
+      if (!existingArena) {
+          return res.status(404).json({ message: "❌ ไม่พบข้อมูลสนามก่อนอัปเดต" });
+      }
+
+      // ✅ อัปเดตสถานะ
+      const updatedArena = await Arena.findByIdAndUpdate(
+          arenaId,
+          { open: open },
+          { new: true }
+      );
+
+      if (!updatedArena) {
+          return res.status(404).json({ message: "❌ สนามหายไปหลังอัปเดต" });
+      }
+
+      console.log("✅ อัปเดตสถานะสนามสำเร็จ:", updatedArena); // ✅ Debugging
+      res.status(200).json({ message: "✅ อัปเดตสถานะสนามสำเร็จ!", arena: updatedArena });
+
+  } catch (error) {
+      console.error("❌ Error updating stadium status:", error);
+      res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการอัปเดตสถานะสนาม", error: error.message });
+  }
+};
+

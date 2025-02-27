@@ -79,12 +79,13 @@ const BookingArena = () => {
 
         <div className="arena-info-container">
           <div className="arena-left-section">
-            <h2 className="arena-title">{arena.fieldName}</h2>
-            <div className="arena-meta">
-              <span className="star">⭐ 5.0</span>
-              <span className="distance-tag">📍 20.2 km</span>
-              <span>{arena.additionalInfo}</span>
-            </div>
+            {/* ✅ เพิ่มสถานะของสนามข้างๆชื่อสนาม */}
+            <h2 className="arena-title">
+              {arena.fieldName} 
+              <span className={`status-badge ${arena.open ? "open" : "closed"}`}>
+                {arena.open ? "✅ เปิดให้จอง" : "❌ ปิดชั่วคราว"}
+              </span>
+            </h2>
 
             <div className="google-map-box">
               {arena.location?.coordinates?.length === 2 && (
