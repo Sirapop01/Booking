@@ -5,6 +5,7 @@ import axios from "axios"; // ✅ Import axios เพื่อดึงข้อ
 import "./Promotion.css";
 import homeLogo from "../assets/logoalt.png";
 import Promoowner from "../Promotionowner/Promoowner"; // นำเข้า Promoowner
+import Navbar from "../Navbar/Navbar";
 
 const PromotionPage = () => {
   const [decodedToken, setDecodedToken] = useState(null);
@@ -67,7 +68,8 @@ const PromotionPage = () => {
                 <p><strong>ประเภทกีฬา:</strong> {promo.sportName}</p>
                 <p><strong>ส่วนลด:</strong> {promo.discount}%</p>
                 <p><strong>ช่วงเวลา:</strong> {promo.timeRange}</p>
-                <p><strong>วันที่:</strong> {promo.startDate.substring(0, 10)} - {promo.endDate.substring(0, 10)}</p>
+                <p><strong>วันที่:</strong> {promo.startDate.substring(0, 10).split("-").reverse().join("-")} ถึง {promo.endDate.substring(0, 10).split("-").reverse().join("-")}</p>
+
               </div>
             </div>
           ))
