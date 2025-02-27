@@ -1,28 +1,72 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Swal from "sweetalert2"; //  ใช้ Swal แจ้งเตือน
+import { jwtDecode } from "jwt-decode"; 
+import Swal from "sweetalert2";
 import "./Promoowner.css";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 
 const PromotionList = () => {
   const [promotions, setPromotions] = useState([]);
+  const [arenas, setArenas] = useState([]);
   const navigate = useNavigate();
-  // ดึงข้อมูลโปรโมชั่นจาก API เมื่อโหลดหน้า
+
   useEffect(() => {
-    fetchPromotions();
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+
+    if (!token) {
+      alert("Session หมดอายุ! กรุณาเข้าสู่ระบบใหม่");
+      window.location.href = "/login";
+      return;
+    }
+
+    try {
+      const decoded = jwtDecode(token);
+      const ownerId = decoded.id;
+
+      if (!ownerId) {
+        console.error("⚠️ ไม่พบ ID ใน Token");
+        return;
+      }
+
+      // ✅ ฟังก์ชันโหลดสนามกีฬาของเจ้าของธุรกิจ
+      const fetchArenas = async () => {
+        try {
+          const response = await axios.get(`http://localhost:4000/api/stadium/getArenas?owner_id=${ownerId}`);
+          if (response.data.length > 0) {
+            setArenas(response.data);
+            fetchPromotions(ownerId, response.data.map(arena => arena._id)); // ✅ โหลดโปรโมชั่นของสนามทั้งหมด
+          } else {
+            setArenas([]);
+            setPromotions([]); // ✅ ถ้าไม่มีสนาม ให้ล้างโปรโมชั่นด้วย
+          }
+        } catch (error) {
+          console.error("⚠️ ไม่สามารถโหลดข้อมูลสนาม:", error);
+        }
+      };
+
+      fetchArenas();
+    } catch (error) {
+      console.error("⚠️ ไม่สามารถถอดรหัส Token:", error);
+      alert("Session ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่");
+      window.location.href = "/login";
+    }
   }, []);
 
-  const fetchPromotions = async () => {
+  // ✅ โหลดโปรโมชั่นที่ตรงกับ ownerId และ stadiumId
+  const fetchPromotions = async (ownerId, stadiumIds) => {
     try {
-      const response = await axios.get("http://localhost:4000/api/promotions"); // 🔹 API ที่ใช้ดึงข้อมูล
-      setPromotions(response.data); //  เก็บข้อมูลโปรโมชั่นใน state
+      const response = await axios.get("http://localhost:4000/api/promotions", {
+        params: { ownerId, stadiumIds: stadiumIds.join(",") }
+      });
+
+      setPromotions(response.data);
     } catch (error) {
       console.error("❌ ไม่สามารถดึงข้อมูลโปรโมชั่น:", error);
     }
   };
 
-  //  ฟังก์ชันลบโปรโมชั่น
+  // ✅ ฟังก์ชันลบโปรโมชั่น
   const handleDeletePromotion = async (promotionId) => {
     const confirmDelete = await Swal.fire({
       title: "ยืนยันการลบ",
@@ -41,7 +85,7 @@ const PromotionList = () => {
         setPromotions(promotions.filter((promo) => promo._id !== promotionId)); // ✅ อัปเดตรายการ
         Swal.fire("ลบสำเร็จ!", "โปรโมชั่นถูกลบออกจากระบบแล้ว", "success");
       } catch (error) {
-        console.error("ไม่สามารถลบโปรโมชั่น:", error);
+        console.error("❌ ไม่สามารถลบโปรโมชั่น:", error);
         Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถลบโปรโมชั่นได้", "error");
       }
     }
@@ -59,7 +103,7 @@ const PromotionList = () => {
               <img src={promo.promotionImageUrl} alt={promo.promotionTitle} className="promotion-image66" />
               <div className="promotion-details66">
                 <h2>{promo.promotionTitle}</h2>
-                <p><strong>สนาม:</strong> {promo.stadiumId?.fieldName || "ไม่ระบุ"}</p> {/* ✅ แสดงชื่อสนาม */}
+                <p><strong>สนาม:</strong> {promo.stadiumId?.fieldName || "ไม่ระบุ"}</p>
                 <p><strong>ประเภทกีฬา:</strong> {promo.sportName || "ไม่ระบุ"}</p>
                 <p><strong>เริ่ม:</strong> {promo.startDate.substring(0, 10) || "ไม่ระบุ"}</p>
                 <p><strong>สิ้นสุด:</strong> {promo.endDate.substring(0, 10) || "ไม่ระบุ"}</p>
