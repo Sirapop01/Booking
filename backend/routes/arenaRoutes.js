@@ -18,4 +18,6 @@ router.put("/updateArena/:id", arenaController.updateArena);
 // ✅ API ลบสนามกีฬา
 router.delete("/deleteArena/:id", arenaController.deleteArena);
 
+router.post("/toggleStatus", arenaController.toggleStadiumStatus);
+
 module.exports = router;

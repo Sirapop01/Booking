@@ -239,3 +239,24 @@ body {
   margin-top: 50px;
 }
 
+/* ✅ ป้ายสถานะแสดงข้างๆชื่อสนาม */
+.status-badge {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 5px;
+  margin-left: 12px;
+  display: inline-block;
+}
+
+/* ✅ สีเขียวเมื่อเปิด */
+.status-badge.open {
+  background-color: #28a745;
+  color: white;
+}
+
+/* ✅ สีแดงเมื่อปิด */
+.status-badge.closed {
+  background-color: #dc3545;
+  color: white;
+}
