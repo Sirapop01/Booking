@@ -76,14 +76,23 @@ exports.createPromotion = async (req, res) => {
 
 // ✅ [GET] ดึงรายการโปรโมชั่นทั้งหมด
 exports.getAllPromotions = async (req, res) => {
-    try {
-      const promotions = await Promotion.find().populate("stadiumId"); // ดึงข้อมูลสนามกีฬา
-      res.status(200).json(promotions);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "เกิดข้อผิดพลาดในการดึงโปรโมชั่น" });
-    }
-  };
+  try {
+    const { ownerId, stadiumIds } = req.query;
+
+    let query = {}; // เริ่มต้นเป็น query ว่าง (ดึงทั้งหมด)
+    if (ownerId) query.ownerId = ownerId;
+    if (stadiumIds) query.stadiumId = { $in: stadiumIds.split(",") };
+
+    const promotions = await Promotion.find(query).populate("stadiumId").lean();
+
+    res.status(200).json(promotions);
+  } catch (error) {
+    console.error("❌ เกิดข้อผิดพลาดในการดึงโปรโมชั่น:", error);
+    res.status(500).json({ error: "เกิดข้อผิดพลาดในการดึงโปรโมชั่น" });
+  }
+};
+
+
   
 
 // ✅ [GET] ดึงโปรโมชั่นของสนามที่กำหนด
