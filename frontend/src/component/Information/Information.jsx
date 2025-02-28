@@ -149,6 +149,7 @@ const Information = () => {
     
 
     return (
+        <div className = "information-background">
         <div className="information-container">
             <div className="information-section">
                 {/* 🔹 รูปถ่ายหนังสือจดทะเบียน */}
@@ -168,6 +169,7 @@ const Information = () => {
                         </label>
                     </div>
                 </div>
+                
 
                 {/* 🔹 รูปถ่ายบัตรประชาชน */}
                 <div className="information-box">
@@ -236,6 +238,7 @@ const Information = () => {
                 <button className="information-cancel">ยกเลิก</button>
                 <button className="information-next" onClick={handleSubmit}>ต่อไป</button>
             </div>
+        </div>
         </div>
     );
 };

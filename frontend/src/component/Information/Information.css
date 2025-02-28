@@ -1,33 +1,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 
-/* ✅ ปรับให้ HTML และ BODY เลื่อนได้ */
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden; /* ✅ ป้องกันการเลื่อนในแกน X */
-    overflow-y: auto; /* ✅ อนุญาตให้เลื่อนในแกน Y */
-    background: linear-gradient(to bottom, #0a1a2a, #004080);
+
+
+.information-background{
+    background: url('./images/backk.jpg') no-repeat center center/cover; /* ตั้งค่าพื้นหลัง */
+    width: 100vw; /* กว้างเต็มจอ */
+  height: 100vh; /* สูงเต็มจอ */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
 }
 
-/* ✅ ปรับให้ Wrapper เต็มหน้าจอและเลื่อนลงได้ */
-.information-wrapper {
+.information-background::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    min-height: 100vh; /* ✅ ให้ wrapper ขยายเต็มความสูงหน้าจอ */
-    height: auto; /* ✅ ป้องกันการถูกบีบเมื่อมีเนื้อหามาก */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-grow: 1; /* ✅ ขยาย wrapper ตามเนื้อหา */
-    padding: 40px 0;
-    background: linear-gradient(to bottom, #0a1a2a, #004080); /* ✅ กำหนดพื้นหลังโดยตรง */
-    padding-bottom: 60px; /* ✅ เพิ่มระยะห่างด้านล่าง */
-}
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)); /* ปรับความเข้มของสีที่นี่ */
+    z-index: 1; /* ให้ overlay อยู่เหนือ background */
+  }
+  
 
 
 /* ✅ ปรับให้ Container อยู่กึ่งกลาง */
 .information-container {
-    width: 90%; /* ✅ ลดจาก 95% เป็น 85% */
+    width: 100%; /* ✅ ลดจาก 95% เป็น 85% */
     max-width: 1200px; /* ✅ ลดขนาดจาก 1400px เป็น 1200px */
     background: white;
     padding: 50px;
@@ -38,11 +39,15 @@ html, body {
     align-items: center;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     margin: auto;
-    margin-top: 40px;
-    margin-bottom: 60px;
+    margin-top: -120px;
+    margin-bottom: 100px;
     min-height: 600px; /* ✅ บังคับให้ container มีความสูง */
     height: auto; /* ✅ ป้องกันการล็อกขนาด */
     overflow: visible; /* ✅ ป้องกันการถูกตัด */
+    z-index: 2;
+    
+    
+    
 }
 
 /* ✅ ปรับให้ Section รองรับการเลื่อน */
@@ -52,6 +57,7 @@ html, body {
     gap: 20px;
     width: 100%;
     max-width: 1200px;
+    
 }
 
 /* ✅ ปรับให้กล่องอยู่กึ่งกลาง */
@@ -95,6 +101,7 @@ html, body {
     width: 100%;
     position: relative;
     justify-content: flex-start; /* ✅ จัด label และ error ให้อยู่ฝั่งซ้าย */
+    
 }
 
 /* ✅ ปุ่ม */
@@ -117,10 +124,12 @@ html, body {
 
 .information-next {
     background-color: #00a6fb;
+    font-family: 'Kanit', sans-serif;
 }
 
 .information-cancel {
     background-color: #ff4d4d;
+    font-family: 'Kanit', sans-serif;
 }
 
 /* ✅ เอฟเฟกต์ Hover */

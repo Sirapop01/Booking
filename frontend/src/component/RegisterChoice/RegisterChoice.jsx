@@ -19,7 +19,7 @@ function RegisterChoice() {
     <div className="container" style={{ backgroundImage: `url(${background})` }}>
       <div className="content">
       <img src={logo} alt="Logo" className="logo" style={{ width: "200px", height: "auto" }} />
-        <h1 className="welcome-text">Welcome To MatchWeb</h1>
+        <h1 className="welcome-text">WELCOME TO MATCHWEB</h1>
         <p className="description-text">
           "ไม่ว่าคุณจะกำลังมองหาสนามที่สมบูรณ์แบบ หรืออยากเพิ่มโอกาสให้ธุรกิจสนามของคุณ ที่นี่คือจุดเริ่มต้นของคุณ!
           <br />
