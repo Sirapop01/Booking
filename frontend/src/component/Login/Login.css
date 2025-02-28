@@ -73,7 +73,7 @@
 
 .login-header {
   position: fixed;
-  top: 100px;
+  top: 75px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -105,6 +105,8 @@
   -webkit-background-clip: text;
   color: transparent;
   animation: textGlow 2s infinite alternate;
+  position: relative;
+  top: -15px;
 }
 .login-logo-text:hover {
   transform: scale(1.1);
