@@ -65,14 +65,15 @@
   max-width: 450px;
   position: relative;
   z-index: 2;
-  left : -5px
+  left : -5px;
+  top: 100px;
   
 }
 
 
 .login-header {
   position: fixed;
-  top: 30px;
+  top: 100px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
