@@ -10,7 +10,7 @@ import "react-clock/dist/Clock.css"; // ✅ นำเข้า Clock UI
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom"; // ✅ เพิ่มบรรทัดนี้
 import Swal from "sweetalert2";
-
+import background from "../assets/Blackground/Yahoo.png";
 
 const DEFAULT_LOCATION = [13.736717, 100.523186]; // ✅ ค่าดีฟอลต์ (กรุงเทพฯ)
 
@@ -323,146 +323,155 @@ useEffect(() => {
   }, [mapLocation]);
 
   return (
-    <div className="form-container099">
+    <>
       {/* ✅ ส่วนหัวที่ครอบด้วยสีน้ำเงิน พร้อมโลโก้ */}
       <div className="form-header099">
-        <div className="header099">
-          <img src={logo} alt="MatchWeb Logo" className="logo099" />
-          <h1>MatchWeb</h1>
-          <p>{arenaId ? "แก้ไขสนาม" : "เพิ่มสนามสำหรับผู้ประกอบการ"}</p>
-        </div>
-      </div>
-  
-      <div className="form-content099">
-        {/* ✅ ส่วนอัปโหลดรูปภาพ */}
-        <div className="form-section099 image-section099">
-          <div className="image-upload099">
-            {images.length < 4 ? (
-              <label htmlFor="imageInput">
-                <span>เพิ่มรูป {images.length}/4</span>
-              </label>
-            ) : (
-              <span className="complete-message">รูปภาพครบจำนวนแล้ว</span>
-            )}
-            <input
-              type="file"
-              id="imageInput"
-              accept="image/*"
-              multiple
-              onChange={handleImageUpload}
-              style={{ display: "none" }}
-            />
-          </div>
-  
-          {/* ✅ แสดงภาพที่อัปโหลด */}
-          <div className="uploaded-images099">
-            {images.map((image, index) => (
-              <div key={index} className="uploaded-image-container099">
-                <img 
-                  src={typeof image === "string" ? image : URL.createObjectURL(image)} 
-                  alt={`Uploaded ${index}`} 
-                  className="uploaded-image099" 
-                />
-                <button className="remove-image-button099" onClick={() => handleRemoveImage(index)}>✖</button>
-              </div>
-            ))}
-          </div>
-          {errorMessage && <p className="error-message099">{errorMessage}</p>}
-        </div>
-  
-        {/* ✅ ส่วนฟอร์มข้อมูลสนาม */}
-        <div className="form-section099 field-section099">
-          <label>ชื่อสนาม : *</label>
-          <input 
-            type="text" 
-            name="fieldName" 
-            value={formData.fieldName} 
-            onChange={handleInputChange} 
-            placeholder="ระบุชื่อสนาม" 
-          />
-  
-          <label>เจ้าของ : *</label>
-          <input 
-            type="text" 
-            name="ownerName" 
-            value={formData.ownerName} 
-            onChange={handleInputChange} 
-            placeholder="ระบุชื่อเจ้าของ" 
-          />
-  
-          <label>เบอร์โทรศัพท์ : *</label>
-          <input 
-            type="tel" 
-            name="phone" 
-            value={formData.phone} 
-            onChange={handleInputChange} 
-            placeholder="ระบุเบอร์โทรศัพท์" 
-          />
-  
-          <label>เวลาเปิด-ปิด:</label>
-          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-            {/* ✅ ช่องเลือกเวลาเริ่มต้น (Start Time) */}
-            <TimePicker
-              onChange={(time) => setFormData({ ...formData, startTime: time })} 
-              value={formData.startTime}
-              disableClock={true}
-              format="H:mm"
-              clearIcon={null}
-              className="react-time-picker"
-            />
-            <span>-</span>
-            {/* ✅ ช่องเลือกเวลาสิ้นสุด (End Time) */}
-            <TimePicker
-              onChange={(time) => setFormData({ ...formData, endTime: time })} 
-              value={formData.endTime}
-              disableClock={true}
-              format="H:mm"
-              clearIcon={null}
-              className="react-time-picker"
-            />
-          </div>
-  
-          <label>ตำแหน่งที่ตั้ง:</label>
-          <span style={{ marginLeft: "10px", fontWeight: "bold", color: "#007bff" }}>
-            📍 {mapLocation[0]?.toFixed(5)}, {mapLocation[1]?.toFixed(5)}
-          </span>
-          <Mapping location={mapLocation || DEFAULT_LOCATION} setLocation={setMapLocation} />
-        </div>
-  
-        {/* ✅ ส่วนเพิ่มเติม (สิ่งอำนวยความสะดวก + ข้อมูลเพิ่มเติม) */}
-        <div className="form-section099 additional-section099">
-          <label>สิ่งอำนวยความสะดวก:</label>
-          <div className="checkbox-group099">
-            {["parking", "wifi", "locker", "shower", "rent", "shop", "other"].map((amenity) => (
-              <div key={amenity}>
-                <input
-                  type="checkbox"
-                  id={amenity}
-                  checked={formData.amenities ? formData.amenities.includes(amenity) : false} 
-                  onChange={handleCheckboxChange}
-                />
-                <label htmlFor={amenity}>{getAmenityLabel(amenity)}</label>
-              </div>
-            ))}
-          </div>
-  
-          <label>ข้อมูลสนาม / เงื่อนไขการจอง :</label>
-          <textarea
-            className="large-textarea099"
-            value={formData.additionalInfo}
-            onChange={handleTextAreaChange}
-            placeholder="ระบุข้อมูลเพิ่มเติม"
-          ></textarea>
-        </div>
-      </div>
-  
-      {/* ✅ ฟุตเตอร์ฟอร์ม */}
-      <div className="form-footer099">
-        {formErrors && <p className="error-message">{formErrors}</p>}
-        <button onClick={handleSubmit}>{arenaId ? "บันทึกการแก้ไข" : "ดำเนินการต่อ"}</button>
+    <div className="header099">
+        <img src={logo} alt="MatchWeb Logo" className="logo099" />
+        <h1 className="header-title">{arenaId ? "แก้ไขสนาม" : "เพิ่มสนามสำหรับผู้ประกอบการ"}</h1>
       </div>
     </div>
+  
+      {/* ✅ คอนเทนต์ของฟอร์ม */}
+    <div className="containerRe" style={{ backgroundImage: `url(${background})` }}>
+      <div className="form-container099">
+        <div className="form-content099">
+          {/* ✅ ส่วนอัปโหลดรูปภาพ */}
+          <div className="form-section099 image-section099">
+            <div className="image-upload099">
+              {images.length < 4 ? (
+                <label htmlFor="imageInput">
+                  <span>เพิ่มรูป {images.length}/4</span>
+                </label>
+              ) : (
+                <span className="complete-message">รูปภาพครบจำนวนแล้ว</span>
+              )}
+              <input
+                type="file"
+                id="imageInput"
+                accept="image/*"
+                multiple
+                onChange={handleImageUpload}
+                style={{ display: "none" }}
+              />
+            </div>
+  
+            {/* ✅ แสดงภาพที่อัปโหลด */}
+            <div className="uploaded-images099">
+              {images.map((image, index) => (
+                <div key={index} className="uploaded-image-container099">
+                  <img 
+                    src={typeof image === "string" ? image : URL.createObjectURL(image)} 
+                    alt={`Uploaded ${index}`} 
+                    className="uploaded-image099" 
+                  />
+                  <button className="remove-image-button099" onClick={() => handleRemoveImage(index)}>
+                    ✖
+                  </button>
+                </div>
+              ))}
+            </div>
+            {errorMessage && <p className="error-message099">{errorMessage}</p>}
+          </div>
+  
+          {/* ✅ ส่วนฟอร์มข้อมูลสนาม */}
+          <div className="form-section099 field-section099">
+            <label>ชื่อสนาม : *</label>
+            <input 
+              type="text" 
+              name="fieldName" 
+              value={formData.fieldName} 
+              onChange={handleInputChange} 
+              placeholder="ระบุชื่อสนาม" 
+            />
+  
+            <label>เจ้าของ : *</label>
+            <input 
+              type="text" 
+              name="ownerName" 
+              value={formData.ownerName} 
+              onChange={handleInputChange} 
+              placeholder="ระบุชื่อเจ้าของ" 
+            />
+  
+            <label>เบอร์โทรศัพท์ : *</label>
+            <input 
+              type="tel" 
+              name="phone" 
+              value={formData.phone} 
+              onChange={handleInputChange} 
+              placeholder="ระบุเบอร์โทรศัพท์" 
+            />
+  
+            <label>เวลาเปิด-ปิด:</label>
+            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              {/* ✅ ช่องเลือกเวลาเริ่มต้น (Start Time) */}
+              <TimePicker
+                onChange={(time) => setFormData({ ...formData, startTime: time })} 
+                value={formData.startTime}
+                disableClock={true}
+                format="H:mm"
+                clearIcon={null}
+                className="react-time-picker"
+              />
+              <span>-</span>
+              {/* ✅ ช่องเลือกเวลาสิ้นสุด (End Time) */}
+              <TimePicker
+                onChange={(time) => setFormData({ ...formData, endTime: time })} 
+                value={formData.endTime}
+                disableClock={true}
+                format="H:mm"
+                clearIcon={null}
+                className="react-time-picker"
+              />
+            </div>
+  
+            <label>ตำแหน่งที่ตั้ง:</label>
+            <span style={{ marginLeft: "10px", fontWeight: "bold", color: "#007bff" }}>
+              📍 {mapLocation[0]?.toFixed(5)}, {mapLocation[1]?.toFixed(5)}
+            </span>
+            <Mapping location={mapLocation || DEFAULT_LOCATION} setLocation={setMapLocation} />
+          </div>
+  
+          {/* ✅ ส่วนเพิ่มเติม (สิ่งอำนวยความสะดวก + ข้อมูลเพิ่มเติม) */}
+          <div className="form-section099 additional-section099">
+            <label>สิ่งอำนวยความสะดวก:</label>
+            <div className="checkbox-group099">
+              {["parking", "wifi", "locker", "shower", "rent", "shop", "other"].map((amenity) => (
+                <div key={amenity}>
+                  <input
+                    type="checkbox"
+                    id={amenity}
+                    checked={formData.amenities ? formData.amenities.includes(amenity) : false} 
+                    onChange={handleCheckboxChange}
+                  />
+                  <label htmlFor={amenity}>{getAmenityLabel(amenity)}</label>
+                </div>
+              ))}
+            </div>
+  
+            <label>ข้อมูลสนาม / เงื่อนไขการจอง :</label>
+            <textarea
+              className="large-textarea099"
+              value={formData.additionalInfo}
+              onChange={handleTextAreaChange}
+              placeholder="ระบุข้อมูลเพิ่มเติม"
+            ></textarea>
+          </div>
+        </div>
+  
+        {/* ✅ ฟุตเตอร์ฟอร์ม */}
+        <div className="form-footer099">
+          {formErrors && <p className="error-message">{formErrors}</p>}
+          <button onClick={handleSubmit}>
+            {arenaId ? "บันทึกการแก้ไข" : "ดำเนินการต่อ"}
+          </button>
+        </div>
+      </div>
+    </div>  
+    </>
   );
+  
   
 
 };
