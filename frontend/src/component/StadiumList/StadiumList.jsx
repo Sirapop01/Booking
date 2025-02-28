@@ -107,6 +107,34 @@ function StadiumList() {
         }
     };
 
+    const deleteStadium = async (arenaId) => {
+        Swal.fire({
+            title: "คุณแน่ใจหรือไม่?",
+            text: "การลบสนามจะไม่สามารถกู้คืนได้!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#28a745", // ✅ ปรับเป็นสีเขียว
+            cancelButtonColor: "#d33", // ✅ ปรับเป็นสีแดง
+            confirmButtonText: "ใช่, ลบเลย!",
+            cancelButtonText: "ยกเลิก",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    await axios.delete(`http://localhost:4000/api/arenas/deleteArena/${arenaId}`);
+                    await fetchStadiumsStatus(); // ✅ โหลดข้อมูลใหม่
+    
+                    setSelectedStadium(null); // ✅ รีเซ็ตค่า selectedStadium
+                    Swal.fire("ลบสำเร็จ!", "สนามถูกลบแล้ว", "success");
+                } catch (error) {
+                    console.error("⚠️ ไม่สามารถลบสนาม:", error);
+                    Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถลบสนามได้", "error");
+                }
+            }
+        });
+    };
+    
+    
+    
     return (
         <div className="stadium-page-container">
             <NavbarStadiumlist />
@@ -161,24 +189,35 @@ function StadiumList() {
 
             {/* ✅ ปุ่มด้านล่าง */}
             <div className="bottom-buttons-stadiumlist">
-                <button
-                    className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`}
-                    onClick={() => navigate(`/Registerarena/${selectedStadium}`)}
+                <button 
+                    className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
+                    onClick={() => navigate(`/Registerarena/${selectedStadium}`)} 
                     disabled={!selectedStadium}
                 >
                     แก้ไข
                 </button>
+
                 <button onClick={() => navigate("/Registerarena")} className="btn-stadiumlist">
                     เพิ่มสนามใหม่
                 </button>
-                <button
-                    className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`}
-                    onClick={() => navigate(`/manage-sub-stadium/${selectedStadium}`)}
+
+                <button 
+                    className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
+                    onClick={() => navigate(`/manage-sub-stadium/${selectedStadium}`)} 
                     disabled={!selectedStadium}
                 >
                     จัดการสนามย่อย
                 </button>
+
+                <button 
+                    className={`delete-btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
+                    onClick={() => deleteStadium(selectedStadium)}
+                    disabled={!selectedStadium}
+                >
+                    ลบสนาม
+                </button>
             </div>
+
         </div>
     );
 }

@@ -234,3 +234,45 @@
   background-color: rgba(0, 123, 255, 0.3); /* สีที่จางลงเล็กน้อย */
   box-shadow: 0px 6px 15px rgba(0, 123, 255, 0.6); /* เพิ่มเงาเมื่อเลือก */
 }
+
+/* ✅ ปุ่มลบสนาม (เหมือน .btn-stadiumlist แต่เปลี่ยนเป็นสีแดง) */
+.delete-btn-stadiumlist {
+  padding: 14px 26px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  min-width: 200px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Kanit', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #d33;
+  color: white;
+  text-decoration: none;
+  border: none;
+}
+
+.delete-btn-stadiumlist:active {
+  transform: scale(0.95);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* ✅ เปลี่ยนเป็นสีแดงเข้มเมื่อ hover */
+.delete-btn-stadiumlist:hover {
+  background-color: #b02a2a; 
+  box-shadow: 0px 8px 16px rgba(255, 0, 0, 0.4);
+}
+
+/* ❌ ปุ่มลบสนามที่กดไม่ได้ */
+.delete-btn-stadiumlist.disabled {
+  background-color: #c1c1c1;
+  color: #777;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.8;
+}
