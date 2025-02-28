@@ -3,37 +3,119 @@
 
 /* Container หลัก */
 .login-container {
+  width: 100vw; /* กว้างเต็มจอ */
+  height: 100vh; /* สูงเต็มจอ */
   display: flex;
-  height: 100vh;
-  align-items: center; /* จัดแนวกลางในแนวตั้ง */
-  justify-content: center; /* จัดแนวกลางในแนวนอน */
-  background: linear-gradient(to bottom, #0C2C4B, #00518E); /* พื้นหลังแบบไล่สี */
-  font-family: "Kanit", sans-serif;
+  align-items: center;
+  justify-content: center;
+  background: url('./images/bluee.jpg') no-repeat center center/cover; /* ตั้งค่าพื้นหลัง */
+  position: relative;
 }
 
-/* ด้านซ้าย */
+.background-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* ✅ ทำให้ภาพมืดขึ้นเล็กน้อย */
+  z-index: 1;
+}
+
+
+.login-container::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* ทำให้พื้นหลังมืดลงเล็กน้อย */
+  z-index: 1;
+}
+
+
+.login-right-side {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 400px; /* กำหนดขนาดไม่ให้กว้างเกินไป */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .login-left-side {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 50%;
-  font-family: "Kanit", sans-serif;
+  width: 100%;
+  max-width: 400px;
+  z-index: 2;
 }
+
+.login-form-container {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 40px;
+  border-radius: 15px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  text-align: center;
+  width: 100%;
+  max-width: 450px;
+  position: relative;
+  z-index: 2;
+  left : -5px
+  fon
+}
+
+
+.login-header {
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000;
+}
+
 
 .login-logo {
-  width: 100px;
-  margin-bottom: 20px;
-  font-family: "Kanit", sans-serif;
+  width: 90px;
+  filter: drop-shadow(0px 0px 20px rgba(255, 255, 255, 0.8));
+  transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out;
+  animation: floatAnimation 4s ease-in-out infinite; /* ✅ ทำให้ลอยขึ้น-ลงเบาๆ */
 }
 
+/* ✅ โลโก้ขยาย + Glow Effect เวลา Hover */
+.login-logo:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0px 0px 30px rgba(255, 255, 255, 1));
+}
 .login-logo-text {
-  font-size: 24px;
-  color: #FFFFFF;
-  margin-bottom: 30px;
-  font-family: 'Inder', sans-serif;
-  font-weight: bold;
-  font-family: "Kanit", sans-serif;
+  font-size: 35px;
+  font-weight: 1000;
+  font-family: "Inder", sans-serif;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #39BBDF, #1B82B1, #ffffff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: textGlow 2s infinite alternate;
+}
+.login-logo-text:hover {
+  transform: scale(1.1);
+}
+
+@keyframes textGlow {
+  from {
+    text-shadow: 0px 0px 15px rgba(57, 187, 223, 0.8);
+  }
+  to {
+    text-shadow: 0px 0px 25px rgba(57, 187, 223, 1);
+  }
 }
 
 .login-bg-img {
@@ -42,32 +124,17 @@
   font-family: "Kanit", sans-serif;
 }
 
-/* ด้านขวา */
-.login-right-side {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: "Kanit", sans-serif;
-}
 
-.login-form-container {
-  background-color: rgba(255, 255, 255, 0.1); /* พื้นหลังโปร่งแสง */
-  padding: 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* เพิ่มเงา */
-  width: 80%;
-  font-family: "Kanit", sans-serif;
-}
+
 
 .login-heading {
   text-align: center;
-  margin-bottom: 20px;
-  font-size: 32px;
+  margin-bottom: 50px;
+  font-size: 40px;
   color: #FFFFFF;
   font-weight: bold;
-  font-family: "Kanit", sans-serif;
+  font-family: "Inder", sans-serif;
+  
 }
 
 /* กล่องอินพุต */
@@ -79,20 +146,25 @@
 
 .login-input-group input {
   width: 100%;
-  padding: 15px;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #FFFFFF;
-  border: none;
-  border-radius: 5px;
+  padding: 12px 10px; /* ✅ เพิ่ม padding ด้านซ้าย */
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  border-radius: 8px;
   font-size: 16px;
-  outline: none;
-  box-sizing: border-box;
-  font-family: "Kanit", sans-serif;
+  text-align: left; /* ✅ ทำให้ข้อความอยู่ชิดซ้าย */
+  outline: none; /* ✅ เอาเส้นขอบออก */
 }
 
 .login-input-group input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
-  font-family: "Kanit", sans-serif;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: left; 
+}
+
+.login-input-group input:focus {
+  outline: none;
+  border-color: #39BBDF;
+  box-shadow: 0px 0px 10px rgba(57, 187, 223, 0.8);
 }
 
 /* กล่องพาสเวิร์ดพร้อมปุ่มตา */
@@ -103,19 +175,22 @@
 .login-toggle-password {
   position: absolute;
   top: 50%;
-  right: -350px; /* ปรับให้ชิดขอบ input */
+  right: 10px; /* ✅ ปรับให้ชิดขอบ input */
   transform: translateY(-50%);
-  background: none !important;
-  border: none !important;
+  background: none;
+  border: none;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 20px;
-  display: flex;
+  display: inline-flex; /* ✅ ทำให้ปุ่มคลิกได้เฉพาะขนาดของไอคอน */
+  width: 30px; /* ✅ กำหนดขนาดของปุ่มให้พอดีกับไอคอน */
+  height: 30px;
   align-items: center;
   justify-content: center;
-  outline: none !important;
-  box-shadow: none !important;
+  padding: 5px; /* ✅ เพิ่มพื้นที่การคลิกเล็กน้อย */
+  border-radius: 50%; /* ✅ ทำให้ปุ่มมีขอบโค้งมน */
 }
+
 
 .login-toggle-password:hover,
 .login-toggle-password:focus,
@@ -137,6 +212,7 @@
   color: #39BBDF;
   font-size: 14px;
   cursor: pointer;
+ 
 }
 
 .login-remember-me input[type="checkbox"] {
@@ -171,13 +247,16 @@
   color: #39BBDF;
   margin-left: -5px;
   position: relative;
-  top: -1px
+  top: 1px;
+  left:5px;
+  
+  
 }
 
 /* ลืมรหัสผ่าน */
-.login-forgot-password {
-  text-align: left;
-  margin-bottom: 20px;
+.login-forgot-password,
+.login-signup-link {
+  text-align: center;
 }
 
 .login-forgot-password a {
@@ -193,21 +272,51 @@
 /* ปุ่ม Login */
 .login-button {
   width: 100%;
-  padding: 15px;
-  background-color: #39BBDF;
-  color: #FFFFFF;
+  padding: 12px;
+  background: linear-gradient(135deg, #39BBDF, #1B82B1);
+  color: #ffffff;
   border: none;
-  border-radius: 5px;
-  font-size: 16px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
   cursor: pointer;
-  font-family: 'Inder', sans-serif;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(57, 187, 223, 0.4);
+  transition: all 0.3s ease-in-out;
 }
 
+.login-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transition: all 0.5s;
+}
 .login-button:hover {
-  background-color: #1B82B1;
-  
+  background: linear-gradient(135deg, #1B82B1, #39BBDF);
+  transform: scale(1.05);
+  box-shadow: 0px 6px 15px rgba(57, 187, 223, 0.6);
 }
 
+.login-button:hover::before {
+  left: 100%;
+}
+
+@keyframes floatAnimation {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
 /* Divider */
 .login-divider {
   display: flex;
