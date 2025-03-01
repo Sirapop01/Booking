@@ -2,7 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 
 
-
 /* โครงสร้างหลัก */
 .homepage-container77 {
   width: 1250px; 
@@ -17,8 +16,7 @@
   position: relative;
   top: 50px;
   z-index: 2;
-  
-  
+
 }
 
 .homepage-container77:hover {
@@ -185,6 +183,8 @@
   align-items: center;
   justify-content: center;
   background: url('./images/backk.jpg') no-repeat center center/cover; /* ตั้งค่าพื้นหลัง */
+  overflow: auto;
+  height: 100vh;
 }
 
 .homepage-wrapper::before {
