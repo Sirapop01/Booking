@@ -5,6 +5,7 @@ import { FaPencilAlt } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const UserProfile = () => {
   const [isEditable, setIsEditable] = useState(false);
@@ -59,9 +60,11 @@ const UserProfile = () => {
 
   useEffect(() => {
     if (id) {
+      console.log("✅ Ready to fetch data with ID:", id);
       getMB();
     }
   }, [id]);
+  
 
   const getMB = async () => {
     try {
@@ -152,6 +155,69 @@ const UserProfile = () => {
     setShowLogoutModal(true); // ✅ Open the modal
   };
 
+  const DeleteUser = async () => {
+    try {
+      // ✅ ให้ผู้ใช้กรอกอีเมลเพื่อยืนยัน
+      const { value: emailInput } = await Swal.fire({
+        title: "ยืนยันการลบบัญชี",
+        input: "email",
+        inputLabel: "กรุณากรอกอีเมลของคุณ",
+        inputPlaceholder: member.email,
+        showCancelButton: true,
+        confirmButtonText: "ยืนยัน",
+        cancelButtonText: "ยกเลิก",
+        customClass: {
+          input: "swal-input-custom", // ✅ ปรับแต่ง input
+          confirmButton: "swal-confirm-btn", // ✅ ปรับแต่งปุ่ม "ยืนยัน"
+          cancelButton: "swal-cancel-btn" // ✅ ปรับแต่งปุ่ม "ยกเลิก"
+        },
+        inputValidator: (value) => {
+          if (!value) {
+            return "กรุณากรอกอีเมล!";
+          }
+          if (value !== member.email) {
+            return "อีเมลไม่ถูกต้อง!";
+          }
+        }
+      });
+  
+      // ✅ ถ้าไม่ได้กด "ยืนยัน" ให้ยกเลิกการลบ
+      if (!emailInput) {
+        return;
+      }
+  
+      // ✅ แสดง SweetAlert ยืนยันก่อนส่ง API
+      const confirmDelete = await Swal.fire({
+        title: "คุณแน่ใจหรือไม่?",
+        text: "เมื่อลบแล้วจะไม่สามารถกู้คืนบัญชีได้!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "ลบบัญชี",
+        cancelButtonText: "ยกเลิก"
+      });
+  
+      if (!confirmDelete.isConfirmed) {
+        return;
+      }
+  
+      const response = await axios.delete(`http://localhost:4000/api/auth/delete/${id}`)
+  
+      if (response.status === 200) {
+        await Swal.fire("ลบสำเร็จ!", "บัญชีของคุณถูกลบแล้ว", "success");
+        localStorage.clear();
+        sessionStorage.clear();
+        navigate("/");
+      } else {
+        await Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถลบบัญชีได้", "error");
+      }
+    } catch (error) {
+      console.log("❌ ไม่สามารถลบข้อมูลผู้ใช้ได้", error);
+      await Swal.fire("เกิดข้อผิดพลาด!", "ไม่สามารถลบบัญชีได้", "error");
+    }
+  };
+
   const confirmLogout = async () => {
     try {
       const response = await axios.get("http://localhost:4000/api/auth/logout");
@@ -175,7 +241,7 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="profile-container">
+    <div className="profile-container" type = "user-profile">
       {/* เมนูด้านซ้าย */}
       <aside className="sidebar">
         <div className="profile-image">
@@ -268,7 +334,7 @@ const UserProfile = () => {
         {isEditable && <button className="save-button" onClick={updateMemberData}>บันทึก</button>}
         <div className="account-actions">
           <h3 className="forgot-password-user" onClick={() => navigate("/forgot-password")}>ลืมรหัสผ่าน ?</h3>
-          <h3 className="user-delete">ลบบัญชี !</h3>
+          <h3 className="user-delete" onClick={DeleteUser}>ลบบัญชี !</h3>
         </div>
       </main>
 

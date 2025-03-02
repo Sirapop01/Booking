@@ -1,7 +1,8 @@
-.profile-container {
+.profile-container  {
   display: flex;
   min-height: 100vh; /* ทำให้ container สูงตามเนื้อหา */
   background-color: #f9f9f9;
+  overflow-y: auto;
 }
 
   
@@ -138,11 +139,49 @@
   }
   
   .user-delete {
+    margin-left: auto;
     font-size: 14px;
     font-weight: bold;
     color: #e74c3c; /* 🔴 ให้เป็นสีแดงเพื่อความชัดเจน */
     cursor: pointer;
   }
+  
+/* ✅ ปรับแต่ง Input */
+.swal-input-custom {
+  width: 100% !important;
+  max-width: 400px !important;
+  text-align: center;
+  padding: 10px;
+}
+
+/* ✅ ปุ่มยืนยัน (เปลี่ยนเป็นสีแดง) */
+.swal-confirm-btn {
+  background-color: #d33 !important; /* 🔥 สีแดง */
+  color: white !important;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+/* ✅ ปุ่มยกเลิก (เปลี่ยนเป็นสีเทาเข้ม) */
+.swal-cancel-btn {
+  background-color: #6c757d !important; /* 🔥 สีเทาเข้ม */
+  color: white !important;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+/* ✅ ปุ่มยืนยันเมื่อ Hover */
+.swal-confirm-btn:hover {
+  background-color: #b02a2a !important; /* 🔥 สีแดงเข้มขึ้น */
+}
+
+/* ✅ ปุ่มยกเลิกเมื่อ Hover */
+.swal-cancel-btn:hover {
+  background-color: #5a6268 !important; /* 🔥 สีเทาเข้มขึ้น */
+}
+
   
   
 
