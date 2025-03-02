@@ -83,7 +83,7 @@ const Navbar = () => {
                 <div className="dropdown-menu">
                   <button onClick={() => navigate("/profile")}>บัญชี</button>
                   <button onClick={() => navigate("/history")}>ประวัติการจอง</button>
-                  <button onClick={() => navigate("/favorites")}>รายการโปรด</button>
+                  <button onClick={() => navigate("/FavoritesList")}>รายการโปรด</button>
                   <button onClick={handleLogout}>ลงชื่อออก</button>
                 </div>
               )}
