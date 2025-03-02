@@ -53,10 +53,12 @@ const UserProfile = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setNewProfileImage(file); // ✅ เก็บไฟล์ไว้ แต่ยังไม่อัปเดต DB
-    setProfileImage(URL.createObjectURL(file)); // แสดง preview
-    uploadImage(file);
+    if (file) {
+      setNewProfileImage(file); // ✅ เก็บไฟล์ไว้ แต่ยังไม่อัปโหลด
+      setProfileImage(URL.createObjectURL(file)); // ✅ แสดงรูปที่เลือกเป็น preview
+    }
   };
+
 
   useEffect(() => {
     if (id) {
@@ -64,7 +66,7 @@ const UserProfile = () => {
       getMB();
     }
   }, [id]);
-  
+
 
   const getMB = async () => {
     try {
@@ -180,12 +182,12 @@ const UserProfile = () => {
           }
         }
       });
-  
+
       // ✅ ถ้าไม่ได้กด "ยืนยัน" ให้ยกเลิกการลบ
       if (!emailInput) {
         return;
       }
-  
+
       // ✅ แสดง SweetAlert ยืนยันก่อนส่ง API
       const confirmDelete = await Swal.fire({
         title: "คุณแน่ใจหรือไม่?",
@@ -197,13 +199,13 @@ const UserProfile = () => {
         confirmButtonText: "ลบบัญชี",
         cancelButtonText: "ยกเลิก"
       });
-  
+
       if (!confirmDelete.isConfirmed) {
         return;
       }
-  
+
       const response = await axios.delete(`http://localhost:4000/api/auth/delete/${id}`)
-  
+
       if (response.status === 200) {
         await Swal.fire("ลบสำเร็จ!", "บัญชีของคุณถูกลบแล้ว", "success");
         localStorage.clear();
@@ -241,14 +243,29 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="profile-container" type = "user-profile">
+    <div className="profile-container" type="user-profile">
       {/* เมนูด้านซ้าย */}
       <aside className="sidebar">
         <div className="profile-image">
-          <img src={profileImage || defaultProfilePic} alt="Profile" />
-          {isEditable && (
-            <input type="file" accept="image/*" onChange={handleImageChange} />
-          )}
+          <label htmlFor="fileUpload" className="image-upload-label">
+            <img src={profileImage || defaultProfilePic} alt="Profile" />
+
+            {isEditable && (
+              <div className="edit-icon-container">
+                <FaPencilAlt className="edit-icon" />
+              </div>
+            )}
+
+            {isEditable && (
+              <input
+                id="fileUpload"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="image-upload-input"
+              />
+            )}
+          </label>
         </div>
 
         <nav>
