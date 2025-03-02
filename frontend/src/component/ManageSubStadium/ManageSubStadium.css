@@ -11,7 +11,20 @@
     height: 100vh;
     overflow: auto;
     background-color: #f8f9fa; /* เปลี่ยนกลับเป็นสีเดิม */
+    background: url('./images/blackblue.jpg') no-repeat center center/cover; /* ตั้งค่าพื้นหลัง */
+    
 }
+
+.manage-substadium-page::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)); /* ปรับความเข้มของสีที่นี่ */
+    
+  }
 
 /* ✅ Header Section */
 .substadium-header {
@@ -25,6 +38,7 @@
     font-weight: bold;
     font-size: 24px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 2;
 }
 
 .substadium-title {
@@ -35,6 +49,7 @@
     justify-content: center;
     margin: 0;
     font-family: 'Kanit', sans-serif;
+    z-index: 2;
 }
 
 .substadium-logo {
@@ -71,12 +86,13 @@
     align-items: center;
     width: 100%;
     padding: 20px 0;
+    
 }
 
 .substadium-subtitle {
     font-size: 26px;
     font-weight: bold;
-    color: #07213A;
+    color: #ffffff;
     text-align: left;
     width: 60%;
     padding-left: 20px;
@@ -86,7 +102,7 @@
     letter-spacing: 1px;
     padding-left: 15px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-    background: linear-gradient(to right, #0056b3, #07213A);
+    background:white;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     display: inline-block;
@@ -94,6 +110,8 @@
     position: relative;
     right : -100px;
     top:50px;
+    
+    
 }
 
 .substadium-sports {
@@ -166,7 +184,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    
 }
 
 .substadium-popup-box {

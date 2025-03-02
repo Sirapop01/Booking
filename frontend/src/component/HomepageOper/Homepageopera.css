@@ -2,7 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 
 
-
 /* โครงสร้างหลัก */
 .homepage-container77 {
   width: 1250px; 
@@ -10,18 +9,19 @@
   margin: 80px auto;
   text-align: center;
   padding: 40px;
-  background: #d0d0d0; /* ทำให้สีเทาเข้มขึ้นเล็กน้อย */
+  background: #ffffff; /* ทำให้สีเทาเข้มขึ้นเล็กน้อย */
   border-radius: 25px;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.18); /* เพิ่มเงาให้นุ่มขึ้น */
   transition: transform 0.3s ease-in-out, background 0.3s;
   position: relative;
   top: 50px;
-  
+  z-index: 2;
+
 }
 
 .homepage-container77:hover {
   transform: translateY(-5px);
-  background: #c6c6c6;
+  background: #ffffff;
 }
 
 /* หัวข้อหลัก */
@@ -182,4 +182,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background: url('./images/backk.jpg') no-repeat center center/cover; /* ตั้งค่าพื้นหลัง */
+  overflow: auto;
+  height: 100vh;
+}
+
+.homepage-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)); /* ปรับความเข้มของสีที่นี่ */
+  z-index: 1; /* ให้ overlay อยู่เหนือ background */
 }

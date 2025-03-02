@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import "./ManageSubStadiumDetails.css";
 import NavbarStadiumlist from "../NavbarStadiumlist/NavbarStadiumlist";
+import { jwtDecode } from "jwt-decode";
 
 function ManageSubStadiumDetails() {
   const location = useLocation();
@@ -25,7 +26,7 @@ useEffect(() => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [editedCourt, setEditedCourt] = useState({
-    id: null, name: "", status: "เปิด", owner: "", phone: "", description: "", openTime: "", closeTime: "", price: "", images: []
+    id: null, name: "", status: "เปิด", intendantr: "", phone: "", description: "", openTime: "", closeTime: "", price: "", images: []
   });
 
   // State สำหรับ popup ลบ
@@ -38,43 +39,68 @@ useEffect(() => {
     setSelectedCourt(selectedCourt?.id === court.id ? null : court);
     setIsEditing(false);
     setIsAdding(false);
-    setEditedCourt(court || { id: null, name: "", status: "เปิด", owner: "", phone: "", description: "", openTime: "", closeTime: "", price: "", images: [] });
+    setEditedCourt(court || { id: null, name: "", status: "เปิด", intendant: "", phone: "", description: "", openTime: "", closeTime: "", price: "", images: [] });
+  };
+
+  const getOwnerIdFromToken = () => {
+    const token = localStorage.getItem("token");
+    console.log("🔍 Token from Local Storage:", token);
+  
+    if (!token) {
+      console.error("❌ No token found!");
+      return null;
+    }
+  
+    try {
+      const decoded = jwtDecode(token);
+      console.log("✅ Decoded Token:", decoded);
+      return decoded.owner_id || decoded.user_id || decoded.id;
+    } catch (error) {
+      console.error("❌ Token decoding failed:", error);
+      return null;
+    }
   };
 
   const handleAddClick = () => {
     setIsAdding(true);
     setIsEditing(true);
   
+    const owner_id = getOwnerIdFromToken(); // ✅ ดึง owner_id จาก token
+  
     const newCourt = {
       id: null, // จะถูกแทนที่หลังจากบันทึกลงฐานข้อมูล
       name: "",
       status: "เปิด",
-      owner: "",
+      intendant: "",
       phone: "",
       description: "",
       openTime: "",
       closeTime: "",
       price: "",
-      images: []
+      images: [],
+      owner_id, // ✅ บันทึก owner_id ไปในข้อมูลสนาม
     };
   
     setEditedCourt(newCourt);
     setSelectedCourt(newCourt); // ✅ เลือกสนามใหม่อัตโนมัติ
-  };
+  };  
   
 
   const handleSaveClick = () => {
+    const owner_id = getOwnerIdFromToken(); // ✅ ดึง owner_id จาก token
+  
     if (isAdding) {
       axios.post("http://localhost:4000/api/substadiums", {
         arenaId,
         sportId,
-        ...editedCourt
+        ...editedCourt,
+        owner_id, // ✅ ส่ง owner_id ไปกับ API
       })
       .then(response => {
         setCourts([...courts, response.data]); // อัปเดต UI
         setIsAdding(false);
         setIsEditing(false);
-        window.location.reload(); // ✅ รีเฟรชหน้าใหม่
+        window.location.reload(); // ✅ รีเฟรชหน้าใหม่ (แนะนำให้เปลี่ยนเป็น setCourts แทน)
       })
       .catch(error => console.error("❌ Failed to save substadium:", error));
     } else {
@@ -87,6 +113,7 @@ useEffect(() => {
       .catch(error => console.error("❌ Failed to update substadium:", error));
     }
   };
+  
   
   
   // เปิด popup ลบ
@@ -102,54 +129,52 @@ useEffect(() => {
     setCourtToDelete(courtId);
     setIsDeletePopupOpen(true);
   };
-  
-  
 
 // ✅ ฟังก์ชันยืนยันการลบสนาม
-const confirmDeleteCourt = async () => {
-  if (deleteConfirmText !== "Delete") return;
-  if (!courtToDelete) {
-    alert("❌ ไม่พบ ID ของสนาม กรุณารีเฟรชหน้าแล้วลองใหม่");
-    return;
-  }
+    const confirmDeleteCourt = async () => {
+      if (deleteConfirmText !== "Delete") return;
+      if (!courtToDelete) {
+        alert("❌ ไม่พบ ID ของสนาม กรุณารีเฟรชหน้าแล้วลองใหม่");
+        return;
+      }
 
-  try {
-    console.log("🗑️ กำลังลบสนามย่อย ID:", courtToDelete); // ✅ ตรวจสอบค่า ID ที่จะลบ
+      const owner_id = getOwnerIdFromToken(); // ✅ ดึง owner_id จาก token
+      console.log("🗑️ ลบสนาม ID:", courtToDelete, "โดย owner_id:", owner_id); // ✅ Debug
 
-    await axios.delete(`http://localhost:4000/api/substadiums/${courtToDelete}`);
+      if (!owner_id) {
+        alert("❌ ไม่พบ owner_id กรุณาเข้าสู่ระบบใหม่!");
+        return;
+      }
 
-    setCourts((prevCourts) => prevCourts.filter((court) => court._id !== courtToDelete));
-    
-    // ✅ ปิดป็อปอัพอัตโนมัติ
-    setIsDeletePopupOpen(false);
-    setDeleteConfirmText("");
-    setCourtToDelete(null);
+      try {
+        const response = await axios.delete(`http://localhost:4000/api/substadiums/${courtToDelete}`, {
+          data: { owner_id }, // ✅ ส่ง owner_id ไปด้วย
+        });
 
-    // ✅ แจ้งเตือนว่าลบสำเร็จ
-    alert("✅ ลบสนามย่อยสำเร็จ!");
+        console.log("✅ ลบสนามย่อยสำเร็จ:", response.data);
+        setCourts((prevCourts) => prevCourts.filter((court) => court._id !== courtToDelete));
+        
+        setIsDeletePopupOpen(false);
+        setDeleteConfirmText("");
+        setCourtToDelete(null);
+        
+        alert("✅ ลบสนามย่อยสำเร็จ!");
+      } catch (error) {
+        console.error("❌ Failed to delete substadium:", error.response?.data || error);
+        alert("❌ เกิดข้อผิดพลาดในการลบสนามย่อย: " + (error.response?.data?.message || "ไม่ทราบสาเหตุ"));
+      }
+    };
 
-    // ✅ รีเฟรชหน้าหลังจาก 1 วินาที เพื่อให้เห็นผลชัดเจน
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
-  } catch (error) {
-    console.error("❌ Failed to delete substadium:", error);
-    alert("เกิดข้อผิดพลาดในการลบสนามย่อย");
-  }
-};
+    const toggleStatus = async (courtId, currentStatus) => {
+      const newStatus = currentStatus === "เปิด" ? "ปิดชั่วคราว" : "เปิด";
+      try {
+        await axios.put(`http://localhost:4000/api/substadiums/${courtId}`, { status: newStatus });
+        setCourts(courts.map(court => (court._id === courtId ? { ...court, status: newStatus } : court)));
+      } catch (error) {
+        console.error("❌ Failed to update status:", error);
+      }
+    };
 
-
-
-  
-  const toggleStatus = (courtId) => {
-    setCourts(
-      courts.map((court) =>
-        court.id === courtId
-          ? { ...court, status: court.status === "เปิด" ? "ปิดชั่วคราว" : "เปิด" }
-          : court
-      )
-    );
-  };
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -212,12 +237,12 @@ const confirmDeleteCourt = async () => {
                   <tr key={court._id} className={selectedCourt?._id === court._id ? "selected" : ""} onClick={() => selectCourt(court)}>
                     <td>{court.name}</td>
                     <td>
-                      <button 
-                        className={court.status === "เปิด" ? "btn-open" : "btn-closed"} 
-                        onClick={(e) => { e.stopPropagation(); toggleStatus(court._id); }} // ✅ ใช้ `_id` แทน `id`
-                      >
-                        {court.status}
-                      </button>
+                    <button 
+                      className={court.status === "เปิด" ? "btn-open" : "btn-closed"} 
+                      onClick={(e) => { e.stopPropagation(); toggleStatus(court._id, court.status); }}
+                    >
+                      {court.status}
+                    </button>
                     </td>
                     <td>
                       <button 
@@ -303,8 +328,8 @@ const confirmDeleteCourt = async () => {
             </p>
 
         <h2>เจ้าของสนาม</h2>
-            <p><strong>ชื่อเจ้าของ:</strong> 
-                <input type="text" value={editedCourt.owner} onChange={(e) => setEditedCourt({ ...editedCourt, owner: e.target.value })} readOnly={!isEditing} />
+            <p><strong>ชื่อผู้ดูแล:</strong> 
+                <input type="text" value={editedCourt.intendant} onChange={(e) => setEditedCourt({ ...editedCourt, intendant: e.target.value })} readOnly={!isEditing} />
             </p>
               <p><strong>เบอร์โทรศัพท์:</strong> 
                   <input type="text" value={editedCourt.phone} onChange={(e) => setEditedCourt({ ...editedCourt, phone: e.target.value })} readOnly={!isEditing} />

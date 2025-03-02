@@ -9,6 +9,7 @@ const PromotionSchema = new mongoose.Schema({
   startDate: { type: Date, required: true }, // วันที่เริ่ม
   endDate: { type: Date, required: true }, // วันที่สิ้นสุด
   timeRange: { type: String, required: true }, // ช่วงเวลาโปรโมชั่น
+  sportName: { type: String, required: true }, // ✅ เพิ่มประเภทกีฬา
   promotionImageUrl: { type: String, required: true }, // URL ของรูปภาพ
   status: { type: String, enum: ["active", "expired", "cancelled"], default: "active" }, // สถานะ
   createdAt: { type: Date, default: Date.now }, // เวลาสร้าง

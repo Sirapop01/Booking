@@ -1,151 +1,262 @@
 body {
-    font-family: 'Kanit', sans-serif;
-    background-color: #0b1e35;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .booking-arena-container {
-    width: 90%;
-    margin: 40px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    font-family: 'Arial', sans-serif;
-    color: #333;
-  }
-  
-  .arena-card {
-    border: 2px solid #ddd;
+  font-family: 'Kanit', sans-serif;
+  background-color: #0b1e35;
+  margin: 0;
+  padding: 0;
+}
+
+.booking-arena-container {
+  width: 90%;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.arena-card {
+  border: 2px solid #ddd;
   border-radius: 20px;
   padding: 20px;
   margin-bottom: 30px;
-  }
-  
-  .main-image-container {
-    text-align: center;
-  }
-  
-  .main-image {
-    width: 100%;
-    height: 320px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 2px solid #5ea4f3;
-  }
-  
-  .arena-info-container {
-    display: flex;
-    margin-top: 16px;
-  }
-  
-  .arena-left-section {
-    flex: 0.7;
-    margin-right: 20px;
-  }
-  
-  .arena-title {
-    margin-bottom: 8px;
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .arena-meta {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .star {
-    color: orange;
-  }
-  
-  .distance-tag {
-    background-color: #f8d7da;
-    color: red;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-  }
-  
-  .google-map-box {
-    margin-bottom: 12px;
-  }
-  
-  .google-map {
-    width: 100%;
-    height: 120px;
-    border: none;
-    border-radius: 8px;
-  }
-  
-  .amenities-section,
-  .booking-conditions {
-    background-color: #e7f9e7;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 12px;
-  }
-  
-  .amenities-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  
-  .amenity-item {
-    background-color: white;
-    border: 1px solid #ddd;
-    padding: 4px 12px;
-    border-radius: 16px;
-    font-size: 14px;
-  }
-  
-  .sub-stadiums {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    max-width: 220px;
-  }
-  
-  .sub-stadium-card {
-    background-color: #f9f9f9;
-    text-align: center;
-    border-radius: 8px;
-    padding: 8px;
-    font-size: 12px;
-  }
-  
-  .sub-stadium-card img {
-    width: 100%;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 6px;
-  }
-  
-  .booking-button {
-    background-color: #2b7cff;
-    color: white;
-    border: none;
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 12px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .booking-button:hover {
-    background-color: #1a5dc9;
-  }
-  
-  .loading-text {
-    color: white;
-    font-size: 24px;
-    text-align: center;
-    margin-top: 50px;
-  }
-  
+}
+
+.main-image-container {
+  text-align: center;
+}
+
+.main-image {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #5ea4f3;
+}
+
+.arena-info-container {
+  display: flex;
+  height: 500px; /* กำหนดความสูงคงที่ */
+  overflow: hidden;
+}
+
+/* ✅ ฝั่งซ้าย: ทำให้เลื่อนดูข้อมูลสนามกีฬาได้ */
+.arena-left-section {
+  flex: 1.2;
+  margin-right: 20px;
+  overflow-y: auto; /* เปิดให้เลื่อนดูแนวตั้ง */
+  max-height: 500px; /* จำกัดความสูง */
+  padding-right: 10px; /* ป้องกัน scrollbar ทับเนื้อหา */
+}
+
+/* ✅ สไตล์ Scrollbar ฝั่งซ้าย */
+.arena-left-section::-webkit-scrollbar {
+  width: 6px;
+}
+
+.arena-left-section::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.arena-left-section::-webkit-scrollbar-thumb {
+  background: #5ea4f3;
+  border-radius: 10px;
+}
+
+.arena-left-section::-webkit-scrollbar-thumb:hover {
+  background: #1a5dc9;
+}
+
+.arena-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.arena-meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.star {
+  color: orange;
+}
+
+.distance-tag {
+  background-color: #f8d7da;
+  color: red;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.google-map-box {
+  margin-bottom: 12px;
+}
+
+.google-map {
+  width: 100%;
+  height: 120px;
+  border: none;
+  border-radius: 8px;
+}
+
+.amenities-section,
+.booking-conditions {
+  background-color: #e7f9e7;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.amenities-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.amenity-item {
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+}
+
+/* ✅ ฝั่งขวา: ทำให้เลื่อนดูสนามย่อยได้ */
+.grouped-sub-stadiums {
+  flex: 1;
+  overflow-y: auto; /* เปิดให้เลื่อนดูแนวตั้ง */
+  max-height: 500px; /* จำกัดความสูง */
+  padding-right: 10px; /* ป้องกัน scrollbar ทับเนื้อหา */
+}
+
+/* ✅ สไตล์ Scrollbar ฝั่งขวา */
+.grouped-sub-stadiums::-webkit-scrollbar {
+  width: 6px;
+}
+
+.grouped-sub-stadiums::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.grouped-sub-stadiums::-webkit-scrollbar-thumb {
+  background: #5ea4f3;
+  border-radius: 10px;
+}
+
+.grouped-sub-stadiums::-webkit-scrollbar-thumb:hover {
+  background: #1a5dc9;
+}
+
+.sport-group {
+  margin-bottom: 20px;
+}
+
+.sport-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #0b1e35;
+}
+
+.sub-stadium-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ✅ ปรับสนามย่อยให้เป็นปุ่ม */
+.sub-stadium-button {
+  background-color: white;
+  border: 2px solid #5ea4f3;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 14px;
+  width: 150px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sub-stadium-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.sub-stadium-button img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.sub-stadium-button p {
+  margin-top: 5px;
+  font-weight: bold;
+  color: #0b1e35;
+}
+
+.sub-stadium-button.selected {
+  background-color: #5ea4f3;
+  color: white;
+  border: 2px solid #1a5dc9;
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.sub-stadium-button.selected p {
+  color: white;
+}
+
+
+/* ✅ ปุ่มจอง */
+.booking-button {
+  background-color: #2b7cff;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.booking-button:hover {
+  background-color: #1a5dc9;
+}
+
+/* ✅ โหลดข้อมูล */
+.loading-text {
+  color: white;
+  font-size: 24px;
+  text-align: center;
+  margin-top: 50px;
+}
+
+/* ✅ ป้ายสถานะแสดงข้างๆชื่อสนาม */
+.status-badge {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 5px;
+  margin-left: 12px;
+  display: inline-block;
+}
+
+/* ✅ สีเขียวเมื่อเปิด */
+.status-badge.open {
+  background-color: #28a745;
+  color: white;
+}
+
+/* ✅ สีแดงเมื่อปิด */
+.status-badge.closed {
+  background-color: #dc3545;
+  color: white;
+}

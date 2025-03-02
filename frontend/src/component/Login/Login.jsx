@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png'; // Path ของโลโก้
-import bgImage from '../assets/threeman.png'; // Path ของรูปพื้นหลัง
 import { IoEyeSharp } from "react-icons/io5";
 import { FaEyeSlash } from "react-icons/fa";
-
+import bgImage from './images/bluee.jpg';
 import axios from 'axios';
+
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -81,21 +81,24 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
+  
+
   return (
     <div className="login-container">
-      <div className="login-left-side">
-        <img src={logo} alt="Logo" className="login-logo" />
-        <p className="login-logo-text">MatchWeb</p>
-        <img src={bgImage} alt="Background" className="login-bg-img" />
-      </div>
+ 
+        <div className="login-header">
+          <img src={logo} alt="Logo" className="login-logo" />
+          <p className="login-logo-text">MatchWeb</p>
+        </div>
+
       <div className="login-right-side">
         <div className="login-form-container">
-          <h2 className="login-heading">ลงชื่อเข้าใช้</h2>
+          <h2 className="login-heading">Login</h2>
           <div className="login-input-group">
             <input
               type="email"
               id="email"
-              placeholder="อีเมล"
+              placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -104,7 +107,7 @@ function Login() {
             <input
               type={showPassword ? 'text' : 'password'} // เปลี่ยน type ระหว่าง text และ password
               id="password"
-              placeholder="รหัสผ่าน"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -125,7 +128,7 @@ function Login() {
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
             />
-            <label htmlFor="rememberMe">จดจำฉัน</label>
+            <label htmlFor="rememberMe">remember me</label>
           </div>
 
           {/* Divider Section */}
@@ -139,7 +142,7 @@ function Login() {
           </button>
 
           <p className="login-forgot-password">
-            <a href="/forgot-password">ลืมรหัสผ่าน ?</a>
+            <a href="/forgot-password">Forgot password?</a>
           </p>
           <p className="login-signup-link">
             Don't have an Account? <a href="/RegisterChoice">Sign Up</a>
