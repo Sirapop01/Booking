@@ -1,19 +1,29 @@
 .profile-container {
-    display: flex;
-    height: 100vh;
-    background-color: #f9f9f9;
-  }
+  display: flex;
+  min-height: 100vh; /* ทำให้ container สูงตามเนื้อหา */
+  background-color: #f9f9f9;
+}
+
   
-  /* Sidebar */
-  .sidebar {
-    width: 230px;
-    background: #2c3e50;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 15px;
-  }
+.sidebar {
+  width: 230px;
+  background: #2c3e50;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  min-height: 100vh; /* ทำให้ sidebar เต็มหน้าจอ */
+}
+
+.profile-content {
+  flex: 1;
+  padding: 20px;
+  background: white;
+  border-left: 3px solid #2c3e50;
+  min-height: 100vh; /* ทำให้เนื้อหาเต็มหน้าจอ */
+}
+
   
   .profile-image img {
     width: 100px;
@@ -39,13 +49,6 @@
     background: #e74c3c;
   }
   
-  /* Profile Content */
-  .profile-content {
-    flex: 1;
-    padding: 20px;
-    background: white;
-    border-left: 3px solid #2c3e50;
-  }
   
   .profile-content h2 {
     text-align: center;
@@ -119,16 +122,29 @@
     background-color: #219150;
   }
   
-  /* ปุ่มลืมรหัสผ่าน */
-  .forgot-password {
-    display: block;
-    text-align: center;
-    padding: 8px;
-    font-size: 12px;
-    color: #3498db;
+  .account-actions {
+    display: flex;  /* 🏹 จัดเรียงให้อยู่ในแถวเดียวกัน */
+    align-items: center; /* 📏 จัดให้ตรงแนวกลาง */
+    gap: 20px;  /* 🌟 กำหนดระยะห่างระหว่าง "ลืมรหัสผ่าน?" และ "ลบบัญชี!" */
+  }
+  
+  .forgot-password-user {
+    background: none;
     text-decoration: underline;
+    font-size: 14px;
+    color: #1e3a8a;
+    border: none;
     cursor: pointer;
   }
+  
+  .user-delete {
+    font-size: 14px;
+    font-weight: bold;
+    color: #e74c3c; /* 🔴 ให้เป็นสีแดงเพื่อความชัดเจน */
+    cursor: pointer;
+  }
+  
+  
 
 /* 🎬 เอฟเฟกต์แสดง Modal */
 @keyframes fadeIn {
