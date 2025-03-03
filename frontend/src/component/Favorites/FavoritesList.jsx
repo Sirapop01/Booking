@@ -49,20 +49,32 @@ const FavoritePage = () => {
     fetchFavorites();
   }, [decodedToken]);
 
-  const toggleFavorite = async (id) => {
-    const favorite = favorites.find((item) => item._id === id);
-
-    if (favorite.liked) {
-      // ✅ ลบออกจาก Database
-      try {
-        await axios.delete(`http://localhost:4000/api/favoritearena/${id}`);
-        // ✅ อัปเดต UI เอารายการออก
-        setFavorites((prevFavorites) => prevFavorites.filter((item) => item._id !== id));
-      } catch (error) {
-        console.error("❌ ไม่สามารถลบรายการโปรด:", error);
-      }
+  const toggleFavorite = async (stadiumId) => {
+    if (!decodedToken?.id) {
+        alert("กรุณาเข้าสู่ระบบก่อนลบรายการโปรด");
+        return;
     }
-  };
+
+    if (!stadiumId) {
+        console.error("❌ stadiumId is undefined!");
+        return;
+    }
+
+    console.log("📌 Toggling favorite for stadiumId:", stadiumId);
+
+    try {
+        await axios.delete(`http://localhost:4000/api/favoritearena/${stadiumId}`, {
+            data: { userId: decodedToken.id } // ✅ ส่ง userId ผ่าน body
+        });
+
+        // ✅ ลบออกจาก state
+        setFavorites((prevFavorites) => prevFavorites.filter((item) => item.stadiumId._id !== stadiumId));
+    } catch (error) {
+        console.error("❌ ไม่สามารถลบรายการโปรด:", error);
+    }
+};
+
+
 
   if (loading) return <div>Loading...</div>;
 
@@ -76,10 +88,16 @@ const FavoritePage = () => {
     <div className="favorite-card" key={favorite._id}>
       <div className="favorite-details">
         <div className="left">
-          <FaHeart
-            className={`heart-icon ${favorite.liked ? "liked" : ""}`}
-            onClick={() => toggleFavorite(favorite._id)}
-          />
+        <FaHeart
+    className={`heart-icon ${favorite.liked ? "liked" : ""}`}
+    onClick={() => {
+        console.log("📌 Full favorite data:", favorite); // ✅ Debugging
+        console.log("📌 stadiumId before sending:", favorite.stadiumId?._id); 
+        toggleFavorite(favorite?.stadiumId?._id);
+    }}
+/>
+
+
           <h2>{favorite.stadiumId?.fieldName}</h2>
         </div>
         
