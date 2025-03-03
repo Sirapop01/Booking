@@ -6,9 +6,13 @@ const favoriteController = require("../controllers/favoriteController");
 router.get("/", favoriteController.getFavorites);
 
 // 📌 เพิ่มสนามเป็นรายการโปรด
-router.post("/", favoriteController.addFavorite);  // <-- ตรวจสอบตรงนี้
+router.post("/", favoriteController.addFavorite);  
 
 // 📌 ลบสนามออกจากรายการโปรด
-router.delete("/:id", favoriteController.removeFavorite);
+router.delete("/:stadiumId", favoriteController.removeFavorite);
+
+// ✅ เส้นทางสำหรับเช็คสถานะ
+router.get("/check/:stadiumId", favoriteController.checkFavoriteStatus);
+
 
 module.exports = router;

@@ -10,7 +10,7 @@ exports.getFavorites = async (req, res) => {
 
         console.log("🔍 Fetching favorites for userId:", userId);
 
-        // ✅ Populate stadiumId และดึงเฉพาะ fieldName + รูปที่ index [0]
+        // ✅ ใช้ populate() เพื่อดึง fieldName จาก stadiumId
         const favorites = await FavoriteArena.find({ userId })
             .populate({
                 path: "stadiumId",
@@ -18,10 +18,14 @@ exports.getFavorites = async (req, res) => {
             })
             .lean();
 
-        // ✅ ดึงรูปแรกจาก images array เท่านั้น
+        // ✅ ดึงเฉพาะ fieldName และรูปภาพแรก
         const updatedFavorites = favorites.map(fav => ({
-            ...fav,
-            stadiumImage: fav.stadiumId.images?.length > 0 ? fav.stadiumId.images[0] : null
+            _id: fav._id,
+            userId: fav.userId,
+            stadiumId: fav.stadiumId._id,
+            fieldName: fav.stadiumId.fieldName, // ✅ ดึงชื่อสนามจาก stadiumId
+            stadiumImage: fav.stadiumId.images?.length > 0 ? fav.stadiumId.images[0] : null,
+            createdAt: fav.createdAt
         }));
 
         console.log("✅ Found Favorites:", updatedFavorites);
@@ -34,13 +38,22 @@ exports.getFavorites = async (req, res) => {
 
 
 
-
-
 // 📌 เพิ่มสนามเป็นรายการโปรด
-exports.addFavorite = async (req, res) => {   // <-- ตรวจสอบว่ามีการ export ฟังก์ชันนี้หรือไม่
+exports.addFavorite = async (req, res) => {   
     try {
-        const { userId, stadiumId, fieldName } = req.body;
-        const newFavorite = new FavoriteArena({ userId, stadiumId, fieldName });
+        console.log("📌 Data received in addFavorite:", req.body); // ✅ เช็คค่าใน backend
+        
+        const { userId, stadiumId } = req.body;
+        if (!userId || !stadiumId) {
+            return res.status(400).json({ error: "userId และ stadiumId จำเป็นต้องมี" });
+        }
+
+        const existingFavorite = await FavoriteArena.findOne({ userId, stadiumId });
+        if (existingFavorite) {
+            return res.status(400).json({ error: "สนามนี้อยู่ในรายการโปรดแล้ว" });
+        }
+
+        const newFavorite = new FavoriteArena({ userId, stadiumId });
         await newFavorite.save();
         res.status(201).json(newFavorite);
     } catch (error) {
@@ -48,12 +61,48 @@ exports.addFavorite = async (req, res) => {   // <-- ตรวจสอบว่
     }
 };
 
-// 📌 ลบรายการโปรด
+
+
+
+// 📌 ลบรายการโปรดโดยใช้ userId และ stadiumId
 exports.removeFavorite = async (req, res) => {
     try {
-        await FavoriteArena.findByIdAndDelete(req.params.id);
-        res.json({ message: "Favorite removed!" });
+        const { userId } = req.body; // ✅ อ่าน userId จาก req.body
+        const stadiumId = req.params.stadiumId; // ✅ ใช้ params สำหรับ stadiumId
+
+        if (!userId || !stadiumId) {
+            return res.status(400).json({ error: "userId และ stadiumId จำเป็นต้องมี" });
+        }
+
+        const deletedFavorite = await FavoriteArena.findOneAndDelete({ userId, stadiumId });
+        if (!deletedFavorite) {
+            return res.status(404).json({ error: "ไม่พบรายการโปรดที่ต้องการลบ" });
+        }
+
+        res.json({ message: "ลบรายการโปรดสำเร็จ!" });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
+
+// 📌 ตรวจสอบว่าสนามนี้อยู่ในรายการโปรดหรือไม่
+exports.checkFavoriteStatus = async (req, res) => {
+    try {
+        const { userId } = req.query;
+        const stadiumId = req.params.stadiumId;
+
+        if (!userId || !stadiumId) {
+            return res.status(400).json({ error: "userId และ stadiumId จำเป็นต้องมี" });
+        }
+
+        const favorite = await FavoriteArena.findOne({ userId, stadiumId });
+        res.status(200).json({ isFavorite: !!favorite }); // ✅ ส่งค่า true หรือ false กลับไป
+    } catch (error) {
+        console.error("❌ Error checking favorite status:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+
+

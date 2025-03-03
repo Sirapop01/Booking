@@ -260,3 +260,16 @@ body {
   background-color: #dc3545;
   color: white;
 }
+
+.heart-icon {
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+  color: gray;
+  margin-left: 15px;
+}
+
+.heart-icon.liked {
+  color: red;
+}
+
