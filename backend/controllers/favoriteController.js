@@ -67,23 +67,26 @@ exports.addFavorite = async (req, res) => {
 // 📌 ลบรายการโปรดโดยใช้ userId และ stadiumId
 exports.removeFavorite = async (req, res) => {
     try {
-        const { userId } = req.body; // ✅ อ่าน userId จาก req.body
-        const stadiumId = req.params.stadiumId; // ✅ ใช้ params สำหรับ stadiumId
+        const userId = req.query.userId || req.body.userId; // ✅ รองรับทั้ง query และ body
+        const { stadiumId } = req.params;
 
         if (!userId || !stadiumId) {
             return res.status(400).json({ error: "userId และ stadiumId จำเป็นต้องมี" });
         }
 
         const deletedFavorite = await FavoriteArena.findOneAndDelete({ userId, stadiumId });
+
         if (!deletedFavorite) {
             return res.status(404).json({ error: "ไม่พบรายการโปรดที่ต้องการลบ" });
         }
 
         res.json({ message: "ลบรายการโปรดสำเร็จ!" });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("❌ Error removing favorite:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
 
 
 // 📌 ตรวจสอบว่าสนามนี้อยู่ในรายการโปรดหรือไม่

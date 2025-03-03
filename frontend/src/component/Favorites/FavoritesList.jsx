@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // ✅ เพิ่ม useParams
 import axios from "axios";
 import { FaHeart } from "react-icons/fa";
 import Navbar from "../Navbar/Navbar";
 import "./FavoriteList.css";
 
 const FavoritePage = () => {
+  const { id } = useParams(); // ✅ รับ stadiumId จาก URL
+  const navigate = useNavigate();
   const [decodedToken, setDecodedToken] = useState(null);
   const [loading, setLoading] = useState(true);
   const [favorites, setFavorites] = useState([]);
-  const navigate = useNavigate();
+  const [selectedFavorite, setSelectedFavorite] = useState(null); // ✅ เก็บรายการโปรดที่ถูกเลือก
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
@@ -34,47 +36,53 @@ const FavoritePage = () => {
           `http://localhost:4000/api/favoritearena?userId=${decodedToken.id}`
         );
 
-        // ✅ ตั้งค่าให้ liked เป็น true สำหรับรายการโปรด
         const updatedFavorites = response.data.map((favorite) => ({
           ...favorite,
-          liked: true, // ✅ หัวใจถูกกดไว้แล้ว
+          liked: true,
         }));
 
         setFavorites(updatedFavorites);
+
+        // ✅ หากมี stadiumId ใน URL ให้เลือกข้อมูลที่ตรงกัน
+        if (id) {
+          const foundFavorite = updatedFavorites.find(fav => fav.stadiumId === id);
+          setSelectedFavorite(foundFavorite);
+        }
       } catch (error) {
         console.error("❌ ไม่สามารถดึงข้อมูลรายการโปรด:", error);
       }
     };
 
     fetchFavorites();
-  }, [decodedToken]);
+  }, [decodedToken, id]); // ✅ อัปเดตตาม `id`
 
   const toggleFavorite = async (stadiumId) => {
     if (!decodedToken?.id) {
-        alert("กรุณาเข้าสู่ระบบก่อนลบรายการโปรด");
-        return;
+      alert("กรุณาเข้าสู่ระบบก่อนลบรายการโปรด");
+      return;
     }
 
     if (!stadiumId) {
-        console.error("❌ stadiumId is undefined!");
-        return;
+      console.error("❌ stadiumId is undefined!");
+      return;
     }
 
     console.log("📌 Toggling favorite for stadiumId:", stadiumId);
 
     try {
-        await axios.delete(`http://localhost:4000/api/favoritearena/${stadiumId}`, {
-            data: { userId: decodedToken.id } // ✅ ส่ง userId ผ่าน body
-        });
+      await axios.delete(`http://localhost:4000/api/favoritearena/${stadiumId}?userId=${decodedToken.id}`);
 
-        // ✅ ลบออกจาก state
-        setFavorites((prevFavorites) => prevFavorites.filter((item) => item.stadiumId._id !== stadiumId));
+      setFavorites(prevFavorites => prevFavorites.filter(item => item.stadiumId !== stadiumId));
+
+      // ✅ หากสนามที่ถูกลบคือสนามที่กำลังดู ให้ล้าง `selectedFavorite`
+      if (selectedFavorite?.stadiumId === stadiumId) {
+        setSelectedFavorite(null);
+        navigate("/FavoritesList"); // ✅ กลับไปที่รายการทั้งหมด
+      }
     } catch (error) {
-        console.error("❌ ไม่สามารถลบรายการโปรด:", error);
+      console.error("❌ ไม่สามารถลบรายการโปรด:", error);
     }
-};
-
-
+  };
 
   if (loading) return <div>Loading...</div>;
 
@@ -82,56 +90,51 @@ const FavoritePage = () => {
     <div className="favorite-page">
       <Navbar />
       <h1 className="favorite-title">รายการโปรด</h1>
-      <div className="favorite-list-container">
-      {favorites.length > 0 ? (
-  favorites.map((favorite) => (
-    <div className="favorite-card" key={favorite._id}>
-      <div className="favorite-details">
-        <div className="left">
-        <FaHeart
-    className={`heart-icon ${favorite.liked ? "liked" : ""}`}
-    onClick={() => {
-        console.log("📌 Full favorite data:", favorite); // ✅ Debugging
-        console.log("📌 stadiumId before sending:", favorite.stadiumId?._id); 
-        toggleFavorite(favorite?.stadiumId?._id);
-    }}
-/>
 
-
-          <h2>{favorite.stadiumId?.fieldName}</h2>
-        </div>
-        
-        {/* ✅ ใช้รูปแรกของสนาม */}
-        <div className="favorite-image">
-          <img 
-            src={favorite.stadiumImage || "https://via.placeholder.com/150"} 
-            alt={favorite.stadiumId?.fieldName} 
+      {/* ✅ ถ้ามี stadiumId ให้แสดงรายละเอียดสนามนั้น */}
+      {selectedFavorite ? (
+        <div className="favorite-details-page">
+          <button onClick={() => navigate("/FavoritesList")}>🔙 กลับไปหน้ารายการโปรด</button>
+          <h2>{selectedFavorite.fieldName}</h2>
+          <img src={selectedFavorite.stadiumImage || "https://via.placeholder.com/150"} alt={selectedFavorite.fieldName} />
+          <p>วันที่เพิ่ม: {new Date(selectedFavorite.createdAt).toLocaleDateString()}</p>
+          <FaHeart 
+            className={`heart-icon ${selectedFavorite.liked ? "liked" : ""}`} 
+            onClick={() => toggleFavorite(selectedFavorite.stadiumId)}
           />
         </div>
-
-        <p>
-          <strong>วันที่เพิ่ม:</strong> {" "}
-          {new Date(favorite.createdAt).toLocaleDateString()}
-        </p>
-        <button
-          className="gofavorite-booking-button"
-          onClick={() => navigate("/BookingArena")}
-        >
-          จองอีกครั้ง
-        </button>
-      </div>
-    </div>
-  ))
-) : (
-  <p className="no-favorites">ไม่มีรายการโปรดในขณะนี้</p>
-)}
-      </div>
-      <button
-        className="favorite-booking-button"
-        onClick={() => navigate("/booking")}
-      >
-        ไปหน้าการจอง
-      </button>
+      ) : (
+        <div className="favorite-list-container">
+          {favorites.length > 0 ? (
+            favorites.map((favorite) => (
+              <div 
+                className="favorite-card" 
+                key={favorite._id} 
+                onClick={() => navigate(`/FavoritesList/${favorite.stadiumId}`)}
+              >
+                <div className="favorite-details">
+                  <div className="left">
+                    <FaHeart
+                      className={`heart-icon ${favorite.liked ? "liked" : ""}`}
+                      onClick={(e) => {
+                        e.stopPropagation(); // ✅ กันการกดหัวใจแล้วเปิดหน้าใหม่
+                        toggleFavorite(favorite.stadiumId);
+                      }}
+                    />
+                    <h2>{favorite.fieldName}</h2>
+                  </div>
+                  <div className="favorite-image">
+                    <img src={favorite.stadiumImage || "https://via.placeholder.com/150"} alt={favorite.fieldName} />
+                  </div>
+                  <p><strong>วันที่เพิ่ม:</strong> {new Date(favorite.createdAt).toLocaleDateString()}</p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="no-favorites">ไม่มีรายการโปรดในขณะนี้</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
