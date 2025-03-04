@@ -78,8 +78,8 @@ const PromotionPage = () => {
         )}
       </div>
 
-      <button className="promotion-booking-button" onClick={() => navigate("/booking")}>
-        ไปหน้าการจอง
+      <button className="promotion-booking-button" onClick={() => navigate("/")}>
+        กลับหน้าหลัก
       </button>
     </div>
   );

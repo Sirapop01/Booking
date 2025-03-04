@@ -4,6 +4,7 @@ import axios from "axios";
 import "./BookingArena.css";
 import { FaHeart } from "react-icons/fa"; // ✅ เพิ่มไอคอนหัวใจ
 import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
 
 const BookingArena = () => {
   const { id } = useParams(); // รับ arenaId จาก URL
@@ -76,31 +77,70 @@ useEffect(() => {
 }, [userId, id]);
 
 
+
 const toggleFavorite = async () => {
   try {
-      if (!userId) {
-          alert("กรุณาเข้าสู่ระบบก่อนเพิ่มรายการโปรด");
-          return;
-      }
+    if (!userId) {
+      Swal.fire({
+        title: "กรุณาเข้าสู่ระบบ!",
+        text: "กรุณาเข้าสู่ระบบก่อนเพิ่มหรือยกเลิกรายการโปรด",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง",
+      });
+      return;
+    }
 
-      console.log("📌 Sending data:", { userId, stadiumId: id });
+    console.log("📌 Sending data:", { userId, stadiumId: id });
 
-      if (isFavorite) {
-          await axios.delete(`http://localhost:4000/api/favoritearena/${id}`, {
-              data: { userId } // ✅ ส่ง userId ผ่าน data body
-          });
-          setIsFavorite(false);
-      } else {
-          await axios.post("http://localhost:4000/api/favoritearena", 
-              { userId, stadiumId: id }, 
-              { headers: { "Content-Type": "application/json" } }
-          );
-          setIsFavorite(true);
-      }
+    if (isFavorite) {
+      // 🔽 ลบออกจากรายการโปรด
+      await axios.delete(`http://localhost:4000/api/favoritearena/${id}`, {
+        data: { userId },
+      });
+
+      setIsFavorite(false);
+
+      // ✅ แจ้งเตือนเมื่อ "ลบรายการโปรด" สำเร็จ
+      Swal.fire({
+        title: "ลบรายการโปรดสำเร็จ!",
+        text: "คุณได้ลบสนามออกจากรายการโปรดแล้ว",
+        icon: "success",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง",
+      });
+    } else {
+      // 🔽 เพิ่มเข้าในรายการโปรด
+      await axios.post("http://localhost:4000/api/favoritearena", 
+        { userId, stadiumId: id },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      setIsFavorite(true);
+
+      // ✅ แจ้งเตือนเมื่อ "เพิ่มในรายการโปรด" สำเร็จ
+      Swal.fire({
+        title: "เพิ่มลงรายการโปรดสำเร็จ!",
+        text: "สนามถูกเพิ่มลงในรายการโปรดของคุณแล้ว",
+        icon: "success",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง",
+      });
+    }
   } catch (error) {
-      console.error("❌ Error toggling favorite:", error.response ? error.response.data : error);
+    console.error("❌ Error toggling favorite:", error.response ? error.response.data : error);
+
+    // ✅ แจ้งเตือนเมื่อเกิดข้อผิดพลาด
+    Swal.fire({
+      title: "เกิดข้อผิดพลาด!",
+      text: "ไม่สามารถเพิ่ม/ลบ รายการโปรดได้",
+      icon: "error",
+      confirmButtonColor: "#d33",
+      confirmButtonText: "ตกลง",
+    });
   }
 };
+
 
 
   // ฟังก์ชันเลือกหรือยกเลิกสนามย่อย
@@ -143,11 +183,17 @@ const toggleFavorite = async () => {
               <span className={`status-badge ${arena.open ? "open" : "closed"}`}>
                 {arena.open ? "✅ เปิดให้จอง" : "❌ ปิดชั่วคราว"}
               </span>
-              <FaHeart
-                className={`heart-icon ${isFavorite ? "liked" : ""}`}
-                onClick={toggleFavorite} 
-                style={{ color: isFavorite ? "red" : "gray", cursor: "pointer" }}
-              />
+              <div className="favorite-container78">
+    <FaHeart
+        className={`heart-icon ${isFavorite ? "liked" : ""}`}
+        onClick={toggleFavorite} 
+        style={{ color: isFavorite ? "red" : "gray", cursor: "pointer" }}
+    />
+    <span className="favorite-text78">
+        {isFavorite ? "เพิ่มลงรายการโปรดแล้ว" : "เพิ่มในรายการโปรด"}
+    </span>
+</div>
+
             </h2>
 
             <div className="google-map-box">
