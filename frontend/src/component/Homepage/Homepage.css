@@ -38,6 +38,7 @@
   max-width: 900px; /* กำหนดความกว้างสูงสุดให้เท่ากับ .search-section */
   width: 100%; /* ป้องกันการยืดของช่อง */
   margin-left: 30px;
+  
 }
 
 .date-input {
@@ -283,4 +284,7 @@
 .homepage-container {
     min-height: 100vh;
     background-color: #fff;  /* ใช้สีขาวเต็มหน้าเว็บ */
+    overflow: auto;
+    height: 100vh;
+
   }

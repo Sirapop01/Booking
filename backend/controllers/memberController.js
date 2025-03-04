@@ -270,3 +270,26 @@ exports.resetPassword = async (req, res) => {
     return res.status(400).json({ message: "❌ ลิงก์หมดอายุหรือไม่ถูกต้อง" });
   }
 };
+
+exports.delete = async (req, res) => {
+  console.log("✅ Delete Member Requested:", req.params.id);
+  try {
+    const  userId  = req.params.id;
+    console.log("🗑️ กำลังลบผู้ใช้ ID:", userId);
+
+    if (!userId) {
+      return res.status(400).json({ message: "❌ ไม่ได้รับ userId" });
+    }
+
+    const deletedUser = await User.findByIdAndDelete(userId);
+    if (!deletedUser) {
+      return res.status(404).json({ message: "❌ ไม่พบผู้ใช้ในระบบ" });
+    }
+
+    console.log("✅ ผู้ใช้ถูกลบ:", deletedUser);
+    return res.status(200).json({ message: "ลบข้อมูลผู้ใช้เรียบร้อย", deletedUser });
+  } catch (error) {
+    console.error("❌ Error deleting user:", error);
+    return res.status(500).json({ message: "ลบข้อมูลไม่สำเร็จ" });
+  }
+};

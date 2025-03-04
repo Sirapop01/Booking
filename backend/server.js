@@ -30,6 +30,7 @@ const promotionRoutes = require("./routes/promotionRoutes");
 const sportscategoriesRoutes = require("./routes/sportscategoriesRoutes");
 const subStadiumRoutes = require("./routes/subStadiumRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+const favoriteRoutes = require("./routes/favoriteRoutes"); // ✅ เพิ่ม Route ของ Favorite
 
 // ✅ กำหนด CORS
 const allowedOrigins = process.env.ALLOWED_ORIGINS
@@ -82,6 +83,8 @@ app.use("/api/promotions", promotionRoutes);
 app.use("/api/sportscategories", sportscategoriesRoutes);
 app.use("/api/substadiums", subStadiumRoutes);
 app.use("/api/chat", chatRoutes); // ✅ ใช้ "/api/chat" แทน "/api" เพื่อให้ Route ชัดเจน
+app.use("/api/favoritearena", favoriteRoutes); // ✅ เพิ่ม API Routes สำหรับ Favorite Arena
+
 
 // ✅ Error Handling Middleware
 app.use((err, req, res, next) => {
