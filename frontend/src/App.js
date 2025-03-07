@@ -37,6 +37,7 @@ import ProtectedRoute from "./component/ProtectedRoute";
 import AdminRegister from "./component/AdminRegister/AdminRegister";
 import Addpromotion from "./component/AddPromo/Addpromotion";
 import Promoowner from "./component/Promotionowner/Promoowner";
+import VerifyOnwers from "./component/Verifyowners/verifyowners"
 
 /**/ 
 
@@ -83,6 +84,7 @@ function App() {
         <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
         <Route element={<ProtectedRoute role="superadmin" />}>
         <Route path="/admin/register" element={<AdminRegister />} />
+        <Route path="/verifyOwners" element={<VerifyOnwers />} />
         </Route>
 
       </Routes>

@@ -38,26 +38,23 @@ const Information = () => {
                 }
     
                 const userData = jwtDecode(Token);
-                console.log("🔍 Token Data:", userData);
-    
-                if (!userData.id && !userData.email) {
-                    console.error("❌ Missing userData.id or userData.email");
+                if (!userData.id) {
+                    console.error("❌ Missing user ID in Token");
                     return;
                 }
     
                 const response = await axios.get("http://localhost:4000/api/business/find-owner", {
-                    params: {
-                        id: userData.id || '',
-                        email: userData.email || '',
-                    },
+                    params: { id: userData.id },
                 });
     
                 if (response.data && response.data.businessOwnerId) {
-                    setFormData((prevData) => ({
+                    setFormData(prevData => ({
                         ...prevData,
                         businessOwnerId: response.data.businessOwnerId,
                     }));
                     console.log("✅ Business Owner Found:", response.data.businessOwnerId);
+                } else {
+                    console.error("❌ Business Owner ID Not Found in Response");
                 }
             } catch (error) {
                 console.error("🚨 Error fetching BusinessOwner:", error.response?.data || error.message);
@@ -66,7 +63,6 @@ const Information = () => {
     
         fetchBusinessOwner();
     }, []);
-    
     
 
     const handleImageChange = async (event, type) => {
@@ -126,7 +122,7 @@ const Information = () => {
 
     const handleSubmit = async () => {
         if (isUploading) {
-            alert('กรุณารอให้อัปโหลดรูปภาพเสร็จก่อน');
+            alert("กรุณารอให้อัปโหลดรูปภาพเสร็จก่อน");
             return;
         }
     
@@ -138,14 +134,20 @@ const Information = () => {
                 images: uploadedImages
             };
     
-            const response = await axios.post('http://localhost:4000/api/business-info/submit', submissionData);
+            console.log("📡 Sending request to API:", submissionData); // ✅ Log ก่อนส่ง API
+    
+            const response = await axios.post("http://localhost:4000/api/business-info-requests/submit", submissionData);
+    
+            console.log("✅ API Response:", response.data); // ✅ Log Response จาก API
+    
             alert(`✅ ${response.data.message}`);
             navigate("/SuccessRegis");
         } catch (error) {
-            console.error('❌ Submission failed:', error);
-            setErrorMessage('เกิดข้อผิดพลาดในการส่งข้อมูล');
+            console.error('❌ Submission failed:', error.response?.data || error);
+            alert("เกิดข้อผิดพลาดในการส่งข้อมูล");
         }
     };
+    
     
 
     return (

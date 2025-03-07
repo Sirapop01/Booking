@@ -260,3 +260,36 @@ body {
   background-color: #dc3545;
   color: white;
 }
+
+.heart-icon {
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+  color: gray;
+  margin-left: 15px;
+}
+
+.heart-icon.liked {
+  color: red;
+}
+
+.favorite-container78 {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* ระยะห่างระหว่างหัวใจกับข้อความ */
+  position: relative;
+  top: 7px;
+}
+
+.favorite-text78 {
+  font-size: 16px;
+  font-weight: bold;
+  color: gray;
+}
+
+/* ถ้ากดแล้วให้เปลี่ยนสี */
+.heart-icon.liked + .favorite-text {
+  color: red;
+}
+
+

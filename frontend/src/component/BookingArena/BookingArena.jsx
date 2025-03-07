@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./BookingArena.css";
+import { FaHeart } from "react-icons/fa"; // ✅ เพิ่มไอคอนหัวใจ
+import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
 
 const BookingArena = () => {
   const { id } = useParams(); // รับ arenaId จาก URL
@@ -11,12 +14,30 @@ const BookingArena = () => {
   const [subStadiums, setSubStadiums] = useState({});
   const [loading, setLoading] = useState(true);
   const [selectedSubStadiums, setSelectedSubStadiums] = useState([]); // เก็บสนามย่อยที่ถูกเลือก
+  const [isFavorite, setIsFavorite] = useState(false); // ✅ เช็คว่าสนามเป็นรายการโปรดหรือไม่
+  const [userId, setUserId] = useState(null); // ✅ กำหนดค่า userId
 
   useEffect(() => {
-    axios.get(`http://localhost:4000/api/arenas/getArenaById/${id}`)
-      .then((response) => setArena(response.data))
+    const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (storedToken) {
+      try {
+        const decoded = jwtDecode(storedToken);
+        setUserId(decoded.id); // ✅ กำหนดค่า userId
+      } catch (error) {
+        console.error("⚠️ Error decoding token:", error);
+      }
+    }
+}, []);
+
+useEffect(() => {
+  axios.get(`http://localhost:4000/api/arenas/getArenaById/${id}`)
+      .then((response) => {
+          console.log("✅ Loaded arena data:", response.data);
+          setArena(response.data);
+      })
       .catch((error) => console.error("Error fetching arena data:", error));
-  }, [id]);
+}, [id]);
+
 
   useEffect(() => {
     axios.get(`http://localhost:4000/api/sports/${id}`)
@@ -44,6 +65,83 @@ const BookingArena = () => {
       setLoading(false);
     }
   }, [sports, id]);
+
+  useEffect(() => {
+    if (userId) {
+        axios.get(`http://localhost:4000/api/favoritearena/check/${id}?userId=${userId}`)
+            .then((response) => {
+                setIsFavorite(response.data.isFavorite);
+            })
+            .catch((error) => console.error("❌ Error checking favorite status:", error));
+    }
+}, [userId, id]);
+
+
+
+const toggleFavorite = async () => {
+  try {
+    if (!userId) {
+      Swal.fire({
+        title: "กรุณาเข้าสู่ระบบ!",
+        text: "กรุณาเข้าสู่ระบบก่อนเพิ่มหรือยกเลิกรายการโปรด",
+        icon: "warning",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง",
+      });
+      return;
+    }
+
+    console.log("📌 Sending data:", { userId, stadiumId: id });
+
+    if (isFavorite) {
+      // 🔽 ลบออกจากรายการโปรด
+      await axios.delete(`http://localhost:4000/api/favoritearena/${id}`, {
+        data: { userId },
+      });
+
+      setIsFavorite(false);
+
+      // ✅ แจ้งเตือนเมื่อ "ลบรายการโปรด" สำเร็จ
+      Swal.fire({
+        title: "ลบรายการโปรดสำเร็จ!",
+        text: "คุณได้ลบสนามออกจากรายการโปรดแล้ว",
+        icon: "success",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง",
+      });
+    } else {
+      // 🔽 เพิ่มเข้าในรายการโปรด
+      await axios.post("http://localhost:4000/api/favoritearena", 
+        { userId, stadiumId: id },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      setIsFavorite(true);
+
+      // ✅ แจ้งเตือนเมื่อ "เพิ่มในรายการโปรด" สำเร็จ
+      Swal.fire({
+        title: "เพิ่มลงรายการโปรดสำเร็จ!",
+        text: "สนามถูกเพิ่มลงในรายการโปรดของคุณแล้ว",
+        icon: "success",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง",
+      });
+    }
+  } catch (error) {
+    console.error("❌ Error toggling favorite:", error.response ? error.response.data : error);
+
+    // ✅ แจ้งเตือนเมื่อเกิดข้อผิดพลาด
+    Swal.fire({
+      title: "เกิดข้อผิดพลาด!",
+      text: "ไม่สามารถเพิ่ม/ลบ รายการโปรดได้",
+      icon: "error",
+      confirmButtonColor: "#d33",
+      confirmButtonText: "ตกลง",
+    });
+  }
+};
+
+
 
   // ฟังก์ชันเลือกหรือยกเลิกสนามย่อย
   const toggleSubStadiumSelection = (subStadiumId) => {
@@ -85,6 +183,17 @@ const BookingArena = () => {
               <span className={`status-badge ${arena.open ? "open" : "closed"}`}>
                 {arena.open ? "✅ เปิดให้จอง" : "❌ ปิดชั่วคราว"}
               </span>
+              <div className="favorite-container78">
+    <FaHeart
+        className={`heart-icon ${isFavorite ? "liked" : ""}`}
+        onClick={toggleFavorite} 
+        style={{ color: isFavorite ? "red" : "gray", cursor: "pointer" }}
+    />
+    <span className="favorite-text78">
+        {isFavorite ? "เพิ่มลงรายการโปรดแล้ว" : "เพิ่มในรายการโปรด"}
+    </span>
+</div>
+
             </h2>
 
             <div className="google-map-box">

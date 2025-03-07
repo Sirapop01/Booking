@@ -14,22 +14,13 @@ body, html {
   align-items: center;
 }
 
-/* กำหนด container ให้เต็มจอ */
-.container {
-  width: 100vw;  /* ✅ ปรับให้กว้างเต็มจอ */
-  height: 100vh; /* ✅ ปรับให้สูงเต็มจอ */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 /* กล่องรายการโปรด */
 .favorite-box {
   width: 90%;
   max-width: 800px;
   height: auto;
   min-height: 80vh;
-  background: white;
+  background: rgb(121, 60, 156);
   border-radius: 12px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -40,12 +31,30 @@ body, html {
   
 }
 
-.favorite-list-container {
- position: relative;
- top: 100px;
- 
-  
+.favorite-container {
+  width: 800px;
+  height: 700px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 120px;
+  padding: 30px;
+  overflow-y: auto;
 }
+
+
+.favorite-list-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
 
 /* หัวข้อ */
 .favorite-title {
@@ -61,7 +70,6 @@ body, html {
 }
 
 
-
 /* รายการโปรด */
 .favorite-list {
   flex-grow: 1;
@@ -73,30 +81,22 @@ body, html {
   align-items: center;
   
 }
-
-/* กล่องแต่ละรายการ */
-.favorite-item {
-  width: 95%;
-  max-width: 750px;
-  padding: 15px;
+.favorite-card{
+  width: 500px;
+  max-width: 800px;
+  background: #07213A;
   border-radius: 12px;
-  border: 1px solid #ddd;
-  background: white;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
-  color: #333;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  padding: 15px;
   margin-bottom: 10px;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.favorite-item:hover {
+.favorite-card:hover {
   transform: scale(1.02);
   box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.15);
 }
+
 
 /* ไอคอนหัวใจ + ข้อความ */
 .left {
@@ -117,19 +117,7 @@ body, html {
   color: red;
 }
 
-/* ปุ่มรายละเอียด */
-.details-button {
-  background: #e0e0e0;
-  padding: 7px 15px;
-  border-radius: 5px;
-  font-size: 14px;
-  border: 1px solid black;
-  cursor: pointer;
-}
 
-.details-button:hover {
-  background: #d0d0d0;
-}
 
 .gofavorite-booking-button{
   background: #007bff;
@@ -150,6 +138,17 @@ body, html {
   background: #15359c;
 }
 
+.no-favorites{
+  color: black;
+}
+
+
+.favorite-details {
+  display: flex;
+  flex-direction: column; /* ✅ จัดเรียงเนื้อหาแนวตั้ง */
+  align-items: center; /* ✅ ทำให้เนื้อหาอยู่ตรงกลาง */
+  text-align: center; /* ✅ ทำให้ข้อความอยู่ตรงกลาง */
+}
 
 .favorite-image {
   width: 120px;
@@ -158,8 +157,9 @@ body, html {
   border-radius: 12px;
   overflow: hidden;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* ✅ จัดให้อยู่ตรงกลางแนวนอน */
+  align-items: center; /* ✅ จัดให้อยู่ตรงกลางแนวตั้ง */
+  margin: 10px auto; /* ✅ เพิ่ม margin ให้อยู่ตรงกลาง */
 }
 
 .favorite-image img {
@@ -168,7 +168,10 @@ body, html {
   object-fit: cover;
 }
 
+
 .favorite-details h2{
   position: relative;
-  border-bottom: 3px solid #007bff;
+  text-align: center;  /* ✅ ทำให้ข้อความอยู่ตรงกลาง */
+  width: 100%;         /* ✅ ให้ขยายเต็มความกว้าง */
+  display: block;
 }

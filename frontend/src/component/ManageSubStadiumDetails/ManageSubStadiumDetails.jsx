@@ -2,13 +2,11 @@ import axios from "axios"; // ⬅️ เพิ่ม axios
 import { useParams } from "react-router-dom"; // ⬅️ ใช้ useParams() แทน useLocation()
 import { useEffect } from "react"; // ⬅️ ใช้ useEffect()
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
 import "./ManageSubStadiumDetails.css";
 import NavbarStadiumlist from "../NavbarStadiumlist/NavbarStadiumlist";
 import { jwtDecode } from "jwt-decode";
 
 function ManageSubStadiumDetails() {
-  const location = useLocation();
   const { arenaId, sportId } = useParams();
   console.log("arenaId:", arenaId, "sportId:", sportId);
   const [courts, setCourts] = useState([]);
@@ -36,14 +34,21 @@ useEffect(() => {
 
   // เลือกสนาม
   const selectCourt = (court) => {
-    setSelectedCourt(selectedCourt?.id === court.id ? null : court);
+    if (!court) return;
+    
+    setSelectedCourt(court);
     setIsEditing(false);
     setIsAdding(false);
-    setEditedCourt(court || { id: null, name: "", status: "เปิด", intendant: "", phone: "", description: "", openTime: "", closeTime: "", price: "", images: [] });
+    
+    setEditedCourt({ 
+      ...court, 
+      images: court.images || []  // ป้องกัน errors กรณีไม่มีรูปภาพ
+    });
   };
+  
 
   const getOwnerIdFromToken = () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
     console.log("🔍 Token from Local Storage:", token);
   
     if (!token) {
@@ -336,14 +341,15 @@ useEffect(() => {
               </p>
 
             <div className="details-buttons">
-                {isEditing ? (
-            <>
+            {selectedCourt && !isEditing && (
+              <button className="edit-btn" onClick={() => setIsEditing(true)}>แก้ไข</button>
+            )}
+            {isEditing && (
+              <>
                 <button className="save-btn" onClick={handleSaveClick}>บันทึก</button>
                 <button className="cancel-btn" onClick={() => { setIsEditing(false); setIsAdding(false); }}>ยกเลิก</button>
-            </>
-                ) : (
-                  selectedCourt && <button className="edit-btn" onClick={() => setIsEditing(true)}>แก้ไข</button>
-                )}
+              </>
+            )}
             </div>
         </div>
 
