@@ -5,10 +5,10 @@ const businessInfoRequestController = require('../controllers/businessInfoReques
 router.post('/submit', businessInfoRequestController.submitBusinessRequest);
 
 // ✅ ดึงคำร้องทั้งหมด (Admin ใช้ดูคำร้อง)
-router.get('/', businessInfoRequestController.getAllRequests);
+router.get("/pending", businessInfoRequestController.getPendingRequests);
 
 // ✅ อนุมัติคำร้อง (ย้ายไป `businessinfos`)
-router.put('/approve/:id', businessInfoRequestController.approveRequest);
+router.put("/approve/:id", businessInfoRequestController.approveRequest);
 
 // ✅ Route ปฏิเสธคำร้อง พร้อมเหตุผล
 router.delete("/reject/:id", businessInfoRequestController.rejectRequest);
