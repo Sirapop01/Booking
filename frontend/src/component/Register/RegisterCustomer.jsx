@@ -37,17 +37,18 @@ function RegisterCustomer() {
 
   // ✅ โหลดรายชื่ออำเภอเมื่อเปลี่ยนจังหวัด
   const handleProvinceChange = async (e) => {
-    const provinceId = e.target.value;
-    setFormData({ ...formData, province: provinceId, district: "", subdistrict: "" });
+    const provinceName = e.target.value;
+    setFormData({ ...formData, province: provinceName, district: "", subdistrict: "" });
 
     try {
-      const res = await axios.get(`http://localhost:4000/api/location/districts/${provinceId}`);
+      const res = await axios.get(`http://localhost:4000/api/location/districts/${encodeURIComponent(provinceName)}`);
       setDistricts(res.data);
       setSubdistricts([]); // รีเซ็ตตำบล
     } catch (error) {
       console.error("❌ Error fetching districts:", error);
     }
   };
+
 
   // ✅ โหลดรายชื่อตำบลเมื่อเปลี่ยนอำเภอ
   const handleDistrictChange = async (e) => {
@@ -198,7 +199,7 @@ function RegisterCustomer() {
                 <select name="province" value={formData.province} onChange={handleChange}>
                   <option value="">เลือกจังหวัด</option>
                   {provinces.map((province) => (
-                    <option key={province.id} value={province.id}>{province.name_th}</option>
+                    <option key={province.id} value={province.name_th}>{province.name_th}</option>
                   ))}
                 </select>
 
@@ -206,7 +207,7 @@ function RegisterCustomer() {
                 <select name="district" value={formData.district} onChange={handleChange} disabled={!districts.length}>
                   <option value="">เลือกอำเภอ</option>
                   {districts.map((district) => (
-                    <option key={district.id} value={district.id}>{district.name_th}</option>
+                    <option key={district.id} value={district.name_th}>{district.name_th}</option>
                   ))}
                 </select>
 
@@ -214,7 +215,7 @@ function RegisterCustomer() {
                 <select name="subdistrict" value={formData.subdistrict} onChange={(e) => setFormData({ ...formData, subdistrict: e.target.value })} disabled={!subdistricts.length}>
                   <option value="">เลือกตำบล</option>
                   {subdistricts.map((subdistrict) => (
-                    <option key={subdistrict.id} value={subdistrict.id}>{subdistrict.name_th}</option>
+                    <option key={subdistrict.id} value={subdistrict.name_th}>{subdistrict.name_th}</option>
                   ))}
                 </select>
 
