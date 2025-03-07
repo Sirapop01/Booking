@@ -32,7 +32,6 @@ const subStadiumRoutes = require("./routes/subStadiumRoutes");
 const favoriteRoutes = require("./routes/favoriteRoutes"); // ✅ เพิ่ม Route ของ Favorite
 const locationRoutes = require("./routes/locationRoutes");
 const chatRoutes = require("./routes/chatRoutes");
-const favoriteRoutes = require("./routes/favoriteRoutes");
 const businessInfoRequestRoutes = require('./routes/businessInfoRequestRoutes');
 
 // ✅ กำหนด CORS
