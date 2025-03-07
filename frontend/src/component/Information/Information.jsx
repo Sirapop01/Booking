@@ -38,26 +38,23 @@ const Information = () => {
                 }
     
                 const userData = jwtDecode(Token);
-                console.log("🔍 Token Data:", userData);
-    
-                if (!userData.id && !userData.email) {
-                    console.error("❌ Missing userData.id or userData.email");
+                if (!userData.id) {
+                    console.error("❌ Missing user ID in Token");
                     return;
                 }
     
                 const response = await axios.get("http://localhost:4000/api/business/find-owner", {
-                    params: {
-                        id: userData.id || '',
-                        email: userData.email || '',
-                    },
+                    params: { id: userData.id },
                 });
     
                 if (response.data && response.data.businessOwnerId) {
-                    setFormData((prevData) => ({
+                    setFormData(prevData => ({
                         ...prevData,
                         businessOwnerId: response.data.businessOwnerId,
                     }));
                     console.log("✅ Business Owner Found:", response.data.businessOwnerId);
+                } else {
+                    console.error("❌ Business Owner ID Not Found in Response");
                 }
             } catch (error) {
                 console.error("🚨 Error fetching BusinessOwner:", error.response?.data || error.message);
@@ -66,7 +63,6 @@ const Information = () => {
     
         fetchBusinessOwner();
     }, []);
-    
     
 
     const handleImageChange = async (event, type) => {
@@ -138,7 +134,7 @@ const Information = () => {
                 images: uploadedImages
             };
     
-            const response = await axios.post('http://localhost:4000/api/business-info/submit', submissionData);
+            const response = await axios.post('http://localhost:4000/api/business-info-requests/submit', submissionData);
             alert(`✅ ${response.data.message}`);
             navigate("/SuccessRegis");
         } catch (error) {
