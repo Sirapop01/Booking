@@ -4,6 +4,8 @@ import HomepageOpera from '../HomepageOper/Homepageopera';
 import './Homepage.css';
 import { jwtDecode } from 'jwt-decode';
 import ListCard from '../ListCard/ListCard';
+import axios from 'axios';
+
 
 const Homepage = () => {
   const [decodedToken, setDecodedToken] = useState(null);
@@ -30,6 +32,57 @@ const Homepage = () => {
     }
     setLoading(false);
   }, []);
+
+  const [searchQuery, setSearchQuery] = useState("");
+    const [arenas, setArenas] = useState([]);
+    const [sportsCategories, setSportsCategories] = useState([]);
+
+    useEffect(() => {
+        fetchArenas();
+        fetchSportsCategories();
+    }, []);
+
+    const fetchArenas = async () => {
+        try {
+            const res = await axios.get("http://localhost:4000/api/arena/getArenas");
+            setArenas(res.data);
+        } catch (error) {
+            console.error("❌ Error fetching arenas:", error);
+        }
+    };
+
+    const fetchSportsCategories = async () => {
+        try {
+            const res = await axios.get("http://localhost:4000/api/sports/getCategories");
+            setSportsCategories(res.data);
+        } catch (error) {
+            console.error("❌ Error fetching sports categories:", error);
+        }
+    };
+
+    const handleSearch = async () => {
+      try {
+          if (searchQuery.trim() === "") {
+              fetchArenas();
+              return;
+          }
+          const res = await axios.get(`http://localhost:4000/api/arena/searchArenas?query=${searchQuery}`);
+          setArenas(res.data);
+      } catch (error) {
+          console.error("❌ Error searching arenas:", error);
+      }
+  };
+
+  const handleSportClick = async (sportName) => {
+    try {
+        const res = await axios.get(`http://localhost:4000/api/arena/getArenasBySport/${sportName}`);
+        setArenas(res.data);
+    } catch (error) {
+        console.error("❌ Error fetching arenas by sport:", error);
+        setArenas([]);
+    }
+};
+
 
   const handleToggleTime = (time) => {
     // ถ้าเลือกเวลาเดิมให้เอาออก
