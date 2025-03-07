@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const businessInfoRequestSchema = new mongoose.Schema({
+const rejectedRequestSchema = new mongoose.Schema({
     accountName: { type: String, required: true },
     bank: { type: String, required: true },
     accountNumber: { type: String, required: true },
@@ -11,9 +11,8 @@ const businessInfoRequestSchema = new mongoose.Schema({
         idHolder: { type: String, required: true },
         qrCode: { type: String, required: true },
     },
-    status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" }, // ✅ เพิ่มสถานะ
-    rejectReason: { type: String, default: "" }, // ✅ เพิ่มฟิลด์เก็บเหตุผลที่ถูกปฏิเสธ
-    createdAt: { type: Date, default: Date.now },
+    rejectReason: { type: String, required: true },
+    rejectedAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("BusinessInfoRequest", businessInfoRequestSchema);
+module.exports = mongoose.model("RejectedRequest", rejectedRequestSchema);

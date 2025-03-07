@@ -122,7 +122,7 @@ const Information = () => {
 
     const handleSubmit = async () => {
         if (isUploading) {
-            alert('กรุณารอให้อัปโหลดรูปภาพเสร็จก่อน');
+            alert("กรุณารอให้อัปโหลดรูปภาพเสร็จก่อน");
             return;
         }
     
@@ -134,14 +134,20 @@ const Information = () => {
                 images: uploadedImages
             };
     
-            const response = await axios.post('http://localhost:4000/api/business-info-requests/submit', submissionData);
+            console.log("📡 Sending request to API:", submissionData); // ✅ Log ก่อนส่ง API
+    
+            const response = await axios.post("http://localhost:4000/api/business-info-requests/submit", submissionData);
+    
+            console.log("✅ API Response:", response.data); // ✅ Log Response จาก API
+    
             alert(`✅ ${response.data.message}`);
             navigate("/SuccessRegis");
         } catch (error) {
-            console.error('❌ Submission failed:', error);
-            setErrorMessage('เกิดข้อผิดพลาดในการส่งข้อมูล');
+            console.error('❌ Submission failed:', error.response?.data || error);
+            alert("เกิดข้อผิดพลาดในการส่งข้อมูล");
         }
     };
+    
     
 
     return (
