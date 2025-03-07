@@ -19,7 +19,7 @@ exports.getProvinces = (req, res) => {
 // ✅ ดึงอำเภอจากจังหวัดที่เลือก
 exports.getDistricts = (req, res) => {
   const { provinceId } = req.params;
-  const province = locationData.find((p) => p.id == provinceId);
+  const province = locationData.find((p) => p.name_th  === provinceId);
 
   if (!province) return res.status(404).json({ message: "ไม่พบจังหวัด" });
 
@@ -35,11 +35,11 @@ exports.getDistricts = (req, res) => {
 // ✅ ดึงตำบลจากอำเภอที่เลือก
 exports.getSubdistricts = (req, res) => {
   const { provinceId, districtId } = req.params;
-  const province = locationData.find((p) => p.id == provinceId);
+  const province = locationData.find((p) => p.name_th  === provinceId);
 
   if (!province) return res.status(404).json({ message: "ไม่พบจังหวัด" });
 
-  const district = province.amphure.find((d) => d.id == districtId);
+  const district = province.amphure.find((d) => d.name_th === districtId);
   if (!district) return res.status(404).json({ message: "ไม่พบอำเภอ" });
 
   const subdistricts = district.tambon.map((sub) => ({
