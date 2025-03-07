@@ -29,6 +29,8 @@ const sportRoutes = require("./routes/sportRoutes");
 const promotionRoutes = require("./routes/promotionRoutes");
 const sportscategoriesRoutes = require("./routes/sportscategoriesRoutes");
 const subStadiumRoutes = require("./routes/subStadiumRoutes");
+const favoriteRoutes = require("./routes/favoriteRoutes"); // ✅ เพิ่ม Route ของ Favorite
+const locationRoutes = require("./routes/locationRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const favoriteRoutes = require("./routes/favoriteRoutes");
 const businessInfoRequestRoutes = require('./routes/businessInfoRequestRoutes');
@@ -83,10 +85,11 @@ app.use("/api/sports", sportRoutes);
 app.use("/api/promotions", promotionRoutes);
 app.use("/api/sportscategories", sportscategoriesRoutes);
 app.use("/api/substadiums", subStadiumRoutes);
+app.use("/api/favoritearena", favoriteRoutes); // ✅ เพิ่ม API Routes สำหรับ Favorite Arena
+app.use("/api/location", locationRoutes);
 app.use("/api/chat", chatRoutes); // ✅ ใช้ "/api/chat" แทน "/api" เพื่อให้ Route ชัดเจน
 app.use("/api/favoritearena", favoriteRoutes);
 app.use("/api/business-info-requests", businessInfoRequestRoutes);
-
 
 // ✅ Error Handling Middleware
 app.use((err, req, res, next) => {
