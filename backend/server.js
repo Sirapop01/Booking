@@ -30,6 +30,7 @@ const promotionRoutes = require("./routes/promotionRoutes");
 const sportscategoriesRoutes = require("./routes/sportscategoriesRoutes"); // ✅ เพิ่ม Route
 const subStadiumRoutes = require("./routes/subStadiumRoutes");
 const favoriteRoutes = require("./routes/favoriteRoutes"); // ✅ เพิ่ม Route ของ Favorite
+const locationRoutes = require("./routes/locationRoutes");
 
 // เสิร์ฟไฟล์ภาพจากโฟลเดอร์ uploads
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -80,6 +81,7 @@ app.use("/api/promotions", promotionRoutes);
 app.use("/api/sportscategories", sportscategoriesRoutes);
 app.use("/api/substadiums", subStadiumRoutes);
 app.use("/api/favoritearena", favoriteRoutes); // ✅ เพิ่ม API Routes สำหรับ Favorite Arena
+app.use("/api/location", locationRoutes);
 
 app.use((err, req, res, next) => {
   if (err.name === 'UnauthorizedError') {
