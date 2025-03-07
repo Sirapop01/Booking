@@ -8,6 +8,7 @@ require("dotenv").config();
 const nodemailer = require("nodemailer");
 
 exports.register = async (req, res) => {
+  console.log(req.body)
   try {
     const {
       email, password, firstName, lastName,
