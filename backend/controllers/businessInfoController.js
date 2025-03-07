@@ -1,16 +1,19 @@
-const BusinessInfo = require('../models/BusinessInfo');
+const BusinessInfoRequest = require('../models/BusinessInfoRequest');
 
+// ✅ เปลี่ยนให้เพิ่มข้อมูลลง `businessInfoRequests` แทน
 exports.submitBusinessInfo = async (req, res) => {
     try {
         const { accountName, bank, accountNumber, businessOwnerId, images } = req.body;
 
-        const existingInfo = await BusinessInfo.findOne({ businessOwnerId });
+        // ตรวจสอบว่ามีคำร้องขออยู่แล้วหรือไม่
+        const existingRequest = await BusinessInfoRequest.findOne({ businessOwnerId });
 
-        if (existingInfo) {
-            return res.status(400).json({ message: 'ข้อมูลของเจ้าของธุรกิจนี้มีอยู่แล้วในระบบ' });
+        if (existingRequest) {
+            return res.status(400).json({ message: 'คำร้องขอของเจ้าของธุรกิจนี้มีอยู่แล้วในระบบ' });
         }
 
-        const newInfo = new BusinessInfo({
+        // สร้างคำร้องใหม่
+        const newRequest = new BusinessInfoRequest({
             accountName,
             bank,
             accountNumber,
@@ -18,11 +21,11 @@ exports.submitBusinessInfo = async (req, res) => {
             images,
         });
 
-        await newInfo.save();
-        res.status(201).json({ message: 'บันทึกข้อมูลสำเร็จ!' });
+        await newRequest.save();
+        res.status(201).json({ message: 'ส่งคำร้องสำเร็จ! โปรดรอการอนุมัติจากแอดมิน', request: newRequest });
 
     } catch (error) {
-        console.error('🚨 Error submitting business information:', error);
-        res.status(500).json({ message: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล', error: error.message });
+        console.error('🚨 Error submitting business request:', error);
+        res.status(500).json({ message: 'เกิดข้อผิดพลาดในการส่งคำร้อง', error: error.message });
     }
 };
