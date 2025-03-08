@@ -38,6 +38,8 @@ import AdminRegister from "./component/AdminRegister/AdminRegister";
 import Addpromotion from "./component/AddPromo/Addpromotion";
 import Promoowner from "./component/Promotionowner/Promoowner";
 import Booking from "./component/Booking/Booking";
+import VerifyOnwers from "./component/Verifyowners/verifyowners"
+
 
 /**/ 
 
@@ -85,6 +87,7 @@ function App() {
         <Route path="/Booking" element={<Booking />} />
         <Route element={<ProtectedRoute role="superadmin" />}>
         <Route path="/admin/register" element={<AdminRegister />} />
+        <Route path="/verifyOwners" element={<VerifyOnwers />} />
         </Route>
 
       </Routes>

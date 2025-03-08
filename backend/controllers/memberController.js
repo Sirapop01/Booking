@@ -8,6 +8,7 @@ require("dotenv").config();
 const nodemailer = require("nodemailer");
 
 exports.register = async (req, res) => {
+  console.log(req.body)
   try {
     const {
       email, password, firstName, lastName,
@@ -54,9 +55,9 @@ exports.register = async (req, res) => {
       phoneNumber,
       birthdate: formattedBirthdate,
       interestedSports,
-      province,
-      district,
-      subdistrict,
+      province: province, 
+      district: district, 
+      subdistrict: subdistrict, 
       profileImage,
       role: role || 'customer',
       location,
