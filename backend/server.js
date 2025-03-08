@@ -33,6 +33,8 @@ const favoriteRoutes = require("./routes/favoriteRoutes"); // ✅ เพิ่�
 const locationRoutes = require("./routes/locationRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const businessInfoRequestRoutes = require('./routes/businessInfoRequestRoutes');
+const reviewRoutes = require("./routes/reviewRoutes");
+const bookingHistoryRoutes = require("./routes/bookingHistoryRoutes");
 
 // ✅ กำหนด CORS
 const allowedOrigins = process.env.ALLOWED_ORIGINS
@@ -89,6 +91,8 @@ app.use("/api/location", locationRoutes);
 app.use("/api/chat", chatRoutes); // ✅ ใช้ "/api/chat" แทน "/api" เพื่อให้ Route ชัดเจน
 app.use("/api/favoritearena", favoriteRoutes);
 app.use("/api/business-info-requests", businessInfoRequestRoutes);
+app.use("/api", reviewRoutes);
+app.use("/api", bookingHistoryRoutes);
 
 // ✅ Error Handling Middleware
 app.use((err, req, res, next) => {
