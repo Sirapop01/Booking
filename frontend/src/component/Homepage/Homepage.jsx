@@ -6,19 +6,26 @@ import { jwtDecode } from 'jwt-decode';
 import ListCard from '../ListCard/ListCard';
 import axios from 'axios';
 
-
 const Homepage = () => {
   const [decodedToken, setDecodedToken] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedTimes, setSelectedTimes] = useState([]); // เปลี่ยนเป็น array
-  const [showTimeModal, setShowTimeModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // ✅ แก้ `searchQuery` ไม่ถูกกำหนด
+  const [arenas, setArenas] = useState([]); // ✅ แก้ `setArenas` ไม่ถูกกำหนด
 
-  const timeSlots = [
-    '08:00-09:00', '09:00-10:00', '10:00-11:00',
-    '11:00-12:00', '12:00-13:00', '13:00-14:00',
-    '14:00-15:00', '15:00-16:00', '16:00-17:00',
-    '17:00-18:00', '18:00-19:00', '19:00-20:00',
-  ];
+  useEffect(() => {
+    fetchArenas(); // ✅ แก้ `fetchArenas` ไม่ถูกกำหนด
+  }, []);
+
+  const fetchArenas = async () => { // ✅ ประกาศฟังก์ชันให้ชัดเจน
+    try {
+      const res = await axios.get("http://localhost:4000/api/arenas/getArenas");
+      setArenas(res.data);
+      console.log("Arena Fetch", arenas)
+    } catch (error) {
+      console.error("❌ Error fetching arenas:", error);
+    }
+  };
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token') || sessionStorage.getItem('token');
@@ -33,69 +40,27 @@ const Homepage = () => {
     setLoading(false);
   }, []);
 
-  const [searchQuery, setSearchQuery] = useState("");
-    const [arenas, setArenas] = useState([]);
-    const [sportsCategories, setSportsCategories] = useState([]);
-
-    useEffect(() => {
-        fetchArenas();
-        fetchSportsCategories();
-    }, []);
-
-    const fetchArenas = async () => {
-        try {
-            const res = await axios.get("http://localhost:4000/api/arena/getArenas");
-            setArenas(res.data);
-        } catch (error) {
-            console.error("❌ Error fetching arenas:", error);
-        }
-    };
-
-    const fetchSportsCategories = async () => {
-        try {
-            const res = await axios.get("http://localhost:4000/api/sports/getCategories");
-            setSportsCategories(res.data);
-        } catch (error) {
-            console.error("❌ Error fetching sports categories:", error);
-        }
-    };
-
-    const handleSearch = async () => {
-      try {
-          if (searchQuery.trim() === "") {
-              fetchArenas();
-              return;
-          }
-          const res = await axios.get(`http://localhost:4000/api/arena/searchArenas?query=${searchQuery}`);
-          setArenas(res.data);
-      } catch (error) {
-          console.error("❌ Error searching arenas:", error);
-      }
-  };
-
-  const handleSportClick = async (sportName) => {
+  const handleSearch = async () => {
     try {
-        const res = await axios.get(`http://localhost:4000/api/arena/getArenasBySport/${sportName}`);
-        setArenas(res.data);
+      console.log("🔍 Searching for:", searchQuery); // ✅ เช็คค่าที่ถูกส่ง
+
+      if (searchQuery.trim() === "") {
+        console.log("🔄 No search query, fetching all arenas...");
+        fetchArenas(); // โหลดข้อมูลสนามทั้งหมด ถ้าไม่มีการค้นหา
+        return;
+      }
+
+      const res = await axios.get(`http://localhost:4000/api/arenas/searchArenasByFieldName?query=${encodeURIComponent(searchQuery)}`);
+
+      console.log("✅ Search Results:", res.data); // ✅ ตรวจสอบค่าที่ได้กลับมา
+      setArenas(res.data);
     } catch (error) {
-        console.error("❌ Error fetching arenas by sport:", error);
-        setArenas([]);
-    }
-};
-
-
-  const handleToggleTime = (time) => {
-    // ถ้าเลือกเวลาเดิมให้เอาออก
-    if (selectedTimes.includes(time)) {
-      setSelectedTimes(selectedTimes.filter((t) => t !== time));
-    } else {
-      setSelectedTimes([...selectedTimes, time]);
+      console.error("❌ Error searching arenas:", error);
     }
   };
 
-  const handleConfirmTime = () => {
-    setShowTimeModal(false); // ปิด Modal
-  };
+
+
 
   if (loading) return <div>Loading...</div>;
 
@@ -104,27 +69,13 @@ const Homepage = () => {
       <div className="homepage-container">
         <Navbar />
         <div className="search-section-homepage">
-          <input type="text" className="search-input-homepage" placeholder="ค้นหาสถานที่" />
+          <input type="text"
+            className='search-input-homepage'
+            placeholder="ค้นหาสนามกีฬา..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
           <div className="date-time-container">
-            <input type="date" className="date-input" />
-
-            {/* ช่องเวลา */}
-            <div className="time-input-container" onClick={() => setShowTimeModal(true)}>
-              <input
-                type="text"
-                className="time-input-display"
-                value={selectedTimes.length > 0 ? selectedTimes.join(', ') : ''}
-                placeholder="เลือกเวลา"
-                readOnly
-              />
-            </div>
-
-            <select className="people-select-value">
-              <option>จำนวน</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
             <div className="booking-status">
               <label>
                 <input type="radio" name="booking" defaultChecked />
@@ -135,31 +86,9 @@ const Homepage = () => {
                 แสดงทั้งหมด
               </label>
             </div>
-            <button className="search-button-homepage">ค้นหา</button>
+            <button className="search-button-homepage" onClick={handleSearch}>ค้นหา</button>
           </div>
         </div>
-
-        {/* Modal เลือกเวลา */}
-        {showTimeModal && (
-          <div className="time-modal-overlay" onClick={() => setShowTimeModal(false)}>
-            <div className="time-modal" onClick={(e) => e.stopPropagation()}>
-              {timeSlots.map((time) => (
-                <button
-                  key={time}
-                  className={`time-slot-button ${selectedTimes.includes(time) ? 'selected' : ''}`}
-                  onClick={() => handleToggleTime(time)}
-                >
-                  🕒 {time}
-                </button>
-              ))}
-              <div className="confirm-button-wrapper">
-                <button className="confirm-button-homepage" onClick={handleConfirmTime}>
-                  ตกลง
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         <div className="sports-icons">
           <button className="sport-btn">⚽</button>
@@ -174,7 +103,11 @@ const Homepage = () => {
           <button className="sport-btn">...</button>
         </div>
 
-        <ListCard />
+        {loading ? (
+          <p>⏳ กำลังโหลดข้อมูล...</p>
+        ) : (
+          <ListCard stadiums={arenas} />  // ✅ ส่งข้อมูลที่ค้นหาไปยัง ListCard
+        )}
       </div>
     );
   } else {

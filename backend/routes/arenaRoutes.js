@@ -19,7 +19,7 @@ router.put("/updateArena/:id", arenaController.updateArena);
 router.delete("/deleteArena/:id", arenaController.deleteArena);
 
 router.post("/toggleStatus", arenaController.toggleStadiumStatus);
-router.get("/searchArenas", arenaController.searchArenas);
+router.get("/searchArenasByFieldName", arenaController.searchArenasByFieldName);
 router.get("/getArenasBySport/:sportName", arenaController.getArenasBySport);
 
 module.exports = router;

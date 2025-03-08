@@ -181,24 +181,21 @@ exports.toggleStadiumStatus = async (req, res) => {
   }
 };
 
-exports.searchArenas = async (req, res) => {
+exports.searchArenasByFieldName = async (req, res) => {
   try {
-    const { query } = req.query;
+      const { query } = req.query;
 
-    const arenas = await Arena.find({
-      $or: [
-        { fieldName: { $regex: query, $options: "i" } },
-        { ownerName: { $regex: query, $options: "i" } },
-        { additionalInfo: { $regex: query, $options: "i" } },
-      ]
-    });
+      const arenas = await Arena.find({
+          fieldName: { $regex: query, $options: "i" } // ค้นหาจาก fieldName แบบ Case Insensitive
+      });
 
-    res.status(200).json(arenas);
+      res.status(200).json(arenas);
   } catch (error) {
-    console.error("❌ Error searching arenas:", error);
-    res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการค้นหา" });
+      console.error("❌ Error searching arenas:", error);
+      res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการค้นหาสนามกีฬา" });
   }
 };
+
 
 exports.getArenasBySport = async (req, res) => {
   try {
