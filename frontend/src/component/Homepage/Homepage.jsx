@@ -9,7 +9,7 @@ import axios from 'axios';
 const Homepage = () => {
   const [decodedToken, setDecodedToken] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedTimes, setSelectedTimes] = useState([]); // เปลี่ยนเป็น array
+  const [selectedSport, setSelectedSport] = useState(""); 
   const [searchQuery, setSearchQuery] = useState(""); // ✅ แก้ `searchQuery` ไม่ถูกกำหนด
   const [arenas, setArenas] = useState([]); // ✅ แก้ `setArenas` ไม่ถูกกำหนด
 
@@ -59,6 +59,17 @@ const Homepage = () => {
     }
   };
 
+  const searchBySport = async (sportName) => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`http://localhost:4000/api/sportscategories/searchBySport?sportName=${sportName}`);
+      setArenas(res.data);
+    } catch (error) {
+      console.error("❌ Error searching by sport:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
 
@@ -91,17 +102,26 @@ const Homepage = () => {
         </div>
 
         <div className="sports-icons">
-          <button className="sport-btn">⚽</button>
-          <button className="sport-btn">🏀</button>
-          <button className="sport-btn">🏸</button>
-          <button className="sport-btn">🎾</button>
-          <button className="sport-btn">🏐</button>
-          <button className="sport-btn">🏓</button>
-          <button className="sport-btn">🥊</button>
-          <button className="sport-btn">🎳</button>
-          <button className="sport-btn">⛳</button>
-          <button className="sport-btn">...</button>
-        </div>
+        {[
+          { icon: "⚽", name: "Football" },
+          { icon: "🏀", name: "Basketball" },
+          { icon: "🏸", name: "Badminton" },
+          { icon: "🎾", name: "Tennis" },
+          { icon: "🏐", name: "วอลเลย์บอล" },
+          { icon: "🏓", name: "Table Tennis" },
+          { icon: "🥊", name: "มวย" },
+          { icon: "🎳", name: "โบว์ลิ่ง" },
+          { icon: "⛳", name: "Golf" },
+        ].map((sport) => (
+          <button
+            key={sport.name}
+            className={`sport-btn ${selectedSport === sport.name ? "selected" : ""}`}
+            onClick={() => searchBySport(sport.name)}
+          >
+            {sport.icon}
+          </button>
+        ))}
+      </div>
 
         {loading ? (
           <p>⏳ กำลังโหลดข้อมูล...</p>
