@@ -202,7 +202,7 @@ exports.searchArenas = async (req, res) => {
 
     // ✅ ค้นหาตามสถานะ "เปิด/ปิด"
     if (status === "จองได้") {
-      searchCriteria.status = "พร้อมใช้งาน";
+      searchCriteria.open = "true";
     }
 
     // ✅ ดึงข้อมูลสนามกีฬา และลบสนามที่ซ้ำกัน
