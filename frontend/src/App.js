@@ -84,7 +84,7 @@ function App() {
         <Route path="/Addpromotion" element={<Addpromotion />} />
         <Route path="/Promoowner" element={<Promoowner />} />
         <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
-        <Route path="/reveiw" element={<ReviewPage />} />
+        <Route path="/review" element={<ReviewPage />} />
         <Route path="/Booking" element={<Booking />} />
         <Route element={<ProtectedRoute role="superadmin" />}>
           <Route path="/admin/register" element={<AdminRegister />} />
