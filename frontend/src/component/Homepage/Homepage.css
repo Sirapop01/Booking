@@ -31,13 +31,11 @@
 /* จัดตำแหน่ง date-time-container ให้อยู่ชิดซ้ายเท่ากับ search-input */
 .date-time-container {
   display: flex;
-  flex-wrap: nowrap;
   gap: 10px;
   align-items: center;
-  justify-content: flex-start; /* ชิดซ้าย */
   max-width: 900px; /* กำหนดความกว้างสูงสุดให้เท่ากับ .search-section */
   width: 100%; /* ป้องกันการยืดของช่อง */
-  margin-left: 30px;
+  margin-left: auto;
   
 }
 
@@ -287,5 +285,5 @@
     background-color: #fff;  /* ใช้สีขาวเต็มหน้าเว็บ */
     overflow: auto;
     height: 100vh;
-
+    align-items: center;
   }
