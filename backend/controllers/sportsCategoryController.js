@@ -1,4 +1,7 @@
 const SportsCategory = require("../models/SportsCategory");
+const Arena = require("../models/Arena");
+const mongoose = require("mongoose");
+
 
 // 📌 ✅ ดึงประเภทกีฬาทั้งหมดของสนามที่เลือก
 exports.getSportsByArena = async (req, res) => {
@@ -58,5 +61,45 @@ exports.deleteSportsCategory = async (req, res) => {
   } catch (error) {
     console.error("⚠️ เกิดข้อผิดพลาดในการลบประเภทกีฬา:", error);
     res.status(500).json({ error: "เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์" });
+  }
+};
+
+exports.getArenasBySport = async (req, res) => {
+  try {
+      const { sportName } = req.query; // รับชื่อกีฬา
+      if (!sportName) {
+          return res.status(400).json({ message: "กรุณาระบุประเภทกีฬา" });
+      }
+
+      console.log("📌 ค้นหาประเภทกีฬา:", sportName);
+
+      // ✅ ค้นหา SportCategory ที่ตรงกับชื่อกีฬา
+      const sportCategory = await SportsCategory.findOne({ sportName: { $regex: new RegExp(sportName, "i") } });
+
+      if (!sportCategory || !sportCategory.arenaId) {
+          return res.status(404).json({ message: "ไม่พบสนามกีฬาสำหรับประเภทนี้" });
+      }
+
+      console.log("📌 arenaId จาก sportsCategory:", sportCategory.arenaId);
+
+      // ✅ ตรวจสอบว่า arenaId เป็น Array หรือ ค่าเดี่ยว
+      let arenaIds = [];
+      if (Array.isArray(sportCategory.arenaId)) {
+          // ✅ ถ้าเป็น Array → ใช้ map() แปลงเป็น ObjectId อย่างถูกต้อง
+          arenaIds = sportCategory.arenaId.map(id => new mongoose.Types.ObjectId(id));
+      } else {
+          // ✅ ถ้าเป็นค่าเดี่ยว → แปลงให้เป็น Array
+          arenaIds = [new mongoose.Types.ObjectId(sportCategory.arenaId)];
+      }
+
+      console.log("📌 arenaIds ที่ใช้ค้นหา:", arenaIds);
+
+      // ✅ ค้นหาสนามกีฬาที่ตรงกับ arenaIds
+      const arenas = await Arena.find({ _id: { $in: arenaIds } });
+
+      res.json(arenas);
+  } catch (error) {
+      console.error("❌ Error fetching arenas by sport:", error);
+      res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูลสนามกีฬา" });
   }
 };
