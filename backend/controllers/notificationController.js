@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const BusinessOwner = require("../models/BusinessOwner"); // ✅ Import Model ที่ถูกต้อง
 require("dotenv").config();
 
 // ✅ ใช้ Google App Password แทนรหัสผ่านปกติ
@@ -32,3 +33,36 @@ exports.sendEmailNotification = async (req, res) => {
     res.status(500).json({ message: "ไม่สามารถส่ง Email ได้", error: error.message });
   }
 };
+
+// ✅ ส่งอีเมลเมื่ออนุมัติ
+exports.sendApprovalEmail = async (email, ownerName) => {
+  try {
+      const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: email,
+          subject: `✅ สนามของคุณได้รับการอนุมัติ`,
+          text: `ขอแสดงความยินดี! คุณ ${ownerName} สนามของคุณได้รับการอนุมัติเรียบร้อยแล้ว`
+      };
+
+      await transporter.sendMail(mailOptions);
+  } catch (error) {
+      console.error("❌ Error sending approval email:", error);
+  }
+};
+
+// ❌ ส่งอีเมลเมื่อปฏิเสธ
+exports.sendRejectionEmail = async (email, ownerName, reason) => {
+  try {
+      const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: email,
+          subject: `🚫 สนามของคุณถูกปฏิเสธ`,
+          text: `เรียนคุณ ${ownerName},\n\nขออภัย สนามของคุณถูกปฏิเสธเนื่องจาก: ${reason} \n\nกรุณาตรวจสอบข้อมูลและส่งคำขอใหม่หากต้องการ`
+      };
+
+      await transporter.sendMail(mailOptions);
+  } catch (error) {
+      console.error("❌ Error sending rejection email:", error);
+  }
+};
+
