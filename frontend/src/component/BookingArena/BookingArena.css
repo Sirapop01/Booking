@@ -224,7 +224,7 @@
 
 /* ✅ ปุ่มจอง */
 .booking-button {
-  background-color: #080a74;
+  background-color: #0c3259 !important;
   padding: 14px;
   font-size: 18px;
   border-radius: 10px;
