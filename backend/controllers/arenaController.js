@@ -66,16 +66,16 @@ exports.registerArena = async (req, res) => {
 // ✅ ดึงข้อมูลสนามกีฬาตาม `owner_id`
 exports.getArenas = async (req, res) => {
   try {
-      const { owner_id } = req.query;
-      console.log("📢 Owner ID ที่รับมา:", owner_id); // ✅ Debugging
+    const { owner_id } = req.query;
+    console.log("📢 Owner ID ที่รับมา:", owner_id); // ✅ Debugging
 
-      const arenas = await Arena.find({ owner_id });
-      console.log("✅ สนามที่โหลดจาก DB:", arenas); // ✅ Debugging
+    const arenas = await Arena.find({ owner_id });
+    console.log("✅ สนามที่โหลดจาก DB:", arenas); // ✅ Debugging
 
-      res.json(arenas);
+    res.json(arenas);
   } catch (error) {
-      console.error("❌ Error loading arenas:", error);
-      res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการโหลดสนาม" });
+    console.error("❌ Error loading arenas:", error);
+    res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการโหลดสนาม" });
   }
 };
 
@@ -104,7 +104,7 @@ exports.getArenaById = async (req, res) => {
 
 // ✅ อัปเดตข้อมูลสนามกีฬา
 exports.updateArena = async (req, res) => {
-  try {    
+  try {
     const { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -148,36 +148,71 @@ exports.deleteArena = async (req, res) => {
 
 exports.toggleStadiumStatus = async (req, res) => {
   try {
-      const { arenaId, open } = req.body;
-      console.log("📢 รับค่า:", { arenaId, open }); // ✅ Debugging
+    const { arenaId, open } = req.body;
+    console.log("📢 รับค่า:", { arenaId, open }); // ✅ Debugging
 
-      if (!mongoose.Types.ObjectId.isValid(arenaId)) {
-          return res.status(400).json({ message: "⚠️ arenaId ไม่ถูกต้อง" });
-      }
+    if (!mongoose.Types.ObjectId.isValid(arenaId)) {
+      return res.status(400).json({ message: "⚠️ arenaId ไม่ถูกต้อง" });
+    }
 
-      // ✅ ตรวจสอบว่ามีสนามก่อนอัปเดต
-      const existingArena = await Arena.findById(arenaId);
-      if (!existingArena) {
-          return res.status(404).json({ message: "❌ ไม่พบข้อมูลสนามก่อนอัปเดต" });
-      }
+    // ✅ ตรวจสอบว่ามีสนามก่อนอัปเดต
+    const existingArena = await Arena.findById(arenaId);
+    if (!existingArena) {
+      return res.status(404).json({ message: "❌ ไม่พบข้อมูลสนามก่อนอัปเดต" });
+    }
 
-      // ✅ อัปเดตสถานะ
-      const updatedArena = await Arena.findByIdAndUpdate(
-          arenaId,
-          { open: open },
-          { new: true }
-      );
+    // ✅ อัปเดตสถานะ
+    const updatedArena = await Arena.findByIdAndUpdate(
+      arenaId,
+      { open: open },
+      { new: true }
+    );
 
-      if (!updatedArena) {
-          return res.status(404).json({ message: "❌ สนามหายไปหลังอัปเดต" });
-      }
+    if (!updatedArena) {
+      return res.status(404).json({ message: "❌ สนามหายไปหลังอัปเดต" });
+    }
 
-      console.log("✅ อัปเดตสถานะสนามสำเร็จ:", updatedArena); // ✅ Debugging
-      res.status(200).json({ message: "✅ อัปเดตสถานะสนามสำเร็จ!", arena: updatedArena });
+    console.log("✅ อัปเดตสถานะสนามสำเร็จ:", updatedArena); // ✅ Debugging
+    res.status(200).json({ message: "✅ อัปเดตสถานะสนามสำเร็จ!", arena: updatedArena });
 
   } catch (error) {
-      console.error("❌ Error updating stadium status:", error);
-      res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการอัปเดตสถานะสนาม", error: error.message });
+    console.error("❌ Error updating stadium status:", error);
+    res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการอัปเดตสถานะสนาม", error: error.message });
   }
 };
 
+exports.searchArenasByFieldName = async (req, res) => {
+  try {
+      const { query } = req.query;
+
+      const arenas = await Arena.find({
+          fieldName: { $regex: query, $options: "i" } // ค้นหาจาก fieldName แบบ Case Insensitive
+      });
+
+      res.status(200).json(arenas);
+  } catch (error) {
+      console.error("❌ Error searching arenas:", error);
+      res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการค้นหาสนามกีฬา" });
+  }
+};
+
+
+exports.getArenasBySport = async (req, res) => {
+  try {
+    const { sportName } = req.params;
+
+    const sports = await SportsCategory.find({ sportName }).select("arenaId");
+
+    if (!sports.length) {
+      return res.status(404).json({ message: "❌ ไม่พบสนามกีฬาสำหรับประเภทนี้" });
+    }
+
+    const arenaIds = sports.map(sport => sport.arenaId);
+    const arenas = await Arena.find({ _id: { $in: arenaIds } });
+
+    res.status(200).json(arenas);
+  } catch (error) {
+    console.error("❌ Error fetching arenas by sport:", error);
+    res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการค้นหาสนามกีฬา" });
+  }
+};
