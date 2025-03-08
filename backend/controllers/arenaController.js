@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Arena = require("../models/Arena");
+const SportsCategory = require("../models/SportsCategory")
 const BusinessOwner = require("../models/BusinessOwner");
 
 // ✅ ฟังก์ชัน Register สนามกีฬา (รับ URL ของรูปภาพ)
@@ -181,38 +182,43 @@ exports.toggleStadiumStatus = async (req, res) => {
   }
 };
 
-exports.searchArenasByFieldName = async (req, res) => {
+exports.searchArenas = async (req, res) => {
   try {
-      const { query } = req.query;
+    const { query, sport, status } = req.query;
+    console.log("status ", status)
+    let searchCriteria = {};
 
-      const arenas = await Arena.find({
-          fieldName: { $regex: query, $options: "i" } // ค้นหาจาก fieldName แบบ Case Insensitive
-      });
-
-      res.status(200).json(arenas);
-  } catch (error) {
-      console.error("❌ Error searching arenas:", error);
-      res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการค้นหาสนามกีฬา" });
-  }
-};
-
-
-exports.getArenasBySport = async (req, res) => {
-  try {
-    const { sportName } = req.params;
-
-    const sports = await SportsCategory.find({ sportName }).select("arenaId");
-
-    if (!sports.length) {
-      return res.status(404).json({ message: "❌ ไม่พบสนามกีฬาสำหรับประเภทนี้" });
+    // ✅ ค้นหาตามชื่อสนามกีฬา (ถ้ามีค่า)
+    if (query) {
+      searchCriteria.fieldName = { $regex: query, $options: "i" };
     }
 
-    const arenaIds = sports.map(sport => sport.arenaId);
-    const arenas = await Arena.find({ _id: { $in: arenaIds } });
+    // ✅ ค้นหาตามประเภทกีฬา (ถ้ามีค่า)
+    if (sport) {
+      const sportCategories = await SportsCategory.find({ sportName: { $in: sport.split(",") } });
+      const arenaIds = sportCategories.map(sport => sport.arenaId.toString());
+      searchCriteria._id = { $in: arenaIds };
+    }
 
-    res.status(200).json(arenas);
+    // ✅ ค้นหาตามสถานะ "เปิด/ปิด"
+    if (status === "จองได้") {
+      searchCriteria.status = "พร้อมใช้งาน";
+    }
+
+    // ✅ ดึงข้อมูลสนามกีฬา และลบสนามที่ซ้ำกัน
+    let arenas = await Arena.find(searchCriteria).lean();
+    const uniqueArenas = Object.values(
+      arenas.reduce((acc, arena) => {
+        acc[arena._id.toString()] = arena;
+        return acc;
+      }, {})
+    );
+
+    res.json(uniqueArenas);
   } catch (error) {
-    console.error("❌ Error fetching arenas by sport:", error);
-    res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการค้นหาสนามกีฬา" });
+    console.error("❌ Error searching arenas:", error);
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
   }
 };
+
+

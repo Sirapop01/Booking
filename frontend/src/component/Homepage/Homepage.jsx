@@ -9,10 +9,11 @@ import axios from 'axios';
 const Homepage = () => {
   const [decodedToken, setDecodedToken] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedSport, setSelectedSport] = useState("");
   const [searchQuery, setSearchQuery] = useState(""); // ✅ แก้ `searchQuery` ไม่ถูกกำหนด
   const [arenas, setArenas] = useState([]); // ✅ แก้ `setArenas` ไม่ถูกกำหนด
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(true);
+  const [selectedSports, setSelectedSports] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState("แสดงทั้งหมด");
 
   useEffect(() => {
     fetchArenas(); // ✅ แก้ `fetchArenas` ไม่ถูกกำหนด
@@ -53,35 +54,46 @@ const Homepage = () => {
     }
   };
 
+  const handleSportSelection = (sport) => {
+    setSelectedSports((prevSports) => {
+      if (prevSports.includes(sport)) {
+        return prevSports.filter((s) => s !== sport);
+      } else {
+        return [...prevSports, sport];
+      }
+    });
+  };
+
   const handleSearch = async () => {
     try {
-      let endpoint = "";
+      const sportQuery = selectedSports.length ? selectedSports.join(",") : "";
+      const statusQuery = selectedStatus === "จองได้" ? "จองได้" : "แสดงทั้งหมด";
 
-      if (searchQuery.trim() !== "") {
-        // 🔹 ค้นหาสนามโดยใช้ชื่อ
-        endpoint = `http://localhost:4000/api/arenas/searchArenasByFieldName?query=${searchQuery}`;
-      } else if (selectedSport) {
-        // 🔹 ค้นหาสนามโดยใช้ประเภทกีฬา
-        endpoint = `http://localhost:4000/api/sportscategories/searchBySport?sportName=${selectedSport}`;
-      } else {
-        // 🔹 ถ้าไม่มีเงื่อนไข → โหลดข้อมูลทั้งหมด
-        endpoint = "http://localhost:4000/api/arenas/getArenas";
-      }
+      const res = await axios.get(`http://localhost:4000/api/arenas/searchArenas`, {
+        params: { query: searchQuery, sport: sportQuery, status: statusQuery },
+      });
 
-      const res = await axios.get(endpoint);
-      let filteredArenas = res.data;
-
-      // ✅ ตรวจสอบเงื่อนไขแสดง "สนามที่เปิด" หรือ "ทั้งหมด"
-      if (showOnlyAvailable) {
-        filteredArenas = filteredArenas.filter(arenas => arenas.status === "พร้อมใช้งาน");
-        console.log(filteredArenas)
-      }
-
-      setArenas(filteredArenas);
+      setArenas(res.data);
     } catch (error) {
       console.error("❌ Error searching arenas:", error);
     }
   };
+
+
+  const handleSportClick = (sportName) => {
+    let updatedSports = [...selectedSports];
+
+    if (updatedSports.includes(sportName)) {
+      updatedSports = updatedSports.filter(sport => sport !== sportName);
+    } else {
+      updatedSports.push(sportName);
+    }
+
+    setSelectedSports(updatedSports);
+  };
+
+
+
 
   if (loading) return <div>Loading...</div>;
 
@@ -104,29 +116,31 @@ const Homepage = () => {
             { icon: "🏀", name: "Basketball" },
             { icon: "🏸", name: "Badminton" },
             { icon: "🎾", name: "Tennis" },
-            { icon: "🏐", name: "วอลเลย์บอล" },
+            { icon: "🏐", name: "Volleyball" },
             { icon: "🏓", name: "Table Tennis" },
-            { icon: "🥊", name: "มวย" },
-            { icon: "🎳", name: "โบว์ลิ่ง" },
+            { icon: "🥊", name: "Boxing" },
+            { icon: "🎳", name: "Bowling" },
             { icon: "⛳", name: "Golf" },
           ].map((sport) => (
             <button
               key={sport.name}
-              className={`sport-btn ${selectedSport === sport.name ? "selected" : ""}`}
-              onClick={() => searchBySport(sport.name)}
+              className={`sport-btn ${selectedSports.includes(sport.name) ? "active" : ""}`}
+              onClick={() => handleSportClick(sport.name)}
             >
               {sport.icon}
             </button>
           ))}
         </div>
+
         <div className="date-time-container">
           <div className="booking-status">
             <label>
               <input
                 type="radio"
                 name="booking"
-                checked={showOnlyAvailable}
-                onChange={() => setShowOnlyAvailable(true)}
+                value="available"
+                checked={selectedStatus === "จองได้"}
+                onChange={() => setSelectedStatus("จองได้")}
               />
               จองได้
             </label>
@@ -134,8 +148,9 @@ const Homepage = () => {
               <input
                 type="radio"
                 name="booking"
-                checked={!showOnlyAvailable}
-                onChange={() => setShowOnlyAvailable(false)}
+                value="all"
+                checked={selectedStatus === "แสดงทั้งหมด"}
+                onChange={() => setSelectedStatus("แสดงทั้งหมด")}
               />
               แสดงทั้งหมด
             </label>

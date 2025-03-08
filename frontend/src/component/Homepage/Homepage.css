@@ -33,15 +33,19 @@
   display: flex;
   gap: 10px;
   align-items: center;
-  max-width: 900px; /* กำหนดความกว้างสูงสุดให้เท่ากับ .search-section */
-  width: 100%; /* ป้องกันการยืดของช่อง */
+  max-width: 900px;
+  /* กำหนดความกว้างสูงสุดให้เท่ากับ .search-section */
+  width: 100%;
+  /* ป้องกันการยืดของช่อง */
   margin-left: auto;
-  
+
 }
 
 .date-input {
-  width: 140px !important; /* กำหนดขนาดตายตัว */
-  max-width: 140px; /* ป้องกันการขยาย */
+  width: 140px !important;
+  /* กำหนดขนาดตายตัว */
+  max-width: 140px;
+  /* ป้องกันการขยาย */
   padding: 10px;
   font-size: 16px;
   border-radius: 10px;
@@ -52,7 +56,8 @@
 
 /* ส่วนเลือกเวลา */
 .time-input {
-  width: 180px; /* คงขนาดของช่องเวลา */
+  width: 180px;
+  /* คงขนาดของช่องเวลา */
   padding: 10px;
   font-size: 16px;
   border-radius: 10px;
@@ -63,16 +68,17 @@
 
 /* ป้องกันการขยายของ input */
 .date-input {
-  flex-shrink: 0; /* ป้องกันการขยาย */
+  flex-shrink: 0;
+  /* ป้องกันการขยาย */
 }
 
-.time-input-display{
+.time-input-display {
   font-family: 'Kanit', sans-serif;
   color: black;
 }
 
 /* ปรับไอคอน dropdown ให้ดูดีขึ้น */
-.date-input::-webkit-calendar-picker-indicator{
+.date-input::-webkit-calendar-picker-indicator {
   filter: invert(0.5);
   cursor: pointer;
 }
@@ -95,9 +101,11 @@
   padding: 20px;
   border-radius: 12px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* แบ่งเป็น 3 คอลัมน์ */
+  grid-template-columns: repeat(3, 1fr);
+  /* แบ่งเป็น 3 คอลัมน์ */
   gap: 10px;
-  max-width: 500px; /* ขยายให้กว้างขึ้นนิดหน่อย */
+  max-width: 500px;
+  /* ขยายให้กว้างขึ้นนิดหน่อย */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -115,7 +123,8 @@
   font-family: 'Kanit', sans-serif;
   transition: background-color 0.3s ease, transform 0.1s ease;
   justify-content: center;
-  height: 45px; /* ตั้งให้สูงเท่ากัน */
+  height: 45px;
+  /* ตั้งให้สูงเท่ากัน */
 }
 
 .time-slot-button.selected {
@@ -130,7 +139,8 @@
 
 /* ใช้ grid-column ให้ปุ่มตกลงอยู่ตรงกลาง */
 .confirm-button-wrapper {
-  grid-column: span 3; /* ให้ปุ่มกวาดเต็ม 3 คอลัมน์ */
+  grid-column: span 3;
+  /* ให้ปุ่มกวาดเต็ม 3 คอลัมน์ */
   display: flex;
   justify-content: center;
   margin-top: 10px;
@@ -182,61 +192,66 @@
 /* ลดขนาด radio button และจัดข้อความไปทางขวา */
 /* จัดให้ทั้งสอง radio button เท่ากัน */
 .booking-status {
-    color: #000;
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    font-size: 14px;
-    white-space: nowrap; 
-  }
-  
-  .booking-status label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    flex-direction: row; /* ทำให้ข้อความอยู่ขวาของปุ่ม */
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  .booking-status input[type="radio"] {
-    transform: scale(0.8); /* ลดขนาด radio button */
-    appearance: none;
-    width: 14px;
-    height: 14px;
-    border: 2px solid #000;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-  
-  /* ทำให้ radio button ที่ถูกเลือกมีวงกลมสีดำข้างใน */
-  .booking-status input[type="radio"]:checked::before {
-    content: "";
-    width: 12px;
-    height: 12px;
-    background-color: black;
-    border-radius: 50%;
-    position: absolute;
-  }
-  
-  
+  color: #000;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.booking-status label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  flex-direction: row;
+  /* ทำให้ข้อความอยู่ขวาของปุ่ม */
+  font-family: 'Kanit', sans-serif;
+}
+
+.booking-status input[type="radio"] {
+  transform: scale(0.8);
+  /* ลดขนาด radio button */
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* ทำให้ radio button ที่ถูกเลือกมีวงกลมสีดำข้างใน */
+.booking-status input[type="radio"]:checked::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background-color: black;
+  border-radius: 50%;
+  position: absolute;
+}
+
+
 
 /* ปุ่มค้นหา */
 .search-button-homepage {
   background-color: #07213A;
   color: #fff;
   border: none;
-  padding: 10px 16px; /* ลด padding ด้านข้าง */
+  padding: 10px 16px;
+  /* ลด padding ด้านข้าง */
   border-radius: 5px;
   cursor: pointer;
   font-size: 18px;
   font-weight: bold;
   font-family: 'Kanit', sans-serif;
-  width: auto; /* หรือใช้ width: 150px; เพื่อล็อกขนาด */
-  min-width: 120px; /* ป้องกันปุ่มเล็กเกินไป */
+  width: auto;
+  /* หรือใช้ width: 150px; เพื่อล็อกขนาด */
+  min-width: 120px;
+  /* ป้องกันปุ่มเล็กเกินไป */
   text-align: center;
 }
 
@@ -248,42 +263,52 @@
 /* --------------------- ไอคอนกีฬา --------------------- */
 
 .sports-icons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    align-items: center;
-    background-color: #07213A;
-    border-radius: 30px;
-    padding: 20px 30px;
-    /* ลดความยาวโดยกำหนด max-width ที่เล็กลง แล้วใช้ margin auto */
-    max-width: 800px; /* ปรับตัวเลขได้ตามต้องการ */
-    margin: 30px auto; 
-  }
-  
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  background-color: #07213A;
+  border-radius: 30px;
+  padding: 20px 30px;
+  /* ลดความยาวโดยกำหนด max-width ที่เล็กลง แล้วใช้ margin auto */
+  max-width: 800px;
+  /* ปรับตัวเลขได้ตามต้องการ */
+  margin: 30px auto;
+}
+
 
 /* ปุ่มแต่ละกีฬา */
 .sport-btn {
-    width: 60px;
-    height: 60px;
-    background-color: #D1D1D1;
-    border: none;
-    border-radius: 8px;  /* มุมโค้งเล็กน้อย */
-    cursor: pointer;
-    font-size: 24px;     /* กรณีเป็นอีโมจิหรือไอคอนแบบตัวหนังสือ */
-    /* ถ้าต้องการให้ไอคอนกึ่งกลางในปุ่ม: */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  width: 60px;
+  height: 60px;
+  background-color: #D1D1D1;
+  border: none;
+  border-radius: 8px;
+  /* มุมโค้งเล็กน้อย */
+  cursor: pointer;
+  font-size: 24px;
+  /* กรณีเป็นอีโมจิหรือไอคอนแบบตัวหนังสือ */
+  /* ถ้าต้องการให้ไอคอนกึ่งกลางในปุ่ม: */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .sport-btn:hover {
   background-color: #ddd;
 }
 
 .homepage-container {
-    min-height: 100vh;
-    background-color: #fff;  /* ใช้สีขาวเต็มหน้าเว็บ */
-    overflow: auto;
-    height: 100vh;
-    align-items: center;
-  }
+  min-height: 100vh;
+  background-color: #fff;
+  /* ใช้สีขาวเต็มหน้าเว็บ */
+  overflow: auto;
+  height: 100vh;
+  align-items: center;
+}
+
+.sport-btn.active {
+  background-color: #007bff;
+  color: white;
+  border: 2px solid #0056b3;
+}
