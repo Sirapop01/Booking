@@ -66,12 +66,12 @@ const ReviewPage = () => {
             {isLoading ? (
                 <p>⏳ กำลังโหลดข้อมูล...</p>
             ) : (
-                <div className="stadium-list">
+                <div className="stadium-list12">
                     {stadiums.length > 0 ? (
                         stadiums.map((stadium) => (
                             <button
                                 key={stadium._id}
-                                className={`stadium-item ${selectedStadium?._id === stadium._id ? "selected" : ""}`}
+                                className={`stadium-item12 ${selectedStadium?._id === stadium._id ? "selected" : ""}`}
                                 onClick={() => setSelectedStadium(stadium)}
                             >
                                 {stadium.fieldName}
