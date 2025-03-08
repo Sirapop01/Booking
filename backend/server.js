@@ -93,6 +93,7 @@ app.use("/api/favoritearena", favoriteRoutes);
 app.use("/api/business-info-requests", businessInfoRequestRoutes);
 app.use("/api", reviewRoutes);
 app.use("/api", bookingHistoryRoutes);
+app.use("/api/businessOwners", businessOwnerRoutes);
 
 // ✅ Error Handling Middleware
 app.use((err, req, res, next) => {
