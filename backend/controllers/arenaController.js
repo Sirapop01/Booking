@@ -186,7 +186,7 @@ exports.toggleStadiumStatus = async (req, res) => {
 // ✅ ฟังก์ชันคำนวณระยะทาง (Haversine formula)
 const getDistance = (userLocation, arenaLocation) => {
   if (!userLocation || !arenaLocation) return Infinity;
-  
+
   const [lon1, lat1] = userLocation;
   const [lon2, lat2] = arenaLocation;
   const toRad = (value) => (value * Math.PI) / 180;
@@ -196,8 +196,8 @@ const getDistance = (userLocation, arenaLocation) => {
   const dLon = toRad(lon2 - lon1);
 
   const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c; // ระยะทางเป็นกิโลเมตร
@@ -205,48 +205,52 @@ const getDistance = (userLocation, arenaLocation) => {
 
 exports.getFilteredArenas = async (req, res) => {
   try {
-      const { query, sport, status } = req.query;
+    const { query, sport, status, startTime, endTime } = req.query;
+    
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ message: "ไม่พบ Token" });
 
-      // ✅ ดึง Token และถอดรหัส
-      const token = req.headers.authorization?.split(" ")[1];
-      if (!token) return res.status(401).json({ message: "ไม่พบ Token" });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select("location");
+    if (!user) return res.status(404).json({ message: "ไม่พบผู้ใช้" });
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const user = await User.findById(decoded.id).select("location");
-      if (!user) return res.status(404).json({ message: "ไม่พบผู้ใช้" });
+    const userLocation = user.location?.coordinates; // [longitude, latitude]
 
-      const userLocation = user.location?.coordinates; // [longitude, latitude]
+    let filter = {};
 
-      // ✅ เงื่อนไขการค้นหา
-      let filter = {};
+    if (query) filter.fieldName = { $regex: query, $options: "i" };
+    if (sport) {
+      const sportCategories = await SportsCategory.find({ sportName: { $in: sport.split(",") } });
+      const arenaIds = sportCategories.map(sport => sport.arenaId);
+      filter._id = { $in: arenaIds };
+    }
+    if (status === "เปิด") filter.open = true;
 
-      if (query) filter.fieldName = { $regex: query, $options: "i" };
-      
-      if (sport) {
-          const sportCategories = await SportsCategory.find({ sportName: { $in: sport.split(",") } });
-          const arenaIds = sportCategories.map(sport => sport.arenaId);
-          filter._id = { $in: arenaIds };
-      }
+    // ✅ ตรวจสอบช่วงเวลา
+    if (startTime && endTime) {
+      filter.$and = [
+        { startTime: { $lte: startTime } },
+        { endTime: { $gte: endTime } }
+      ];
+    }
 
-      if (status === "เปิด") filter.open = "true";
+    const arenas = await Arena.find(filter).lean();
+    const arenasWithDistance = arenas.map(arena => {
+      const arenaLocation = arena.location?.coordinates;
+      const distance = getDistance(userLocation, arenaLocation);
+      return { ...arena, distance };
+    });
 
-      // ✅ ค้นหาสนาม และคำนวณระยะทาง
-      const arenas = await Arena.find(filter).lean();
-      const arenasWithDistance = arenas.map(arena => {
-          const arenaLocation = arena.location?.coordinates;
-          const distance = getDistance(userLocation, arenaLocation);
-          return { ...arena, distance };
-      });
+    arenasWithDistance.sort((a, b) => a.distance - b.distance);
 
-      // ✅ เรียงลำดับสนามที่ใกล้ที่สุด
-      arenasWithDistance.sort((a, b) => a.distance - b.distance);
-
-      res.json(arenasWithDistance);
+    res.json(arenasWithDistance);
   } catch (error) {
-      console.error("❌ Error filtering arenas:", error);
-      res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
+    console.error("❌ Error filtering arenas:", error);
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
   }
 };
+
+
 
 
 

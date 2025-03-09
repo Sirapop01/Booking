@@ -15,6 +15,9 @@ const Homepage = () => {
   const [selectedSports, setSelectedSports] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("แสดงทั้งหมด");
   const [selectedSport, setSelectedSport] = useState(null);
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+
 
   useEffect(() => {
     fetchArenas(); // ✅ แก้ `fetchArenas` ไม่ถูกกำหนด
@@ -89,6 +92,8 @@ const Homepage = () => {
       if (searchQuery) queryParams.push(`query=${encodeURIComponent(searchQuery)}`);
       if (selectedSports.length > 0) queryParams.push(`sport=${selectedSports.join(",")}`);
       if (selectedStatus === "จองได้") queryParams.push("status=เปิด");
+      if (startTime) queryParams.push(`startTime=${startTime}`);
+      if (endTime) queryParams.push(`endTime=${endTime}`);
 
       const queryString = queryParams.length ? `?${queryParams.join("&")}` : "";
 
@@ -96,19 +101,13 @@ const Homepage = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      // ✅ เรียงลำดับสนามตามระยะห่าง
       const sortedArenas = res.data.sort((a, b) => a.distance - b.distance);
-
       setArenas(sortedArenas);
     } catch (error) {
       console.error("❌ Error searching arenas:", error);
     }
   };
 
-  // ✅ โหลดสนามทั้งหมดเมื่อหน้าเว็บโหลด
-  useEffect(() => {
-    handleSearch();
-  }, []);
 
 
   if (loading) return <div>Loading...</div>;
@@ -149,6 +148,24 @@ const Homepage = () => {
         </div>
 
         <div className="date-time-container">
+          <div className="time-picker">
+            <label>เวลาเปิด</label>
+            <input
+              type="time"
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+            />
+          </div>
+
+          <div className="time-picker">
+            <label>เวลาปิด</label>
+            <input
+              type="time"
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value)}
+            />
+          </div>
+
           <div className="booking-status">
             <label>
               <input
