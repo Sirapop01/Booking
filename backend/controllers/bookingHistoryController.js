@@ -32,32 +32,27 @@ exports.addBookingHistory = async (req, res) => {
 // ✅ ดึงสนามที่ลูกค้าเคยจอง (สำหรับรีวิว)
 exports.getUserBookingHistory = async (req, res) => {
     try {
-        const token = req.headers.authorization?.split(" ")[1];
-        if (!token) {
-            return res.status(401).json({ message: "❌ Unauthorized" });
+        const { userId } = req.query;
+
+        if (!userId) {
+            return res.status(400).json({ message: "❌ ต้องระบุ userId" });
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const userId = decoded.id;
-
-        // ✅ ค้นหาการจองทั้งหมดของผู้ใช้
+        // ✅ ดึงข้อมูลสนามเพิ่มเติม รวมถึงรูปภาพ
         const bookings = await BookingHistory.find({ userId, status: "completed" })
-            .populate("stadiumId", "fieldName");
+            .populate("stadiumId", "fieldName stadiumImage") // ✅ เพิ่ม stadiumImage
+            .select("sportName timeRange bookingDate status stadiumId");
 
         if (!bookings.length) {
-            return res.status(404).json({ message: "❌ คุณยังไม่เคยใช้บริการสนามใด" });
+            return res.status(404).json({ message: "❌ ไม่พบประวัติการจอง" });
         }
 
-        // ✅ ดึงข้อมูลสนามจากการจอง
-        const stadiums = bookings.map(booking => ({
-            _id: booking.stadiumId._id,
-            fieldName: booking.stadiumId.fieldName
-        }));
-
-        res.status(200).json(stadiums);
+        res.status(200).json(bookings);
     } catch (error) {
-        console.error("🚨 Error fetching stadiums used:", error);
-        res.status(500).json({ message: "❌ ไม่สามารถดึงข้อมูลสนามได้" });
+        console.error("🚨 Error fetching booking history:", error);
+        res.status(500).json({ message: "❌ ไม่สามารถดึงประวัติการจองได้" });
     }
 };
+
+
 
