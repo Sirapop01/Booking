@@ -137,6 +137,7 @@
   align-items: center;
   font-size: 14px;
   white-space: nowrap;
+  margin-top: 1rem;
 }
 
 .booking-status label {
