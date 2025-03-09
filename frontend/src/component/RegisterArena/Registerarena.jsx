@@ -226,16 +226,16 @@ const MatchWebForm = () => {
 
         // ✅ แสดง Alert สวยๆ แล้วไปหน้า Information
         Swal.fire({
-          title: "✅ เพิ่มสนามสำเร็จ!",
-          text: "สนามของคุณถูกเพิ่มเรียบร้อยแล้ว",
-          icon: "success",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "ไปที่หน้าข้อมูล",
-        }).then(() => {
-          navigate("/Information"); // ✅ ไปหน้าข้อมูล
-        });
-      }
-
+        title: "✅ เพิ่มสนามสำเร็จ!",
+        text: "สนามของคุณถูกเพิ่มเรียบร้อยแล้ว",
+        icon: "success",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ไปที่หน้าข้อมูล",
+      }).then(() => {
+        navigate(`/Information?arenaId=${response.data.arena._id}`); // ✅ ส่ง arenaId ไปยัง Information
+      });
+     }
+      
     } catch (error) {
       console.error("❌ Register Arena Failed:", error);
 
@@ -247,7 +247,6 @@ const MatchWebForm = () => {
         confirmButtonColor: "#d33",
         confirmButtonText: "ตกลง",
       });
-
       setFormErrors("เกิดข้อผิดพลาดในการส่งข้อมูล");
     }
   };

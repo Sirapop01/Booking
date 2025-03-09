@@ -44,30 +44,40 @@ const VerifyOwnersPage = () => {
     // ✅ โหลดข้อมูลเมื่อเป็น Admin เท่านั้น
     useEffect(() => {
         if (!isAdmin) return;
-
+    
         const fetchOwners = async () => {
             setIsLoading(true);
             try {
                 const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-
+    
                 const response = await fetch(`${API_URL}/pending`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-
+    
                 if (!response.ok) throw new Error("Failed to fetch data");
                 const data = await response.json();
-                console.log("📡 ข้อมูลจาก API:", data); // ✅ Debug Data
-
-                setOwnersData(data);
+    
+                // ✅ ตรวจสอบว่าข้อมูลที่ได้รับมามี `arenaId` หรือไม่
+                console.log("📡 ข้อมูลจาก API:", data);
+    
+                const updatedData = data.map(owner => ({
+                    ...owner,
+                    arenaId: owner.arenaId?._id || "ไม่มี Arena ID" // ✅ เพิ่ม `arenaId` ถ้ามี
+                }));
+    
+                setOwnersData(updatedData);
             } catch (error) {
                 console.error("🚨 Error fetching business owners:", error);
             } finally {
                 setIsLoading(false);
             }
         };
-
+    
         fetchOwners();
     }, [isAdmin]);
+    
+
+    
 
     const handleApprove = async (ownerId, ownerName) => {
         if (!ownerId) {
@@ -77,6 +87,17 @@ const VerifyOwnersPage = () => {
     
         try {
             const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    
+            // ✅ แสดง Loading ระหว่างเรียก API
+            Swal.fire({
+                title: "กำลังอนุมัติ...",
+                text: "กรุณารอสักครู่",
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
     
             // ✅ เรียก API อนุมัติ
             const response = await fetch(`http://localhost:4000/api/notifications/approve/${ownerId}`, {
@@ -92,17 +113,32 @@ const VerifyOwnersPage = () => {
             setOwnersData(prevData => prevData.filter(owner => owner.businessOwnerId?._id !== ownerId));
             setSelectedOwner(null);
     
-            Swal.fire("✅ อนุมัติสำเร็จ!", `เจ้าของสนาม "${ownerName}" ได้รับการอนุมัติแล้ว`, "success");
+            // ✅ แสดง Swal Success
+            Swal.fire({
+                icon: "success",
+                title: "✅ อนุมัติสำเร็จ!",
+                text: `เจ้าของสนาม "${ownerName}" ได้รับการอนุมัติแล้ว`,
+                confirmButtonColor: "#16A34A"
+            });
     
         } catch (error) {
-            Swal.fire("❌ เกิดข้อผิดพลาด!", error.message, "error");
+            // ✅ แสดง Swal Error
+            Swal.fire({
+                icon: "error",
+                title: "❌ เกิดข้อผิดพลาด!",
+                text: error.message,
+                confirmButtonColor: "#DC2626"
+            });
         }
     };
     
     
+    
 
 // ✅ ฟังก์ชันปฏิเสธสนามและส่งอีเมลแจ้งเตือน
-const handleReject = async (ownerId, ownerName) => {
+const handleReject = async (requestId, arenaId, ownerName) => {
+    console.log("🚫 Rejecting Request:", { requestId, arenaId, ownerName });
+
     if (!rejectReason.trim()) {
         Swal.fire({
             icon: "warning",
@@ -113,38 +149,87 @@ const handleReject = async (ownerId, ownerName) => {
         return;
     }
 
+    if (!arenaId) {
+        console.error("❌ Arena ID ไม่พบ!");
+        Swal.fire({
+            icon: "error",
+            title: "เกิดข้อผิดพลาด!",
+            text: "ไม่พบ Arena ID กรุณาลองใหม่",
+            confirmButtonColor: "#DC2626"
+        });
+        return;
+    }
+
     try {
         const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
-        // ✅ เรียก API ปฏิเสธสนาม
-        const response = await fetch(`http://localhost:4000/api/notifications/reject/${ownerId}`, {
+        Swal.fire({
+            title: "กำลังปฏิเสธ...",
+            text: "กรุณารอสักครู่",
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const response = await fetch(`http://localhost:4000/api/notifications/reject/${requestId}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify({ reason: rejectReason })
+            body: JSON.stringify({ reason: rejectReason, arenaId })  // ✅ ส่ง arenaId ไปด้วย
         });
 
         if (!response.ok) {
             throw new Error("❌ ไม่สามารถปฏิเสธคำขอได้");
         }
 
-        // ✅ ลบคำขอออกจาก UI
-        setOwnersData(prevData => prevData.filter(owner => owner.businessOwnerId?._id !== ownerId));
+        setOwnersData(prevData => prevData.filter(request => request._id !== requestId));
         setSelectedOwner(null);
         setShowRejectPopup(false);
 
-        Swal.fire("🚫 ปฏิเสธสำเร็จ!", `เจ้าของสนาม "${ownerName}" ถูกปฏิเสธและลบออกจากระบบ`, "success");
+        Swal.fire({
+            icon: "success",
+            title: "🚫 ปฏิเสธสำเร็จ!",
+            text: `สนาม "${arenaId}" ของ "${ownerName}" ถูกปฏิเสธและลบออกจากระบบ`,
+            confirmButtonColor: "#16A34A"
+        });
 
     } catch (error) {
-        Swal.fire("❌ เกิดข้อผิดพลาด!", error.message, "error");
+        Swal.fire({
+            icon: "error",
+            title: "❌ เกิดข้อผิดพลาด!",
+            text: error.message,
+            confirmButtonColor: "#DC2626"
+        });
     }
 };
 
 
-    
-    if (!isAdmin) return null;
+if (!isAdmin) return null;
+
+const handleSelectOwner = (owner) => {
+    console.log("🔍 Selecting Owner:", owner);
+
+    if (!owner?.arenaId?._id) {
+        console.warn("⚠️ Arena ID ไม่พบสำหรับเจ้าของสนามนี้:", owner);
+    }
+
+    setSelectedOwner({
+        ...owner,
+        arenaId: owner.arenaId?._id || owner.arenaId,  // ✅ กำหนดค่า arenaId ให้แน่ใจว่ามีค่า
+    });
+
+    console.log("📌 Updated selectedOwner:", {
+        ...owner,
+        arenaId: owner.arenaId?._id || owner.arenaId,
+    });
+};
+
+
+
 
     return (
         <div className="verify-container">
@@ -157,7 +242,7 @@ const handleReject = async (ownerId, ownerName) => {
                         {ownersData.map((owner) => (
                             <li
                                 key={owner._id}
-                                onClick={() => setSelectedOwner(owner)}
+                                onClick={() => handleSelectOwner(owner)}  // ✅ ใช้ handleSelectOwner แทน setSelectedOwner
                                 className={`verify-list-item ${selectedOwner?._id === owner._id ? "active" : ""}`}
                             >
                                 {owner.accountName}
@@ -168,6 +253,7 @@ const handleReject = async (ownerId, ownerName) => {
                     <p className="verify-empty">ไม่มีคำร้องขอในขณะนี้</p>
                 )}
             </div>
+
 
             <div className="verify-content">
                 <h2 className="verify-content-title">รายละเอียด</h2>
@@ -246,12 +332,9 @@ const handleReject = async (ownerId, ownerName) => {
                     <div className="reject-popup-buttons">
                         <button className="reject-popup-cancel" onClick={() => setShowRejectPopup(false)}>ยกเลิก</button>
                         <button className="reject-popup-confirm" 
-                            onClick={() => handleReject(selectedOwner.businessOwnerId?._id, selectedOwner.businessOwnerId?.firstName)}>
+                            onClick={() => handleReject(selectedOwner?._id, selectedOwner?.arenaId, selectedOwner?.businessOwnerId?.firstName)}>
                             ยืนยันปฏิเสธ
                         </button>
-
-
-
                     </div>
                 </div>
             </div>

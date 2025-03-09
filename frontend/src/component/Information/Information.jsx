@@ -3,7 +3,7 @@ import './Information.css';
 import NavbarRegis from "../NavbarRegis/NavbarRegis"; // นำ NavbarRegis มาใช้ข้างนอก
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2';
 
 
@@ -12,6 +12,10 @@ const Information = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [isUploading, setIsUploading] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const arenaId = searchParams.get("arenaId"); // ✅ ดึง arenaId จาก URL
+
     const [images, setImages] = useState({
         registration: null,
         idCard: null,
@@ -23,7 +27,8 @@ const Information = () => {
         accountName: '',
         bank: '',
         accountNumber: '',
-        businessOwnerId: ''
+        businessOwnerId: '',
+        arenaId: arenaId || "", // ✅ เพิ่ม arenaId ที่รับมาจาก URL
     });
 
     const [errors, setErrors] = useState({});
@@ -42,6 +47,8 @@ const Information = () => {
                     console.error("❌ Missing user ID in Token");
                     return;
                 }
+    
+                console.log("✅ Arena ID:", arenaId); // ✅ Log Arena ID ที่รับมาจาก URL
     
                 const response = await axios.get("http://localhost:4000/api/business/find-owner", {
                     params: { id: userData.id },
@@ -62,7 +69,8 @@ const Information = () => {
         };
     
         fetchBusinessOwner();
-    }, []);
+    }, [arenaId]); // ✅ ถ้า arenaId เปลี่ยน ค่าจะอัปเดตอัตโนมัติ
+    
     
 
     const handleImageChange = async (event, type) => {
@@ -132,30 +140,40 @@ const Information = () => {
     
         if (!validateForm()) return;
     
+        if (!formData.arenaId) { // ✅ ตรวจสอบว่ามี arenaId หรือไม่
+            Swal.fire({
+                icon: "error",
+                title: "เกิดข้อผิดพลาด!",
+                text: "กรุณาเลือกสนามก่อนทำการลงทะเบียน",
+                confirmButtonText: "ตกลง",
+            });
+            return;
+        }
+    
         try {
             const submissionData = {
                 ...formData,
+                arenaId: formData.arenaId, // ✅ เพิ่ม `arenaId`
                 images: uploadedImages
             };
     
-            console.log("📡 Sending request to API:", submissionData); // ✅ Log ก่อนส่ง API
+            console.log("📡 Sending request to API:", submissionData); // ✅ Debugging
     
             const response = await axios.post("http://localhost:4000/api/business-info-requests/submit", submissionData);
     
-            console.log("✅ API Response:", response.data); // ✅ Log Response จาก API
+            console.log("✅ API Response:", response.data);
     
-            // ✅ แสดง Swal แทน alert
             Swal.fire({
                 icon: "success",
                 title: "ลงทะเบียนสำเร็จ!",
                 text: response.data.message,
                 confirmButtonText: "ตกลง",
             }).then(() => {
-                navigate("/SuccessRegis"); // ✅ ไปยังหน้า SuccessRegis หลังจากกด OK
+                navigate("/SuccessRegis");
             });
     
         } catch (error) {
-            console.error('❌ Submission failed:', error.response?.data || error);
+            console.error("❌ Submission failed:", error.response?.data || error);
     
             Swal.fire({
                 icon: "error",
