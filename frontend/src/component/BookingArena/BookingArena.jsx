@@ -5,6 +5,7 @@ import "./BookingArena.css";
 import { FaHeart } from "react-icons/fa"; // ✅ เพิ่มไอคอนหัวใจ
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
+import Navbar from '../Navbar/Navbar';
 
 const BookingArena = () => {
   const { id } = useParams(); // รับ arenaId จาก URL
@@ -165,97 +166,101 @@ const toggleFavorite = async () => {
   if (!arena) return <div className="loading-text">ไม่พบข้อมูลสนามกีฬา</div>;
 
   return (
-    <div className="booking-arena-container">
-      <div className="arena-card">
-        <div className="main-image-container">
-          <img
-            src={arena.images.length > 0 ? arena.images[0] : "https://via.placeholder.com/400"}
-            alt={arena.fieldName}
-            className="main-image"
-          />
-        </div>
+    <>
+      {/* ✅ เพิ่ม Navbar */}
+      <Navbar />
 
-        <div className="arena-info-container">
-          <div className="arena-left-section">
-            {/* ✅ เพิ่มสถานะของสนามข้างๆชื่อสนาม */}
-            <h2 className="arena-title">
-              {arena.fieldName} 
-              <span className={`status-badge ${arena.open ? "open" : "closed"}`}>
-                {arena.open ? "✅ เปิดให้จอง" : "❌ ปิดชั่วคราว"}
-              </span>
-              <div className="favorite-container78">
-    <FaHeart
-        className={`heart-icon ${isFavorite ? "liked" : ""}`}
-        onClick={toggleFavorite} 
-        style={{ color: isFavorite ? "red" : "gray", cursor: "pointer" }}
-    />
-    <span className="favorite-text78">
-        {isFavorite ? "เพิ่มลงรายการโปรดแล้ว" : "เพิ่มในรายการโปรด"}
-    </span>
-</div>
+      <div className="booking-arena-container">
+        <div className="arena-card">
+          <div className="main-image-container">
+            <img
+              src={arena.images.length > 0 ? arena.images[0] : "https://via.placeholder.com/400"}
+              alt={arena.fieldName}
+              className="main-image"
+            />
+          </div>
 
-            </h2>
+          <div className="arena-info-container">
+            <div className="arena-left-section">
+              {/* ✅ เพิ่มสถานะของสนามข้างๆชื่อสนาม */}
+              <h2 className="arena-title">
+                {arena.fieldName} 
+                <span className={`status-badge ${arena.open ? "open" : "closed"}`}>
+                  {arena.open ? "✅ เปิดให้จอง" : "❌ ปิดชั่วคราว"}
+                </span>
+                <div className="favorite-container78">
+                  <FaHeart
+                    className={`heart-icon ${isFavorite ? "liked" : ""}`}
+                    onClick={toggleFavorite} 
+                    style={{ color: isFavorite ? "red" : "gray", cursor: "pointer" }}
+                  />
+                  <span className="favorite-text78">
+                    {isFavorite ? "เพิ่มลงรายการโปรดแล้ว" : "เพิ่มในรายการโปรด"}
+                  </span>
+                </div>
+              </h2>
 
-            <div className="google-map-box">
-              {arena.location?.coordinates?.length === 2 && (
-                <iframe
-                  src={`https://www.google.com/maps?q=${arena.location.coordinates[1]},${arena.location.coordinates[0]}&z=14&output=embed`}
-                  title="Google Maps"
-                  className="google-map"
-                  allowFullScreen
-                  loading="lazy"
-                />
-              )}
-            </div>
+              <div className="google-map-box">
+                {arena.location?.coordinates?.length === 2 && (
+                  <iframe
+                    src={`https://www.google.com/maps?q=${arena.location.coordinates[1]},${arena.location.coordinates[0]}&z=14&output=embed`}
+                    title="Google Maps"
+                    className="google-map"
+                    allowFullScreen
+                    loading="lazy"
+                  />
+                )}
+              </div>
 
-            <div className="amenities-section">
-              <h3>สิ่งอำนวยความสะดวก</h3>
-              <div className="amenities-list">
-                {arena.amenities.map((item, index) => (
-                  <span key={index} className="amenity-item">✅ {item}</span>
-                ))}
+              <div className="amenities-section">
+                <h3>สิ่งอำนวยความสะดวก</h3>
+                <div className="amenities-list">
+                  {arena.amenities.map((item, index) => (
+                    <span key={index} className="amenity-item">✅ {item}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="booking-conditions">
+                <h3>เงื่อนไขการจอง</h3>
+                <p>เวลาเปิดทำการ: {arena.startTime} - {arena.endTime}</p>
+                <p>{arena.additionalInfo}</p>
               </div>
             </div>
 
-            <div className="booking-conditions">
-              <h3>เงื่อนไขการจอง</h3>
-              <p>เวลาเปิดทำการ: {arena.startTime} - {arena.endTime}</p>
-              <p>{arena.additionalInfo}</p>
+            {/* กลุ่มของสนามย่อย */}
+            <div className="grouped-sub-stadiums">
+              {Object.entries(subStadiums).length > 0 ? (
+                Object.entries(subStadiums).map(([sportName, stadiums]) => (
+                  <div key={sportName} className="sport-group">
+                    <h3 className="sport-title">{sportName}</h3>
+                    <div className="sub-stadium-row">
+                      {stadiums.map((sub) => (
+                        <button
+                          key={sub._id}
+                          className={`sub-stadium-button ${selectedSubStadiums.includes(sub._id) ? "selected" : ""}`}
+                          onClick={() => toggleSubStadiumSelection(sub._id)}
+                        >
+                          <img src={sub.images.length > 0 ? sub.images[0] : "https://via.placeholder.com/150"} alt={sub.name} />
+                          <p>{sub.name}</p>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>ไม่มีสนามย่อยให้เลือก</p>
+              )}
             </div>
           </div>
 
-          {/* กลุ่มของสนามย่อย */}
-          <div className="grouped-sub-stadiums">
-            {Object.entries(subStadiums).length > 0 ? (
-              Object.entries(subStadiums).map(([sportName, stadiums]) => (
-                <div key={sportName} className="sport-group">
-                  <h3 className="sport-title">{sportName}</h3>
-                  <div className="sub-stadium-row">
-                    {stadiums.map((sub) => (
-                      <button
-                        key={sub._id}
-                        className={`sub-stadium-button ${selectedSubStadiums.includes(sub._id) ? "selected" : ""}`}
-                        onClick={() => toggleSubStadiumSelection(sub._id)}
-                      >
-                        <img src={sub.images.length > 0 ? sub.images[0] : "https://via.placeholder.com/150"} alt={sub.name} />
-                        <p>{sub.name}</p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>ไม่มีสนามย่อยให้เลือก</p>
-            )}
-          </div>
+          {/* ปุ่มจอง */}
+          <button className="booking-button" onClick={handleBooking}>
+            จองสนาม ({selectedSubStadiums.length})
+          </button>
         </div>
-
-        {/* ปุ่มจอง */}
-        <button className="booking-button" onClick={handleBooking}>
-          จองสนาม ({selectedSubStadiums.length})
-        </button>
       </div>
-    </div>
+    </>
   );
 };
 

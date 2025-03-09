@@ -1,4 +1,7 @@
 const SportsCategory = require("../models/SportsCategory");
+const Arena = require("../models/Arena");
+const mongoose = require("mongoose");
+
 
 // 📌 ✅ ดึงประเภทกีฬาทั้งหมดของสนามที่เลือก
 exports.getSportsByArena = async (req, res) => {
@@ -60,3 +63,30 @@ exports.deleteSportsCategory = async (req, res) => {
     res.status(500).json({ error: "เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์" });
   }
 };
+
+exports.getArenasBySport = async (req, res) => {
+  try {
+      const { sportName } = req.query;
+
+      if (!sportName) {
+          return res.status(400).json({ message: "กรุณาระบุประเภทกีฬา" });
+      }
+
+      const sportCategory = await SportsCategory.findOne({ sportName });
+
+      if (!sportCategory || !sportCategory.arenaId) {
+          return res.status(404).json({ message: "ไม่พบสนามที่มีประเภทกีฬา" });
+      }
+
+      // ✅ ค้นหาสนามจาก arenaId
+      const arenas = await Arena.find({ _id: { $in: sportCategory.arenaId } });
+
+      res.json(arenas);
+  } catch (error) {
+      console.error("❌ Error fetching arenas by sport:", error);
+      res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
+  }
+};
+
+
+

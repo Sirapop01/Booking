@@ -3,9 +3,9 @@ const arenaController = require('../controllers/arenaController');
 const upload = require('../middlewares/upload'); // เรียกใช้งานตัวใหม่
 const router = express.Router();
 
+
+
 router.post('/registerArena', upload.array('images', 5), arenaController.registerArena);
-
-
 // ✅ API ดึงข้อมูลสนามกีฬา fix
 router.get("/getArenas", arenaController.getArenas);
 
@@ -19,5 +19,7 @@ router.put("/updateArena/:id", arenaController.updateArena);
 router.delete("/deleteArena/:id", arenaController.deleteArena);
 
 router.post("/toggleStatus", arenaController.toggleStadiumStatus);
+router.get("/filteredArenas", arenaController.getFilteredArenas);
+
 
 module.exports = router;

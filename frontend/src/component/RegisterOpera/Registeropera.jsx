@@ -50,6 +50,7 @@ const RegistrationForm = () => {
     }
   };
 
+  // ✅ ตรวจสอบเลขบัตรประชาชนให้ถูกต้อง
   const validateIdCard = (idCard) => {
     if (idCard.length !== 13) return false;
 
@@ -63,9 +64,12 @@ const RegistrationForm = () => {
   };
 
 
+  // ✅ ตรวจสอบข้อมูลก่อนส่ง
   const validateForm = () => {
     let newErrors = {};
     if (!formData.idCard) newErrors.idCard = "กรุณากรอกเลขบัตรประชาชน";
+    else if (!validateIdCard(formData.idCard)) newErrors.idCard = "เลขบัตรประชาชนไม่ถูกต้อง";
+
     if (!formData.firstName) newErrors.firstName = "กรุณากรอกชื่อจริง";
     if (!formData.lastName) newErrors.lastName = "กรุณากรอกนามสกุล";
     if (!formData.dob) newErrors.dob = "กรุณาระบุวันเกิด";
@@ -80,10 +84,10 @@ const RegistrationForm = () => {
   };
 
 
+  // ✅ ฟังก์ชันส่งข้อมูลสมัครสมาชิก
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!validateForm()) return; // ✅ ตรวจสอบข้อมูลก่อนส่ง
+    if (!validateForm()) return;
 
     console.log("🚀 Data being sent to backend:", formData);
 
@@ -94,16 +98,14 @@ const RegistrationForm = () => {
       );
 
       if (response.data.success) {
-        // ✅ เก็บ Email ใน LocalStorage
+        // ✅ เก็บ Token และ Email
+        localStorage.setItem("token", response.data.token);
         localStorage.setItem("registeredEmail", formData.email);
 
-        // ✅ ส่ง Email แจ้งเตือนให้ User
-        // await axios.post("http://localhost:4000/api/notifications/send-email", { email: formData.email });
-
-        alert("สมัครสมาชิกสำเร็จ! โปรดกรอกข้อมูลสนามและรอการอนุมัติ!");
+        alert("✅ สมัครสมาชิกสำเร็จ! โปรดกรอกข้อมูลสนามและรอการอนุมัติ!");
         navigate("/RegisterArena");
       } else {
-        alert(response.data.message || "เกิดข้อผิดพลาดในการสมัครสมาชิก");
+        alert(response.data.message || "❌ เกิดข้อผิดพลาดในการสมัครสมาชิก");
       }
     } catch (error) {
       console.error("🚨 Error registering user:", error.response?.data || error);
@@ -112,11 +114,8 @@ const RegistrationForm = () => {
   };
 
 
-
   return (
     <>
-
-
       <div className="registration-container1">
         <header className="registration-header1">
           <h1>

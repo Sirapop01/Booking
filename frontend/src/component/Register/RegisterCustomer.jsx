@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './RegisterCustomer.css';
 import logo from '../assets/logo.png';
@@ -6,18 +6,6 @@ import axios from 'axios';
 
 function RegisterCustomer() {
   const navigate = useNavigate();
-
-  const locationData = {
-    "กรุงเทพมหานคร": {
-      "เขตบางรัก": ["บางรัก", "สีลม", "มหาพฤฒาราม"],
-      "เขตปทุมวัน": ["ปทุมวัน", "รองเมือง", "ลุมพินี"]
-    },
-    "เชียงใหม่": {
-      "อำเภอเมืองเชียงใหม่": ["ช้างเผือก", "พระสิงห์", "ศรีภูมิ"],
-      "อำเภอหางดง": ["หนองควาย", "หางดง", "น้ำแพร่"]
-    }
-  };
-
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -36,8 +24,44 @@ function RegisterCustomer() {
   });
 
   const [errors, setErrors] = useState({});
+  const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [subdistricts, setSubdistricts] = useState([]);
+
+  // ✅ โหลดรายชื่อจังหวัดจาก API เมื่อ Component โหลด
+  useEffect(() => {
+    axios.get("http://localhost:4000/api/location/provinces")
+      .then((res) => setProvinces(res.data))
+      .catch((err) => console.error("❌ Error fetching provinces:", err));
+  }, []);
+
+  // ✅ โหลดรายชื่ออำเภอเมื่อเปลี่ยนจังหวัด
+  const handleProvinceChange = async (e) => {
+    const provinceName = e.target.value;
+    setFormData({ ...formData, province: provinceName, district: "", subdistrict: "" });
+
+    try {
+      const res = await axios.get(`http://localhost:4000/api/location/districts/${encodeURIComponent(provinceName)}`);
+      setDistricts(res.data);
+      setSubdistricts([]); // รีเซ็ตตำบล
+    } catch (error) {
+      console.error("❌ Error fetching districts:", error);
+    }
+  };
+
+
+  // ✅ โหลดรายชื่อตำบลเมื่อเปลี่ยนอำเภอ
+  const handleDistrictChange = async (e) => {
+    const districtId = e.target.value;
+    setFormData({ ...formData, district: districtId, subdistrict: "" });
+
+    try {
+      const res = await axios.get(`http://localhost:4000/api/location/subdistricts/${formData.province}/${districtId}`);
+      setSubdistricts(res.data);
+    } catch (error) {
+      console.error("❌ Error fetching subdistricts:", error);
+    }
+  };
 
   const validateForm = () => {
     let newErrors = {};
@@ -57,46 +81,54 @@ function RegisterCustomer() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    setFormData(prev => {
-      let updated = { ...prev, [name]: files ? files[0] : value };
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
-      if (name === 'province') {
-        const selectedDistricts = Object.keys(locationData[value] || {});
-        setDistricts(selectedDistricts);
-        setSubdistricts([]);
-        updated.district = '';
-        updated.subdistrict = '';
+    if (name === "province") {
+      setFormData({ ...formData, province: value, district: "", subdistrict: "" });
+      setDistricts([]);
+      setSubdistricts([]);
+
+      try {
+        const res = await axios.get(`http://localhost:4000/api/location/districts/${value}`);
+        setDistricts(res.data);
+      } catch (error) {
+        console.error("❌ Error fetching districts:", error);
       }
+    }
 
-      if (name === 'district') {
-        const selectedSubdistricts = locationData[formData.province]?.[value] || [];
-        setSubdistricts(selectedSubdistricts);
-        updated.subdistrict = '';
+    if (name === "district") {
+      setFormData({ ...formData, district: value, subdistrict: "" });
+      setSubdistricts([]);
+
+      try {
+        const res = await axios.get(`http://localhost:4000/api/location/subdistricts/${formData.province}/${value}`);
+        setSubdistricts(res.data);
+      } catch (error) {
+        console.error("❌ Error fetching subdistricts:", error);
       }
-
-      return updated;
-    });
+    }
   };
+
 
   const handleRegister = async (e) => {
     e.preventDefault();
-  
+
     if (!validateForm()) return;
-  
+
     try {
       const submitFormData = new FormData();
-  
+
       Object.entries(formData).forEach(([key, value]) => {
         if (key === "confirmPassword") return;
         submitFormData.append(key, value);
       });
-  
+
       await axios.post('http://localhost:4000/api/auth/register', submitFormData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-  
+
       alert('✅ สมัครสมาชิกสำเร็จ!');
       navigate('/login');
     } catch (err) {
@@ -104,17 +136,20 @@ function RegisterCustomer() {
       alert('❌ เกิดข้อผิดพลาด: ' + (err.response?.data?.message || 'ลองใหม่อีกครั้ง'));
     }
   };
-  
-  
+
+
 
   return (
     <div className="container1">
-      <header className="header">
-        <img src={logo} alt="MatchWeb Logo" />
-        <h1>MatchWeb</h1>
-        <p>ระบบลงทะเบียนสำหรับผู้ใช้งาน</p>
-      </header>
       <div className="right-side">
+            <header className="register-header">
+        <h1>
+          <img src={logo} alt="MatchWeb Logo" className="register-logo" />
+          <span>MatchWeb</span> {/* 🔹 ใส่ <span> เพื่อให้ขยับเฉพาะข้อความ */}
+        </h1>
+            <p>ระบบลงทะเบียนสำหรับผู้ใช้งาน</p>
+            </header>
+
         <h2 className="register-heading">ยืนยันข้อมูลการสมัครสมาชิกสำหรับผู้ใช้งาน</h2>
         <p className="subtext">กรุณากรอกข้อมูลและตรวจสอบให้ครบถ้วน</p>
         <form onSubmit={handleRegister}>
@@ -163,24 +198,30 @@ function RegisterCustomer() {
               <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} />
               <label>จังหวัด / อำเภอ / ตำบล *{errors.location && <span className="error-message-register">{errors.location}</span>}</label>
               <div className="location-container">
+                <label>จังหวัด</label>
                 <select name="province" value={formData.province} onChange={handleChange}>
-                  <option value="">จังหวัด</option>
-                  {Object.keys(locationData).map((province) => (
-                    <option key={province} value={province}>{province}</option>
+                  <option value="">เลือกจังหวัด</option>
+                  {provinces.map((province) => (
+                    <option key={province.id} value={province.name_th}>{province.name_th}</option>
                   ))}
                 </select>
+
+                <label>อำเภอ</label>
                 <select name="district" value={formData.district} onChange={handleChange} disabled={!districts.length}>
-                  <option value="">อำเภอ</option>
+                  <option value="">เลือกอำเภอ</option>
                   {districts.map((district) => (
-                    <option key={district} value={district}>{district}</option>
+                    <option key={district.id} value={district.name_th}>{district.name_th}</option>
                   ))}
                 </select>
-                <select name="subdistrict" value={formData.subdistrict} onChange={handleChange} disabled={!subdistricts.length}>
-                  <option value="">ตำบล</option>
+
+                <label>ตำบล</label>
+                <select name="subdistrict" value={formData.subdistrict} onChange={(e) => setFormData({ ...formData, subdistrict: e.target.value })} disabled={!subdistricts.length}>
+                  <option value="">เลือกตำบล</option>
                   {subdistricts.map((subdistrict) => (
-                    <option key={subdistrict} value={subdistrict}>{subdistrict}</option>
+                    <option key={subdistrict.id} value={subdistrict.name_th}>{subdistrict.name_th}</option>
                   ))}
                 </select>
+
               </div>
             </div>
           </div>

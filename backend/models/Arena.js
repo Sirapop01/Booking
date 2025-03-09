@@ -27,8 +27,8 @@ const ArenaSchema = new mongoose.Schema(
     additionalInfo: { type: String, default: "" },
     amenities: { type: [String], default: [] },
     images: { type: [String], default: [] },
-    open: { type: Boolean, default: true }, // ✅ เพิ่มสถานะเปิด/ปิด
-    status: { type: String, default: "พร้อมใช้งาน" }, // ✅ เพิ่มสถานะของสนามกีฬา
+    open: { type: Boolean, default: "" }, // ✅ เพิ่มสถานะเปิด/ปิด
+    status: { type: String, default: "" }, // ✅ เพิ่มสถานะของสนามกีฬา
   },
   { timestamps: true }
 );
