@@ -11,7 +11,6 @@ const HistoryBooking = () => {
   const [loading, setLoading] = useState(true);
   const [bookingHistory, setBookingHistory] = useState([]);
 
-  // ✅ ดึง token และ decode userId
   useEffect(() => {
     const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
     if (storedToken) {
@@ -25,7 +24,6 @@ const HistoryBooking = () => {
     setLoading(false);
   }, []);
 
-  // ✅ ดึงข้อมูลประวัติการจองจาก API
   useEffect(() => {
     if (!decodedToken) return;
 
@@ -49,23 +47,28 @@ const HistoryBooking = () => {
     <div className="history-page">
       <Navbar />
       <h1 className="history-title">ประวัติการจอง</h1>
-
+  
       <div className="history-container">
         {bookingHistory.length > 0 ? (
           bookingHistory.map((booking) => (
             <div 
               className="history-card" 
               key={booking._id} 
-              onClick={() => navigate(`/BookingArena/${booking.stadiumId}`)}
+              onClick={() => navigate(`/BookingArena/${booking.stadiumId._id}`)}
             >
               <div className="history-details">
                 <div className="left">
                   <h2>กีฬา: {booking.sportName}</h2>
                   <p><strong>วันที่จอง:</strong> {new Date(booking.bookingDate).toLocaleDateString()}</p>
+                  <p><strong>ช่วงเวลา:</strong> {booking.timeRange}</p>
                   <p><strong>สถานะ:</strong> {booking.status}</p>
+                  <p><strong>สนาม:</strong> {booking.stadiumId?.fieldName || "ไม่พบชื่อสนาม"}</p> {/* ✅ แสดงชื่อสนาม */}
                 </div>
                 <div className="history-image">
-                  <img src={"https://via.placeholder.com/150"} alt="สนามกีฬา" />
+                  <img 
+                    src={booking.stadiumId?.stadiumImage || "https://via.placeholder.com/150"} 
+                    alt={booking.stadiumId?.fieldName || "สนามกีฬา"} 
+                  /> {/* ✅ เพิ่มรูปสนาม */}
                 </div>
               </div>
             </div>
@@ -76,6 +79,8 @@ const HistoryBooking = () => {
       </div>
     </div>
   );
+  
+  
 };
 
 export default HistoryBooking;

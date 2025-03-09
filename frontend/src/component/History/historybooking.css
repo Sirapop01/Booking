@@ -33,6 +33,7 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    color: black;
   }
   
   .history-image img {
