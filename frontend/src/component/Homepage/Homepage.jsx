@@ -14,6 +14,7 @@ const Homepage = () => {
   const [showOnlyAvailable, setShowOnlyAvailable] = useState(true);
   const [selectedSports, setSelectedSports] = useState([]);
   const [selectedStatus, setSelectedStatus] = useState("แสดงทั้งหมด");
+  const [selectedSport, setSelectedSport] = useState(null);
 
   useEffect(() => {
     fetchArenas(); // ✅ แก้ `fetchArenas` ไม่ถูกกำหนด
@@ -64,22 +65,6 @@ const Homepage = () => {
     });
   };
 
-  const handleSearch = async () => {
-    try {
-      const sportQuery = selectedSports.length ? selectedSports.join(",") : "";
-      const statusQuery = selectedStatus === "จองได้" ? "จองได้" : "แสดงทั้งหมด";
-
-      const res = await axios.get(`http://localhost:4000/api/arenas/searchArenas`, {
-        params: { query: searchQuery, sport: sportQuery, status: statusQuery },
-      });
-
-      setArenas(res.data);
-    } catch (error) {
-      console.error("❌ Error searching arenas:", error);
-    }
-  };
-
-
   const handleSportClick = (sportName) => {
     let updatedSports = [...selectedSports];
 
@@ -92,7 +77,38 @@ const Homepage = () => {
     setSelectedSports(updatedSports);
   };
 
+  const handleSearch = async () => {
+    try {
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+      if (!token) {
+        console.error("❌ ไม่มี Token, ไม่สามารถค้นหาได้");
+        return;
+      }
 
+      let queryParams = [];
+      if (searchQuery) queryParams.push(`query=${encodeURIComponent(searchQuery)}`);
+      if (selectedSports.length > 0) queryParams.push(`sport=${selectedSports.join(",")}`);
+      if (selectedStatus === "จองได้") queryParams.push("status=เปิด");
+
+      const queryString = queryParams.length ? `?${queryParams.join("&")}` : "";
+
+      const res = await axios.get(`http://localhost:4000/api/arenas/filteredArenas${queryString}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      // ✅ เรียงลำดับสนามตามระยะห่าง
+      const sortedArenas = res.data.sort((a, b) => a.distance - b.distance);
+
+      setArenas(sortedArenas);
+    } catch (error) {
+      console.error("❌ Error searching arenas:", error);
+    }
+  };
+
+  // ✅ โหลดสนามทั้งหมดเมื่อหน้าเว็บโหลด
+  useEffect(() => {
+    handleSearch();
+  }, []);
 
 
   if (loading) return <div>Loading...</div>;

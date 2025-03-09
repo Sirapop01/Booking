@@ -29,11 +29,7 @@ const ListCard = ({ stadiums }) => {  // ✅ รับ props stadiums จาก 
                 <h3>{stadium.fieldName}</h3>
                 <p>โทร: {stadium.phone}</p>
                 <p>เวลาเปิด: {stadium.startTime} - {stadium.endTime}</p>
-                <p>
-                  พิกัด: {stadium.location && stadium.location.coordinates
-                    ? stadium.location.coordinates.join(', ')
-                    : 'ไม่มีข้อมูลพิกัด'}
-                </p>
+                <p>ระยะห่าง: {stadium.distance ? `${stadium.distance.toFixed(2)} กม.` : "ไม่ระบุ"}</p>
               </div>
             </div>
           ))
