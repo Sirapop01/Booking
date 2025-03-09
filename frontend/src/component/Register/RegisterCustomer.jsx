@@ -141,12 +141,12 @@ function RegisterCustomer() {
 
   return (
     <div className="container1">
-      <header className="header">
-        <img src={logo} alt="MatchWeb Logo" />
-        <h1>MatchWeb</h1>
-        <p>ระบบลงทะเบียนสำหรับผู้ใช้งาน</p>
-      </header>
       <div className="right-side">
+        <header className="header">
+          <img src={logo} alt="MatchWeb Logo" />
+          <h1>MatchWeb</h1>
+          <p>ระบบลงทะเบียนสำหรับผู้ใช้งาน</p>
+        </header>
         <h2 className="register-heading">ยืนยันข้อมูลการสมัครสมาชิกสำหรับผู้ใช้งาน</h2>
         <p className="subtext">กรุณากรอกข้อมูลและตรวจสอบให้ครบถ้วน</p>
         <form onSubmit={handleRegister}>
