@@ -10,36 +10,44 @@ exports.getFavorites = async (req, res) => {
 
         console.log("🔍 Fetching favorites for userId:", userId);
 
-        // ✅ ใช้ populate() เพื่อดึง fieldName จาก stadiumId
+        // ✅ ใช้ populate() เพื่อดึง fieldName, images, startTime, endTime, phone, additionalInfo (เอา distance ออก)
         const favorites = await FavoriteArena.find({ userId })
-    .populate({
-        path: "stadiumId",
-        select: "fieldName images",
-        options: { strictPopulate: false } // ✅ ป้องกัน Error ถ้า stadiumId ไม่มีข้อมูล
-    })
-    .lean();
+            .populate({
+                path: "stadiumId",
+                select: "fieldName images startTime endTime phone additionalInfo",
+                options: { strictPopulate: false } // ✅ ป้องกัน Error ถ้า stadiumId ไม่มีข้อมูล
+            })
+            .lean();
 
-// ✅ ตรวจสอบว่ามีข้อมูลหรือไม่ก่อนส่ง response
-const updatedFavorites = favorites
-    .filter(fav => fav.stadiumId) // ✅ กรองรายการที่ stadiumId เป็น null
-    .map(fav => ({
-        _id: fav._id,
-        userId: fav.userId,
-        stadiumId: fav.stadiumId._id,
-        fieldName: fav.stadiumId.fieldName, // ✅ ดึงชื่อสนาม
-        stadiumImage: fav.stadiumId.images?.[0] || "https://via.placeholder.com/150",
-        createdAt: fav.createdAt
-    }));
+        // ✅ ตรวจสอบค่าที่ดึงมา
+        console.log("📌 Raw favorites from DB:", favorites);
 
-console.log("✅ Found Favorites:", updatedFavorites);
-res.status(200).json(updatedFavorites);
+        // ✅ ตรวจสอบว่ามีข้อมูลหรือไม่ก่อนส่ง response
+        const updatedFavorites = favorites
+            .filter(fav => fav.stadiumId) // ✅ กรองรายการที่ stadiumId เป็น null
+            .map(fav => ({
+                _id: fav._id,
+                userId: fav.userId,
+                stadiumId: fav.stadiumId._id,
+                fieldName: fav.stadiumId.fieldName || "ไม่มีข้อมูล", // ✅ ดึงชื่อสนาม
+                stadiumImage: fav.stadiumId.images?.[0] || "https://via.placeholder.com/150",
+                phone: fav.stadiumId.phone || "ไม่มีข้อมูล", // ✅ ดึงเบอร์โทร
+                startTime: fav.stadiumId.startTime || "ไม่ระบุ", // ✅ ดึงเวลาเปิดสนาม
+                endTime: fav.stadiumId.endTime || "ไม่ระบุ", // ✅ ดึงเวลาปิดสนาม
+                additionalInfo: fav.stadiumId.additionalInfo || "ไม่มีข้อมูลเพิ่มเติม", // ✅ ดึงข้อมูลเพิ่มเติม
+                createdAt: fav.createdAt
+            }));
 
+        console.log("✅ Processed Favorites:", updatedFavorites);
+        res.status(200).json(updatedFavorites);
 
     } catch (error) {
         console.error("❌ Error fetching favorites:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
+
 
 
 
