@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png'; // Path ของโลโก้
@@ -38,7 +38,12 @@ function Login() {
     return true;
   };
   
-
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (storedToken) {
+      navigate("/")
+    }
+  }, []);
 
   const handleLogin = async () => {
   if (!validateForm()) {
