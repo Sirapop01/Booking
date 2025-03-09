@@ -38,6 +38,7 @@ import AdminRegister from "./component/AdminRegister/AdminRegister";
 import Addpromotion from "./component/AddPromo/Addpromotion";
 import Promoowner from "./component/Promotionowner/Promoowner";
 import Booking from "./component/Booking/Booking";
+import HistoryBooking from "./component/History/historybooking";
 
 /**/ 
 
@@ -83,6 +84,7 @@ function App() {
         <Route path="/Promoowner" element={<Promoowner/>} />
         <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
         <Route path="/Booking" element={<Booking />} />
+        <Route path="/historybooking" element={<HistoryBooking />} />
         <Route element={<ProtectedRoute role="superadmin" />}>
         <Route path="/admin/register" element={<AdminRegister />} />
         </Route>
