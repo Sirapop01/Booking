@@ -49,47 +49,47 @@ router.put("/approve/:id", async (req, res) => {
     }
 });
 
-
-// ✅ API ปฏิเสธสนาม
 router.delete("/reject/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        const { reason } = req.body;
+        const { reason, arenaId } = req.body; // ✅ ดึงค่า arenaId และ reason ที่ส่งมาจาก frontend
 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
+        if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(arenaId)) {
             return res.status(400).json({ message: "❌ ID ไม่ถูกต้อง" });
         }
 
-        // ✅ อัปเดตสถานะเจ้าของสนามเป็น "rejected"
-        const owner = await BusinessOwner.findByIdAndUpdate(
-            id,
-            { status: "rejected", rejectReason: reason },
-            { new: true }
-        );
-
-        if (!owner) {
-            return res.status(404).json({ message: "❌ ไม่พบเจ้าของสนาม" });
-        }
-
-        // ✅ ลบคำขอใน `BusinessInfoRequest`
-        const deletedRequest = await BusinessInfoRequest.findOneAndDelete({ businessOwnerId: id });
-
-        if (!deletedRequest) {
+        // ✅ ค้นหาข้อมูลเจ้าของสนามและคำขอ
+        const request = await BusinessInfoRequest.findById(id).populate("businessOwnerId", "email firstName");
+        if (!request) {
             return res.status(404).json({ message: "❌ ไม่พบคำขออนุมัติที่เกี่ยวข้อง" });
         }
 
-        // ✅ ลบ `Arena` ที่เกี่ยวข้องกับเจ้าของสนามนี้
-        await Arena.deleteMany({ businessOwnerId: id });
+        // ✅ ค้นหาและลบ Arena ตาม arenaId เท่านั้น
+        const deletedArena = await Arena.findByIdAndDelete(arenaId);
+        if (!deletedArena) {
+            return res.status(404).json({ message: "❌ ไม่พบสนามที่ต้องการลบ" });
+        }
+
+        // ✅ ลบคำขอใน BusinessInfoRequest
+        await BusinessInfoRequest.findByIdAndDelete(id);
 
         // ✅ ส่งอีเมลแจ้งเตือน
-        await sendRejectionEmail(owner.email, owner.firstName, reason);
+        if (request.businessOwnerId.email) {
+            await sendRejectionEmail(request.businessOwnerId.email, request.businessOwnerId.firstName, reason);
+            console.log("✅ อีเมลแจ้งเตือนการปฏิเสธถูกส่งไปที่:", request.businessOwnerId.email);
+        } else {
+            console.warn("⚠️ ไม่มีอีเมลของเจ้าของสนาม ไม่สามารถส่งอีเมลแจ้งเตือนได้");
+        }
 
-        res.status(200).json({ message: "🚫 ปฏิเสธและลบสนามสำเร็จ!" });
+        res.status(200).json({ message: "🚫 ปฏิเสธคำร้องสำเร็จ! ลบสนามเรียบร้อย และส่งอีเมลแจ้งเตือน" });
 
     } catch (error) {
+        console.error("🚨 Error rejecting request:", error);
         res.status(500).json({ message: "❌ ไม่สามารถปฏิเสธได้", error: error.message });
     }
 });
+
+
 
 
 module.exports = router;

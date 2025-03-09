@@ -34,7 +34,8 @@ const RegistrationSuccess = () => {
           </div>
           <h2 className="success-title">การลงทะเบียนเสร็จสมบูรณ์</h2>
           <p className="success-message">
-            การสมัครสำหรับบัญชีผู้ใช้ผู้ประกอบการของท่านได้ถูกส่งเรียบร้อยแล้ว
+            การสมัครสำหรับบัญชีผู้ประกอบการของท่านได้ถูกส่งเรียบร้อยแล้ว
+            โปรดติดตามช่องทางอีเมลเพื่อตรวจสอบการลงทะเบียนสนาม
           </p>
           <button className="confirm-button" onClick={handleBack}>ตกลง</button>
         </div>

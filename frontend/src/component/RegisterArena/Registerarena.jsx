@@ -232,7 +232,7 @@ const handleSubmit = async () => {
         confirmButtonColor: "#3085d6",
         confirmButtonText: "ไปที่หน้าข้อมูล",
       }).then(() => {
-        navigate("/Information"); // ✅ ไปหน้าข้อมูล
+        navigate(`/Information?arenaId=${response.data.arena._id}`); // ✅ ส่ง arenaId ไปยัง Information
       });
     }
 
