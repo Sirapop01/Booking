@@ -11,22 +11,26 @@ cloudinary.config({
 
 // ✅ ดึงข้อมูลสนามย่อยทั้งหมดของสนามหลัก และประเภทกีฬาที่เลือก
 exports.getSubStadiums = async (req, res) => {
-  try {
-      const { arenaId, sportId } = req.params;
-      const { owner_id } = req.query; // ✅ รับ owner_id จาก query params (optional)
-
-      let query = { arenaId, sportId };
-      if (owner_id) {
-          query.owner_id = owner_id; // ✅ กรองเฉพาะสนามที่เป็นของ owner_id นี้
-      }
-
-      const subStadiums = await SubStadium.find(query);
-      res.status(200).json(subStadiums);
-  } catch (error) {
-      console.error("❌ ไม่สามารถดึงข้อมูลสนามย่อย:", error);
-      res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูล" });
-  }
-};
+    try {
+        const { arenaId, sportId } = req.params;
+        console.log("📌 ค่า arenaId:", arenaId, "sportId:", sportId);
+  
+        if (!arenaId || !sportId) {
+            return res.status(400).json({ message: "❌ arenaId หรือ sportId ไม่ถูกต้อง" });
+        }
+  
+        const subStadiums = await SubStadium.find({ 
+            arenaId: String(arenaId), 
+            sportId: String(sportId) 
+        });
+  
+        res.status(200).json(subStadiums);
+    } catch (error) {
+        console.error("❌ ไม่สามารถดึงข้อมูลสนามย่อย:", error);
+        res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูลสนามย่อย" });
+    }
+  };
+  
 
 
 // ✅ เพิ่มสนามย่อยใหม่ (พร้อมบันทึกลิงก์รูป)
@@ -79,42 +83,34 @@ exports.createSubStadium = async (req, res) => {
 
 // ✅ อัปเดตข้อมูลสนามย่อย (อัปเดตรูป + บันทึกลิงก์ใหม่)
 exports.updateSubStadium = async (req, res) => {
-  try {
-      const { id } = req.params;
-      const { owner_id } = req.body;
-      let updatedData = req.body;
-      let images = [];
+    try {
+        const { id } = req.params;
+        const { owner_id, status } = req.body;
 
-      if (!owner_id) {
-          return res.status(400).json({ message: "❌ owner_id is required" });
-      }
+        console.log("🔍 อัปเดตสนาม ID:", id);
+        console.log("📦 Data ที่ได้รับจาก Frontend:", req.body);
 
-      const existingSubStadium = await SubStadium.findById(id);
-      if (!existingSubStadium) {
-          return res.status(404).json({ message: "❌ ไม่พบสนามย่อย" });
-      }
+        if (!owner_id) {
+            return res.status(400).json({ message: "❌ owner_id is required" });
+        }
 
-      if (existingSubStadium.owner_id.toString() !== owner_id) {
-          return res.status(403).json({ message: "❌ คุณไม่มีสิทธิ์แก้ไขสนามนี้" });
-      }
+        const existingSubStadium = await SubStadium.findById(id);
+        if (!existingSubStadium) {
+            return res.status(404).json({ message: "❌ ไม่พบสนามย่อย" });
+        }
 
-      if (req.files && req.files.length > 0) {
-          for (let file of req.files) {
-              const result = await cloudinary.uploader.upload(file.path, { folder: "substadium" });
-              images.push(result.secure_url);
-          }
-          updatedData.images = images;
-      }
+        if (existingSubStadium.owner_id.toString() !== owner_id) {
+            return res.status(403).json({ message: "❌ คุณไม่มีสิทธิ์แก้ไขสนามนี้" });
+        }
 
-      const updatedSubStadium = await SubStadium.findByIdAndUpdate(id, updatedData, { new: true });
-      res.status(200).json({ message: "✅ อัปเดตสนามย่อยสำเร็จ", subStadium: updatedSubStadium });
-  } catch (error) {
-      console.error("❌ ไม่สามารถอัปเดตสนามย่อย:", error);
-      res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการอัปเดต", error });
-  }
+        const updatedSubStadium = await SubStadium.findByIdAndUpdate(id, { status }, { new: true });
+        res.status(200).json({ message: "✅ อัปเดตสนามย่อยสำเร็จ", subStadium: updatedSubStadium });
+    } catch (error) {
+        console.error("❌ ไม่สามารถอัปเดตสนามย่อย:", error);
+        res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการอัปเดต", error });
+    }
 };
 
-  
 
 exports.deleteSubStadium = async (req, res) => {
   try {
