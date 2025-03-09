@@ -4,7 +4,7 @@ import NavbarRegis from "../NavbarRegis/NavbarRegis"; // นำ NavbarRegis ม�
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom'
-
+import Swal from 'sweetalert2';
 
 
 const Information = () => {
@@ -122,7 +122,11 @@ const Information = () => {
 
     const handleSubmit = async () => {
         if (isUploading) {
-            alert("กรุณารอให้อัปโหลดรูปภาพเสร็จก่อน");
+            Swal.fire({
+                icon: "warning",
+                title: "กรุณารอให้อัปโหลดรูปภาพเสร็จก่อน!",
+                confirmButtonText: "ตกลง",
+            });
             return;
         }
     
@@ -140,11 +144,25 @@ const Information = () => {
     
             console.log("✅ API Response:", response.data); // ✅ Log Response จาก API
     
-            alert(`✅ ${response.data.message}`);
-            navigate("/SuccessRegis");
+            // ✅ แสดง Swal แทน alert
+            Swal.fire({
+                icon: "success",
+                title: "ลงทะเบียนสำเร็จ!",
+                text: response.data.message,
+                confirmButtonText: "ตกลง",
+            }).then(() => {
+                navigate("/SuccessRegis"); // ✅ ไปยังหน้า SuccessRegis หลังจากกด OK
+            });
+    
         } catch (error) {
             console.error('❌ Submission failed:', error.response?.data || error);
-            alert("เกิดข้อผิดพลาดในการส่งข้อมูล");
+    
+            Swal.fire({
+                icon: "error",
+                title: "เกิดข้อผิดพลาด!",
+                text: error.response?.data?.message || "เกิดข้อผิดพลาดในการส่งข้อมูล",
+                confirmButtonText: "ลองใหม่",
+            });
         }
     };
     

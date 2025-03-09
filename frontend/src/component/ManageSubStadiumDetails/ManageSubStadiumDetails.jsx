@@ -172,13 +172,32 @@ useEffect(() => {
 
     const toggleStatus = async (courtId, currentStatus) => {
       const newStatus = currentStatus === "เปิด" ? "ปิดชั่วคราว" : "เปิด";
-      try {
-        await axios.put(`http://localhost:4000/api/substadiums/${courtId}`, { status: newStatus });
-        setCourts(courts.map(court => (court._id === courtId ? { ...court, status: newStatus } : court)));
-      } catch (error) {
-        console.error("❌ Failed to update status:", error);
+      const owner_id = getOwnerIdFromToken(); // ✅ ดึง owner_id จาก Token
+  
+      console.log("📝 Updating status for:", courtId);
+      console.log("🔄 New Status:", newStatus);
+      console.log("👤 Owner ID:", owner_id); // ✅ ดูว่า owner_id มีค่าหรือไม่
+  
+      if (!owner_id) {
+          alert("❌ ไม่พบ owner_id กรุณาเข้าสู่ระบบใหม่!");
+          return;
       }
-    };
+  
+      try {
+          await axios.put(`http://localhost:4000/api/substadiums/${courtId}`, { 
+              status: newStatus, 
+              owner_id // ✅ ส่ง owner_id ไปด้วย
+          });
+  
+          setCourts(courts.map(court => 
+              (court._id === courtId ? { ...court, status: newStatus } : court)
+          ));
+      } catch (error) {
+          console.error("❌ Failed to update status:", error.response?.data || error);
+      }
+  };
+  
+  
 
 
   const handleImageUpload = async (event) => {

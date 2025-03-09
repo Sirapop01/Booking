@@ -137,36 +137,39 @@ const FavoritePage = () => {
   
       {/* ✅ เพิ่ม container เพื่อจัดเรียงเนื้อหาให้ดูเป็นระเบียบ */}
       <div className="favorite-container">
-        <div className="favorite-list-container">
-          {favorites.length > 0 ? (
-            favorites.map((favorite) => (
-              <div 
-                className="favorite-card" 
-                key={favorite._id} 
-                onClick={() => navigate(`/BookingArena/${favorite.stadiumId}`)}
-              >
-                <div className="favorite-details">
-                  <div className="left">
-                    <FaHeart
-                      className={`heart-icon ${favorite.liked ? "liked" : ""}`}
-                      onClick={(e) => {
-                        e.stopPropagation(); // ✅ ป้องกันการกดแล้วเปิดหน้าใหม่
-                        toggleFavorite(favorite.stadiumId);
-                      }}
-                    />
-                    <h2>{favorite.fieldName}</h2>
-                  </div>
-                  <div className="favorite-image">
-                    <img src={favorite.stadiumImage || "https://via.placeholder.com/150"} alt={favorite.fieldName} />
-                  </div>
-                  <p><strong>วันที่เพิ่ม:</strong> {new Date(favorite.createdAt).toLocaleDateString()}  (กดเพื่อจองอีกครั้ง)</p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="no-favorites">ไม่มีรายการโปรดในขณะนี้</p>
-          )}
+      <div className="favorite-list-container">
+  {favorites.length > 0 ? (
+    favorites
+      .filter(favorite => favorite.fieldName && favorite.stadiumId) // ✅ กรองเฉพาะรายการที่มีข้อมูล
+      .map((favorite) => (
+        <div 
+          className="favorite-card" 
+          key={favorite._id} 
+          onClick={() => navigate(`/BookingArena/${favorite.stadiumId}`)}
+        >
+          <div className="favorite-details">
+            <div className="left">
+              <FaHeart
+                className={`heart-icon ${favorite.liked ? "liked" : ""}`}
+                onClick={(e) => {
+                  e.stopPropagation(); // ✅ ป้องกันการกดแล้วเปิดหน้าใหม่
+                  toggleFavorite(favorite.stadiumId);
+                }}
+              />
+              <h2>{favorite.fieldName}</h2>
+            </div>
+            <div className="favorite-image">
+              <img src={favorite.stadiumImage || "https://via.placeholder.com/150"} alt={favorite.fieldName} />
+            </div>
+            <p><strong>วันที่เพิ่ม:</strong> {new Date(favorite.createdAt).toLocaleDateString()}  (กดเพื่อจองอีกครั้ง)</p>
+          </div>
         </div>
+      ))
+  ) : (
+    <p className="no-favorites">ไม่มีรายการโปรดในขณะนี้</p>
+  )}
+</div>
+
       </div>
     </div>
   );

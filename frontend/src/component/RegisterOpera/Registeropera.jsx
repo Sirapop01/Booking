@@ -116,8 +116,6 @@ const RegistrationForm = () => {
 
   return (
     <>
-
-
       <div className="registration-container1">
         <header className="registration-header1">
           <h1>

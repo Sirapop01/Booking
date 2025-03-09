@@ -12,24 +12,29 @@ exports.getFavorites = async (req, res) => {
 
         // ✅ ใช้ populate() เพื่อดึง fieldName จาก stadiumId
         const favorites = await FavoriteArena.find({ userId })
-            .populate({
-                path: "stadiumId",
-                select: "fieldName images"
-            })
-            .lean();
+    .populate({
+        path: "stadiumId",
+        select: "fieldName images",
+        options: { strictPopulate: false } // ✅ ป้องกัน Error ถ้า stadiumId ไม่มีข้อมูล
+    })
+    .lean();
 
-        // ✅ ดึงเฉพาะ fieldName และรูปภาพแรก
-        const updatedFavorites = favorites.map(fav => ({
-            _id: fav._id,
-            userId: fav.userId,
-            stadiumId: fav.stadiumId._id,
-            fieldName: fav.stadiumId.fieldName, // ✅ ดึงชื่อสนามจาก stadiumId
-            stadiumImage: fav.stadiumId.images?.length > 0 ? fav.stadiumId.images[0] : null,
-            createdAt: fav.createdAt
-        }));
+// ✅ ตรวจสอบว่ามีข้อมูลหรือไม่ก่อนส่ง response
+const updatedFavorites = favorites
+    .filter(fav => fav.stadiumId) // ✅ กรองรายการที่ stadiumId เป็น null
+    .map(fav => ({
+        _id: fav._id,
+        userId: fav.userId,
+        stadiumId: fav.stadiumId._id,
+        fieldName: fav.stadiumId.fieldName, // ✅ ดึงชื่อสนาม
+        stadiumImage: fav.stadiumId.images?.[0] || "https://via.placeholder.com/150",
+        createdAt: fav.createdAt
+    }));
 
-        console.log("✅ Found Favorites:", updatedFavorites);
-        res.status(200).json(updatedFavorites);
+console.log("✅ Found Favorites:", updatedFavorites);
+res.status(200).json(updatedFavorites);
+
+
     } catch (error) {
         console.error("❌ Error fetching favorites:", error.message);
         res.status(500).json({ error: "Internal Server Error" });

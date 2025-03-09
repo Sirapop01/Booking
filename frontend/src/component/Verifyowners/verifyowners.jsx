@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import "./verifyowners.css";
+import Swal from "sweetalert2";
+
 
 const API_URL = "http://localhost:4000/api/business-info-requests";
 
@@ -67,58 +69,81 @@ const VerifyOwnersPage = () => {
         fetchOwners();
     }, [isAdmin]);
 
-    // ✅ ฟังก์ชันยืนยัน (อนุมัติ)
-    const handleApprove = async (id) => {
+    const handleApprove = async (ownerId, ownerName) => {
+        if (!ownerId) {
+            Swal.fire("❌ เกิดข้อผิดพลาด!", "Owner ID ไม่ถูกต้อง", "error");
+            return;
+        }
+    
         try {
             const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-
-            const response = await fetch(`${API_URL}/approve/${id}`, {
+    
+            // ✅ เรียก API อนุมัติ
+            const response = await fetch(`http://localhost:4000/api/notifications/approve/${ownerId}`, {
                 method: "PUT",
                 headers: { Authorization: `Bearer ${token}` }
             });
-
-            if (!response.ok) throw new Error("Failed to approve request");
-
-            setOwnersData(prevData => prevData.filter(owner => owner._id !== id));
+    
+            if (!response.ok) {
+                throw new Error("❌ ไม่สามารถอนุมัติคำขอได้");
+            }
+    
+            // ✅ ลบคำขอจาก UI
+            setOwnersData(prevData => prevData.filter(owner => owner.businessOwnerId?._id !== ownerId));
             setSelectedOwner(null);
-            alert("✅ อนุมัติคำร้องสำเร็จ!");
+    
+            Swal.fire("✅ อนุมัติสำเร็จ!", `เจ้าของสนาม "${ownerName}" ได้รับการอนุมัติแล้ว`, "success");
+    
         } catch (error) {
-            console.error("🚨 Error approving request:", error);
-            alert("❌ เกิดข้อผิดพลาดในการอนุมัติ");
+            Swal.fire("❌ เกิดข้อผิดพลาด!", error.message, "error");
         }
     };
+    
+    
 
-    // ✅ ฟังก์ชันปฏิเสธคำร้อง
-    const handleReject = async () => {
-        if (!rejectReason.trim()) {
-            alert("❗ กรุณากรอกเหตุผลในการปฏิเสธ");
-            return;
+// ✅ ฟังก์ชันปฏิเสธสนามและส่งอีเมลแจ้งเตือน
+const handleReject = async (ownerId, ownerName) => {
+    if (!rejectReason.trim()) {
+        Swal.fire({
+            icon: "warning",
+            title: "กรุณากรอกเหตุผล!",
+            text: "❗ จำเป็นต้องระบุเหตุผลในการปฏิเสธคำร้อง",
+            confirmButtonColor: "#FACC15"
+        });
+        return;
+    }
+
+    try {
+        const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+
+        // ✅ เรียก API ปฏิเสธสนาม
+        const response = await fetch(`http://localhost:4000/api/notifications/reject/${ownerId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ reason: rejectReason })
+        });
+
+        if (!response.ok) {
+            throw new Error("❌ ไม่สามารถปฏิเสธคำขอได้");
         }
 
-        try {
-            const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+        // ✅ ลบคำขอออกจาก UI
+        setOwnersData(prevData => prevData.filter(owner => owner.businessOwnerId?._id !== ownerId));
+        setSelectedOwner(null);
+        setShowRejectPopup(false);
 
-            const response = await fetch(`${API_URL}/reject/${selectedOwner._id}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({ reason: rejectReason })
-            });
+        Swal.fire("🚫 ปฏิเสธสำเร็จ!", `เจ้าของสนาม "${ownerName}" ถูกปฏิเสธและลบออกจากระบบ`, "success");
 
-            if (!response.ok) throw new Error("Failed to reject request");
+    } catch (error) {
+        Swal.fire("❌ เกิดข้อผิดพลาด!", error.message, "error");
+    }
+};
 
-            setOwnersData(prevData => prevData.filter(owner => owner._id !== selectedOwner._id));
-            setSelectedOwner(null);
-            setShowRejectPopup(false);
-            alert("🚫 ปฏิเสธคำร้องสำเร็จ!");
-        } catch (error) {
-            console.error("🚨 Error rejecting request:", error);
-            alert("❌ เกิดข้อผิดพลาดในการปฏิเสธคำร้อง");
-        }
-    };
 
+    
     if (!isAdmin) return null;
 
     return (
@@ -148,10 +173,10 @@ const VerifyOwnersPage = () => {
                 <h2 className="verify-content-title">รายละเอียด</h2>
                 {selectedOwner ? (
                     <div className="verify-details">
-                        <p><strong>ชื่อบัญชี:</strong> {selectedOwner.accountName}</p>
-                        <p><strong>ธนาคาร:</strong> {selectedOwner.bank}</p>
-                        <p><strong>เลขบัญชี:</strong> {selectedOwner.accountNumber}</p>
-                        <p><strong>เจ้าของสนาม:</strong> 
+                        <p><strong>ชื่อบัญชี: </strong> {selectedOwner.accountName}</p>
+                        <p><strong>ธนาคาร: </strong> {selectedOwner.bank}</p>
+                        <p><strong>เลขบัญชี: </strong> {selectedOwner.accountNumber}</p>
+                        <p><strong>เจ้าของสนาม: </strong> 
                             {selectedOwner.businessOwnerId
                                 ? `${selectedOwner.businessOwnerId.firstName} ${selectedOwner.businessOwnerId.lastName}`
                                 : "ไม่ระบุ"}
@@ -159,46 +184,49 @@ const VerifyOwnersPage = () => {
                         <p><strong>เลขบัตรประชาชน:</strong> {selectedOwner.businessOwnerId?.idCard || "ไม่มีข้อมูล"}</p>
                         <p><strong>Email:</strong> {selectedOwner.businessOwnerId?.email || "ไม่ระบุ"}</p>
                         <div>
-                          <p><strong>หนังสือจดทะเบียน:</strong></p>
-                          <div className="verify-doc-box">
-                            {selectedOwner.images?.registration ? (
-                              <a href={selectedOwner.images.registration} target="_blank" rel="noopener noreferrer">
-                                <img src={selectedOwner.images.registration} alt="Registration Document" />
-                              </a>
-                            ) : (
-                              <p>ไม่มีเอกสาร</p>
-                            )}
-                          </div>
+                            <div className="verify-img-container">
+                                
+                                {/* รูปถ่ายหนังสือจดทะเบียน */}
+                                {selectedOwner.images?.registration && (
+                                    <div className="verify-img-box">
+                                        <p><strong>รูปถ่ายหนังสือจดทะเบียน</strong></p>
+                                        <a href={selectedOwner.images.registration} target="_blank" rel="noopener noreferrer">
+                                            <img src={selectedOwner.images.registration} alt="Registration Document" />
+                                        </a>
+                                    </div>
+                                )}
+
+                                {/* รูปถ่ายบัตรประชาชน */}
+                                {selectedOwner.images?.idCard && (
+                                    <div className="verify-img-box">
+                                        <p><strong>รูปถ่ายบัตรประชาชน</strong></p>
+                                        <a href={selectedOwner.images.idCard} target="_blank" rel="noopener noreferrer">
+                                            <img src={selectedOwner.images.idCard} alt="ID Card" />
+                                        </a>
+                                    </div>
+                                )}
+
+                                {/* รูปถ่ายของผู้ถือบัตรประชาชน */}
+                                {selectedOwner.images?.idHolder && (
+                                    <div className="verify-img-box">
+                                        <p><strong>รูปถ่ายของผู้ถือบัตรประชาชน</strong></p>
+                                        <a href={selectedOwner.images.idHolder} target="_blank" rel="noopener noreferrer">
+                                            <img src={selectedOwner.images.idHolder} alt="Selfie with ID" />
+                                        </a>
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
-                        <div>
-                          <p><strong>บัตรประชาชน:</strong></p>
-                          <div className="verify-img-box">
-                            {selectedOwner.images?.idCard ? (
-                              <a href={selectedOwner.images.idCard} target="_blank" rel="noopener noreferrer">
-                              <img src={selectedOwner.images.idCard} alt="ID Card" />
-                              </a>
-                            ) : (
-                              <p>ไม่มีรูปบัตรประชาชน</p>
-                            )}
-                          </div>
+                        <div className="verify-button-group">
+                            <button className="verify-button delete" onClick={() => setShowRejectPopup(true)}>ปฏิเสธ</button>
+                            <button className="verify-button confirm" 
+                                onClick={() => handleApprove(selectedOwner.businessOwnerId?._id, selectedOwner.businessOwnerId?.firstName)}>
+                                ยืนยัน
+                            </button>
+
                         </div>
 
-                        <div>
-                          <p><strong>รูปถ่ายคู่กับบัตรประชาชน:</strong></p>
-                          <div className="verify-img-box">
-                            {selectedOwner.images?.idHolder ? (
-                              <a href={selectedOwner.images.idHolder} target="_blank" rel="noopener noreferrer">
-                              <img src={selectedOwner.images.idHolder} alt="Selfie with ID" />
-                              </a>
-                            ) : (
-                              <p>ไม่มีรูปถ่ายคู่กับบัตรประชาชน</p>
-                            )}
-                          </div>
-                        </div>
-
-                        <button className="verify-button delete" onClick={() => setShowRejectPopup(true)}>ปฏิเสธ</button>
-                        <button className="verify-button confirm" onClick={() => handleApprove(selectedOwner._id)}>ยืนยัน</button>
                     </div>
                 ) : (
                     <p className="verify-empty">กรุณาเลือกเจ้าของสนามจากรายการทางซ้าย</p>
@@ -206,14 +234,28 @@ const VerifyOwnersPage = () => {
             </div>
 
             {showRejectPopup && (
-                <div className="verify-popup-overlay">
-                    <div className="verify-popup-box">
-                        <h3>กรุณาระบุเหตุผลในการปฏิเสธ</h3>
-                        <textarea value={rejectReason} onChange={(e) => setRejectReason(e.target.value)} placeholder="กรอกเหตุผลที่นี่..." />
-                        <button onClick={() => setShowRejectPopup(false)}>ยกเลิก</button>
-                        <button onClick={handleReject}>ยืนยันปฏิเสธ</button>
+                <div className="reject-popup-overlay">
+                <div className="reject-popup-box">
+                    <h3 className="reject-popup-title">กรุณาระบุเหตุผลในการปฏิเสธ</h3>
+                    <textarea 
+                        className="reject-popup-textarea" 
+                        value={rejectReason} 
+                        onChange={(e) => setRejectReason(e.target.value)} 
+                        placeholder="กรอกเหตุผลที่นี่..."
+                    />
+                    <div className="reject-popup-buttons">
+                        <button className="reject-popup-cancel" onClick={() => setShowRejectPopup(false)}>ยกเลิก</button>
+                        <button className="reject-popup-confirm" 
+                            onClick={() => handleReject(selectedOwner.businessOwnerId?._id, selectedOwner.businessOwnerId?.firstName)}>
+                            ยืนยันปฏิเสธ
+                        </button>
+
+
+
                     </div>
                 </div>
+            </div>
+            
             )}
         </div>
     );
