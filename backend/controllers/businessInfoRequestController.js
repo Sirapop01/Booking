@@ -8,32 +8,35 @@ const jwt = require("jsonwebtoken");
 // ✅ ส่งคำร้องไปยัง BusinessInfoRequest
 exports.submitBusinessRequest = async (req, res) => {
     try {
-        console.log("📩 Data received from Frontend:", req.body); // ✅ ตรวจสอบค่าที่ถูกส่งจาก Frontend
+        console.log("📩 Data received from Frontend:", req.body);
 
-        const { accountName, bank, accountNumber, businessOwnerId, images } = req.body;
+        const { accountName, bank, accountNumber, businessOwnerId, arenaId, images } = req.body;
 
-        if (!accountName || !bank || !accountNumber || !businessOwnerId || !images) {
+        if (!accountName || !bank || !accountNumber || !businessOwnerId || !arenaId || !images) {
             return res.status(400).json({ message: "❌ ข้อมูลไม่ครบถ้วน" });
         }
 
-        // ✅ ตรวจสอบว่า businessOwnerId มีอยู่ในฐานข้อมูลจริงหรือไม่
+        // ✅ ตรวจสอบ `arenaId` และ `businessOwnerId` ว่ามีจริงในฐานข้อมูลหรือไม่
         const ownerExists = await BusinessOwner.findById(businessOwnerId);
-        if (!ownerExists) {
-            return res.status(400).json({ message: "❌ ไม่พบเจ้าของธุรกิจนี้" });
-        }
+        if (!ownerExists) return res.status(400).json({ message: "❌ ไม่พบเจ้าของธุรกิจนี้" });
 
+        const arenaExists = await Arena.findById(arenaId);
+        if (!arenaExists) return res.status(400).json({ message: "❌ ไม่พบสนามนี้" });
+
+        // ✅ บันทึกคำขอ
         const newRequest = new BusinessInfoRequest({
             accountName,
             bank,
             accountNumber,
             businessOwnerId,
+            arenaId, // ✅ เพิ่ม arenaId
             images,
             status: "pending",
             createdAt: new Date(),
         });
 
         await newRequest.save();
-        console.log("✅ Request saved to MongoDB:", newRequest); 
+        console.log("✅ Request saved to MongoDB:", newRequest);
 
         res.status(201).json({ message: "✅ ส่งคำร้องสำเร็จ!", request: newRequest });
 
@@ -43,17 +46,25 @@ exports.submitBusinessRequest = async (req, res) => {
     }
 };
 
+
 // ✅ ดึงเฉพาะคำร้องที่ยังไม่ได้รับการอนุมัติ (`status: pending`)
 exports.getPendingRequests = async (req, res) => {
     try {
         const requests = await BusinessInfoRequest.find({ status: "pending" })
-            .populate("businessOwnerId", "firstName lastName email idCard phoneNumber"); // ✅ ดึงข้อมูลเจ้าของสนาม
+            .populate("businessOwnerId", "firstName lastName email idCard phoneNumber")
+            .populate("arenaId", "_id fieldName location"); // ✅ ดึงข้อมูลสนามด้วย
+
+        console.log("📡 Pending Requests Data:", JSON.stringify(requests, null, 2));
+
         res.status(200).json(requests);
     } catch (error) {
         console.error("🚨 Error fetching pending requests:", error);
         res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูล", error: error.message });
     }
 };
+
+
+
 
 // ✅ อนุมัติคำร้อง และย้ายไป BusinessInfo
 exports.approveRequest = async (req, res) => {
@@ -98,53 +109,49 @@ exports.approveRequest = async (req, res) => {
 // ✅ ปฏิเสธคำร้อง พร้อมระบุเหตุผล
 exports.rejectRequest = async (req, res) => {
     try {
-        const { reason } = req.body;
+        const { reason, arenaId } = req.body;
         const requestId = req.params.id;
 
-        console.log("📩 Reject Request Received:", requestId, "Reason:", reason);
+        console.log("📩 Reject Request Received:", requestId, "Arena ID:", arenaId, "Reason:", reason);
 
-        if (!reason) {
-            return res.status(400).json({ message: "❌ กรุณาระบุเหตุผลในการปฏิเสธ" });
+        if (!reason || !arenaId) {
+            return res.status(400).json({ message: "❌ กรุณาระบุเหตุผลในการปฏิเสธ และ Arena ID" });
         }
 
-        // ✅ ค้นหาคำร้องที่ถูกปฏิเสธ
         const request = await BusinessInfoRequest.findById(requestId);
         if (!request) {
             return res.status(404).json({ message: "❌ ไม่พบคำร้องขอ" });
         }
 
-        const businessOwnerId = request.businessOwnerId; // ✅ ดึง `businessOwnerId`
-        console.log("🔍 businessOwnerId ที่ต้องลบสนาม:", businessOwnerId);
-
-        // ✅ ย้ายข้อมูลไป Collection `RejectedRequests`
         const rejectedData = new RejectedRequest({
             accountName: request.accountName,
             bank: request.bank,
             accountNumber: request.accountNumber,
-            businessOwnerId: businessOwnerId,
+            businessOwnerId: request.businessOwnerId,
+            arenaId: arenaId,
             images: request.images,
             rejectReason: reason
         });
         await rejectedData.save();
 
-        // ✅ ลบคำร้องออกจาก `businessInfoRequests`
         await BusinessInfoRequest.findByIdAndDelete(requestId);
 
-        // ✅ ลบ Arena ที่เป็นของ `businessOwnerId`
-        const relatedArenas = await Arena.find({ businessOwnerId });
-        console.log("🔍 สนามที่เกี่ยวข้อง:", relatedArenas);
+        const deletedArena = await Arena.findByIdAndDelete(arenaId);
 
-        if (relatedArenas.length > 0) {
-            const deletedArenas = await Arena.deleteMany({ businessOwnerId });
-            console.log("✅ ลบสนามที่เกี่ยวข้อง:", deletedArenas.deletedCount, "รายการ");
-        } else {
-            console.warn("⚠️ ไม่พบสนามที่เกี่ยวข้องกับ ownerId:", businessOwnerId);
+        if (!deletedArena) {
+            console.warn("⚠️ ไม่พบสนามที่เกี่ยวข้องกับ arenaId:", arenaId);
+            return res.status(404).json({ message: "❌ ไม่พบสนามที่ต้องการลบ" });
         }
 
-        res.status(200).json({ message: "🚫 ปฏิเสธคำร้องสำเร็จ! ลบสนามเรียบร้อย แต่เก็บบัญชีเจ้าของไว้" });
+        console.log("✅ สนามที่ถูกลบ:", deletedArena);
+
+        res.status(200).json({ message: `🚫 ปฏิเสธคำร้องสำเร็จ! สนาม ${arenaId} ถูกลบออกจากระบบ` });
 
     } catch (error) {
         console.error("🚨 Error rejecting request:", error);
         res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการปฏิเสธคำร้อง", error: error.message });
     }
 };
+
+
+

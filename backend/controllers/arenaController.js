@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 const Arena = require("../models/Arena");
+const User = require("../models/User")
+const SportsCategory = require("../models/SportsCategory")
 const BusinessOwner = require("../models/BusinessOwner");
-
+const jwt = require("jsonwebtoken");
 // ✅ ฟังก์ชัน Register สนามกีฬา (รับ URL ของรูปภาพ)
 exports.registerArena = async (req, res) => {
   try {
@@ -181,38 +183,74 @@ exports.toggleStadiumStatus = async (req, res) => {
   }
 };
 
-exports.searchArenasByFieldName = async (req, res) => {
-  try {
-      const { query } = req.query;
+// ✅ ฟังก์ชันคำนวณระยะทาง (Haversine formula)
+const getDistance = (userLocation, arenaLocation) => {
+  if (!userLocation || !arenaLocation) return Infinity;
 
-      const arenas = await Arena.find({
-          fieldName: { $regex: query, $options: "i" } // ค้นหาจาก fieldName แบบ Case Insensitive
-      });
+  const [lon1, lat1] = userLocation;
+  const [lon2, lat2] = arenaLocation;
+  const toRad = (value) => (value * Math.PI) / 180;
 
-      res.status(200).json(arenas);
-  } catch (error) {
-      console.error("❌ Error searching arenas:", error);
-      res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการค้นหาสนามกีฬา" });
-  }
+  const R = 6371; // รัศมีโลก (กิโลเมตร)
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c; // ระยะทางเป็นกิโลเมตร
 };
 
-
-exports.getArenasBySport = async (req, res) => {
+exports.getFilteredArenas = async (req, res) => {
   try {
-    const { sportName } = req.params;
+    const { query, sport, status, startTime, endTime } = req.query;
+    
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ message: "ไม่พบ Token" });
 
-    const sports = await SportsCategory.find({ sportName }).select("arenaId");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select("location");
+    if (!user) return res.status(404).json({ message: "ไม่พบผู้ใช้" });
 
-    if (!sports.length) {
-      return res.status(404).json({ message: "❌ ไม่พบสนามกีฬาสำหรับประเภทนี้" });
+    const userLocation = user.location?.coordinates; // [longitude, latitude]
+
+    let filter = {};
+
+    if (query) filter.fieldName = { $regex: query, $options: "i" };
+    if (sport) {
+      const sportCategories = await SportsCategory.find({ sportName: { $in: sport.split(",") } });
+      const arenaIds = sportCategories.map(sport => sport.arenaId);
+      filter._id = { $in: arenaIds };
+    }
+    if (status === "เปิด") filter.open = true;
+
+    // ✅ ตรวจสอบช่วงเวลา
+    if (startTime && endTime) {
+      filter.$and = [
+        { startTime: { $lte: startTime } },
+        { endTime: { $gte: endTime } }
+      ];
     }
 
-    const arenaIds = sports.map(sport => sport.arenaId);
-    const arenas = await Arena.find({ _id: { $in: arenaIds } });
+    const arenas = await Arena.find(filter).lean();
+    const arenasWithDistance = arenas.map(arena => {
+      const arenaLocation = arena.location?.coordinates;
+      const distance = getDistance(userLocation, arenaLocation);
+      return { ...arena, distance };
+    });
 
-    res.status(200).json(arenas);
+    arenasWithDistance.sort((a, b) => a.distance - b.distance);
+
+    res.json(arenasWithDistance);
   } catch (error) {
-    console.error("❌ Error fetching arenas by sport:", error);
-    res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการค้นหาสนามกีฬา" });
+    console.error("❌ Error filtering arenas:", error);
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
   }
 };
+
+
+
+
+

@@ -36,6 +36,7 @@ const businessInfoRequestRoutes = require('./routes/businessInfoRequestRoutes');
 const reviewRoutes = require("./routes/reviewRoutes");
 const bookingHistoryRoutes = require("./routes/bookingHistoryRoutes");
 
+
 // ✅ กำหนด CORS
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",")
@@ -92,7 +93,9 @@ app.use("/api/chat", chatRoutes); // ✅ ใช้ "/api/chat" แทน "/api" 
 app.use("/api/favoritearena", favoriteRoutes);
 app.use("/api/business-info-requests", businessInfoRequestRoutes);
 app.use("/api", reviewRoutes);
-app.use("/api", bookingHistoryRoutes);
+app.use("/api/bookinghistories", bookingHistoryRoutes);
+app.use("/api/businessOwners", businessOwnerRoutes);
+
 
 // ✅ Error Handling Middleware
 app.use((err, req, res, next) => {

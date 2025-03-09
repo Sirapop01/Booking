@@ -1,298 +1,321 @@
 @import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 
-  /* รูปแบบของฟอร์ม */
-  .form-container099 {
-    position: relative;
-    top: 15px;
-    max-width: 1500px;
-    width: 1500px;
-    margin: 50px auto;
-    background-color: #ffffff;
-    color: #000000;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    overflow: auto; /* ✅ อนุญาตให้เลื่อนแนวตั้ง */
-    max-height: 90vh; /* ✅ จำกัดความสูงไม่ให้ล้นจอ */
-    z-index: 2; /* ทำให้ฟอร์มอยู่เหนือ fade */
-    background: rgba(255, 255, 255, 0.9); /* ทำให้โปร่งแสง */
-    margin-top: -60px;
-  }
-
-  .containerRe {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    background-image: url("../assets/Blackground/Yahoo.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  /* ✅ ใช้ ::before สร้าง overlay fade */
-  .containerRe::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3)); /* ปรับความเข้มของสีที่นี่ */
-    z-index: 1; /* ให้ overlay อยู่เหนือ background */
-  }
-  
-  .form-header099 {
-    width: 100vw; /* ให้ Navbar กว้างเต็มจอ */
-    max-width: 100%;
-    background-color: #07213A; /* สีพื้นหลัง */
-    padding: 20px 0; /* ลด padding ด้านบน-ล่างให้เล็กลง */
-    height: 80px; /* ปรับความสูงให้เล็กลง */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-  
-  .header099 {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* ระยะห่างระหว่างโลโก้กับข้อความ */
-    justify-content: center;
-  }
-  
-  .logo099 {
-    width: 80px; /* ปรับขนาดโลโก้ให้พอดี */
-    height: auto;
-  }
-  
-  .header-title {
-    font-size: 42px; /* ทำให้ตัวหนังสือใหญ่ขึ้น */
-    color: #ffffff;
-    font-family: 'Kanit', sans-serif;
-    margin-top: 1px;
-  }
-  
-  /* เเก้ขนาดช่อง 3 ช่อง*/
-  .form-content099 {
-    display: grid;
-    grid-template-columns: 2fr 2fr 2fr; /* ปรับขนาดแต่ละ column */
-    gap: 5px
+/* รูปแบบของฟอร์ม */
+.form-container099 {
+  position: relative;
+  top: 15px;
+  max-width: 1500px;
+  width: 1500px;
+  margin: 50px auto;
+  background-color: #ffffff;
+  color: #000000;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: auto;
+  /* ✅ อนุญาตให้เลื่อนแนวตั้ง */
+  max-height: 90vh;
+  /* ✅ จำกัดความสูงไม่ให้ล้นจอ */
+  z-index: 2;
+  /* ทำให้ฟอร์มอยู่เหนือ fade */
+  background: rgba(255, 255, 255, 0.9);
+  /* ทำให้โปร่งแสง */
+  margin-top: -60px;
 }
 
-  
-  .form-section099 {
-    background-color: #f9f9f9;
-    padding: 15px;
-    width: 90%;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .image-section099 .image-upload099 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
-    border: 2px dashed #cccccc;
-    border-radius: 8px;
-    font-size: 48px;
-    color: #aaaaaa;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  /* การจัดการรูปภาพ */
-  .uploaded-images099 {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 15px;
-  }
-  
-  .uploaded-image-container099 {
-    position: relative;
-    display: inline-block;
-    margin: 5px;
-  }
-  
-  .uploaded-image099 {
-    max-width: 100px;
-    max-height: 100px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-  }
-  
-  .remove-image-button099 {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: red;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .remove-image-button099:hover {
-    background-color: darkred;
-  }
-  
-  
-  .image-upload099 span {
-    font-size: 16px;
-    color: #166CBF;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  /* ข้อความแจ้งเตือน */
-  .error-message {
-    color: red;
-    font-size: 14px;
-    margin-top: 10px;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  /* ฟิลด์อินพุต */
-  .field-section099 label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333333;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  .field-section099 input,
-  .field-section099 textarea {
-    width: 90%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #cccccc;
-    border-radius: 4px;
-    font-size: 14px;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  .field-section099 textarea {
-    resize: none;
-    height: 80px;
-    width: 90%;
-    
-  }
-  
-  .large-textarea099 {
-    width: 90%;
-    position: relative;
-    top: 10px;
-    height: 150px;
-    resize: none;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  /* ส่วนเพิ่มเติม */
-  .additional-section099 .checkbox-group099 {
-    display: grid;
-    position: relative;
-    top: 8px;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 15px;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  .additional-section099 .checkbox-group099 div {
-    display: flex;
-    align-items: center;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  .additional-section099 input[type="checkbox"] {
-    margin-right: 8px;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  /* ฟุตเตอร์ฟอร์ม */
-  .form-footer099 {
-    text-align: center;
-    margin-top: 20px;
-    
-    
-  }
-  
-  .form-footer099 button {
-    background-color: #007bff;
-    color: #ffffff;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-family: 'Kanit', sans-serif;
-  }
-  
-  .form-footer099 button:hover {
-    background-color: #0056b3;
-    
-  }
+.containerRe {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../assets/Blackground/Yahoo.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .form-section099  {
-    font-family: 'Kanit', sans-serif;
-    
-  }
+/* ✅ ใช้ ::before สร้าง overlay fade */
+.containerRe::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3));
+  /* ปรับความเข้มของสีที่นี่ */
+  z-index: 1;
+  /* ให้ overlay อยู่เหนือ background */
+}
 
-  .react-time-picker {
-    max-width: 100px !important; /* ลดขนาดโดยรวม */
-    max-height: 50px;
-    border: none;
-  }
-  
-  .react-time-picker__inputGroup input {
-    width: 30px !important; /* ปรับขนาดช่องตัวเลข */
-    font-size: 14px;
-    text-align: center;
-    height: 20px;
-    border: none;
-  }
-  
-  .react-time-picker__clock {
-    width: 30px !important;
-  }
-  
-  .swal2-popup {
-    font-family: "Kanit", sans-serif !important;
-    border-radius: 10px;
-  }
-  
-  .swal2-title {
-    font-size: 24px !important;
-    font-weight: bold;
-  }
-  
-  .swal2-content {
-    font-size: 18px !important;
-    color: #333;
-  }
-  
-  .swal2-confirm {
-    background-color: #007bff !important;
-    font-size: 18px;
-    padding: 10px 20px;
-    border-radius: 5px;
-  }
-  
-  .swal2-icon {
-    width: 80px !important;
-    height: 80px !important;
-  }
-  
+.form-header099 {
+  width: 100vw;
+  /* ให้ Navbar กว้างเต็มจอ */
+  max-width: 100%;
+  background-color: #07213A;
+  /* สีพื้นหลัง */
+  padding: 20px 0;
+  /* ลด padding ด้านบน-ล่างให้เล็กลง */
+  height: 80px;
+  /* ปรับความสูงให้เล็กลง */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.time-input {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  width: 130px;
+}
+
+.header099 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* ระยะห่างระหว่างโลโก้กับข้อความ */
+  justify-content: center;
+}
+
+.logo099 {
+  width: 80px;
+  /* ปรับขนาดโลโก้ให้พอดี */
+  height: auto;
+}
+
+.header-title {
+  font-size: 42px;
+  /* ทำให้ตัวหนังสือใหญ่ขึ้น */
+  color: #ffffff;
+  font-family: 'Kanit', sans-serif;
+  margin-top: 1px;
+}
+
+/* เเก้ขนาดช่อง 3 ช่อง*/
+.form-content099 {
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr;
+  /* ปรับขนาดแต่ละ column */
+  gap: 5px
+}
+
+
+.form-section099 {
+  background-color: #f9f9f9;
+  padding: 15px;
+  width: 90%;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.image-section099 .image-upload099 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  border: 2px dashed #cccccc;
+  border-radius: 8px;
+  font-size: 48px;
+  color: #aaaaaa;
+  font-family: 'Kanit', sans-serif;
+}
+
+/* การจัดการรูปภาพ */
+.uploaded-images099 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.uploaded-image-container099 {
+  position: relative;
+  display: inline-block;
+  margin: 5px;
+}
+
+.uploaded-image099 {
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.remove-image-button099 {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.remove-image-button099:hover {
+  background-color: darkred;
+}
+
+
+.image-upload099 span {
+  font-size: 16px;
+  color: #166CBF;
+  font-family: 'Kanit', sans-serif;
+}
+
+/* ข้อความแจ้งเตือน */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+  font-family: 'Kanit', sans-serif;
+}
+
+/* ฟิลด์อินพุต */
+.field-section099 label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333333;
+  font-family: 'Kanit', sans-serif;
+}
+
+.field-section099 input,
+.field-section099 textarea {
+  width: 90%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: 'Kanit', sans-serif;
+}
+
+.field-section099 textarea {
+  resize: none;
+  height: 80px;
+  width: 90%;
+
+}
+
+.large-textarea099 {
+  width: 90%;
+  position: relative;
+  top: 10px;
+  height: 150px;
+  resize: none;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Kanit', sans-serif;
+}
+
+/* ส่วนเพิ่มเติม */
+.additional-section099 .checkbox-group099 {
+  display: grid;
+  position: relative;
+  top: 8px;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 15px;
+  font-family: 'Kanit', sans-serif;
+}
+
+.additional-section099 .checkbox-group099 div {
+  display: flex;
+  align-items: center;
+  font-family: 'Kanit', sans-serif;
+}
+
+.additional-section099 input[type="checkbox"] {
+  margin-right: 8px;
+  font-family: 'Kanit', sans-serif;
+}
+
+/* ฟุตเตอร์ฟอร์ม */
+.form-footer099 {
+  text-align: center;
+  margin-top: 20px;
+
+
+}
+
+.form-footer099 button {
+  background-color: #007bff;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Kanit', sans-serif;
+}
+
+.form-footer099 button:hover {
+  background-color: #0056b3;
+
+}
+
+.form-section099 {
+  font-family: 'Kanit', sans-serif;
+
+}
+
+.react-time-picker {
+  max-width: 100px !important;
+  /* ลดขนาดโดยรวม */
+  max-height: 50px;
+  border: none;
+}
+
+.react-time-picker__inputGroup input {
+  width: 30px !important;
+  /* ปรับขนาดช่องตัวเลข */
+  font-size: 14px;
+  text-align: center;
+  height: 20px;
+  border: none;
+}
+
+.react-time-picker__clock {
+  width: 30px !important;
+}
+
+.swal2-popup {
+  font-family: "Kanit", sans-serif !important;
+  border-radius: 10px;
+}
+
+.swal2-title {
+  font-size: 24px !important;
+  font-weight: bold;
+}
+
+.swal2-content {
+  font-size: 18px !important;
+  color: #333;
+}
+
+.swal2-confirm {
+  background-color: #007bff !important;
+  font-size: 18px;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.swal2-icon {
+  width: 80px !important;
+  height: 80px !important;
+}
