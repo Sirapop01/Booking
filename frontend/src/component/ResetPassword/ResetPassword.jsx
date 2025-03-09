@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./ResetPassword.css";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import logo from "../assets/lago.png";
 
 function ResetPassword() {
   const { token } = useParams();
@@ -33,43 +34,43 @@ function ResetPassword() {
   };
 
   return (
-    <div className="reset-password-container">
-      <h1 className="main-title">เปลี่ยนรหัสผ่านใหม่</h1>
-      <div className="reset-password-box">
-        <h2>รีเซ็ตรหัสผ่าน</h2>
+    <div className="new-reset-password-container">
+      <div className="new-reset-password-box">
+        <img src={logo} alt="Logo" className="reset-logo" />
+        <h1>รีเซ็ตรหัสผ่าน</h1>
+        <p>กรุณากรอกรหัสผ่านใหม่ของคุณด้านล่าง</p>
         <form onSubmit={handleReset}>
-          <div className="input-group">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="กรอกรหัสผ่านใหม่"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-            />
-            <span onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
-          </div>
+        <div className="new-input-group-reset">
+          <label htmlFor="new-password">รหัสผ่านใหม่</label>
+          <input
+            id="new-password"
+            type="password"
+            placeholder="Enter new password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            required
+          />
+        </div>
 
-          <div className="input-group">
+          <div className="new-input-group-reset">
+            <label htmlFor="confirm-password">ยืนยันรหัสผ่าน</label>
             <input
-              type={showConfirmPassword ? "text" : "password"}
-              placeholder="ยืนยันรหัสผ่านใหม่"
+              id="confirm-password"
+              type="password"
+              placeholder="Confirm new password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
-            <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
           </div>
 
-          <button type="submit">ยืนยัน</button>
+          <button type="submit" className="new-reset-button">Confirm</button>
         </form>
-        {message && <p className="message">{message}</p>}
+        {message && <p className="new-message">{message}</p>}
       </div>
     </div>
   );
+
 }
 
 export default ResetPassword;
