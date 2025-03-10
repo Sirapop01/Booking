@@ -22,8 +22,8 @@ const BookingSchema = new mongoose.Schema(
       required: true,
     },
     timeRange: {
-      type: String,
-      required: true, // เช่น "10:00 - 12:00"
+      start: { type: String, required: true }, // เช่น "10:00"
+      end: { type: String, required: true },   // เช่น "12:00"
     },
     status: {
       type: String,
