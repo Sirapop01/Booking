@@ -22,9 +22,13 @@
     border-bottom: 2px solid #ccc;
 }
 
-.image-top{
-    margin-right: auto;
+.image-top {
+    width: 300px; 
+    height: 200px; 
+    object-fit: contain;
+    display: block;
 }
+
 
 .info-top{
     margin-left: auto;

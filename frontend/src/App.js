@@ -41,15 +41,16 @@ import HistoryBooking from "./component/History/historybooking";
 import VerifyOnwers from "./component/Verifyowners/verifyowners"
 import ReviewPage from './component/ReviewPage/ReviewPage';
 import Payment from './component/Payment/Payment'
-
+import AuthProvider from './AuthProvider'
 
 /**/
 
 function App() {
+
   return (
     <BrowserRouter>
+      <AuthProvider />
       <Routes>
-
         <Route path='/' element={<Homepage />} />
         <Route path="/RegisterChoice" element={<RegisterChoice />} />
         <Route path="/login" element={<Login />} />
@@ -91,7 +92,7 @@ function App() {
         <Route path="/historybooking" element={<HistoryBooking />} />
         <Route path='/payment' element={<Payment />} />
 
-        
+
         <Route element={<ProtectedRoute role="superadmin" />}>
           <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/verifyOwners" element={<VerifyOnwers />} />

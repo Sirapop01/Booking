@@ -29,3 +29,5 @@ exports.submitBusinessInfo = async (req, res) => {
         res.status(500).json({ message: 'เกิดข้อผิดพลาดในการส่งคำร้อง', error: error.message });
     }
 };
+
+
