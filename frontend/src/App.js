@@ -40,7 +40,7 @@ import Booking from "./component/Booking/Booking";
 import HistoryBooking from "./component/History/historybooking";
 import VerifyOnwers from "./component/Verifyowners/verifyowners"
 import ReviewPage from './component/ReviewPage/ReviewPage';
-
+import Payment from './component/Payment/Payment'
 
 
 /**/
@@ -89,6 +89,9 @@ function App() {
         <Route path="/review" element={<ReviewPage />} />
         <Route path="/Booking" element={<Booking />} />
         <Route path="/historybooking" element={<HistoryBooking />} />
+        <Route path='/payment' element={<Payment />} />
+
+        
         <Route element={<ProtectedRoute role="superadmin" />}>
           <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/verifyOwners" element={<VerifyOnwers />} />
