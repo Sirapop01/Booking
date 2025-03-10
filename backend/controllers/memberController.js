@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const secret = "MatchWeb";
 require("dotenv").config();
 const nodemailer = require("nodemailer");
+const axios = require("axios")
 
 exports.register = async (req, res) => {
   console.log(req.body)
@@ -163,16 +164,43 @@ exports.logout = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
-    const { id } = req.params; // รับ ID จาก URL
-    const updateData = req.body; // ข้อมูลที่ส่งมาอัปเดต
+    const { id } = req.params;
+    let updateData = req.body;
 
-    // ตรวจสอบว่าผู้ใช้มีอยู่จริงหรือไม่
+    // ✅ ตรวจสอบว่าผู้ใช้มีอยู่จริงหรือไม่
     const existingUser = await User.findById(id);
     if (!existingUser) {
       return res.status(404).json({ message: "ไม่พบผู้ใช้ในระบบ" });
     }
 
-    // อัปเดตข้อมูลผู้ใช้
+    // ✅ ตรวจสอบว่ามีการเปลี่ยนแปลงที่อยู่หรือไม่
+    if (updateData.province || updateData.district || updateData.subdistrict) {
+      const addressQuery = `${updateData.subdistrict}, ${updateData.district}, ${updateData.province}, Thailand`;
+      const encodedAddress = encodeURIComponent(addressQuery);
+
+      try {
+        // 🔹 ใช้ Nominatim API เพื่อดึงค่าพิกัด lat, lng
+        const response = await axios.get(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}`
+        );
+
+        if (response.data.length > 0) {
+          const { lat, lon } = response.data[0];
+          updateData.location = {
+            type: "Point",
+            coordinates: [parseFloat(lon), parseFloat(lat)],
+          };
+          console.log("📌 อัปเดตพิกัดใหม่:", updateData.location);
+        } else {
+          return res.status(400).json({ message: "❌ ไม่สามารถดึงพิกัดที่อยู่ได้" });
+        }
+      } catch (error) {
+        console.error("❌ Error fetching geolocation:", error);
+        return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตพิกัด" });
+      }
+    }
+
+    // ✅ อัปเดตข้อมูลผู้ใช้ใน Database
     const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
 
     return res.status(200).json({

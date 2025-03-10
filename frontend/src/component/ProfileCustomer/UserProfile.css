@@ -332,3 +332,11 @@ h3 {
   background: #f87171;
   /* 🔴 สีแดงอ่อนลง */
 }
+
+.input-group select {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+}

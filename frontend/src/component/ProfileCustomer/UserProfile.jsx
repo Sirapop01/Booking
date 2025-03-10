@@ -17,6 +17,9 @@ const UserProfile = () => {
   const [token, setToken] = useState("");
   const [profileImage, setProfileImage] = useState(null);
   const [newProfileImage, setNewProfileImage] = useState(null);
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [subdistricts, setSubdistricts] = useState([]);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
@@ -66,6 +69,40 @@ const UserProfile = () => {
       getMB();
     }
   }, [id]);
+
+  // ✅ โหลดรายชื่อจังหวัด
+  useEffect(() => {
+    axios.get("http://localhost:4000/api/location/provinces")
+      .then((res) => setProvinces(res.data))
+      .catch((err) => console.error("❌ Error fetching provinces:", err));
+  }, []);
+
+  // ✅ โหลดอำเภอเมื่อเลือกจังหวัด
+  const handleProvinceChange = async (e) => {
+    const provinceName = e.target.value;
+    setMember({ ...member, province: provinceName, district: "", subdistrict: "" });
+
+    try {
+      const res = await axios.get(`http://localhost:4000/api/location/districts/${provinceName}`);
+      setDistricts(res.data);
+      setSubdistricts([]);
+    } catch (error) {
+      console.error("❌ Error fetching districts:", error);
+    }
+  };
+
+  // ✅ โหลดตำบลเมื่อเลือกอำเภอ
+  const handleDistrictChange = async (e) => {
+    const districtName = e.target.value;
+    setMember({ ...member, district: districtName, subdistrict: "" });
+
+    try {
+      const res = await axios.get(`http://localhost:4000/api/location/subdistricts/${member.province}/${districtName}`);
+      setSubdistricts(res.data);
+    } catch (error) {
+      console.error("❌ Error fetching subdistricts:", error);
+    }
+  };
 
 
   const getMB = async () => {
@@ -269,11 +306,11 @@ const UserProfile = () => {
         </div>
 
         <nav>
-        <button onClick={() => navigate('/historybooking')}>ประวัติการจอง</button>
-        <button onClick={() => navigate('/FavoritesList')}>รายการโปรด</button>
-        <button onClick={() => navigate('/')}>ค้นหาสนาม</button>
-        <button onClick={() => navigate('/promotion')}>โปรโมชั่น</button>
-        <button onClick={() => navigate('/Discount')}>คูปอง</button>
+          <button onClick={() => navigate('/historybooking')}>ประวัติการจอง</button>
+          <button onClick={() => navigate('/FavoritesList')}>รายการโปรด</button>
+          <button onClick={() => navigate('/')}>ค้นหาสนาม</button>
+          <button onClick={() => navigate('/promotion')}>โปรโมชั่น</button>
+          <button onClick={() => navigate('/Discount')}>คูปอง</button>
         </nav>
         <button className="logout-button" onClick={toggleLogout}>ลงชื่อออก</button>
       </aside>
@@ -330,21 +367,55 @@ const UserProfile = () => {
         <section className="location-info">
           <h3>
             📍 บริเวณที่สนใจ
-            <FaPencilAlt className="edit-icon" onClick={toggleEdit} />
+            <FaPencilAlt className="edit-icon" onClick={() => setIsEditable(true)} />
           </h3>
           <div className="form-grid">
-            <div className="input-group">
-              <label>ตำบล/แขวง</label>
-              <input type="text" name="subdistrict" value={member?.subdistrict || ""} onChange={handleChange} readOnly={!isEditable} />
-            </div>
-            <div className="input-group">
-              <label>อำเภอ/เขต</label>
-              <input type="text" name="district" value={member?.district || ""} onChange={handleChange} readOnly={!isEditable} />
-            </div>
-            <div className="input-group">
-              <label>จังหวัด</label>
-              <input type="text" name="province" value={member?.province || ""} onChange={handleChange} readOnly={!isEditable} />
-            </div>
+            {isEditable ? (
+              <>
+                <div className="input-group">
+                  <label>จังหวัด</label>
+                  <select name="province" value={member.province || ""} onChange={handleProvinceChange}>
+                    <option value="">เลือกจังหวัด</option>
+                    {provinces.map((province) => (
+                      <option key={province.name_th} value={province.name_th}>{province.name_th}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="input-group">
+                  <label>อำเภอ</label>
+                  <select name="district" value={member.district || ""} onChange={handleDistrictChange} disabled={!districts.length}>
+                    <option value="">เลือกอำเภอ</option>
+                    {districts.map((district) => (
+                      <option key={district.name_th} value={district.name_th}>{district.name_th}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="input-group">
+                  <label>ตำบล</label>
+                  <select name="subdistrict" value={member.subdistrict || ""} onChange={(e) => setMember({ ...member, subdistrict: e.target.value })} disabled={!subdistricts.length}>
+                    <option value="">เลือกตำบล</option>
+                    {subdistricts.map((subdistrict) => (
+                      <option key={subdistrict.name_th} value={subdistrict.name_th}>{subdistrict.name_th}</option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="input-group">
+                  <label>จังหวัด</label>
+                  <input type="text" name="province" value={member?.province || ""} readOnly />
+                </div>
+                <div className="input-group">
+                  <label>อำเภอ/เขต</label>
+                  <input type="text" name="district" value={member?.district || ""} readOnly />
+                </div>
+                <div className="input-group">
+                  <label>ตำบล/แขวง</label>
+                  <input type="text" name="subdistrict" value={member?.subdistrict || ""} readOnly />
+                </div>
+              </>
+            )}
           </div>
         </section>
 
