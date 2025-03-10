@@ -1,10 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const upload = multer({ storage: multer.memoryStorage() }); // ✅ ใช้ memoryStorage
+const upload = multer({ storage: multer.memoryStorage() }); 
 const subStadiumController = require("../controllers/subStadiumController");
 
-// ✅ ดึงข้อมูลสนามย่อยทั้งหมด
+// ✅ เพิ่มเส้นทางสำหรับดึงข้อมูลสนามย่อยแต่ละสนาม (วางไว้ก่อน `/:arenaId/:sportId`)
+router.get("/details/:id", subStadiumController.getSubStadiumDetails);
+
+// ✅ ดึงข้อมูลสนามย่อยทั้งหมด (ต้องวางไว้หลัง `/details/:id`)
 router.get("/:arenaId/:sportId", subStadiumController.getSubStadiums);
 
 // ✅ เพิ่มสนามย่อยใหม่ (รองรับอัปโหลดหลายไฟล์)

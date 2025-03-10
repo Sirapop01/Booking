@@ -107,3 +107,28 @@
 .booking-button:hover {
   background: #002244;
 }
+
+.time-slot-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.time-slot {
+  padding: 10px 15px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.time-slot:hover {
+  background: #0056b3;
+}
+
+.time-slot.reserved {
+  background: #ccc;
+  cursor: not-allowed;
+}

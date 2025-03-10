@@ -1,6 +1,7 @@
 const SubStadium = require("../models/subStadiumModel");
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
+const mongoose = require("mongoose");
 
 // 📌 ตั้งค่า Cloudinary
 cloudinary.config({
@@ -85,31 +86,37 @@ exports.createSubStadium = async (req, res) => {
 exports.updateSubStadium = async (req, res) => {
     try {
         const { id } = req.params;
-        const { owner_id, status } = req.body;
-
-        console.log("🔍 อัปเดตสนาม ID:", id);
+        console.log("📌 อัปเดตสนาม ID:", id);
         console.log("📦 Data ที่ได้รับจาก Frontend:", req.body);
 
-        if (!owner_id) {
-            return res.status(400).json({ message: "❌ owner_id is required" });
+        if (!id) {
+            console.log("❌ ไม่มี ID ถูกส่งมา");
+            return res.status(400).json({ message: "❌ กรุณาส่งค่า ID" });
         }
 
-        const existingSubStadium = await SubStadium.findById(id);
-        if (!existingSubStadium) {
+        const updatedFields = req.body; // ✅ ใช้ค่า req.body ทั้งหมด
+
+        // ✅ ใช้ findByIdAndUpdate และคืนค่าข้อมูลใหม่
+        const updatedSubStadium = await SubStadium.findByIdAndUpdate(
+            id,
+            { $set: updatedFields }, // ✅ อัปเดตเฉพาะฟิลด์ที่ถูกส่งมา
+            { new: true } // ✅ คืนค่าข้อมูลที่อัปเดตแล้ว
+        );
+
+        if (!updatedSubStadium) {
+            console.log("❌ ไม่พบสนามย่อย ID:", id);
             return res.status(404).json({ message: "❌ ไม่พบสนามย่อย" });
         }
 
-        if (existingSubStadium.owner_id.toString() !== owner_id) {
-            return res.status(403).json({ message: "❌ คุณไม่มีสิทธิ์แก้ไขสนามนี้" });
-        }
+        console.log("✅ ข้อมูลหลังอัปเดต:", updatedSubStadium);
 
-        const updatedSubStadium = await SubStadium.findByIdAndUpdate(id, { status }, { new: true });
         res.status(200).json({ message: "✅ อัปเดตสนามย่อยสำเร็จ", subStadium: updatedSubStadium });
     } catch (error) {
         console.error("❌ ไม่สามารถอัปเดตสนามย่อย:", error);
         res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการอัปเดต", error });
     }
 };
+
 
 
 exports.deleteSubStadium = async (req, res) => {
@@ -145,6 +152,35 @@ exports.deleteSubStadium = async (req, res) => {
       console.error("❌ ไม่สามารถลบสนามย่อย:", error);
       res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการลบสนามย่อย", error });
   }
+};
+
+// ✅ ดึงข้อมูลสนามย่อยตาม ID
+exports.getSubStadiumDetails = async (req, res) => {
+    try {
+        const { id } = req.params;
+        console.log("📌 API ถูกเรียกใช้งาน - SubStadium ID:", id);
+
+        // ✅ ตรวจสอบว่า ID ที่รับมาเป็น ObjectId ที่ถูกต้องหรือไม่
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            console.log("❌ รูปแบบ ID ไม่ถูกต้อง:", id);
+            return res.status(400).json({ message: "❌ ID ไม่ถูกต้อง" });
+        }
+
+        // ✅ ลองค้นหาว่ามี ID นี้อยู่ใน Database หรือไม่
+        const subStadium = await SubStadium.findById(id);
+
+        if (!subStadium) {
+            console.log("❌ ไม่พบสนามย่อย ID:", id);
+            return res.status(404).json({ message: "❌ ไม่พบสนามย่อย" });
+        }
+
+        console.log("✅ ข้อมูลสนามย่อยที่พบ:", subStadium);
+
+        res.status(200).json(subStadium);
+    } catch (error) {
+        console.error("❌ API ERROR:", error);
+        res.status(500).json({ message: "❌ Internal Server Error", error });
+    }
 };
 
 
