@@ -116,19 +116,24 @@
 }
 
 .time-slot {
-  padding: 10px 15px;
-  border: none;
-  background: #007bff;
-  color: white;
-  border-radius: 5px;
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #ddd;
+  background: black;
   cursor: pointer;
 }
 
 .time-slot:hover {
-  background: #0056b3;
+  background: #01a5f1;
 }
 
 .time-slot.reserved {
   background: #ccc;
   cursor: not-allowed;
 }
+
+.time-slot.selected {
+  background: #4caf50;
+  color: white;
+}
+

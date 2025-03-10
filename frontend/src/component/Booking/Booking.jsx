@@ -70,36 +70,55 @@ const Booking = () => {
     const timeslots = bookingData[subStadiumId]?.availableTimes || [];
 
     Swal.fire({
-      title: "เลือกเวลาที่ต้องการ",
-      html: `
-        <div class="time-slot-container">
-          ${timeslots
-            .map(
-              (slot) => `
-              <button class="time-slot ${slot.reserved ? "reserved" : ""}" 
-                data-time="${slot.time}" ${slot.reserved ? "disabled" : ""}>
-                ${slot.time}
-              </button>`
-            )
-            .join("")}
-        </div>`,
-      showCancelButton: true,
-      cancelButtonText: "ปิด",
-      showConfirmButton: false,
-      didOpen: () => {
-        document.querySelectorAll(".time-slot").forEach((button) => {
-          button.addEventListener("click", () => {
-            const time = button.getAttribute("data-time");
-            setBookingData((prev) => ({
-              ...prev,
-              [subStadiumId]: { ...prev[subStadiumId], selectedTime: time },
-            }));
-            Swal.close();
-          });
-        });
-      },
+        title: "เลือกเวลาที่ต้องการ",
+        html: `
+            <div class="time-slot-container">
+                ${timeslots
+                    .map(
+                        (slot, index) => `
+                        <button class="time-slot ${slot.reserved ? "reserved" : ""}" 
+                            data-index="${index}" 
+                            ${slot.reserved ? "disabled" : ""}>
+                            ${slot.time}
+                        </button>`
+                    )
+                    .join("")}
+            </div>`,
+        showCancelButton: true,
+        cancelButtonText: "ปิด",
+        showConfirmButton: true,
+        confirmButtonText: "ยืนยัน",
+        didOpen: () => {
+            let selectedTimes = []; // เก็บเวลาที่เลือก
+            document.querySelectorAll(".time-slot").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const index = button.getAttribute("data-index");
+                    const time = timeslots[index].time;
+
+                    if (selectedTimes.includes(time)) {
+                        // ลบออกถ้ากดซ้ำ
+                        selectedTimes = selectedTimes.filter((t) => t !== time);
+                        button.classList.remove("selected");
+                    } else {
+                        // เพิ่มช่วงเวลา
+                        selectedTimes.push(time);
+                        button.classList.add("selected");
+                    }
+                });
+            });
+
+            // ✅ เมื่อกดปุ่ม "ยืนยัน" ให้บันทึกค่าที่เลือก
+            Swal.getConfirmButton().addEventListener("click", () => {
+                setBookingData((prev) => ({
+                    ...prev,
+                    [subStadiumId]: { ...prev[subStadiumId], selectedTime: selectedTimes.join(", ") },
+                }));
+                Swal.close();
+            });
+        },
     });
-  };
+};
+
 
   // ยืนยันการจอง
   const handleBookingConfirmation = () => {
