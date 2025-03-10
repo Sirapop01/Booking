@@ -55,46 +55,45 @@ exports.addBookingHistory = async (req, res) => {
 exports.getUserBookingHistory = async (req, res) => {
     try {
         const { userId } = req.query;
-
         if (!userId) {
             return res.status(400).json({ message: "❌ ต้องระบุ userId" });
         }
 
+        console.log("🔍 Fetching booking history for userId:", userId); // ✅ ตรวจสอบ userId ใน Backend
 
-        console.log("🔍 Fetching booking history for userId:", userId);
+        const bookings = await BookingHistory.find({ userId })
+            .populate({ path: "stadiumId", select: "fieldName images", options: { strictPopulate: false } })
+            .populate({ path: "subStadiumId", select: "name images", options: { strictPopulate: false } })
+            .lean();
 
-        // ✅ ดึงข้อมูลสนามเพิ่มเติม รวมถึง `fieldName` และ `images`
-        let bookings = await BookingHistory.find({ userId })
-            .populate({
-                path: "stadiumId",
-                select: "fieldName images",
-                options: { strictPopulate: false }
-            })
-            .lean(); // ✅ ใช้ lean() เพื่อให้ MongoDB คืนค่าเป็น Object  
+        console.log("📌 Raw bookings from DB:", bookings); // ✅ ตรวจสอบค่าที่ดึงมา
 
-        console.log("📌 Raw bookings from DB:", bookings);
+        if (!bookings.length) {
+            console.log("❌ ไม่พบประวัติการจอง");
+            return res.status(404).json({ message: "❌ ไม่พบประวัติการจอง" });
+        }
 
-        // ✅ กรองข้อมูลที่ไม่มีสนาม และดึง `images[0]` ถ้ามี
-        const updatedBookings = bookings
-            .filter(booking => booking.stadiumId) // ✅ กรองรายการที่ไม่มีสนาม
-            .map(booking => ({
-                _id: booking._id,
-                userId: booking.userId,
-                stadiumId: booking.stadiumId._id,
-                fieldName: booking.stadiumId.fieldName || "ไม่พบชื่อสนาม",
-                stadiumImage: booking.stadiumId.images?.[0] || "https://via.placeholder.com/150",
-                sportName: booking.sportName,
-                timeRange: booking.timeRange,
-                bookingDate: booking.bookingDate,
-                status: booking.status
-            }));
+        const updatedBookings = bookings.map(booking => ({
+            _id: booking._id,
+            userId: booking.userId,
+            stadiumId: booking.stadiumId?._id,
+            fieldName: booking.stadiumId?.fieldName || "ไม่พบชื่อสนาม",
+            stadiumImage: booking.subStadiumId?.images?.[0] || booking.stadiumId?.images?.[0] || "https://via.placeholder.com/150",
+            subStadiumId: booking.subStadiumId?._id,
+            subStadiumName: booking.subStadiumId?.name || "ไม่พบชื่อสนามย่อย",
+            sportName: booking.sportName,
+            timeSlots: booking.timeSlots || [],
+            bookingDate: booking.bookingDate,
+            status: booking.status
+        }));
 
         console.log("✅ Processed Booking History:", updatedBookings);
         res.status(200).json(updatedBookings);
-
     } catch (error) {
         console.error("❌ Error fetching booking history:", error.message);
         res.status(500).json({ message: "❌ ไม่สามารถดึงประวัติการจองได้" });
     }
 };
+
+
 

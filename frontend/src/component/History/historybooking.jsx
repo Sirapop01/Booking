@@ -27,11 +27,14 @@ const HistoryBooking = () => {
   useEffect(() => {
     if (!decodedToken) return;
 
+    console.log("📌 Fetching booking history for userId:", decodedToken.id); // ✅ ตรวจสอบค่า userId ก่อนเรียก API
+
     const fetchBookingHistory = async () => {
       try {
         const response = await axios.get(
           `http://localhost:4000/api/bookinghistories?userId=${decodedToken.id}`
         );
+        console.log("📌 Booking History Data:", response.data); // ✅ ตรวจสอบข้อมูลที่ได้รับจาก API
         setBookingHistory(response.data);
       } catch (error) {
         console.error("❌ ไม่สามารถดึงข้อมูลประวัติการจอง:", error);
@@ -39,7 +42,8 @@ const HistoryBooking = () => {
     };
 
     fetchBookingHistory();
-  }, [decodedToken]);
+}, [decodedToken]);
+
 
   if (loading) return <div>กำลังโหลดข้อมูล...</div>;
 
@@ -61,8 +65,12 @@ const HistoryBooking = () => {
                   <h2>กีฬา: {booking.sportName}</h2>
                   <p><strong>วันที่จอง:</strong> {new Date(booking.bookingDate).toLocaleDateString()}</p>
                   
-                  {/* ✅ แสดงช่วงเวลาที่จอง */}
-                  <p><strong>ช่วงเวลา:</strong> {booking.timeSlots.join(", ")}</p>
+                  {/* ✅ ตรวจสอบ `timeSlots` ก่อนใช้ */}
+                  {booking.timeSlots.length > 0 ? (
+                    <p><strong>ช่วงเวลา:</strong> {booking.timeSlots.join(", ")}</p>
+                  ) : (
+                    <p><strong>ช่วงเวลา:</strong> ไม่ระบุ</p>
+                  )}
   
                   <p>
                     <strong>สถานะ:</strong> 
@@ -89,7 +97,8 @@ const HistoryBooking = () => {
         )}
       </div>
     </div>
-  ); 
+  );
+  
 };
 
 export default HistoryBooking;
