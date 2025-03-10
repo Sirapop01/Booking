@@ -1,0 +1,61 @@
+/* superadmin.css */
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+
+.superadmin-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: url('./Images/adbg1.jpg') no-repeat center center fixed;
+  background-size: cover;
+  padding: 20px;
+  text-align: center;
+}
+
+.superadmin-box {
+  background: rgba(255, 255, 255, 0.2); /* กล่องโปร่งแสง */
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px); /* เบลอพื้นหลัง */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 500px;
+  
+}
+
+.superadmin-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+  
+}
+
+.superadmin-button {
+  padding: 14px 28px;
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+  background-color: #1E40AF;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+  width: 100%;
+  max-width: 300px;
+  margin-top : 20px;
+  font-family: "Kanit", sans-serif;
+}
+
+.superadmin-button:hover {
+  background-color: #3B82F6;
+  transform: scale(1.08);
+  box-shadow: 0px 6px 14px rgba(255, 255, 255, 0.3);
+}

@@ -24,7 +24,7 @@ function ForgotPassword() {
     <div className="new-forgot-password-container">
       <div className="new-forgot-password-box">
         <img src={logo} alt="Matchweb Logo" className="new-logo" />
-        <h1>รีเซ็ตรหัสผ่าน</h1>
+        <h1>ลืมรหัสผ่าน</h1>
         <p>กรุณาป้อนที่อยู่อีเมลที่คุณต้องการให้ส่งข้อมูลการรีเซ็ตรหัสผ่านของคุณไป</p>
         <form onSubmit={handleSubmit}>
           <label htmlFor="email" className="new-label">ป้อนที่อยู่อีเมล</label>

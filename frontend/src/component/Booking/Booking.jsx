@@ -9,121 +9,143 @@ const Booking = () => {
   const location = useLocation();
   const selectedSubStadiums = location.state?.selectedSubStadiums || [];
   const [bookingData, setBookingData] = useState({});
+  const [selectedDate, setSelectedDate] = useState("");
+
+  // ✅ ตรวจสอบและแปลง format ของวันที่เลือกก่อนส่งไป backend
+  const formatDateForAPI = (dateString) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0]; // แปลงเป็น YYYY-MM-DD
+  };
 
   useEffect(() => {
+    if (!selectedDate) {
+      console.warn("⚠ กรุณาเลือกวันที่ก่อน");
+      return;
+    }
+
+    const formattedDate = formatDateForAPI(selectedDate);
+
     selectedSubStadiums.forEach((stadium) => {
-        fetchStadiumDetails(stadium._id);
+      fetchStadiumDetails(stadium._id, formattedDate);
     });
-}, [selectedSubStadiums]);  // ✅ ใช้ selectedSubStadiums เป็น dependencies
+  }, [selectedSubStadiums, selectedDate]);
 
-
-  // ดึงข้อมูลสนามจาก API
-  const fetchStadiumDetails = async (subStadiumId) => {
+  // 📌 ฟังก์ชันดึงข้อมูลสนามและเวลาที่ถูกจองแล้ว
+  const fetchStadiumDetails = async (subStadiumId, selectedDate) => {
     try {
-        const response = await axios.get(`http://localhost:4000/api/substadiums/details/${subStadiumId}`);
-        console.log("📌 API Response:", response.data);  // ✅ Debug Response
+      console.log(`🔍 ดึงข้อมูลสนาม: ${subStadiumId} วันที่: ${selectedDate}`);
 
-        const { openTime, closeTime, reservedSlots = [] } = response.data; // ✅ ตั้งค่า default []
+      // ✅ ดึงเวลาเปิด-ปิดของสนาม พร้อมแนบ `date`
+      const response = await axios.get(
+        `http://localhost:4000/api/substadiums/details/${subStadiumId}?date=${selectedDate}`
+      );
 
-        // สร้างช่วงเวลาทั้งหมด
-        const availableTimes = generateTimeSlots(openTime, closeTime, reservedSlots);
+      const { openTime, closeTime, reservedSlots = [] } = response.data;
 
-        setBookingData((prev) => ({
-            ...prev,
-            [subStadiumId]: { availableTimes, selectedTime: "", openTime, closeTime },
-        }));
+      const availableTimes = generateTimeSlots(openTime, closeTime, reservedSlots);
+
+      console.log("⏳ Available Time Slots:", availableTimes);
+
+      setBookingData((prev) => ({
+        ...prev,
+        [subStadiumId]: { availableTimes, selectedTime: "", openTime, closeTime },
+      }));
     } catch (error) {
-        console.error("❌ Error fetching stadium details:", error);
+      console.error("❌ Error fetching stadium details:", error);
     }
-};
+  };
 
-  // ฟังก์ชันสร้างช่วงเวลาตามเวลาเปิด-ปิด
+  // ✅ ฟังก์ชันสร้างช่วงเวลาเปิด-ปิด (รวมเวลาที่ถูกจองไปแล้ว)
   const generateTimeSlots = (openTime, closeTime, reservedSlots = []) => {
+    console.log("⚡ กำลังสร้าง Time Slots:", openTime, "ถึง", closeTime);
+    console.log("❌ เวลาที่ถูกจอง:", reservedSlots);
+
     let times = [];
-    let startHour = parseInt(openTime.split(":")[0]);  // ดึงค่า ชั่วโมงเปิด
-    let endHour = parseInt(closeTime.split(":")[0]);   // ดึงค่า ชั่วโมงปิด
-
+    let startHour = parseInt(openTime.split(":")[0]);
+    let endHour = parseInt(closeTime.split(":")[0]);
     let currentHour = startHour;
-    let isCrossDay = endHour < startHour;  // ✅ เช็คว่าข้ามวันหรือไม่
+    let isCrossDay = endHour < startHour;
 
-    while (currentHour !== endHour) {
-        let nextHour = (currentHour + 1) % 24; // ✅ รองรับเวลาเกิน 24:00 ไปเป็น 00:00
-        let timeSlot = `${currentHour.toString().padStart(2, "0")}:00 - ${nextHour.toString().padStart(2, "0")}:00`;
+    // ✅ แปลง `reservedSlots` ให้เป็น Set เพื่อค้นหาได้เร็วขึ้น
+    const reservedSet = new Set(reservedSlots.map((slot) => slot.trim()));
 
-        let isReserved = Array.isArray(reservedSlots) && reservedSlots.includes(timeSlot);
-        times.push({ time: timeSlot, reserved: isReserved });
+    while (true) {
+      let nextHour = (currentHour + 1) % 24;
+      let timeSlot = `${currentHour.toString().padStart(2, "0")}:00 - ${nextHour.toString().padStart(2, "0")}:00`;
 
-        currentHour = nextHour;
+      let isReserved = reservedSet.has(timeSlot);
+      times.push({ time: timeSlot, reserved: isReserved });
 
-        // ✅ หยุดลูปเมื่อครบช่วงเวลาเปิด-ปิด
-        if (!isCrossDay && currentHour >= endHour) break;
-        if (isCrossDay && currentHour === endHour) break;
+      currentHour = nextHour;
+      if (!isCrossDay && currentHour >= endHour) break;
+      if (isCrossDay && currentHour === endHour) break;
     }
 
+    console.log("✅ ช่วงเวลาที่พร้อมให้จอง:", times);
     return times;
-};
+  };
 
-
-
-  // แสดงเวลาให้เลือกใน Popup
+  // ✅ แสดง Popup เลือกเวลา
   const showAvailableTimes = (subStadiumId) => {
     const timeslots = bookingData[subStadiumId]?.availableTimes || [];
 
+    console.log("🕒 Available Time Slots:", timeslots);
+
+    if (timeslots.length === 0) {
+      Swal.fire("⚠ ไม่มีช่วงเวลาว่าง", "กรุณาลองเลือกวันอื่น", "warning");
+      return;
+    }
+
     Swal.fire({
-        title: "เลือกเวลาที่ต้องการ",
-        html: `
+      title: "เลือกเวลาที่ต้องการ",
+      html: `
             <div class="time-slot-container">
                 ${timeslots
-                    .map(
-                        (slot, index) => `
+                  .map(
+                    (slot, index) => `
                         <button class="time-slot ${slot.reserved ? "reserved" : ""}" 
                             data-index="${index}" 
                             ${slot.reserved ? "disabled" : ""}>
                             ${slot.time}
                         </button>`
-                    )
-                    .join("")}
+                  )
+                  .join("")}
             </div>`,
-        showCancelButton: true,
-        cancelButtonText: "ปิด",
-        showConfirmButton: true,
-        confirmButtonText: "ยืนยัน",
-        didOpen: () => {
-            let selectedTimes = []; // เก็บเวลาที่เลือก
-            document.querySelectorAll(".time-slot").forEach((button) => {
-                button.addEventListener("click", () => {
-                    const index = button.getAttribute("data-index");
-                    const time = timeslots[index].time;
+      showCancelButton: true,
+      cancelButtonText: "ปิด",
+      showConfirmButton: true,
+      confirmButtonText: "ยืนยัน",
+      didOpen: () => {
+        let selectedTimes = [];
+        document.querySelectorAll(".time-slot").forEach((button) => {
+          button.addEventListener("click", () => {
+            const index = button.getAttribute("data-index");
+            const time = timeslots[index].time;
 
-                    if (selectedTimes.includes(time)) {
-                        // ลบออกถ้ากดซ้ำ
-                        selectedTimes = selectedTimes.filter((t) => t !== time);
-                        button.classList.remove("selected");
-                    } else {
-                        // เพิ่มช่วงเวลา
-                        selectedTimes.push(time);
-                        button.classList.add("selected");
-                    }
-                });
-            });
+            if (selectedTimes.includes(time)) {
+              selectedTimes = selectedTimes.filter((t) => t !== time);
+              button.classList.remove("selected");
+            } else {
+              selectedTimes.push(time);
+              button.classList.add("selected");
+            }
+          });
+        });
 
-            // ✅ เมื่อกดปุ่ม "ยืนยัน" ให้บันทึกค่าที่เลือก
-            Swal.getConfirmButton().addEventListener("click", () => {
-                setBookingData((prev) => ({
-                    ...prev,
-                    [subStadiumId]: { ...prev[subStadiumId], selectedTime: selectedTimes.join(", ") },
-                }));
-                Swal.close();
-            });
-        },
+        Swal.getConfirmButton().addEventListener("click", () => {
+          if (selectedTimes.length === 0) {
+            Swal.fire("⚠ กรุณาเลือกช่วงเวลาก่อนกดยืนยัน", "", "warning");
+            return;
+          }
+          setBookingData((prev) => ({
+            ...prev,
+            [subStadiumId]: { ...prev[subStadiumId], selectedTime: selectedTimes.join(", ") },
+          }));
+          Swal.close();
+        });
+      },
     });
-};
-
-
-  // ยืนยันการจอง
-  const handleBookingConfirmation = () => {
-    console.log("✅ ข้อมูลการจอง:", bookingData);
-    Swal.fire("✅ ยืนยันการจอง", "ระบบได้รับข้อมูลของคุณแล้ว", "success");
   };
 
   return (
@@ -142,18 +164,23 @@ const Booking = () => {
 
                 <div className="booking-info">
                   <label>วันที่จอง</label>
-                  <input type="date" className="input-field" required />
-
-                  <label>ช่วงเวลา</label>
-                  <input 
-                    type="text" 
-                    className="input-field" 
-                    value={bookingData[sub._id]?.selectedTime || ""} 
-                    readOnly 
-                    onClick={() => showAvailableTimes(sub._id)} 
-                    placeholder="คลิกเพื่อเลือกเวลา" 
+                  <input
+                    type="date"
+                    className="input-field"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    required
                   />
 
+                  <label>ช่วงเวลา</label>
+                  <input
+                    type="text"
+                    className="input-field"
+                    value={bookingData[sub._id]?.selectedTime || ""}
+                    readOnly
+                    onClick={() => showAvailableTimes(sub._id)}
+                    placeholder="คลิกเพื่อเลือกเวลา"
+                  />
                   <p className="booking-price">ราคา: ฿ {sub.price || "ไม่ระบุ"} / ชั่วโมง</p>
                 </div>
               </div>
@@ -161,10 +188,6 @@ const Booking = () => {
           ) : (
             <p>ไม่มีสนามที่เลือก</p>
           )}
-
-          <div className="booking-footer">
-            <button className="booking-button" onClick={handleBookingConfirmation}>ยืนยันการจอง</button>
-          </div>
         </div>
       </div>
     </div>

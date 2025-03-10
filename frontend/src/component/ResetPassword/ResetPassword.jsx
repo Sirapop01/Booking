@@ -64,7 +64,7 @@ function ResetPassword() {
             />
           </div>
 
-          <button type="submit" className="new-reset-button">Confirm</button>
+          <button type="submit" className="new-reset-button">ยืนยัน</button>
         </form>
         {message && <p className="new-message">{message}</p>}
       </div>
