@@ -21,7 +21,7 @@ exports.addBookingHistory = async (req, res) => {
         const existingBookings = await BookingHistory.find({
             subStadiumId,
             bookingDate: new Date(bookingDate), // ✅ ใช้ Date Object ให้แน่ใจว่าเปรียบเทียบตรงกัน
-            timeSlots: { $elemMatch: { $in: timeSlots } } // ✅ เช็คการจองซ้ำที่ทับซ้อน
+            timeSlots: { $elemMatch: { $in: timeSlots } } // ✅ เช็คการจองซ้ำที่ทับซ้อนa
         });
 
         if (existingBookings.length > 0) {
