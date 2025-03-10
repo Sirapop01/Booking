@@ -223,11 +223,13 @@
 
 
 /* ✅ ปุ่มจอง */
-.booking-button {
-  background-color: #0c3259 !important;
-  padding: 14px;
-  font-size: 18px;
-  border-radius: 10px;
+.booking-button101 {
+  background-color: #2b7cff;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
   cursor: pointer;
   width: 100%;
   margin-top: 14px;
@@ -235,7 +237,7 @@
   font-family: 'Kanit', sans-serif;
 }
 
-.booking-button:hover {
+.booking-button101:hover {
   background-color: #080a74;
   transform: scale(1.01);
 }

@@ -1,78 +1,139 @@
 .booking-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f5f5f5;
-  }
-  
-  .booking-card {
-    display: flex;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 900px;
-    width: 100%;
-  }
-  
-  .booking-image {
-    width: 50%;
-    border-radius: 10px;
-  }
-  
-  .booking-details {
-    padding: 20px;
-    width: 50%;
-  }
-  
-  .booking-rules {
-    font-size: 14px;
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
-  .booking-rules li {
-    margin-bottom: 5px;
-  }
-  
-  .booking-form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .booking-form label {
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
-  .booking-form input {
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .booking-price {
-    color: red;
-  }
-  
-  .booking-cost {
-    font-size: 20px;
-    font-weight: bold;
-    color: #ff6600;
-  }
-  
-  .booking-button {
-    background: navy;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  .booking-button:hover {
-    background: darkblue;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* ✅ เต็มจอแนวตั้ง */
+  width: 100vw; /* ✅ เต็มจอแนวนอน */
+  padding: 0;
+  background: #f8f9fa;
+  overflow: hidden; /* ✅ ปิดการเลื่อนข้าง */
+}
+
+.booking-content {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* ✅ รูปภาพอยู่ด้านซ้าย */
+.booking-left {
+  flex: 1;
+  height: 100%;
+  max-width: 50%;
+  overflow: hidden;
+}
+
+.booking-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ✅ ทำให้เลื่อนลงได้ */
+.booking-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  max-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-y: auto; /* ✅ เปิดการเลื่อนลง */
+  overflow-x: hidden; /* ✅ ปิดการเลื่อนข้าง */
+  padding-top: 6%;
+  margin-left: -30px;
+}
+
+/* ✅ แยกแบบฟอร์มแต่ละอัน */
+.booking-form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+}
+
+/* ✅ ปรับให้ฟอร์มอยู่ด้านบน */
+.booking-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
+}
+
+/* ✅ ปรับอินพุตให้ดูดี */
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.booking-price {
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+  margin-top: 10px;
+}
+
+/* ✅ ปุ่มยืนยันอยู่ล่างสุด และเลื่อนไปหาได้ */
+.booking-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+  position: relative; /* ✅ ปรับให้ปุ่มอยู่ด้านล่างสุด ไม่ทับ */
+  padding-bottom: 10px; /* ✅ ลด padding-bottom */
+}
+
+.booking-button {
+  background: #003366;
+  color: white;
+  padding: 15px 30px;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  width: 80%;
+  max-width: 400px;
+  margin-top: 10px; /* ✅ ปรับให้มีระยะห่างจากฟอร์ม */
+}
+
+.booking-button:hover {
+  background: #002244;
+}
+
+.time-slot-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.time-slot {
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #ddd;
+  background: black;
+  cursor: pointer;
+}
+
+.time-slot:hover {
+  background: #01a5f1;
+}
+
+.time-slot.reserved {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.time-slot.selected {
+  background: #4caf50;
+  color: white;
+}
+

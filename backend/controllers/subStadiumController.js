@@ -1,6 +1,9 @@
 const SubStadium = require("../models/subStadiumModel");
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
+const mongoose = require("mongoose");
+const moment = require("moment");
+const BookingHistory = require("../models/BookingHistory"); // ✅ นำเข้าตารางจอง
 
 // 📌 ตั้งค่า Cloudinary
 cloudinary.config({
@@ -85,31 +88,37 @@ exports.createSubStadium = async (req, res) => {
 exports.updateSubStadium = async (req, res) => {
     try {
         const { id } = req.params;
-        const { owner_id, status } = req.body;
-
-        console.log("🔍 อัปเดตสนาม ID:", id);
+        console.log("📌 อัปเดตสนาม ID:", id);
         console.log("📦 Data ที่ได้รับจาก Frontend:", req.body);
 
-        if (!owner_id) {
-            return res.status(400).json({ message: "❌ owner_id is required" });
+        if (!id) {
+            console.log("❌ ไม่มี ID ถูกส่งมา");
+            return res.status(400).json({ message: "❌ กรุณาส่งค่า ID" });
         }
 
-        const existingSubStadium = await SubStadium.findById(id);
-        if (!existingSubStadium) {
+        const updatedFields = req.body; // ✅ ใช้ค่า req.body ทั้งหมด
+
+        // ✅ ใช้ findByIdAndUpdate และคืนค่าข้อมูลใหม่
+        const updatedSubStadium = await SubStadium.findByIdAndUpdate(
+            id,
+            { $set: updatedFields }, // ✅ อัปเดตเฉพาะฟิลด์ที่ถูกส่งมา
+            { new: true } // ✅ คืนค่าข้อมูลที่อัปเดตแล้ว
+        );
+
+        if (!updatedSubStadium) {
+            console.log("❌ ไม่พบสนามย่อย ID:", id);
             return res.status(404).json({ message: "❌ ไม่พบสนามย่อย" });
         }
 
-        if (existingSubStadium.owner_id.toString() !== owner_id) {
-            return res.status(403).json({ message: "❌ คุณไม่มีสิทธิ์แก้ไขสนามนี้" });
-        }
+        console.log("✅ ข้อมูลหลังอัปเดต:", updatedSubStadium);
 
-        const updatedSubStadium = await SubStadium.findByIdAndUpdate(id, { status }, { new: true });
         res.status(200).json({ message: "✅ อัปเดตสนามย่อยสำเร็จ", subStadium: updatedSubStadium });
     } catch (error) {
         console.error("❌ ไม่สามารถอัปเดตสนามย่อย:", error);
         res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการอัปเดต", error });
     }
 };
+
 
 
 exports.deleteSubStadium = async (req, res) => {
@@ -147,5 +156,40 @@ exports.deleteSubStadium = async (req, res) => {
   }
 };
 
+// ✅ ดึงข้อมูลสนามย่อยตาม ID
+exports.getSubStadiumDetails = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { date } = req.query; // ✅ รับค่าของวันที่จาก Query Parameters
+        console.log("📌 ดึงข้อมูลสนาม ID:", id, "วันที่:", date);
 
+        const subStadium = await SubStadium.findById(id);
+        if (!subStadium) {
+            return res.status(404).json({ message: "❌ ไม่พบสนามย่อย" });
+        }
 
+        // ✅ ถ้าไม่มีวันที่ ให้ใช้วันที่ปัจจุบัน
+        const selectedDate = date || moment().format("YYYY-MM-DD");
+
+        // ✅ ดึงรายการเวลาที่ถูกจองของวันนี้จาก BookingHistory
+        const reservations = await BookingHistory.find({
+            stadiumId: id, // ✅ ต้องใช้ `stadiumId` ให้ตรงกับ Schema ของ `BookingHistory`
+            bookingDate: new Date(selectedDate), // ✅ ใช้ `bookingDate` แทน `date`
+        }).select("timeRange");
+
+        // ✅ รวมเวลาที่ถูกจองทั้งหมดเป็น Array
+        let reservedSlots = [];
+        reservations.forEach((res) => {
+            if (res.timeRange) {
+                reservedSlots.push(res.timeRange);
+            }
+        });
+
+        console.log("📌 เวลาที่ถูกจองแล้ว:", reservedSlots);
+
+        res.status(200).json({ ...subStadium._doc, reservedSlots });
+    } catch (error) {
+        console.error("❌ ไม่สามารถดึงข้อมูลสนามย่อย:", error);
+        res.status(500).json({ message: "❌ เกิดข้อผิดพลาด", error });
+    }
+};

@@ -1,157 +1,139 @@
 /* verifyowners.css */
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
 
 body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #0F172A;
-  color: white;
-  margin: 0;
-  padding: 0;
+  font-family: 'Kanit', sans-serif;
+  background-color: #F5F7FA;
 }
 
 .verify-container {
   display: flex;
   height: 100vh;
+  background-color: #E2E8F0;
+  
 }
 
 /* Sidebar */
 .verify-sidebar {
   width: 30%;
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   padding: 20px;
   overflow-y: auto;
-  border-right: 2px solid rgba(255, 255, 255, 0.1);
+  border-right: 2px solid #CBD5E1;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Kanit', sans-serif;
 }
 
 .verify-sidebar-title {
-  font-size: 32px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 700;
   margin-bottom: 15px;
-  color: #000000;
+  color: #1E3A8A;
+  text-align: center;
   font-family: 'Kanit', sans-serif;
-  text-align: center; /* จัดให้อยู่ตรงกลาง */
 }
 
 .verify-list {
   list-style-type: none;
   padding: 0;
-  font-family: 'Kanit', sans-serif;
 }
 
 .verify-list-item {
   padding: 12px;
-  background-color: #253f68;
+  background-color: #1E3A8A;
   margin-bottom: 10px;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s ease-in-out, transform 0.1s;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  color: white;
+  text-align: center;
+  font-weight: 500;
 }
 
 .verify-list-item:hover,
 .verify-list-item.active {
-  background-color: #253f68;
+  background-color: #3B82F6;
   transform: scale(1.03);
 }
 
 /* Main Content */
 .verify-content {
   width: 70%;
-  background-color: #374151;
+  background-color: #FFFFFF;
   padding: 25px;
   overflow-y: auto;
   border-radius: 12px;
-  font-family: 'Kanit', sans-serif;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .verify-content-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
   margin-bottom: 15px;
-  color: #F8FAFC;
-  text-align: center; /* จัดให้อยู่ตรงกลาง */
+  color: #1E3A8A;
+  text-align: center;
 }
-
 
 /* Verify Details */
 .verify-details {
-  background-color: #1E293B; /* สีพื้นหลัง */
+  background-color: #F8FAFC;
   padding: 20px;
-  border-radius: 10px; /* มุมโค้งมน */
-  border: 2px solid #FACC15; /* กรอบสีทอง */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* เพิ่มเงา */
-  margin-bottom: 20px;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-
-.verify-details:hover {
-  transform: scale(1.01); /* ขยายเล็กน้อยเมื่อโฮเวอร์ */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  border: 2px solid #3B82F6;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .verify-details p {
-  font-size: 24px;
-  color: #E2E8F0; /* สีข้อความ */
+  font-size: 18px;
+  color: #1E293B;
   margin-bottom: 10px;
   font-weight: 500;
 }
 
 .verify-details p strong {
-  color: #FACC15; /* สีทองสำหรับข้อความสำคัญ */
+  color: #1E3A8A;
 }
-
-
-/* ปรับแต่งไอคอน */
-.verify-details i {
-  margin-right: 8px;
-  color: #38BDF8; /* สีฟ้าสดใสเพื่อให้ดูทันสมัย */
-}
-
 
 .verify-img-container {
   display: flex;
-  justify-content: flex-start; /* จัดชิดซ้าย */
-  align-items: flex-start;
-  flex-wrap: wrap; /* ป้องกันการล้นจอ */
-  gap: 20px; /* เพิ่มช่องว่างระหว่างรูป */
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
   margin-top: 10px;
 }
 
 .verify-img-container img {
-  width: 420px; /* ขนาดรูปเท่ากัน */
-  height: 420px;
-  object-fit: cover; /* ป้องกันรูปผิดสัดส่วน */
-  border-radius: 8px; /* มุมโค้งมน */
-  border: 2px solid #525252; /* กรอบสีทอง */
+  width: 320px;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #CBD5E1;
   padding: 5px;
-  background-color: #2D3748;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  background-color: #FFFFFF;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out;
 }
 
 .verify-img-container img:hover {
-  transform: scale(1.05); /* ขยายเล็กน้อยเมื่อโฮเวอร์ */
+  transform: scale(1.05);
 }
-
-.verify-img-box p {
-  color: #FACC15;
-}
-
 
 /* Buttons */
 .verify-button-group {
   margin-top: 20px;
   display: flex;
+  justify-content: center;
   gap: 12px;
 }
 
 .verify-button {
-  padding: 12px 18px;
+  padding: 12px 20px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, transform 0.1s;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  border: none;
 }
 
 .verify-button:hover {
@@ -160,6 +142,8 @@ body {
 
 .verify-button.delete {
   background-color: #DC2626;
+  color: white;
+  font-family: "Kanit", sans-serif;
 }
 
 .verify-button.delete:hover {
@@ -167,98 +151,65 @@ body {
 }
 
 .verify-button.confirm {
-  background-color: #16A34A;
+  background-color: #1E3A8A;
+  color: white;
+  font-family: "Kanit", sans-serif;
 }
 
 .verify-button.confirm:hover {
-  background-color: #15803D;
-}
-
-.verify-button.reason {
-  background-color: #2563EB;
-}
-
-.verify-button.reason:hover {
-  background-color: #1E40AF;
+  background-color: #3B82F6;
 }
 
 /* Popup */
-.verify-popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  backdrop-filter: blur(5px); /* เพิ่มเบลอพื้นหลัง */
-}
-
-/* กล่อง Popup */
-/* พื้นหลังโปร่งแสงของ Popup */
 .reject-popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  backdrop-filter: blur(5px); /* เพิ่มเอฟเฟกต์เบลอพื้นหลัง */
 }
 
-/* กล่อง Popup */
 .reject-popup-box {
-  background: #ffffff;
+  background: #FFFFFF;
   padding: 30px;
   border-radius: 12px;
   width: 400px;
   text-align: center;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-  border: 2px solid #000000; /* เส้นขอบสีทอง */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  
 }
 
-/* หัวข้อ Popup */
 .reject-popup-title {
-  font-size: 24px;
-  color: #000000; /* แก้เป็นสีทองจริง ๆ */
+  font-size: 22px;
+  color: #1E3A8A;
   margin-bottom: 15px;
-  font-family: 'Kanit', sans-serif;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%; /* ให้ครอบพื้นที่ทั้งหมด */
 }
 
-
-/* Textarea สำหรับพิมพ์เหตุผล */
 .reject-popup-textarea {
   width: 95%;
   height: 100px;
-  margin: 15px 0;
+  margin: 15px 20;
   padding: 12px;
-  border: 1px solid #000000;
+  border: 1px solid #CBD5E1;
   border-radius: 8px;
-  background-color: #ffffff;
-  color: rgb(0, 0, 0);
+  background-color: #F8FAFC;
   resize: none;
   font-size: 16px;
-  outline: none;
+  position : relative;
+  left : -3px;
+
 }
 
-/* กลุ่มปุ่ม */
 .reject-popup-buttons {
   display: flex;
   justify-content: space-between;
   gap: 15px;
 }
 
-/* ปุ่มยกเลิก */
 .reject-popup-cancel {
   background-color: #64748B;
   color: white;
@@ -266,17 +217,14 @@ body {
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s, transform 0.1s;
-  font-size: 16px;
-  font-weight: bold;
-  flex: 1; /* ทำให้ปุ่มขยายเท่ากัน */
+  font-family: "Kanit", sans-serif;
 }
 
 .reject-popup-cancel:hover {
   background-color: #475569;
-  transform: scale(1.05);
+  
 }
 
-/* ปุ่มยืนยันปฏิเสธ */
 .reject-popup-confirm {
   background-color: #DC2626;
   color: white;
@@ -284,14 +232,10 @@ body {
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s, transform 0.1s;
-  font-size: 16px;
-  font-weight: bold;
-  flex: 1;
+  font-family: "Kanit", sans-serif;
 }
 
 .reject-popup-confirm:hover {
   background-color: #B91C1C;
-  transform: scale(1.05);
+
 }
-
-

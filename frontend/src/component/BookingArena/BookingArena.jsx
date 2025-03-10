@@ -153,14 +153,30 @@ const toggleFavorite = async () => {
     );
   };
 
-  // ฟังก์ชันไปยังหน้าจองพร้อมข้อมูลสนามย่อยที่เลือก
   const handleBooking = () => {
     if (selectedSubStadiums.length > 0) {
-      navigate(`/booking`, { state: { selectedSubStadiums } });
+      // ✅ ดึงข้อมูลสนามย่อยแบบเต็ม เพื่อส่งไป Booking.js
+      const selectedData = selectedSubStadiums.map((id) => {
+        const sportKey = Object.keys(subStadiums).find((sport) =>
+          subStadiums[sport].some((sub) => sub._id === id)
+        );
+        return subStadiums[sportKey].find((sub) => sub._id === id);
+      });
+  
+      // ✅ ส่งข้อมูลไปหน้า Booking
+      navigate(`/booking`, { state: { selectedSubStadiums: selectedData } });
     } else {
-      alert("กรุณาเลือกสนามย่อยก่อนทำการจอง!");
+      Swal.fire({
+        title: "กรุณาเลือกสนาม!",
+        text: "เลือกสนามก่อนทำการจอง",
+        icon: "warning",
+        confirmButtonText: "ตกลง",
+      });
     }
   };
+  
+  
+
 
   if (loading) return <div className="loading-text">กำลังโหลดข้อมูล...</div>;
   if (!arena) return <div className="loading-text">ไม่พบข้อมูลสนามกีฬา</div>;
@@ -254,11 +270,11 @@ const toggleFavorite = async () => {
             </div>
           </div>
 
-          {/* ปุ่มจอง */}
-          <button className="booking-button" onClick={handleBooking}>
-            จองสนาม ({selectedSubStadiums.length})
-          </button>
-        </div>
+        {/* ปุ่มจอง */}
+        <button className="booking101-button" onClick={handleBooking}>
+          จองสนาม ({selectedSubStadiums.length})
+        </button>
+      </div>
       </div>
     </>
   );
