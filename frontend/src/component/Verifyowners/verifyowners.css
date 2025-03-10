@@ -143,6 +143,7 @@ body {
 .verify-button.delete {
   background-color: #DC2626;
   color: white;
+  font-family: "Kanit", sans-serif;
 }
 
 .verify-button.delete:hover {
@@ -152,6 +153,7 @@ body {
 .verify-button.confirm {
   background-color: #1E3A8A;
   color: white;
+  font-family: "Kanit", sans-serif;
 }
 
 .verify-button.confirm:hover {
@@ -215,6 +217,7 @@ body {
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s, transform 0.1s;
+  font-family: "Kanit", sans-serif;
 }
 
 .reject-popup-cancel:hover {
@@ -229,6 +232,7 @@ body {
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s, transform 0.1s;
+  font-family: "Kanit", sans-serif;
 }
 
 .reject-popup-confirm:hover {

@@ -21,7 +21,7 @@ exports.addBookingHistory = async (req, res) => {
         const existingBookings = await BookingHistory.find({
             subStadiumId,
             bookingDate: new Date(bookingDate), // ✅ ใช้ Date Object ให้แน่ใจว่าเปรียบเทียบตรงกัน
-            timeSlots: { $elemMatch: { $in: timeSlots } } // ✅ เช็คการจองซ้ำที่ทับซ้อน
+            timeSlots: { $elemMatch: { $in: timeSlots } } // ✅ เช็คการจองซ้ำที่ทับซ้อนa
         });
 
         if (existingBookings.length > 0) {
@@ -60,18 +60,14 @@ exports.getUserBookingHistory = async (req, res) => {
             return res.status(400).json({ message: "❌ ต้องระบุ userId" });
         }
 
+
         console.log("🔍 Fetching booking history for userId:", userId);
 
-        // ✅ ดึงข้อมูลสนามหลัก (`stadiumId`) และสนามย่อย (`subStadiumId`)
-        const bookings = await BookingHistory.find({ userId })
+        // ✅ ดึงข้อมูลสนามเพิ่มเติม รวมถึง `fieldName` และ `images`
+        let bookings = await BookingHistory.find({ userId })
             .populate({
                 path: "stadiumId",
                 select: "fieldName images",
-                options: { strictPopulate: false }
-            })
-            .populate({
-                path: "subStadiumId",
-                select: "name images",
                 options: { strictPopulate: false }
             })
             .lean(); // ✅ ใช้ lean() เพื่อให้ MongoDB คืนค่าเป็น Object  
@@ -80,17 +76,15 @@ exports.getUserBookingHistory = async (req, res) => {
 
         // ✅ กรองข้อมูลที่ไม่มีสนาม และดึง `images[0]` ถ้ามี
         const updatedBookings = bookings
-            .filter(booking => booking.stadiumId && booking.subStadiumId) // ✅ กรองรายการที่ไม่มีสนาม
+            .filter(booking => booking.stadiumId) // ✅ กรองรายการที่ไม่มีสนาม
             .map(booking => ({
                 _id: booking._id,
                 userId: booking.userId,
                 stadiumId: booking.stadiumId._id,
                 fieldName: booking.stadiumId.fieldName || "ไม่พบชื่อสนาม",
-                stadiumImage: booking.subStadiumId.images?.[0] || booking.stadiumId.images?.[0] || "https://via.placeholder.com/150", // ✅ ถ้ามีรูปสนามย่อยให้ใช้ก่อน
-                subStadiumId: booking.subStadiumId._id,
-                subStadiumName: booking.subStadiumId.name || "ไม่พบชื่อสนามย่อย",
+                stadiumImage: booking.stadiumId.images?.[0] || "https://via.placeholder.com/150",
                 sportName: booking.sportName,
-                timeSlots: booking.timeSlots, // ✅ ใช้ `timeSlots` แทน `timeRange`
+                timeRange: booking.timeRange,
                 bookingDate: booking.bookingDate,
                 status: booking.status
             }));

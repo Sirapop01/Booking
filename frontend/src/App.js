@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import "leaflet/dist/leaflet.css";
-import Homepage from './component/Homepage/Homepage';
+import Homepage from './component/HomePage/Homepage';
 import Login from './component/Login/Login';
 import RegisterChoice from './component/RegisterChoice/RegisterChoice';
 import RegisterCustomer from './component/Register/RegisterCustomer';
