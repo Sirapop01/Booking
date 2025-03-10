@@ -12,13 +12,18 @@ const BookingHistorySchema = new mongoose.Schema(
       ref: "Arena",
       required: true,
     },
+    subStadiumId: {  // ✅ เพิ่ม ID ของสนามย่อย
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SubStadium",
+      required: true,
+    },
     ownerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "BusinessOwner",
       required: true,
     },
-    sportName: { type: String, required: true }, // ✅ เพิ่มประเภทกีฬา (Football, Basketball ฯลฯ)
-    timeRange: { type: String, required: true }, // ✅ เพิ่มช่วงเวลาที่จอง (เช่น "10:00 - 12:00")
+    sportName: { type: String, required: true }, // ประเภทกีฬา (Football, Basketball ฯลฯ)
+    timeSlots: { type: [String], required: true }, // ✅ เปลี่ยนจาก timeRange เป็น Array
     bookingDate: { type: Date, required: true },
     status: { type: String, enum: ["completed", "canceled"], default: "completed" },
   },
