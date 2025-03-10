@@ -18,11 +18,22 @@ const Homepage = () => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
 
-
   useEffect(() => {
-    fetchArenas(); // ✅ แก้ `fetchArenas` ไม่ถูกกำหนด
+    const storedToken = localStorage.getItem('token') || sessionStorage.getItem('token');
+    if (storedToken) {
+      try {
+        const decoded = jwtDecode(storedToken);
+        setDecodedToken(decoded);
+        handleSearch();
+      } catch (error) {
+        console.error('Error decoding token:', error);
+      }
+    } else {
+      fetchArenas();
+    }
+    setLoading(false);
   }, []);
-
+  
   const fetchArenas = async () => { // ✅ ประกาศฟังก์ชันให้ชัดเจน
     try {
       const res = await axios.get("http://localhost:4000/api/arenas/getArenas");
@@ -32,19 +43,6 @@ const Homepage = () => {
       console.error("❌ Error fetching arenas:", error);
     }
   };
-
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token') || sessionStorage.getItem('token');
-    if (storedToken) {
-      try {
-        const decoded = jwtDecode(storedToken);
-        setDecodedToken(decoded);
-      } catch (error) {
-        console.error('Error decoding token:', error);
-      }
-    }
-    setLoading(false);
-  }, []);
 
   const searchBySport = async (sportName) => {
     setLoading(true);
