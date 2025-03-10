@@ -29,7 +29,7 @@ exports.addBookingHistory = async (req, res) => {
     }
 };
 
-// ✅ ดึงสนามที่ลูกค้าเคยจอง (สำหรับรีวิว)
+// ✅ ดึงสนามที่ลูกค้าเคยจอง 
 exports.getUserBookingHistory = async (req, res) => {
     try {
         const { userId } = req.query;
@@ -38,21 +38,46 @@ exports.getUserBookingHistory = async (req, res) => {
             return res.status(400).json({ message: "❌ ต้องระบุ userId" });
         }
 
-        // ✅ ดึงข้อมูลสนามเพิ่มเติม รวมถึงรูปภาพ
-        const bookings = await BookingHistory.find({ userId, status: "completed" })
-            .populate("stadiumId", "fieldName stadiumImage") // ✅ เพิ่ม stadiumImage
-            .select("sportName timeRange bookingDate status stadiumId");
+        console.log("🔍 Fetching booking history for userId:", userId);
 
-        if (!bookings.length) {
-            return res.status(404).json({ message: "❌ ไม่พบประวัติการจอง" });
-        }
+        // ✅ ดึงข้อมูลสนามเพิ่มเติม รวมถึง `fieldName` และ `images`
+        let bookings = await BookingHistory.find({ userId })
+            .populate({
+                path: "stadiumId",
+                select: "fieldName images",
+                options: { strictPopulate: false }
+            })
+            .lean(); // ✅ ใช้ lean() เพื่อให้ MongoDB คืนค่าเป็น Object  
 
-        res.status(200).json(bookings);
+        console.log("📌 Raw bookings from DB:", bookings);
+
+        // ✅ กรองข้อมูลที่ไม่มีสนาม และดึง `images[0]` ถ้ามี
+        const updatedBookings = bookings
+            .filter(booking => booking.stadiumId) // ✅ กรองรายการที่ไม่มีสนาม
+            .map(booking => ({
+                _id: booking._id,
+                userId: booking.userId,
+                stadiumId: booking.stadiumId._id,
+                fieldName: booking.stadiumId.fieldName || "ไม่พบชื่อสนาม",
+                stadiumImage: booking.stadiumId.images?.[0] || "https://via.placeholder.com/150",
+                sportName: booking.sportName,
+                timeRange: booking.timeRange,
+                bookingDate: booking.bookingDate,
+                status: booking.status
+            }));
+
+        console.log("✅ Processed Booking History:", updatedBookings);
+        res.status(200).json(updatedBookings);
+
     } catch (error) {
-        console.error("🚨 Error fetching booking history:", error);
+        console.error("❌ Error fetching booking history:", error.message);
         res.status(500).json({ message: "❌ ไม่สามารถดึงประวัติการจองได้" });
     }
 };
+
+
+
+
 
 
 

@@ -20,7 +20,7 @@ const BookingHistorySchema = new mongoose.Schema(
     sportName: { type: String, required: true }, // ✅ เพิ่มประเภทกีฬา (Football, Basketball ฯลฯ)
     timeRange: { type: String, required: true }, // ✅ เพิ่มช่วงเวลาที่จอง (เช่น "10:00 - 12:00")
     bookingDate: { type: Date, required: true },
-    status: { type: String, enum: ["completed", "canceled"], default: "completed" },
+    status: { type: String, enum: ["completed", "canceled", "pending"], default: "pending" },
   },
   { timestamps: true }
 );

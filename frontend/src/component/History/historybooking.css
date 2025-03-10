@@ -48,3 +48,24 @@
     color: gray;
   }
   
+  .status {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .status.completed {
+    color: white;
+    background-color: green;
+  }
+  
+  .status.canceled {
+    color: white;
+    background-color: red;
+  }
+  
+  .status.pending {
+    color: black;
+    background-color: yellow;
+  }
+  
