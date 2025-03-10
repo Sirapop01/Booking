@@ -269,11 +269,11 @@ const UserProfile = () => {
         </div>
 
         <nav>
-          <button>ประวัติการจอง</button>
-          <button>รายการโปรด</button>
-          <button>ค้นหาสนาม</button>
-          <button>โปรโมชั่น</button>
-          <button>คูปอง</button>
+        <button onClick={() => navigate('/historybooking')}>ประวัติการจอง</button>
+        <button onClick={() => navigate('/FavoritesList')}>รายการโปรด</button>
+        <button onClick={() => navigate('/')}>ค้นหาสนาม</button>
+        <button onClick={() => navigate('/promotion')}>โปรโมชั่น</button>
+        <button onClick={() => navigate('/Discount')}>คูปอง</button>
         </nav>
         <button className="logout-button" onClick={toggleLogout}>ลงชื่อออก</button>
       </aside>
