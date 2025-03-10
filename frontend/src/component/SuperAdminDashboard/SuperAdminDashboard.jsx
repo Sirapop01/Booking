@@ -14,6 +14,9 @@ function SuperAdminDashboard() {
           <button className="superadmin-button primary" onClick={() => navigate('/admin/register')}>
             ➕ สมัคร Admin ใหม่
           </button>
+          <button className="superadmin-button secondary" onClick={() => navigate('/verifyowners')}>
+            ✅ ยืนยันข้อมูลผู้ประกอบการ
+          </button>
         </div>
       </div>
     </div>

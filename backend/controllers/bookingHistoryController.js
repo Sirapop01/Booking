@@ -63,13 +63,6 @@ exports.getUserBookingHistory = async (req, res) => {
 
         console.log("🔍 Fetching booking history for userId:", userId);
 
-        // ✅ ดึงข้อมูลสนามหลัก และสนามย่อย รวมถึงรูปภาพ
-        const bookings = await BookingHistory.find({ userId, status: "completed" })
-            .populate({ path: "stadiumId", select: "fieldName stadiumImage" }) // ✅ ดึงข้อมูลสนามใหญ่
-            .populate({ path: "subStadiumId", select: "name images" }) // ✅ ดึงข้อมูลสนามย่อย
-            .select("sportName timeSlots bookingDate status stadiumId subStadiumId");
-
-
         // ✅ ดึงข้อมูลสนามเพิ่มเติม รวมถึง `fieldName` และ `images`
         let bookings = await BookingHistory.find({ userId })
             .populate({
