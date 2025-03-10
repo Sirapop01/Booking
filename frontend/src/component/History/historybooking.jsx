@@ -54,21 +54,29 @@ const HistoryBooking = () => {
             <div 
               className="history-card" 
               key={booking._id} 
-              onClick={() => navigate(`/BookingArena/${booking.stadiumId._id}`)}
+              onClick={() => navigate(`/BookingArena/${booking.stadiumId}`)}
             >
               <div className="history-details">
                 <div className="left">
                   <h2>กีฬา: {booking.sportName}</h2>
                   <p><strong>วันที่จอง:</strong> {new Date(booking.bookingDate).toLocaleDateString()}</p>
                   <p><strong>ช่วงเวลา:</strong> {booking.timeRange}</p>
-                  <p><strong>สถานะ:</strong> {booking.status}</p>
-                  <p><strong>สนาม:</strong> {booking.stadiumId?.fieldName || "ไม่พบชื่อสนาม"}</p> {/* ✅ แสดงชื่อสนาม */}
+  
+                  <p>
+                    <strong>สถานะ:</strong> 
+                    <span className={`status ${booking.status.toLowerCase()}`}>
+                      {booking.status}
+                    </span>
+                  </p>
+  
+                  <p><strong>สนาม:</strong> {booking.fieldName || "ไม่พบชื่อสนาม"}</p>
                 </div>
                 <div className="history-image">
                   <img 
-                    src={booking.stadiumId?.stadiumImage || "https://via.placeholder.com/150"} 
-                    alt={booking.stadiumId?.fieldName || "สนามกีฬา"} 
-                  /> {/* ✅ เพิ่มรูปสนาม */}
+                    src={booking.stadiumImage || "https://via.placeholder.com/150"} 
+                    alt={booking.fieldName || "สนามกีฬา"} 
+                    onError={(e) => e.target.src = "https://via.placeholder.com/150"} 
+                  /> 
                 </div>
               </div>
             </div>
