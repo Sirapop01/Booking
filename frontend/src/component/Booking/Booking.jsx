@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
-import Navbar from '../Navbar/Navbar';
+import Navbar from "../Navbar/Navbar";
 import axios from "axios";
 import "./Booking.css";
 
@@ -12,63 +12,77 @@ const Booking = () => {
 
   useEffect(() => {
     selectedSubStadiums.forEach((stadium) => {
-      fetchStadiumDetails(stadium._id);
+        fetchStadiumDetails(stadium._id);
     });
-  }, [selectedSubStadiums]);
+}, [selectedSubStadiums]);  // ✅ ใช้ selectedSubStadiums เป็น dependencies
 
-  // ดึงข้อมูลสนามที่มีเวลาเปิด-ปิด
+
+  // ดึงข้อมูลสนามจาก API
   const fetchStadiumDetails = async (subStadiumId) => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/substadiums/details/${subStadiumId}`);
-      const { openingTime, closingTime, reservedSlots } = response.data;
+        const response = await axios.get(`http://localhost:4000/api/substadiums/details/${subStadiumId}`);
+        console.log("📌 API Response:", response.data);  // ✅ Debug Response
 
-      // สร้างช่วงเวลาทั้งหมด
-      const availableTimes = generateTimeSlots(openingTime, closingTime, reservedSlots);
+        const { openTime, closeTime, reservedSlots = [] } = response.data; // ✅ ตั้งค่า default []
 
-      setBookingData((prev) => ({
-        ...prev,
-        [subStadiumId]: { availableTimes, selectedTime: "", openingTime, closingTime },
-      }));
+        // สร้างช่วงเวลาทั้งหมด
+        const availableTimes = generateTimeSlots(openTime, closeTime, reservedSlots);
+
+        setBookingData((prev) => ({
+            ...prev,
+            [subStadiumId]: { availableTimes, selectedTime: "", openTime, closeTime },
+        }));
     } catch (error) {
-      console.error("❌ Error fetching stadium details:", error);
+        console.error("❌ Error fetching stadium details:", error);
     }
-  };
+};
 
   // ฟังก์ชันสร้างช่วงเวลาตามเวลาเปิด-ปิด
-  const generateTimeSlots = (openingTime, closingTime, reservedSlots) => {
+  const generateTimeSlots = (openTime, closeTime, reservedSlots = []) => {
     let times = [];
-    let currentTime = new Date(`2000-01-01T${openingTime}`);
-    let endTime = new Date(`2000-01-01T${closingTime}`);
+    let startHour = parseInt(openTime.split(":")[0]);  // ดึงค่า ชั่วโมงเปิด
+    let endHour = parseInt(closeTime.split(":")[0]);   // ดึงค่า ชั่วโมงปิด
 
-    while (currentTime < endTime) {
-      let nextTime = new Date(currentTime);
-      nextTime.setHours(nextTime.getHours() + 1);
+    let currentHour = startHour;
+    let isCrossDay = endHour < startHour;  // ✅ เช็คว่าข้ามวันหรือไม่
 
-      let timeString = `${currentTime.toTimeString().substring(0, 5)}-${nextTime.toTimeString().substring(0, 5)}`;
-      let isReserved = reservedSlots.includes(timeString);
+    while (currentHour !== endHour) {
+        let nextHour = (currentHour + 1) % 24; // ✅ รองรับเวลาเกิน 24:00 ไปเป็น 00:00
+        let timeSlot = `${currentHour.toString().padStart(2, "0")}:00 - ${nextHour.toString().padStart(2, "0")}:00`;
 
-      times.push({ time: timeString, reserved: isReserved });
+        let isReserved = Array.isArray(reservedSlots) && reservedSlots.includes(timeSlot);
+        times.push({ time: timeSlot, reserved: isReserved });
 
-      currentTime = nextTime;
+        currentHour = nextHour;
+
+        // ✅ หยุดลูปเมื่อครบช่วงเวลาเปิด-ปิด
+        if (!isCrossDay && currentHour >= endHour) break;
+        if (isCrossDay && currentHour === endHour) break;
     }
 
     return times;
-  };
+};
 
+
+
+  // แสดงเวลาให้เลือกใน Popup
   const showAvailableTimes = (subStadiumId) => {
     const timeslots = bookingData[subStadiumId]?.availableTimes || [];
 
     Swal.fire({
-      title: `เลือกเวลาที่ต้องการ`,
-      html: timeslots
-        .map(
-          (slot) => `
-          <button class="time-slot ${slot.reserved ? "reserved" : ""}" 
-            data-time="${slot.time}" ${slot.reserved ? "disabled" : ""}>
-            ${slot.time}
-          </button>`
-        )
-        .join(""),
+      title: "เลือกเวลาที่ต้องการ",
+      html: `
+        <div class="time-slot-container">
+          ${timeslots
+            .map(
+              (slot) => `
+              <button class="time-slot ${slot.reserved ? "reserved" : ""}" 
+                data-time="${slot.time}" ${slot.reserved ? "disabled" : ""}>
+                ${slot.time}
+              </button>`
+            )
+            .join("")}
+        </div>`,
       showCancelButton: true,
       cancelButtonText: "ปิด",
       showConfirmButton: false,
@@ -87,6 +101,7 @@ const Booking = () => {
     });
   };
 
+  // ยืนยันการจอง
   const handleBookingConfirmation = () => {
     console.log("✅ ข้อมูลการจอง:", bookingData);
     Swal.fire("✅ ยืนยันการจอง", "ระบบได้รับข้อมูลของคุณแล้ว", "success");
