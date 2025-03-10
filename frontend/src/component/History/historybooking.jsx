@@ -60,7 +60,9 @@ const HistoryBooking = () => {
                 <div className="left">
                   <h2>กีฬา: {booking.sportName}</h2>
                   <p><strong>วันที่จอง:</strong> {new Date(booking.bookingDate).toLocaleDateString()}</p>
-                  <p><strong>ช่วงเวลา:</strong> {booking.timeRange}</p>
+                  
+                  {/* ✅ แสดงช่วงเวลาที่จอง */}
+                  <p><strong>ช่วงเวลา:</strong> {booking.timeSlots.join(", ")}</p>
   
                   <p>
                     <strong>สถานะ:</strong> 
@@ -70,6 +72,7 @@ const HistoryBooking = () => {
                   </p>
   
                   <p><strong>สนาม:</strong> {booking.fieldName || "ไม่พบชื่อสนาม"}</p>
+                  <p><strong>สนามย่อย:</strong> {booking.subStadiumName || "ไม่พบชื่อสนามย่อย"}</p>
                 </div>
                 <div className="history-image">
                   <img 
@@ -86,9 +89,7 @@ const HistoryBooking = () => {
         )}
       </div>
     </div>
-  );
-  
-  
+  ); 
 };
 
 export default HistoryBooking;
