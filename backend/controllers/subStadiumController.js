@@ -2,6 +2,8 @@ const SubStadium = require("../models/subStadiumModel");
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
 const mongoose = require("mongoose");
+const moment = require("moment");
+const BookingHistory = require("../models/BookingHistory"); // ✅ นำเข้าตารางจอง
 
 // 📌 ตั้งค่า Cloudinary
 cloudinary.config({
@@ -158,30 +160,36 @@ exports.deleteSubStadium = async (req, res) => {
 exports.getSubStadiumDetails = async (req, res) => {
     try {
         const { id } = req.params;
-        console.log("📌 API ถูกเรียกใช้งาน - SubStadium ID:", id);
+        const { date } = req.query; // ✅ รับค่าของวันที่จาก Query Parameters
+        console.log("📌 ดึงข้อมูลสนาม ID:", id, "วันที่:", date);
 
-        // ✅ ตรวจสอบว่า ID ที่รับมาเป็น ObjectId ที่ถูกต้องหรือไม่
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            console.log("❌ รูปแบบ ID ไม่ถูกต้อง:", id);
-            return res.status(400).json({ message: "❌ ID ไม่ถูกต้อง" });
-        }
-
-        // ✅ ลองค้นหาว่ามี ID นี้อยู่ใน Database หรือไม่
         const subStadium = await SubStadium.findById(id);
-
         if (!subStadium) {
-            console.log("❌ ไม่พบสนามย่อย ID:", id);
             return res.status(404).json({ message: "❌ ไม่พบสนามย่อย" });
         }
 
-        console.log("✅ ข้อมูลสนามย่อยที่พบ:", subStadium);
+        // ✅ ถ้าไม่มีวันที่ ให้ใช้วันที่ปัจจุบัน
+        const selectedDate = date || moment().format("YYYY-MM-DD");
 
-        res.status(200).json(subStadium);
+        // ✅ ดึงรายการเวลาที่ถูกจองของวันนี้จาก BookingHistory
+        const reservations = await BookingHistory.find({
+            stadiumId: id, // ✅ ต้องใช้ `stadiumId` ให้ตรงกับ Schema ของ `BookingHistory`
+            bookingDate: new Date(selectedDate), // ✅ ใช้ `bookingDate` แทน `date`
+        }).select("timeRange");
+
+        // ✅ รวมเวลาที่ถูกจองทั้งหมดเป็น Array
+        let reservedSlots = [];
+        reservations.forEach((res) => {
+            if (res.timeRange) {
+                reservedSlots.push(res.timeRange);
+            }
+        });
+
+        console.log("📌 เวลาที่ถูกจองแล้ว:", reservedSlots);
+
+        res.status(200).json({ ...subStadium._doc, reservedSlots });
     } catch (error) {
-        console.error("❌ API ERROR:", error);
-        res.status(500).json({ message: "❌ Internal Server Error", error });
+        console.error("❌ ไม่สามารถดึงข้อมูลสนามย่อย:", error);
+        res.status(500).json({ message: "❌ เกิดข้อผิดพลาด", error });
     }
 };
-
-
-

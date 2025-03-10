@@ -35,6 +35,7 @@ const chatRoutes = require("./routes/chatRoutes");
 const businessInfoRequestRoutes = require('./routes/businessInfoRequestRoutes');
 const reviewRoutes = require("./routes/reviewRoutes");
 const bookingHistoryRoutes = require("./routes/bookingHistoryRoutes");
+const bookingRoutes = require("./routes/bookingRoutes");
 
 
 // ✅ กำหนด CORS
@@ -95,6 +96,7 @@ app.use("/api/business-info-requests", businessInfoRequestRoutes);
 app.use("/api", reviewRoutes);
 app.use("/api/bookinghistories", bookingHistoryRoutes);
 app.use("/api/businessOwners", businessOwnerRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 
 // ✅ Error Handling Middleware
