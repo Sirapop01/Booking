@@ -9,7 +9,7 @@ const nodemailer = require("nodemailer");
 const axios = require("axios")
 
 exports.register = async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   try {
     const {
       email, password, firstName, lastName,
@@ -29,42 +29,54 @@ exports.register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const formattedBirthdate = new Date(birthdate);
 
-    // ✅ รับ URL ของรูปจาก Cloudinary
+    // ✅ รับ URL ของรูปจาก Cloudinary (ถ้ามี)
     const profileImage = req.file ? req.file.path : null;
 
-    // ✅ ใช้ Nominatim หา lat, lng ตามตำแหน่งที่อยู่
+    // ✅ ใช้ Google Maps API หา lat, lng
     const addressQuery = `${subdistrict}, ${district}, ${province}, Thailand`;
-    const nominatimRes = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${addressQuery}`);
-    const nominatimData = await nominatimRes.json();
+    const googleApiKey = process.env.GOOGLE_API; // 🔥 ใส่ API Key ของคุณที่นี่
 
-    if (!nominatimData.length) {
-      return res.status(400).json({ message: "ไม่พบพิกัดตำแหน่งจากที่อยู่ที่ระบุ" });
+    try {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(addressQuery)}&key=${googleApiKey}`
+      );
+
+      if (response.data.status !== "OK" || !response.data.results.length) {
+        return res.status(400).json({ message: "❌ ไม่สามารถดึงพิกัดจาก Google Maps ได้" });
+      }
+
+      const { lat, lng } = response.data.results[0].geometry.location;
+      const location = {
+        type: "Point",
+        coordinates: [lng, lat],
+      };
+      console.log("📌 อัปเดตพิกัดใหม่จาก Google Maps:", location);
+
+      // ✅ สร้างบัญชีผู้ใช้
+      const newUser = await User.create({
+        email,
+        password: hashedPassword,
+        firstName,
+        lastName,
+        gender,
+        phoneNumber,
+        birthdate: formattedBirthdate,
+        interestedSports,
+        province,
+        district,
+        subdistrict,
+        profileImage,
+        role: role || "customer",
+        location,
+      });
+
+      res.status(201).json({ message: "✅ สมัครสมาชิกสำเร็จ!", user: newUser });
+
+    } catch (error) {
+      console.error("❌ Error fetching geolocation from Google Maps:", error);
+      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตพิกัด" });
     }
 
-    const { lat, lon } = nominatimData[0];
-    const location = {
-      type: 'Point',
-      coordinates: [parseFloat(lon), parseFloat(lat)],
-    };
-
-    const newUser = await User.create({
-      email,
-      password: hashedPassword,
-      firstName,
-      lastName,
-      gender,
-      phoneNumber,
-      birthdate: formattedBirthdate,
-      interestedSports,
-      province: province, 
-      district: district, 
-      subdistrict: subdistrict, 
-      profileImage,
-      role: role || 'customer',
-      location,
-    });
-
-    res.status(201).json({ message: "สมัครสมาชิกสำเร็จ!", user: newUser });
   } catch (err) {
     console.error("❌ Error registering user:", err);
     res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ", error: err.message });
@@ -179,23 +191,24 @@ exports.updateUser = async (req, res) => {
       const encodedAddress = encodeURIComponent(addressQuery);
 
       try {
-        // 🔹 ใช้ Nominatim API เพื่อดึงค่าพิกัด lat, lng
+        // 🔹 ใช้ Google Maps API เพื่อดึงค่าพิกัด lat, lng
+        const googleApiKey = process.env.GOOGLE_API; // 🔥 ใส่ API Key ของคุณตรงนี้
         const response = await axios.get(
-          `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}`
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${googleApiKey}`
         );
 
-        if (response.data.length > 0) {
-          const { lat, lon } = response.data[0];
+        if (response.data.status === "OK") {
+          const { lat, lng } = response.data.results[0].geometry.location;
           updateData.location = {
             type: "Point",
-            coordinates: [parseFloat(lon), parseFloat(lat)],
+            coordinates: [lng, lat],
           };
-          console.log("📌 อัปเดตพิกัดใหม่:", updateData.location);
+          console.log("📌 อัปเดตพิกัดใหม่จาก Google Maps:", updateData.location);
         } else {
-          return res.status(400).json({ message: "❌ ไม่สามารถดึงพิกัดที่อยู่ได้" });
+          return res.status(400).json({ message: "❌ ไม่สามารถดึงพิกัดจาก Google Maps ได้" });
         }
       } catch (error) {
-        console.error("❌ Error fetching geolocation:", error);
+        console.error("❌ Error fetching geolocation from Google Maps:", error);
         return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตพิกัด" });
       }
     }
