@@ -27,14 +27,12 @@ const HistoryBooking = () => {
   useEffect(() => {
     if (!decodedToken) return;
 
-    console.log("📌 Fetching booking history for userId:", decodedToken.id); // ✅ ตรวจสอบค่า userId ก่อนเรียก API
+    console.log("📌 Fetching booking history for userId:", decodedToken.id);
 
     const fetchBookingHistory = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:4000/api/bookinghistories?userId=${decodedToken.id}`
-        );
-        console.log("📌 Booking History Data:", response.data); // ✅ ตรวจสอบข้อมูลที่ได้รับจาก API
+        const response = await axios.get(`http://localhost:4000/api/bookinghistories?userId=${decodedToken.id}`);
+        console.log("📌 Booking History Data:", response.data);
         setBookingHistory(response.data);
       } catch (error) {
         console.error("❌ ไม่สามารถดึงข้อมูลประวัติการจอง:", error);
@@ -42,8 +40,7 @@ const HistoryBooking = () => {
     };
 
     fetchBookingHistory();
-}, [decodedToken]);
-
+  }, [decodedToken]);
 
   if (loading) return <div>กำลังโหลดข้อมูล...</div>;
 
@@ -62,25 +59,21 @@ const HistoryBooking = () => {
             >
               <div className="history-details">
                 <div className="left">
-                  <h2>กีฬา: {booking.sportName}</h2>
-                  <p><strong>วันที่จอง:</strong> {new Date(booking.bookingDate).toLocaleDateString()}</p>
-                  
-                  {/* ✅ ตรวจสอบ `timeSlots` ก่อนใช้ */}
-                  {booking.timeSlots.length > 0 ? (
-                    <p><strong>ช่วงเวลา:</strong> {booking.timeSlots.join(", ")}</p>
-                  ) : (
-                    <p><strong>ช่วงเวลา:</strong> ไม่ระบุ</p>
-                  )}
-  
+                  <h2>สนาม: {booking.fieldName}</h2>
+                  <p><strong>วันที่จอง:</strong> {new Date(booking.details[0].bookingDate).toLocaleDateString()}</p>
+
+                  {/* ✅ แสดง startTime และ endTime ตามฐานข้อมูล */}
+                  <p><strong>ช่วงเวลา:</strong> {booking.details[0].startTime} - {booking.details[0].endTime}</p>
+
                   <p>
                     <strong>สถานะ:</strong> 
                     <span className={`status ${booking.status.toLowerCase()}`}>
                       {booking.status}
                     </span>
                   </p>
-  
-                  <p><strong>สนาม:</strong> {booking.fieldName || "ไม่พบชื่อสนาม"}</p>
-                  <p><strong>สนามย่อย:</strong> {booking.subStadiumName || "ไม่พบชื่อสนามย่อย"}</p>
+
+                  <p><strong>สนามย่อย:</strong> {booking.details[0].subStadiumName || "ไม่พบชื่อสนามย่อย"}</p>
+                  <p><strong>ราคา:</strong> {booking.details[0].price} บาท</p>
                 </div>
                 <div className="history-image">
                   <img 
@@ -98,7 +91,6 @@ const HistoryBooking = () => {
       </div>
     </div>
   );
-  
 };
 
 export default HistoryBooking;
