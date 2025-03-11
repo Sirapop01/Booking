@@ -30,7 +30,7 @@ const BookingArena = () => {
     slidesToShow: 1, // Show 1 image at a time
     slidesToScroll: 1, // Scroll 1 image at a time
     autoplay: true, // Auto slide images
-    autoplaySpeed: 2000, // Delay between slides (in ms)
+    autoplaySpeed: 2000, 
   };
   useEffect(() => {
     const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");

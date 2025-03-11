@@ -13,18 +13,20 @@
 }
 
 .booking-content {
-  width: 90%;
-  max-width: 1000px;
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap; /* ให้การ์ดล้นแล้วขึ้นบรรทัดใหม่ */
+  justify-content: center; /* จัดให้อยู่กึ่งกลาง */
   gap: 20px;
-  color: black;
+  width: 100%;
 }
 
 .booking-card {
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 45%; /* ปรับขนาดการ์ดให้แบ่งเป็น 2 ส่วน */
+  flex: 1; /* ปรับให้ขนาดการ์ดยืดได้ */
+  max-width: 45%; /* จำกัดขนาดให้ไม่เกินครึ่งหนึ่งของพื้นที่ */
+  min-width: 400px; /* ป้องกันการ์ดเล็กเกินไป */
   background: white;
   border-radius: 10px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* เพิ่มเงาให้มิติ */
@@ -34,6 +36,7 @@
   min-height: 300px; /* เพิ่มความสูงของการ์ด */
   transition: 0.3s;
   margin-top : 30px;
+  
   
 }
 
