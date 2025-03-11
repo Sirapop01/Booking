@@ -2,7 +2,6 @@ const BookingHistory = require("../models/BookingHistory");
 const Arena = require("../models/Arena");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose"); // ✅ แก้ปัญหา mongoose is not defined
-const { nanoid } = require("nanoid");
 
 // ✅ ฟังก์ชันเพิ่มการจองใหม่
 exports.addBookingHistory = async (req, res) => {
