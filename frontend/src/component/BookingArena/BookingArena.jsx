@@ -183,7 +183,7 @@ const toggleSubStadiumSelection = (subStadiumId) => {
 
 
 const handleBooking = () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
   if (!token) {
       Swal.fire("⚠ กรุณาเข้าสู่ระบบก่อนทำการจอง", "", "warning");
