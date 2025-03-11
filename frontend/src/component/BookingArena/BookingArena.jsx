@@ -6,6 +6,7 @@ import { FaHeart } from "react-icons/fa"; // ✅ เพิ่มไอคอน�
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
 import Navbar from '../Navbar/Navbar';
+import Slider from "react-slick";
 
 const BookingArena = () => {
   const { id } = useParams(); // รับ arenaId จาก URL
@@ -248,11 +249,25 @@ const handleBooking = () => {
       <div className="booking-arena-container">
         <div className="arena-card">
           <div className="main-image-container">
-            <img
-              src={arena.images.length > 0 ? arena.images[0] : "https://via.placeholder.com/400"}
-              alt={arena.fieldName}
-              className="main-image"
-            />
+            {imageCount > 1 ? ( // ตรวจสอบจำนวนรูป
+              <Slider {...settings}>
+                {arena.images.map((image, index) => (
+                  <div key={index}>
+                    <img
+                      src={image}
+                      alt={arena.fieldName}
+                      className="main-image"
+                    />
+                  </div>
+                ))}
+              </Slider>
+            ) : (
+              <img
+                src={arena.images[0] || "https://via.placeholder.com/400"}
+                alt={arena.fieldName}
+                className="main-image"
+              />
+            )}
           </div>
 
           <div className="arena-info-container">
