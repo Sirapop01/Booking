@@ -1,14 +1,20 @@
+
+
 .booking-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
   margin-top: 5%;
+  background: linear-gradient(to bottom, #f0f4f8, #e0e8f1); /* เพิ่มความนุ่มนวลให้กับพื้นหลัง */
+  border-radius: 10px;
+  min-height: 100vh;
+  
 }
 
 .booking-content {
   width: 90%;
-  max-width: 1000px; /* กำหนดขนาด content ให้พอดี */
+  max-width: 1000px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -19,18 +25,20 @@
   display: flex;
   align-items: center;
   width: 100%;
-  background: white; /* พื้นหลังสีขาว */
+  background: white;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* เพิ่มเงาให้มิติ */
   padding: 20px;
   gap: 20px;
-  border: 5px solid transparent; /* เริ่มต้นไม่มีเส้นขอบ */
+  border: 1px solid #ddd; /* ขอบเบาๆ */
+  min-height: 300px; /* เพิ่มความสูงของการ์ด */
   transition: 0.3s;
+  margin-top : 30px;
+  
 }
 
-.booking-card.selected {
-  background: white; /* การ์ดที่ถูกเลือกเป็นสีขาว */
-  border-color: #0084ff; /* เส้นขอบสีน้ำเงิน */
+.booking-card:hover {
+  transform: scale(1.02); /* เพิ่มการขยายขนาดเมื่อโฮเวอร์ */
 }
 
 .booking-left {
@@ -44,6 +52,7 @@
   max-width: 350px;
   height: auto;
   border-radius: 10px;
+  border: 2px solid #001f3f;
 }
 
 .booking-right {
@@ -56,21 +65,27 @@
 .booking-title {
   font-size: 22px;
   font-weight: bold;
-  color: black; /* ทำให้ชื่อสนามเป็นสีดำตลอด */
+  color: #001f3f; /* สีตัวอักษรเข้มให้คมชัด */
+  
 }
 
 .booking-price {
   font-size: 18px;
   font-weight: bold;
-  color: #0084ff;
+  color: #0084ff; /* สีน้ำเงินเข้มให้ดูเด่น */
 }
 
 .input-field {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 8px;
   font-size: 16px;
+  transition: 0.3s;
+}
+
+.input-field:focus {
+  border-color: #0084ff; /* สีที่ขอบเมื่อมีการโฟกัส */
 }
 
 .confirm-button {
@@ -83,23 +98,22 @@
   border-radius: 8px;
   cursor: pointer;
   transition: 0.3s;
+  width : 500px;
 }
 
 .confirm-button:hover {
   background: #003366;
 }
 
-/* ✅ ปรับปรุง Layout ของปุ่มเลือกเวลา */
 .time-slot-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* แสดงผล 3 คอลัมน์ */
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
   max-height: 400px;
   overflow-y: auto;
   padding: 10px;
 }
 
-/* ✅ ปุ่มเวลาปกติ */
 .time-slot {
   padding: 12px;
   font-size: 16px;
@@ -108,53 +122,48 @@
   border-radius: 8px;
   border: 2px solid #ccc;
   cursor: pointer;
-  transition: 0.3s ease-in-out;
-  background-color: #fff; /* พื้นหลังขาว */
+  transition: 0.3s;
+  background-color: #fff;
   color: #333;
 }
 
-/* ✅ ปุ่มเมื่อโฮเวอร์ */
 .time-slot:hover {
   background-color: #f0f0f0;
 }
 
-/* ✅ ปุ่มเวลาที่ถูกเลือก */
 .time-slot.selected {
-  background-color: #007bff !important;
-  color: white !important;
+  background-color: #007bff;
+  color: white;
   border: 2px solid #0056b3;
 }
 
-/* ✅ ปุ่มเวลาที่ถูกจอง */
 .time-slot.reserved {
-  background-color: #ccc !important;
-  color: #666 !important;
+  background-color: #ccc;
+  color: #666;
   cursor: not-allowed;
 }
 
-/* ✅ ปรับแต่งปุ่ม SweetAlert2 */
 .swal2-actions button {
-  padding: 12px 24px !important;
-  font-size: 16px !important;
-  border-radius: 6px !important;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 6px;
   transition: 0.3s;
 }
 
 .swal2-confirm {
-  background-color: #007bff !important;
-  border: none !important;
+  background-color: #007bff;
+  border: none;
 }
 
 .swal2-confirm:hover {
-  background-color: #0056b3 !important;
+  background-color: #0056b3;
 }
 
 .swal2-cancel {
-  background-color: #6c757d !important;
-  border: none !important;
+  background-color: #6c757d;
+  border: none;
 }
 
 .swal2-cancel:hover {
-  background-color: #545b62 !important;
+  background-color: #545b62;
 }
-
