@@ -48,7 +48,7 @@ const HistoryBooking = () => {
     <div className="history-page">
       <Navbar />
       <h1 className="history-title">ประวัติการจอง</h1>
-  
+
       <div className="history-container">
         {bookingHistory.length > 0 ? (
           bookingHistory.map((booking) => (
@@ -60,10 +60,17 @@ const HistoryBooking = () => {
               <div className="history-details">
                 <div className="left">
                   <h2>สนาม: {booking.fieldName}</h2>
-                  <p><strong>วันที่จอง:</strong> {new Date(booking.details[0].bookingDate).toLocaleDateString()}</p>
+                  {booking.details.map((detail, index) => ( // 🔥 วนลูปแสดงทุกกีฬา
+                    <div key={index} className="detail-item">
+                      <p><strong>กีฬา:</strong> {detail.sportName}</p> 
+                      <p><strong>วันที่จอง:</strong> {new Date(detail.bookingDate).toLocaleDateString()}</p>
+                      <p><strong>ช่วงเวลา:</strong> {detail.startTime} - {detail.endTime}</p>
+                      <p><strong>สนามย่อย:</strong> {detail.subStadiumName || "ไม่พบชื่อสนามย่อย"}</p>
+                      <p><strong>ราคา:</strong> {detail.price} บาท</p>
+                    </div>
+                  ))}
 
-                  {/* ✅ แสดง startTime และ endTime ตามฐานข้อมูล */}
-                  <p><strong>ช่วงเวลา:</strong> {booking.details[0].startTime} - {booking.details[0].endTime}</p>
+                  <p className="total-price"><strong>รวม:</strong> {booking.totalPrice} บาท</p> {/* ✅ เพิ่มแสดงราคารวม */}
 
                   <p>
                     <strong>สถานะ:</strong> 
@@ -71,9 +78,6 @@ const HistoryBooking = () => {
                       {booking.status}
                     </span>
                   </p>
-
-                  <p><strong>สนามย่อย:</strong> {booking.details[0].subStadiumName || "ไม่พบชื่อสนามย่อย"}</p>
-                  <p><strong>ราคา:</strong> {booking.details[0].price} บาท</p>
                 </div>
                 <div className="history-image">
                   <img 
