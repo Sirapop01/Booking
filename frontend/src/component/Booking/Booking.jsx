@@ -203,20 +203,28 @@ const Booking = () => {
             const selectedTimeSlots = bookingData[sub._id]?.selectedTime?.split(", ") || [];
 
             if (selectedTimeSlots.length > 0) {
-                const duration = selectedTimeSlots.length; // คำนวณชั่วโมงที่จอง
+                const startTime = selectedTimeSlots[0].split(" - ")[0]; 
+                const endTime = selectedTimeSlots[selectedTimeSlots.length - 1].split(" - ")[1];
+
+                // ✅ คำนวณ duration เป็นจำนวนชั่วโมงที่ถูกต้อง
+                const startHour = parseInt(startTime.split(":")[0]);
+                const endHour = parseInt(endTime.split(":")[0]);
+                const duration = endHour - startHour;
+
                 const pricePerHour = parseFloat(sub.price) || 0;
                 const price = pricePerHour * duration;
 
-                totalPrice += price; // รวมราคาทั้งหมด
+                totalPrice += price; // ✅ รวมราคาทั้งหมด
 
                 details.push({
+                    bookingDate: formatDateForAPI(selectedDate),  // ✅ เพิ่มวันที่จองลงใน details
                     subStadiumId: sub._id,
-                    sportName: sub.sportName, // 🔹 เก็บค่าของแต่ละสนามให้ถูกต้อง
-                    startTime: selectedTimeSlots[0]?.split(" - ")[0],
-                    endTime: selectedTimeSlots[selectedTimeSlots.length - 1]?.split(" - ")[1],
-                    duration: duration,
+                    sportName: sub.sportName,
+                    startTime: startTime,
+                    endTime: endTime,
+                    duration: duration, // ✅ แสดงจำนวนชั่วโมงที่ถูกต้อง
                     pricePerHour: pricePerHour,
-                    price: price,
+                    price: price, // ✅ ราคาต่อสนาม
                 });
             }
         });
@@ -226,7 +234,7 @@ const Booking = () => {
             return;
         }
 
-        // ✅ แก้ให้ `totalPrice` และ `details` ถูกต้อง และรวมเป็น session เดียว
+        // ✅ ส่ง `totalPrice` อยู่นอก `details`
         const bookingPayload = {
             sessionId: nanoid(10),
             userId,
@@ -235,7 +243,7 @@ const Booking = () => {
             bookingDate: formatDateForAPI(selectedDate),
             expiresAt: new Date(Date.now() + 10 * 60 * 1000), // หมดอายุใน 10 นาที
             totalPrice,
-            details
+            details,
         };
 
         console.log("📌 ข้อมูลที่ส่งไปยัง Backend:", bookingPayload);
@@ -254,6 +262,7 @@ const Booking = () => {
         Swal.fire("❌ เกิดข้อผิดพลาด", "ไม่สามารถยืนยันการจองได้ กรุณาลองใหม่", "error");
     }
 };
+
 
   return (
     <div className="booking-container">
