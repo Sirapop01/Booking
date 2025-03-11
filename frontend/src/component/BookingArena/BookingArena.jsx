@@ -35,14 +35,16 @@ const BookingArena = () => {
   useEffect(() => {
     const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
     if (storedToken) {
-      try {
-        const decoded = jwtDecode(storedToken);
-        setUserId(decoded.id); // ✅ กำหนดค่า userId
-      } catch (error) {
-        console.error("⚠️ Error decoding token:", error);
-      }
+        try {
+            const decoded = jwtDecode(storedToken);
+            console.log("✅ Token Decoded:", decoded); // 🔍 ตรวจสอบค่า Token
+            setUserId(decoded.id); // 🔥 เปลี่ยนจาก `userId` เป็น `id`
+        } catch (error) {
+            console.error("⚠️ Error decoding token:", error);
+        }
     }
 }, []);
+
 
 useEffect(() => {
   axios.get(`http://localhost:4000/api/arenas/getArenaById/${id}`)
@@ -158,38 +160,87 @@ const toggleFavorite = async () => {
 
 
 
-  // ฟังก์ชันเลือกหรือยกเลิกสนามย่อย
-  const toggleSubStadiumSelection = (subStadiumId) => {
-    setSelectedSubStadiums((prev) =>
-      prev.includes(subStadiumId)
-        ? prev.filter((id) => id !== subStadiumId)
-        : [...prev, subStadiumId]
-    );
-  };
 
-  const handleBooking = () => {
-    if (selectedSubStadiums.length > 0) {
-      // ✅ ดึงข้อมูลสนามย่อยแบบเต็ม เพื่อส่งไป Booking.js
-      const selectedData = selectedSubStadiums.map((id) => {
-        const sportKey = Object.keys(subStadiums).find((sport) =>
-          subStadiums[sport].some((sub) => sub._id === id)
-        );
-        return subStadiums[sportKey].find((sub) => sub._id === id);
-      });
-  
-      // ✅ ส่งข้อมูลไปหน้า Booking
-      navigate(`/booking`, { state: { selectedSubStadiums: selectedData } });
-    } else {
-      Swal.fire({
-        title: "กรุณาเลือกสนาม!",
-        text: "เลือกสนามก่อนทำการจอง",
-        icon: "warning",
-        confirmButtonText: "ตกลง",
-      });
-    }
-  };
-  
- 
+const toggleSubStadiumSelection = (subStadiumId) => {
+  setSelectedSubStadiums((prev) => {
+      const isSelected = prev.some((sub) => sub._id === subStadiumId);
+
+      if (isSelected) {
+          return prev.filter((sub) => sub._id !== subStadiumId);
+      } else {
+          const sportKey = Object.keys(subStadiums).find((sport) =>
+              subStadiums[sport].some((sub) => sub._id === subStadiumId)
+          );
+          const subStadium = subStadiums[sportKey]?.find((sub) => sub._id === subStadiumId);
+
+          if (!subStadium) return prev;
+
+          console.log("📌 ข้อมูลสนามย่อยที่เลือก:", subStadium); // Debug เช็คค่าที่ดึงมา
+
+          return [
+              ...prev,
+              {
+                  _id: subStadium._id,
+                  name: subStadium.name || "ไม่มีชื่อ",
+                  arenaId: subStadium.arenaId || "ไม่พบข้อมูล",
+                  ownerId: subStadium.owner_id || "ไม่พบข้อมูล",
+                  sportName: sportKey || "ไม่ระบุ",
+                  images: subStadium.images || [],
+                  price: subStadium.price || "ไม่มีราคา",
+              },
+          ];
+      }
+  });
+};
+
+
+
+
+
+const handleBooking = () => {
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+
+  if (!token) {
+      Swal.fire("⚠ กรุณาเข้าสู่ระบบก่อนทำการจอง", "", "warning");
+      return;
+  }
+
+  try {
+      const decodedToken = JSON.parse(atob(token.split(".")[1])); 
+      const userId = decodedToken?.id; 
+
+      if (!userId) {
+          Swal.fire("⚠ ไม่พบข้อมูลผู้ใช้ กรุณาเข้าสู่ระบบใหม่", "", "warning");
+          return;
+      }
+
+      if (selectedSubStadiums.length > 0) {
+          console.log("📌 ข้อมูลที่จะส่งไปหน้า Booking:", selectedSubStadiums); // Debug
+
+          // ✅ ตรวจสอบว่าทุกสนามย่อยมี name และ price
+          const hasInvalidData = selectedSubStadiums.some(sub => !sub.name || !sub.price);
+          if (hasInvalidData) {
+              Swal.fire("⚠ ข้อมูลสนามไม่สมบูรณ์", "บางสนามไม่มีชื่อหรือราคา กรุณาเลือกใหม่", "warning");
+              return;
+          }
+
+          navigate(`/booking`, { state: { selectedSubStadiums, userId } });
+      } else {
+          Swal.fire({
+              title: "กรุณาเลือกสนาม!",
+              text: "เลือกสนามก่อนทำการจอง",
+              icon: "warning",
+              confirmButtonText: "ตกลง",
+          });
+      }
+  } catch (error) {
+      console.error("❌ Error decoding token:", error);
+      Swal.fire("❌ Token ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่", "", "error");
+  }
+};
+
+
+
 
   if (loading) return <div className="loading-text">กำลังโหลดข้อมูล...</div>;
   if (!arena) return <div className="loading-text">ไม่พบข้อมูลสนามกีฬา</div>;

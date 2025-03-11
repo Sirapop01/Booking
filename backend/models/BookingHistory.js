@@ -2,30 +2,46 @@ const mongoose = require("mongoose");
 
 const BookingHistorySchema = new mongoose.Schema(
   {
+    sessionId: {
+      type: String,
+      required: true,
+      unique: true, // ✅ ป้องกัน session ซ้ำ
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    stadiumId: {
+    stadiumId: { // ✅ เพิ่ม stadiumId ที่ระดับบนของ schema
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Arena",
+      ref: "Stadium",
       required: true,
     },
-    subStadiumId: {  // ✅ เพิ่ม ID ของสนามย่อย
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "SubStadium",
+    status: {
+      type: String,
+      enum: ["pending", "completed", "canceled"],
+      default: "pending",
+    },
+    totalPrice: {
+      type: Number,
       required: true,
     },
-    ownerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "BusinessOwner",
-      required: true,
+    expiresAt: {
+      type: Date,
+      required: true, // ✅ ใช้สำหรับล้างข้อมูลเมื่อหมดอายุ
     },
-    sportName: { type: String, required: true }, // ประเภทกีฬา (Football, Basketball ฯลฯ)
-    timeSlots: { type: [String], required: true }, // ✅ เปลี่ยนจาก timeRange เป็น Array
-    bookingDate: { type: Date, required: true },
-    status: { type: String, enum: ["completed", "canceled", "pending"], default: "pending" },
+    details: [
+      {
+        subStadiumId: { type: mongoose.Schema.Types.ObjectId, ref: "SubStadium", required: true },
+        sportName: { type: String, required: true },
+        bookingDate: { type: Date, required: true }, // ✅ เพิ่ม bookingDate ลงใน details
+        startTime: { type: String, required: true },
+        endTime: { type: String, required: true },
+        duration: { type: Number, required: true },
+        pricePerHour: { type: Number, required: true },
+        price: { type: Number, required: true },
+      },
+    ],
   },
   { timestamps: true }
 );
