@@ -4,14 +4,15 @@ import Swal from "sweetalert2";
 import Navbar from "../Navbar/Navbar";
 import axios from "axios";
 import "./Booking.css";
+import { nanoid } from "nanoid";
 
 const Booking = () => {
   const location = useLocation();
   const selectedSubStadiums = location.state?.selectedSubStadiums || [];
   const [bookingData, setBookingData] = useState({});
   const [selectedDate, setSelectedDate] = useState("");
-  const [selectedCard, setSelectedCard] = useState(null);
-
+  
+  console.log("📌 ข้อมูลที่ได้รับจากหน้าจอง:", selectedSubStadiums);
   const formatDateForAPI = (dateString) => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -166,25 +167,102 @@ const Booking = () => {
     });
   };
   
-  
+  const handleConfirmBooking = async () => {
+    try {
+        const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+        if (!token) {
+            Swal.fire("⚠ กรุณาเข้าสู่ระบบก่อนทำการจอง", "", "warning");
+            return;
+        }
 
-  const handleConfirmBooking = () => {
-    if (!selectedDate) {
-      console.warn("⚠ กรุณาเลือกวันที่ก่อน");
-      Swal.fire("⚠ กรุณาเลือกวันที่ก่อน", "", "warning");
-      return;
+        let userId = null;
+        try {
+            const decodedToken = JSON.parse(atob(token.split(".")[1]));
+            console.log("✅ Decoded Token in Booking:", decodedToken);
+            userId = decodedToken?.id;
+        } catch (err) {
+            console.error("🚨 Error decoding JWT:", err);
+            Swal.fire("❌ Token ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่", "", "error");
+            return;
+        }
+
+        if (!userId) {
+            Swal.fire("⚠ ไม่พบข้อมูลผู้ใช้ กรุณาเข้าสู่ระบบใหม่", "", "warning");
+            return;
+        }
+
+        if (!selectedDate) {
+            Swal.fire("⚠ กรุณาเลือกวันที่ก่อน", "", "warning");
+            return;
+        }
+
+        let totalPrice = 0;
+        let details = [];
+
+        selectedSubStadiums.forEach((sub) => {
+            const selectedTimeSlots = bookingData[sub._id]?.selectedTime?.split(", ") || [];
+
+            if (selectedTimeSlots.length > 0) {
+                const startTime = selectedTimeSlots[0].split(" - ")[0]; 
+                const endTime = selectedTimeSlots[selectedTimeSlots.length - 1].split(" - ")[1];
+
+                // ✅ คำนวณ duration เป็นจำนวนชั่วโมงที่ถูกต้อง
+                const startHour = parseInt(startTime.split(":")[0]);
+                const endHour = parseInt(endTime.split(":")[0]);
+                const duration = endHour - startHour;
+
+                const pricePerHour = parseFloat(sub.price) || 0;
+                const price = pricePerHour * duration;
+
+                totalPrice += price; // ✅ รวมราคาทั้งหมด
+
+                details.push({
+                    bookingDate: formatDateForAPI(selectedDate),  // ✅ เพิ่มวันที่จองลงใน details
+                    subStadiumId: sub._id,
+                    sportName: sub.sportName,
+                    startTime: startTime,
+                    endTime: endTime,
+                    duration: duration, // ✅ แสดงจำนวนชั่วโมงที่ถูกต้อง
+                    pricePerHour: pricePerHour,
+                    price: price, // ✅ ราคาต่อสนาม
+                });
+            }
+        });
+
+        if (details.length === 0) {
+            Swal.fire("⚠ กรุณาเลือกเวลาอย่างน้อย 1 ช่วง", "", "warning");
+            return;
+        }
+
+        // ✅ ส่ง `totalPrice` อยู่นอก `details`
+        const bookingPayload = {
+            sessionId: nanoid(10),
+            userId,
+            stadiumId: selectedSubStadiums[0].arenaId, // ใช้สนามแรกที่เลือก
+            ownerId: selectedSubStadiums[0].ownerId,
+            bookingDate: formatDateForAPI(selectedDate),
+            expiresAt: new Date(Date.now() + 10 * 60 * 1000), // หมดอายุใน 10 นาที
+            totalPrice,
+            details,
+        };
+
+        console.log("📌 ข้อมูลที่ส่งไปยัง Backend:", bookingPayload);
+
+        const response = await axios.post(
+            "http://localhost:4000/api/bookinghistories/confirm-booking",
+            bookingPayload,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        if (response.status === 201) {
+            Swal.fire("✅ ยืนยันการจองสำเร็จ!", "ระบบได้บันทึกการจองของคุณแล้ว", "success");
+        }
+    } catch (error) {
+        console.error("🚨 Error confirming booking:", error);
+        Swal.fire("❌ เกิดข้อผิดพลาด", "ไม่สามารถยืนยันการจองได้ กรุณาลองใหม่", "error");
     }
+};
 
-    const hasSelection = Object.values(bookingData).some((data) => data.selectedTime);
-    if (!hasSelection) {
-      console.warn("⚠ กรุณาเลือกช่วงเวลาก่อนยืนยันการจอง");
-      Swal.fire("⚠ กรุณาเลือกช่วงเวลาก่อน", "", "warning");
-      return;
-    }
-
-    console.log("✅ กำลังยืนยันการจอง", bookingData);
-    Swal.fire("✅ การจองเสร็จสิ้น!", "", "success");
-  };
 
   return (
     <div className="booking-container">

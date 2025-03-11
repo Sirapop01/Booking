@@ -33,6 +33,8 @@
   border: 3px solid #137bd1;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
+
 .arena-info-container {
   display: flex;
   height: 500px;
@@ -224,7 +226,7 @@
 
 /* ✅ ปุ่มจอง */
 .booking-button101 {
-  background-color: #2b7cff;
+  background-color: #080a74;
   color: white;
   border: none;
   padding: 12px;
@@ -237,7 +239,7 @@
   font-family: 'Kanit', sans-serif;
 }
 
-.booking-button101:hover {
+.booking-button:hover {
   background-color: #080a74;
   transform: scale(1.01);
 }
