@@ -1,72 +1,71 @@
-const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
-import BookingHistory from "../models/BookingHistory";
-const Bookings = require("../models/Booking");
-const Substadium = require("../models/Substadium");
+const BookingHistory = require("../models/BookingHistory");
+const SubStadium = require("../models/subStadiumModel");
 const BusinessInfo = require("../models/BusinessInfo");
+const Arena = require("../models/Arena");
 
-
-require("dotenv").config();
-// ✅ ดึงข้อมูลการจอง + ข้อมูลสนาม + ข้อมูลธนาคาร
-exports.getPaymentDetails = async (req, res) => {
+exports.getPendingPayment = async (req, res) => {
     try {
-        
-        const { bookingId } = req.params;
-
-        // 🔹 ดึงข้อมูลการจองจาก Booking
-        const booking = await Booking.findById(bookingId);
-        if (!booking) {
-            return res.status(404).json({ message: "ไม่พบข้อมูลการจอง" });
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) {
+            return res.status(401).json({ message: "ไม่ได้รับ Token" });
         }
 
-        // 🔹 ดึงข้อมูลสนามจาก Substadium
-        const substadium = await Substadium.findById(booking.substadiumId);
-        if (!substadium) {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+
+        // ✅ ค้นหาคำสั่งจองที่ยังไม่จ่าย
+        const booking = await BookingHistory.findOne({ userId, status: "pending" })
+            .select("details totalPrice expiresAt sessionId")
+            .lean(); // ✅ แปลง MongoDB object เป็น JSON
+
+        if (!booking) {
+            console.log("❌ ไม่พบคำสั่งจองที่รอดำเนินการ");
+            return res.status(404).json({ message: "ไม่พบคำสั่งจองที่รอดำเนินการ" });
+        }
+
+        console.log("✅ booking.details มีข้อมูล:", booking.details);
+
+        // ✅ ดึง subStadiumId ทั้งหมดจากคำสั่งจอง
+        const subStadiumIds = booking.details.map(detail => detail.subStadiumId);
+
+        // ✅ ดึงข้อมูลสนามทั้งหมด
+        const subStadiums = await SubStadium.find({ _id: { $in: subStadiumIds } }).lean();
+        if (!subStadiums.length) {
+            console.log("❌ ไม่พบข้อมูลสนาม");
             return res.status(404).json({ message: "ไม่พบข้อมูลสนาม" });
         }
 
-        // 🔹 ดึงข้อมูลเจ้าของสนามจาก BusinessInfo
-        const businessInfo = await BusinessInfo.findOne({ ownerId: substadium.ownerId });
-        if (!businessInfo) {
-            return res.status(404).json({ message: "ไม่พบข้อมูลธนาคารของเจ้าของสนาม" });
+        console.log("✅ พบข้อมูลสนาม:", subStadiums);
+
+        // ✅ ดึง owner_id จาก subStadiums
+        const ownerIds = [...new Set(subStadiums.map(stadium => stadium.owner_id))];
+        const arenaId = [...new Set(subStadiums.map(stadium => stadium.arenaId))];
+
+        // ✅ ดึงข้อมูลธนาคารของเจ้าของสนาม
+        const businessInfos = await BusinessInfo.find({ businessOwnerId: { $in: ownerIds } }).lean();
+        if (!businessInfos.length) {
+            console.log("❌ ไม่พบข้อมูลเจ้าของสนาม");
+            return res.status(404).json({ message: "ไม่พบข้อมูลธุรกิจเจ้าของสนาม" });
         }
 
-        // ✅ ส่งข้อมูลกลับไปให้ Frontend
-        res.json({
+        console.log("✅ พบข้อมูลธุรกิจ:", businessInfos);
+
+        const arenaInfo = await Arena.find({ _id : { $in: arenaId } }).lean();
+        if (!arenaInfo.length) {
+            console.log("ไม่พบข้อมูลarena")
+            return res.status(404).json({ message: "ไม่พบข้อมูลarena" })
+        }
+        // ✅ ส่งข้อมูลไปยัง Frontend
+        res.status(200).json({
             booking,
-            substadium,
-            businessInfo
+            stadiumInfo: subStadiums,  // อาจมีหลายสนาม
+            bankInfo: businessInfos[0], // เลือกอันแรกถ้ามีหลายอัน
+            arenaInfo 
         });
+
     } catch (error) {
         console.error("❌ Error fetching payment details:", error);
-        res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูล" });
-    }
-};
-
-// ✅ บันทึกข้อมูลการชำระเงิน
-exports.submitPayment = async (req, res) => {
-    try {
-        const { bookingId } = req.params;
-        const { paymentTime, amount, slipImage } = req.body;
-
-        // 🔹 ตรวจสอบว่ามีข้อมูลการจองหรือไม่
-        const booking = await Booking.findById(bookingId);
-        if (!booking) {
-            return res.status(404).json({ message: "ไม่พบข้อมูลการจอง" });
-        }
-
-        // 🔹 อัปเดตสถานะการชำระเงิน
-        booking.paymentStatus = "ชำระเงินแล้ว";
-        booking.paymentTime = paymentTime;
-        booking.amountPaid = amount;
-        booking.slipImage = slipImage; // URL ของภาพสลิป
-
-        await booking.save();
-
-        res.json({ message: "บันทึกการชำระเงินเรียบร้อยแล้ว", booking });
-    } catch (error) {
-        console.error("❌ Error submitting payment:", error);
-        res.status(500).json({ message: "เกิดข้อผิดพลาดในการบันทึกการชำระเงิน" });
+        res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
     }
 };
