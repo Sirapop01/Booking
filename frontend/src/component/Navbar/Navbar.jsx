@@ -10,16 +10,11 @@ const Navbar = () => {
   const [decodedToken, setDecodedToken] = useState(null);
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
 
-
   useEffect(() => {
-    // ดึง Token จาก Local Storage
     const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
-
     if (storedToken) {
       try {
-        // ถอดรหัส JWT Token
         const decoded = jwtDecode(storedToken);
-        console.log("✅ Token Decoded:", decoded);
         setDecodedToken(decoded);
       } catch (error) {
         console.error("❌ Error decoding token:", error);
@@ -30,22 +25,17 @@ const Navbar = () => {
 
   const isLoggedIn = !!decodedToken;
 
-
-
-
-  // ฟังก์ชัน Logout พร้อมป๊อปอัปยืนยัน
   const handleLogout = () => {
-    setShowLogoutPopup(true); // แสดงป๊อปอัปยืนยัน
-
+    setShowLogoutPopup(true);
   };
 
   const confirmLogout = () => {
-    localStorage.removeItem('token'); // ลบ Token ออกจาก LocalStorage
+    localStorage.removeItem('token');
     sessionStorage.removeItem('token');
-    setDecodedToken(null); // รีเซ็ต Token ใน State
-    setIsDropdownOpen(false); // ปิด Dropdown
-    setShowLogoutPopup(false); // ปิดป๊อปอัป
-    navigate('/'); // Redirect ไปหน้าแรก
+    setDecodedToken(null);
+    setIsDropdownOpen(false);
+    setShowLogoutPopup(false);
+    navigate('/');
     window.location.reload();
   };
 
@@ -63,51 +53,43 @@ const Navbar = () => {
           <span className="navbar-title">MatchWeb</span>
         </div>
 
-
         <div className="navbar-right">
           {!isLoggedIn ? (
             <div className="navbar-links">
-              <button className="navbar-link" onClick={() => navigate("/login")}>
-                เข้าสู่ระบบ
-              </button>
-              <button className="navbar-button" onClick={() => navigate("/RegisterChoice")}>
-                ลงทะเบียน
-              </button>
-            </div>
-          ) : decodedToken?.role === "customer" ? (
-            <div className="dropdown">
-              <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-                ☰
-              </button>
-              {isDropdownOpen && (
-                <div className="dropdown-menu">
-                  <button onClick={() => navigate("/profile")}>บัญชี</button>
-                  <button onClick={() => navigate("/historybooking")}>ประวัติการจอง</button>
-                  <button onClick={() => navigate("/FavoritesList")}>รายการโปรด</button>
-                  <button onClick={handleLogout}>ลงชื่อออก</button>
-                </div>
-              )}
+              <button className="navbar-link" onClick={() => navigate("/login")}>เข้าสู่ระบบ</button>
+              <button className="navbar-button" onClick={() => navigate("/RegisterChoice")}>ลงทะเบียน</button>
             </div>
           ) : (
             <div className="dropdown">
-              <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-                ☰
+              <button
+                className="menu-icon"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                <span className={`icon ${isDropdownOpen ? "rotate" : ""}`}>☰</span>
               </button>
-              {isDropdownOpen && (
-                <div className="dropdown-menu">
-                  <button onClick={() => navigate("/OwnerProfile")}>บัญชี</button>
-                  <button onClick={() => navigate("/stadium-list")}>สนามของฉัน</button>
-                  <button onClick={() => navigate(`/Ownerledger/${decodedToken?.id}`)}>บัญชีรายรับ</button>
-                  <button onClick={() => navigate("/addPromotion")}>เพิ่มโปรโมชั่น</button>
-                  <button onClick={handleLogout}>ลงชื่อออก</button>
-                </div>
-              )}
+
+              <div className={`dropdown-menu ${isDropdownOpen ? "open" : ""}`}>
+                {decodedToken?.role === "customer" ? (
+                  <>
+                    <button onClick={() => navigate("/profile")}>บัญชี</button>
+                    <button onClick={() => navigate("/historybooking")}>ประวัติการจอง</button>
+                    <button onClick={() => navigate("/FavoritesList")}>รายการโปรด</button>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => navigate("/OwnerProfile")}>บัญชี</button>
+                    <button onClick={() => navigate("/stadium-list")}>สนามของฉัน</button>
+                    <button onClick={() => navigate(`/Ownerledger/${decodedToken?.id}`)}>บัญชีรายรับ</button>
+                    <button onClick={() => navigate("/addPromotion")}>เพิ่มโปรโมชั่น</button>
+                  </>
+                )}
+                <button onClick={handleLogout}>ลงชื่อออก</button>
+              </div>
             </div>
           )}
         </div>
       </nav>
 
-      {/* ✅ Popup Logout กลางจอ */}
       {showLogoutPopup && (
         <div className="logout-popup-overlay" onClick={() => setShowLogoutPopup(false)}>
           <div className="logout-popup" onClick={(e) => e.stopPropagation()}>
