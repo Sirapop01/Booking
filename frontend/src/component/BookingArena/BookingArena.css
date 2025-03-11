@@ -254,7 +254,7 @@
 
 /* ✅ ปุ่มจอง */
 .booking-button101 {
-  background-color: #080a74;
+  background-color: #001f3f;
   color: white;
   border: none;
   padding: 12px;
@@ -268,7 +268,7 @@
 }
 
 .booking-button:hover {
-  background-color: #080a74;
+  background-color: #003366;
   transform: scale(1.01);
 }
 

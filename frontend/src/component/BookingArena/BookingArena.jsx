@@ -17,6 +17,17 @@ const BookingArena = () => {
   const [selectedSubStadiums, setSelectedSubStadiums] = useState([]); // เก็บสนามย่อยที่ถูกเลือก
   const [isFavorite, setIsFavorite] = useState(false); // ✅ เช็คว่าสนามเป็นรายการโปรดหรือไม่
   const [userId, setUserId] = useState(null); // ✅ กำหนดค่า userId
+  const imageCount = arena?.images?.length || 0;
+  const settings = {
+    dots: true, // Show navigation dots
+    infinite: true, // Infinite scroll
+    speed: 500,
+    slidesToShow: 1, // Show 1 image at a time
+    slidesToScroll: 1, // Scroll 1 image at a time
+    autoplay: true, // Auto slide images
+    autoplaySpeed: 2000, 
+  };
+
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
