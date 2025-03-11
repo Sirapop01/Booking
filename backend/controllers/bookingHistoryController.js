@@ -62,7 +62,7 @@ exports.getUserBookingHistory = async (req, res) => {
 
         console.log("🔍 กำลังดึงประวัติการจองของ userId:", userId);
 
-        // ✅ ดึงข้อมูลการจองพร้อมกับ `subStadiumId`
+        // ✅ ดึงข้อมูลการจองพร้อมข้อมูลสนามย่อย
         const bookings = await BookingHistory.find({ userId })
             .populate({ path: "details.subStadiumId", select: "name images", options: { strictPopulate: false } })
             .lean();
@@ -74,36 +74,35 @@ exports.getUserBookingHistory = async (req, res) => {
             return res.status(404).json({ message: "❌ ไม่พบประวัติการจอง" });
         }
 
-        // ✅ ดึง stadiumId ทั้งหมดที่ต้องใช้
+        // ✅ ดึง stadiumId ที่ต้องใช้
         const stadiumIds = bookings.map(b => b.stadiumId).filter(id => id);
-
-        // ✅ ดึงข้อมูลสนามจาก `Arena` (แทน `Stadium`)
         const arenas = await Arena.find({ _id: { $in: stadiumIds } }).lean();
 
         console.log("📌 Arena Data:", arenas);
 
-        // ✅ รวมข้อมูล Booking + Arena + SubStadium
+        // ✅ รวมข้อมูล Booking + Arena + SubStadium + Sport Name
         const updatedBookings = bookings.map(booking => {
             const arena = arenas.find(a => String(a._id) === String(booking.stadiumId));
 
             return {
                 _id: booking._id,
                 userId: booking.userId,
-                stadiumId: booking.stadiumId || null, // ✅ ดึงค่า stadiumId
-                fieldName: arena ? arena.fieldName : "ไม่พบชื่อสนาม", // ✅ ดึงชื่อสนามจาก `Arena`
-                stadiumImage: arena?.images?.[0] || "https://via.placeholder.com/150", // ✅ รูปภาพสนาม
+                stadiumId: booking.stadiumId || null,
+                fieldName: arena ? arena.fieldName : "ไม่พบชื่อสนาม",
+                stadiumImage: arena?.images?.[0] || "https://via.placeholder.com/150",
+                totalPrice: booking.totalPrice,
+                status: booking.status,
+                expiresAt: booking.expiresAt,
                 details: booking.details.map(detail => ({
                     subStadiumId: detail.subStadiumId?._id || null,
                     subStadiumName: detail.subStadiumId?.name || "ไม่พบชื่อสนามย่อย",
-                    sportName: detail.sportName,
+                    sportName: detail.sportName, // ✅ ดึง sportName มาด้วย
                     bookingDate: detail.bookingDate,
                     startTime: detail.startTime,
                     endTime: detail.endTime,
+                    duration: detail.duration,
                     price: detail.price
-                })),
-                totalPrice: booking.totalPrice,
-                status: booking.status,
-                expiresAt: booking.expiresAt
+                }))
             };
         });
 
@@ -115,6 +114,7 @@ exports.getUserBookingHistory = async (req, res) => {
         res.status(500).json({ message: "❌ ไม่สามารถดึงประวัติการจองได้" });
     }
 };
+
 
 
 // ✅ ฟังก์ชันใหม่สำหรับบันทึกการจองโดยตรง
