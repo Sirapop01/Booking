@@ -1,6 +1,8 @@
 const BookingHistory = require("../models/BookingHistory");
 const Arena = require("../models/Arena");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose"); // ✅ แก้ปัญหา mongoose is not defined
+const { nanoid } = require("nanoid");
 
 // ✅ ฟังก์ชันเพิ่มการจองใหม่
 exports.addBookingHistory = async (req, res) => {
@@ -94,6 +96,47 @@ exports.getUserBookingHistory = async (req, res) => {
         res.status(500).json({ message: "❌ ไม่สามารถดึงประวัติการจองได้" });
     }
 };
+
+// ✅ ฟังก์ชันใหม่สำหรับบันทึกการจองโดยตรง
+exports.confirmBooking = async (req, res) => {
+    try {
+        console.log("📌 ข้อมูลที่ได้รับจาก Frontend:", req.body);
+
+        const { sessionId, userId, stadiumId, ownerId, bookingDate, expiresAt, totalPrice, details } = req.body;
+
+        if (!details || !Array.isArray(details) || details.length === 0) {
+            return res.status(400).json({ message: "❌ ไม่มีข้อมูลการจองที่ถูกต้อง" });
+        }
+
+        // ✅ ตรวจสอบว่ามี sessionId ซ้ำหรือไม่
+        const existingBooking = await BookingHistory.findOne({ sessionId });
+        if (existingBooking) {
+            return res.status(400).json({ message: "❌ Session นี้มีอยู่แล้วในระบบ" });
+        }
+
+        // ✅ สร้าง BookingHistory เดียวที่รวมข้อมูลทั้งหมด
+        const newBooking = new BookingHistory({
+            sessionId,
+            userId,
+            stadiumId,
+            ownerId,
+            bookingDate,
+            expiresAt,
+            totalPrice,
+            details
+        });
+
+        await newBooking.save();
+        res.status(201).json({ message: "✅ การจองสำเร็จ", booking: newBooking });
+
+    } catch (error) {
+        console.error("❌ Error confirming booking:", error);
+        res.status(500).json({ message: "❌ ไม่สามารถบันทึกการจองได้", error: error.message });
+    }
+};
+
+
+
 
 
 

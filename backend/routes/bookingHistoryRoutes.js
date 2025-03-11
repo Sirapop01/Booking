@@ -1,12 +1,14 @@
 const express = require("express");
-const { getUserBookingHistory, addBookingHistory } = require("../controllers/bookingHistoryController");
-
+const { getUserBookingHistory, addBookingHistory, confirmBooking} = require("../controllers/bookingHistoryController");
+const { protect } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
 // ✅ ดึงประวัติการจองของผู้ใช้
-router.get("/", getUserBookingHistory); // ✅ เพิ่ม Route ที่รองรับ `?userId=...`
+router.post("/", protect, getUserBookingHistory);
 
 // ✅ บันทึกการจอง
-router.post("/booking-history", addBookingHistory);
+router.post("/booking-history", protect, addBookingHistory);
+
+router.post("/confirm-booking", protect, confirmBooking);
 
 module.exports = router;
