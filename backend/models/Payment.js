@@ -1,19 +1,38 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const paymentSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  arenaId: { type: mongoose.Schema.Types.ObjectId, ref: 'Arena' },
-  dateTime: Date,
-  item: String,
-  amount: Number,
-  tax: Number,
-  total: Number,
-  slipImageUrl: String,
-  rejectReason: String,
-  status: String,
-  state: String,
-});
+const PaymentSchema = new mongoose.Schema(
+  {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // ผู้ใช้ที่ชำระเงิน
+    sessionId: { type: String, required: true, unique: true }, // รหัสอ้างอิงการจอง
+    bookingId: { type: mongoose.Schema.Types.ObjectId, ref: "BookingHistory", required: true }, // อ้างอิงคำสั่งจอง
 
-const Payment = mongoose.model('Payment', paymentSchema, 'Payment'); // กำหนดชื่อ collection ชัดเจน
+    amount: { type: Number, required: true }, // จำนวนเงินที่โอน
+    transferTime: { type: String, required: true }, // เวลาที่โอนเงิน
+    slipImage: { type: String, required: true }, // URL หลักฐานการโอนจาก Cloudinary
 
-module.exports = Payment;
+    status: {
+      type: String,
+      enum: ["pending", "confirmed", "rejected", "paid"],
+      default: "paid",
+    }, // สถานะของการชำระเงิน
+
+    details: [
+      {
+        subStadiumId: { type: mongoose.Schema.Types.ObjectId, ref: "SubStadium" },
+        sportName: { type: String },
+        bookingDate: { type: Date },
+        startTime: { type: String },
+        endTime: { type: String },
+        duration: { type: Number },
+        pricePerHour: { type: Number },
+        price: { type: Number },
+      },
+    ],
+
+    createdAt: { type: Date, default: Date.now }, // เวลาที่สร้างเอกสาร
+    updatedAt: { type: Date, default: Date.now }, // เวลาที่อัปเดตรายการ
+  },
+  { collection: "payments" }
+);
+
+module.exports = mongoose.model("Payment", PaymentSchema);

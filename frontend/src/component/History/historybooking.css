@@ -1,71 +1,138 @@
+/* ปรับแต่งหน้าหลัก */
 .history-page {
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .history-title {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-  
-  .history-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .history-card {
-    width: 90%;
-    max-width: 600px;
-    background: #f9f9f9;
-    margin: 10px;
-    padding: 15px;
-    border-radius: 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .history-details {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    color: black;
-  }
-  
-  .history-image img {
-    width: 100px;
-    height: 100px;
-    border-radius: 10px;
-    object-fit: cover;
-  }
-  
-  .no-history {
-    font-size: 18px;
-    color: gray;
-  }
-  
-  .status {
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 5px;
-  }
-  
-  .status.completed {
-    color: white;
-    background-color: green;
-  }
-  
-  .status.canceled {
-    color: white;
-    background-color: red;
-  }
-  
-  .status.pending {
-    color: black;
-    background-color: yellow;
-  }
-  
+  padding: 20px;
+  text-align: center;
+  background: linear-gradient(to right, #6a11cb, #2575fc); /* Gradient สีฟ้า-ม่วง */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* หัวข้อหลัก */
+.history-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: white;
+  font-weight: bold;
+}
+
+/* คอนเทนเนอร์ของการ์ด */
+.history-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* การ์ดแต่ละรายการ */
+.history-card {
+  width: 90%;
+  max-width: 650px;
+  background: white;
+  margin: 15px 0;
+  padding: 20px;
+  border-radius: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+/* เอฟเฟกต์ hover */
+.history-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* รายละเอียดของประวัติ */
+.history-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  color: #333;
+}
+
+/* รูปภาพสนาม */
+.history-image img {
+  width: 110px;
+  height: 110px;
+  border-radius: 15px;
+  object-fit: cover;
+  border: 3px solid #6a11cb;
+}
+
+/* ข้อความเมื่อไม่มีประวัติการจอง */
+.no-history {
+  font-size: 20px;
+  color: white;
+  margin-top: 20px;
+}
+
+/* สไตล์สถานะ */
+.status {
+  font-weight: bold;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  display: inline-block;
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+
+/* สีของแต่ละสถานะ */
+.status.paid {
+  color: white;
+  background-color: #28a745;
+}
+
+.status.canceled {
+  color: white;
+  background-color: #dc3545;
+}
+
+.status.pending {
+  color: black;
+  background-color: #ffc107;
+}
+
+/* สไตล์รายการกีฬาแต่ละรายการ */
+.detail-item {
+  background: #f4f4f4;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+  width: 100%;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* ปรับแต่งตัวหนังสือ */
+.detail-item p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+/* ขนาดตัวหนังสือของหัวข้อ */
+.history-details h2 {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #6a11cb;
+}
+
+/* สไตล์สำหรับราคารวม */
+.total-price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+  text-align: center;
+  width: fit-content;
+}

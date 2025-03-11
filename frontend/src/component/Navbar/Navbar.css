@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
-
 /* ✅ Navbar หลัก */
 .navbar-homepage {
     display: flex;
@@ -8,17 +6,17 @@
     background-color: #07213A;
     padding: 20px 30px;
     font-family: 'Inder', sans-serif;
-    height: 100px; /* กำหนดความสูงแน่นอนให้ Navbar */
+    height: 100px;
 }
 
-/* ✅ ปุ่มด้านซ้าย (โปรโมชั่น + รายการโปรด) */
+/* ✅ ปุ่มด้านซ้าย */
 .navbar-left {
     display: flex;
     align-items: center;
-    gap: 10px; /* ระยะห่างระหว่างปุ่ม */
+    gap: 10px;
 }
 
-/* ✅ ปรับปุ่ม โปรโมชั่น + รายการโปรด */
+/* ✅ ปรับปุ่ม โปรโมชั่น */
 .navbar-button-homepage {
     background-color: #fff;
     color: #07213A;
@@ -37,12 +35,11 @@
     background-color: #d1d1d1;
 }
 
-/* ✅ โลโก้และ MatchWeb อยู่ตรงกลาง */
+/* ✅ โลโก้และ MatchWeb */
 .navbar-center {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-grow: 1; /* ดันให้อยู่ตรงกลางได้ */
 }
 
 .navbar-logo-img-homepage {
@@ -57,50 +54,7 @@
     font-weight: bold;
 }
 
-/* ✅ ปุ่มด้านขวา (เข้าสู่ระบบ, ลงทะเบียน) */
-.navbar-links {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* ปุ่มเรียงแนวนอน */
-}
-
-/* ✅ ปุ่ม เข้าสู่ระบบ + ลงทะเบียน */
-.navbar-button,
-.navbar-link {
-    background-color: #fff;
-    color: #07213A;
-    border: 1px solid #07213A;
-    padding: 8px 18px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 18px;
-    font-weight: bold;
-    white-space: nowrap;
-    transition: background 0.3s ease-in-out;
-    font-family: 'Kanit', sans-serif;
-}
-
-.navbar-button:hover,
-.navbar-link:hover {
-    background-color: #d1d1d1;
-}
-
-/* ✅ ปรับสไตล์เมื่อผู้ใช้ล็อกอิน */
-.navbar-user {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-/* ✅ ชื่อผู้ใช้ */
-.username {
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    white-space: nowrap;
-}
-
-/* ✅ ปุ่มเมนู ☰ (Dropdown Icon) */
+/* ✅ ปุ่ม ☰ */
 .menu-icon {
     background-color: #fff;
     color: #07213A;
@@ -109,100 +63,87 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 20px;
-    font-weight: bold;
-    transition: background 0.3s ease-in-out;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
+/* ✅ เมื่อ Hover */
 .menu-icon:hover {
-    background-color: #d1d1d1;
+    background-color: #e1e1e1;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transform: scale(1.1);
 }
 
-/* ✅ Dropdown Menu Container */
-.dropdown {
-    position: relative;
+/* ✅ หมุน ☰ เมื่อกด Dropdown */
+.icon {
+    display: inline-block;
+    transition: transform 0.4s ease-in-out;
 }
 
-/* ✅ ปุ่มเมนู ☰ (Dropdown Icon) */
-.menu-icon {
-    background-color: #fff;
-    color: #07213A;
-    border: 1px solid #07213A;
-    padding: 6px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 20px;
-    font-weight: bold;
-    transition: background 0.3s ease-in-out;
+/* ✅ เมื่อ Dropdown เปิดให้ ☰ หมุน */
+.icon.rotate {
+    transform: rotate(180deg);
 }
 
-.menu-icon:hover {
-    background-color: #d1d1d1;
-}
-
-/* ✅ Dropdown Menu Container */
-.dropdown {
-    position: relative;
-}
-
-/* ✅ ปุ่มเมนู ☰ (Dropdown Icon) */
-.menu-icon {
-    background-color: #fff;
-    color: #07213A;
-    border: 1px solid #07213A;
-    padding: 6px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 20px;
-    font-weight: bold;
-    transition: background 0.3s ease-in-out;
-}
-
-.menu-icon:hover {
-    background-color: #d1d1d1;
-}
-
-/* ✅ ปรับตำแหน่ง Dropdown Menu */
+/* ✅ Dropdown Menu */
 .dropdown-menu {
     position: absolute;
-    right: -10px;  /* ✅ ขยับออกจากขอบขวาเล็กน้อย */
-    top: 55px;  /* ✅ ลดตำแหน่งลงจากปุ่ม ☰ */
+    right: 0;
+    top: 50px;
     background-color: white;
-    border: 1px solid black; /* ✅ กรอบสีดำ */
     border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15); /* ✅ เพิ่มเงาให้ดูมีมิติ */
-    display: flex;
-    flex-direction: column;
-    width: 180px;
+    box-shadow: 3px 3px 30px rgba(118, 96, 168, 0.2);
+    width: fit-content;
+    min-width: 150px;
     padding: 5px 0;
-    z-index: 999;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    visibility: hidden;
+    overflow: hidden;
 }
 
-/* ✅ ปรับสไตล์ของปุ่มใน Dropdown */
+/* ✅ แสดง Dropdown เมื่อเปิด */
+.dropdown-menu.open {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+/* ✅ ปรับแต่งปุ่มใน Dropdown */
 .dropdown-menu button {
-    background: none;
+    background: none !important; /* ✅ เอาแถบสีเทาออก */
     border: none;
-    padding: 12px 16px;
-    text-align: left; /* ✅ ทำให้ตัวอักษรอยู่ชิดซ้าย */
-    cursor: pointer;
-    width: 100%;
+    padding: 8px 12px;
+    text-align: left;
     font-size: 16px;
-    color: black; /* ✅ เอาสีน้ำเงินออก */
-    font-weight: normal;
+    font-weight: bold;
     display: flex;
-    justify-content: flex-start;
     align-items: center;
-    border-bottom: 1px solid #ddd; /* ✅ เส้นแบ่งระหว่างปุ่ม */
+    gap: 6px;
+    white-space: nowrap;
+    width: 100%;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
-/* ✅ ลบเส้นขอบของปุ่มสุดท้าย */
-.dropdown-menu button:last-child {
-    border-bottom: none;
+/* ✅ ปรับ `|` ให้อยู่ชิดซ้ายพอดี */
+.dropdown-menu button::before {
+    content: "|";
+    color: transparent;
+    font-weight: bold;
+    transition: color 0.3s ease, transform 0.3s ease;
+    display: inline-block;
 }
 
-/* ✅ เอฟเฟกต์ Hover ให้ดูสวยงาม */
+/* ✅ เพิ่ม `|` เมื่อ Hover และเปลี่ยนสี */
+.dropdown-menu button:hover::before {
+    color: currentColor;
+}
+
+/* ✅ เปลี่ยนสีข้อความเมื่อ Hover และเอาแถบสีเทาออก */
 .dropdown-menu button:hover {
-    background-color: #f1f1f1;
-    border-radius: 5px;
+    color: #39BBDF;
+    transform: translateX(10px);
+    background: none !important;
 }
 
 /* ✅ ป๊อปอัปออกจากระบบ */
@@ -212,8 +153,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.3); /* ✅ ฉากหลังมืด */
-    backdrop-filter: blur(5px); /* ✅ เอฟเฟกต์เบลอ */
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -238,7 +179,6 @@
 
 /* ✅ ปุ่มใน Popup */
 .logout-buttons {
-    
     display: flex;
     justify-content: space-between;
     gap: 10px;
@@ -265,51 +205,9 @@
 }
 
 .confirm-btn:hover {
-    background-color:#31b0d5 ;
+    background-color: #31b0d5;
 }
 
 .cancel-btn:hover {
     background-color: #c9302c;
-}
-
-
-
-/* ✅ Responsive Design */
-@media (max-width: 768px) {
-    .navbar-homepage {
-        padding: 15px 20px;
-    }
-    
-    .navbar-center {
-        margin-left: 20px;
-    }
-    
-    .navbar-logo-img-homepage {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .navbar-title {
-        font-size: 24px;
-    }
-    
-    .navbar-button-homepage,
-    .navbar-button,
-    .navbar-link {
-        font-size: 16px;
-        padding: 6px 14px;
-    }
-
-    .navbar-left {
-        gap: 8px;
-    }
-
-    .navbar-user {
-        gap: 10px;
-    }
-
-    .menu-icon {
-        padding: 5px 10px;
-        font-size: 18px;
-    }
 }

@@ -6,11 +6,6 @@ import { FaHeart } from "react-icons/fa"; // ✅ เพิ่มไอคอน�
 import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
 import Navbar from '../Navbar/Navbar';
-import Slider from "react-slick";
-
-
-
-  
 
 const BookingArena = () => {
   const { id } = useParams(); // รับ arenaId จาก URL
@@ -32,6 +27,8 @@ const BookingArena = () => {
     autoplay: true, // Auto slide images
     autoplaySpeed: 2000, 
   };
+
+
   useEffect(() => {
     const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
     if (storedToken) {
@@ -160,7 +157,6 @@ const toggleFavorite = async () => {
 
 
 
-
 const toggleSubStadiumSelection = (subStadiumId) => {
   setSelectedSubStadiums((prev) => {
       const isSelected = prev.some((sub) => sub._id === subStadiumId);
@@ -241,7 +237,6 @@ const handleBooking = () => {
 
 
 
-
   if (loading) return <div className="loading-text">กำลังโหลดข้อมูล...</div>;
   if (!arena) return <div className="loading-text">ไม่พบข้อมูลสนามกีฬา</div>;
 
@@ -253,39 +248,25 @@ const handleBooking = () => {
       <div className="booking-arena-container">
         <div className="arena-card">
           <div className="main-image-container">
-            {imageCount > 1 ? ( // ตรวจสอบจำนวนรูป
-              <Slider {...settings}>
-                {arena.images.map((image, index) => (
-                  <div key={index}>
-                    <img
-                      src={image}
-                      alt={arena.fieldName}
-                      className="main-image"
-                    />
-                  </div>
-                ))}
-              </Slider>
-            ) : (
-              <img
-                src={arena.images[0] || "https://via.placeholder.com/400"}
-                alt={arena.fieldName}
-                className="main-image"
-              />
-            )}
+            <img
+              src={arena.images.length > 0 ? arena.images[0] : "https://via.placeholder.com/400"}
+              alt={arena.fieldName}
+              className="main-image"
+            />
           </div>
 
           <div className="arena-info-container">
             <div className="arena-left-section">
               {/* ✅ เพิ่มสถานะของสนามข้างๆชื่อสนาม */}
               <h2 className="arena-title">
-                {arena.fieldName}
+                {arena.fieldName} 
                 <span className={`status-badge ${arena.open ? "open" : "closed"}`}>
                   {arena.open ? "✅ เปิดให้จอง" : "❌ ปิดชั่วคราว"}
                 </span>
                 <div className="favorite-container78">
                   <FaHeart
                     className={`heart-icon ${isFavorite ? "liked" : ""}`}
-                    onClick={toggleFavorite}
+                    onClick={toggleFavorite} 
                     style={{ color: isFavorite ? "red" : "gray", cursor: "pointer" }}
                   />
                   <span className="favorite-text78">
@@ -331,13 +312,22 @@ const handleBooking = () => {
                     <div className="sub-stadium-row">
                       {stadiums.map((sub) => (
                         <button
-                          key={sub._id}
-                          className={`sub-stadium-button ${selectedSubStadiums.includes(sub._id) ? "selected" : ""}`}
-                          onClick={() => toggleSubStadiumSelection(sub._id)}
-                        >
-                          <img src={sub.images.length > 0 ? sub.images[0] : "https://via.placeholder.com/150"} alt={sub.name} />
-                          <p>{sub.name}</p>
-                        </button>
+                        key={sub._id}
+                        className={`sub-stadium-button ${selectedSubStadiums.some(s => s._id === sub._id) ? "selected" : ""}`}
+                        onClick={() => toggleSubStadiumSelection(sub._id)}
+                      >
+                        {/* รูปภาพของสนามย่อย */}
+                        <img src={sub.images.length > 0 ? sub.images[0] : "https://via.placeholder.com/150"} alt={sub.name} />
+                      
+                        {/* ชื่อสนามย่อย */}
+                        <p>{sub.name}</p>
+                      
+                        {/* เอฟเฟกต์เส้นขอบ */}
+                        <svg viewBox="0 0 180 140">
+                          <polyline points="1,1 179,1 179,139 1,139 1,1"/>
+                        </svg>
+                      </button>
+                      
                       ))}
                     </div>
                   </div>
@@ -348,11 +338,11 @@ const handleBooking = () => {
             </div>
           </div>
 
-          {/* ปุ่มจอง */}
-          <button className="booking-button101" onClick={handleBooking}>
-            จองสนาม ({selectedSubStadiums.length})
-          </button>
-        </div>
+        {/* ปุ่มจอง */}
+        <button className="booking101-button" onClick={handleBooking}>
+          จองสนาม ({selectedSubStadiums.length})
+        </button>
+      </div>
       </div>
     </>
   );

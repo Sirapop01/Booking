@@ -2,7 +2,7 @@ const BookingHistory = require("../models/BookingHistory");
 const Arena = require("../models/Arena");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose"); // ✅ แก้ปัญหา mongoose is not defined
-
+const Stadium = require("../models/Stadium");
 // ✅ ฟังก์ชันเพิ่มการจองใหม่
 exports.addBookingHistory = async (req, res) => {
     try {
@@ -60,41 +60,62 @@ exports.getUserBookingHistory = async (req, res) => {
             return res.status(400).json({ message: "❌ ต้องระบุ userId" });
         }
 
-        console.log("🔍 Fetching booking history for userId:", userId); // ✅ ตรวจสอบ userId ใน Backend
+        console.log("🔍 กำลังดึงประวัติการจองของ userId:", userId);
 
+        // ✅ ดึงข้อมูลการจองพร้อมข้อมูลสนามย่อย
         const bookings = await BookingHistory.find({ userId })
-            .populate({ path: "stadiumId", select: "fieldName images", options: { strictPopulate: false } })
-            .populate({ path: "subStadiumId", select: "name images", options: { strictPopulate: false } })
+            .populate({ path: "details.subStadiumId", select: "name images", options: { strictPopulate: false } })
             .lean();
 
-        console.log("📌 Raw bookings from DB:", bookings); // ✅ ตรวจสอบค่าที่ดึงมา
+        console.log("📌 Raw Bookings from DB:", bookings);
 
         if (!bookings.length) {
             console.log("❌ ไม่พบประวัติการจอง");
             return res.status(404).json({ message: "❌ ไม่พบประวัติการจอง" });
         }
 
-        const updatedBookings = bookings.map(booking => ({
-            _id: booking._id,
-            userId: booking.userId,
-            stadiumId: booking.stadiumId?._id,
-            fieldName: booking.stadiumId?.fieldName || "ไม่พบชื่อสนาม",
-            stadiumImage: booking.subStadiumId?.images?.[0] || booking.stadiumId?.images?.[0] || "https://via.placeholder.com/150",
-            subStadiumId: booking.subStadiumId?._id,
-            subStadiumName: booking.subStadiumId?.name || "ไม่พบชื่อสนามย่อย",
-            sportName: booking.sportName,
-            timeSlots: booking.timeSlots || [],
-            bookingDate: booking.bookingDate,
-            status: booking.status
-        }));
+        // ✅ ดึง stadiumId ที่ต้องใช้
+        const stadiumIds = bookings.map(b => b.stadiumId).filter(id => id);
+        const arenas = await Arena.find({ _id: { $in: stadiumIds } }).lean();
 
-        console.log("✅ Processed Booking History:", updatedBookings);
+        console.log("📌 Arena Data:", arenas);
+
+        // ✅ รวมข้อมูล Booking + Arena + SubStadium + Sport Name
+        const updatedBookings = bookings.map(booking => {
+            const arena = arenas.find(a => String(a._id) === String(booking.stadiumId));
+
+            return {
+                _id: booking._id,
+                userId: booking.userId,
+                stadiumId: booking.stadiumId || null,
+                fieldName: arena ? arena.fieldName : "ไม่พบชื่อสนาม",
+                stadiumImage: arena?.images?.[0] || "https://via.placeholder.com/150",
+                totalPrice: booking.totalPrice,
+                status: booking.status,
+                expiresAt: booking.expiresAt,
+                details: booking.details.map(detail => ({
+                    subStadiumId: detail.subStadiumId?._id || null,
+                    subStadiumName: detail.subStadiumId?.name || "ไม่พบชื่อสนามย่อย",
+                    sportName: detail.sportName, // ✅ ดึง sportName มาด้วย
+                    bookingDate: detail.bookingDate,
+                    startTime: detail.startTime,
+                    endTime: detail.endTime,
+                    duration: detail.duration,
+                    price: detail.price
+                }))
+            };
+        });
+
+        console.log("✅ ข้อมูลที่ส่งไปยัง frontend:", updatedBookings);
         res.status(200).json(updatedBookings);
+
     } catch (error) {
         console.error("❌ Error fetching booking history:", error.message);
         res.status(500).json({ message: "❌ ไม่สามารถดึงประวัติการจองได้" });
     }
 };
+
+
 
 // ✅ ฟังก์ชันใหม่สำหรับบันทึกการจองโดยตรง
 exports.confirmBooking = async (req, res) => {
