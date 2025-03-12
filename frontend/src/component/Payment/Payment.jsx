@@ -114,74 +114,64 @@ const Payment = () => {
 
     const { arenaInfo, booking, stadiumInfo, bankInfo } = paymentData;
     return (
-        <div className="payment-container">
-            <div className="payment-top">
-                <div className="image-top">
-                <div className="arena-details">
-                    <img src={arenaInfo?.images?.[0] || "https://via.placeholder.com/150"} alt="สนามกีฬา" className="arena-image" />
-                </div>
-                </div>
-                <div className="info-top">
-                    <div className="arena-details">
-                        <h2>เลขที่การจอง #{booking?.sessionId || "N/A"}</h2>
-                        <p>📍 สนามกีฬา: {arenaInfo?.fieldName || "ไม่พบข้อมูลสนาม"}</p>
-                        <p>📍 สนามย่อยที่จอง: {bookingData?.details?.map((detail) => detail.name).join(", ") || "ไม่พบข้อมูลสนามย่อย"}</p>
-                        <p>📅 วันที่: {new Date(bookingData?.details?.[0]?.bookingDate || new Date()).toLocaleDateString()}</p>
-                        <p>🕒 เวลาที่จอง: </p>
-                        <ul>
-                            {bookingData?.details?.map((detail, index) => (
-                                <li key={index}>
-                                    {detail.name} : {detail.startTime} - {detail.endTime} ({detail.duration} ชั่วโมง)
-                                </li>
-                            ))}
-                        </ul>
-                        <p className="price">💰 ฿{booking?.totalPrice ?? "N/A"}</p>
-                    </div>
-                </div>
+    <div className="payment-container">
+        <div className="payment-top">
+            <div className="image-top">
+                <img src={arenaInfo?.images?.[0] || "https://via.placeholder.com/350x250"} alt="สนามกีฬา" className="arena-image" />
             </div>
-
-            <div className="payment-bottom">
-                <div className="qr-section">
-                    <h3>ช่องทางการชำระเงิน</h3>
-                    <img src={bankInfo?.images.qrCode} alt="QR Code" className="qr-code" />
-                </div>
-
-                <div className="bank-info">
-                    <h3>ข้อมูลธนาคาร</h3>
-                    <p>🏦 ธนาคาร: <strong>{bankInfo?.bank || "ไม่พบข้อมูล"}</strong></p>
-                    <p>💳 เลขบัญชี: <strong>{bankInfo?.accountNumber || "N/A"}</strong></p>
-                    <p>👤 ชื่อบัญชี: {bankInfo?.accountName || "ไม่พบข้อมูล"}</p>
-                    <p className="payment-timer">⏳ ชำระเงินภายใน {new Date(booking?.expiresAt || new Date()).toLocaleTimeString()}</p>
-                </div>
-
-                <div className="slip-upload">
-                    <h3>อัปโหลดหลักฐานการโอน</h3>
-                    <label>⏳ เวลาที่โอนเงิน</label>
-                    <input
-                        type="time"
-                        value={transferTime}
-                        onChange={(e) => setTransferTime(e.target.value)}
-                    />
-
-                    <label>💰 จำนวนเงิน</label>
-                    <input
-                        type="number"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        placeholder="จำนวนเงินที่โอน"
-                    />
-
-                    <label>📎 อัปโหลดสลิปโอนเงิน</label>
-                    <input type="file" accept="image/*" onChange={(e) => setSlipImage(e.target.files[0])} />
-                </div>
-
-                <div className="payment-actions">
-                    <button className="confirm-payment" onClick={handlePaymentSubmit}>ตรวจสอบการโอน</button>
-                    <button className="cancel-booking">ยกเลิกการจอง</button>
+            <div className="info-top">
+                <div className="arena-details">
+                    <h2>เลขที่การจอง #{booking?.sessionId || "N/A"}</h2>
+                    <p>📍 สนามกีฬา: {arenaInfo?.fieldName || "ไม่พบข้อมูลสนาม"}</p>
+                    <p>📍 สนามย่อยที่จอง: {bookingData?.details?.map((detail) => detail.name).join(", ") || "ไม่พบข้อมูลสนามย่อย"}</p>
+                    <p>📅 วันที่: {new Date(bookingData?.details?.[0]?.bookingDate || new Date()).toLocaleDateString()}</p>
+                    <p>🕒 เวลาที่จอง: </p>
+                    <ul>
+                        {bookingData?.details?.map((detail, index) => (
+                            <li key={index}>
+                                {detail.name} : {detail.startTime} - {detail.endTime} ({detail.duration} ชั่วโมง)
+                            </li>
+                        ))}
+                    </ul>
+                    <p className="price">💰 ฿{booking?.totalPrice ?? "N/A"}</p>
                 </div>
             </div>
         </div>
-    );
+
+        <div className="payment-bottom">
+            <div className="qr-section">
+                <h3>ช่องทางการชำระเงิน</h3>
+                <img src={bankInfo?.images.qrCode} alt="QR Code" className="qr-code" />
+            </div>
+
+            <div className="bank-info">
+                <h3>ข้อมูลธนาคาร</h3>
+                <p>🏦 ธนาคาร: <strong>{bankInfo?.bank || "ไม่พบข้อมูล"}</strong></p>
+                <p>💳 เลขบัญชี: <strong>{bankInfo?.accountNumber || "N/A"}</strong></p>
+                <p>👤 ชื่อบัญชี: {bankInfo?.accountName || "ไม่พบข้อมูล"}</p>
+                <p className="payment-timer">⏳ ชำระเงินภายใน {new Date(booking?.expiresAt || new Date()).toLocaleTimeString()}</p>
+            </div>
+
+            <div className="slip-upload">
+                <h3>อัปโหลดหลักฐานการโอน</h3>
+                <label>⏳ เวลาที่โอนเงิน</label>
+                <input type="time" value={transferTime} onChange={(e) => setTransferTime(e.target.value)} />
+
+                <label>💰 จำนวนเงิน</label>
+                <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="จำนวนเงินที่โอน" />
+
+                <label>📎 อัปโหลดสลิปโอนเงิน</label>
+                <input type="file" accept="image/*" onChange={(e) => setSlipImage(e.target.files[0])} />
+            </div>
+        </div>
+
+        <div className="payment-actions">
+            <button className="confirm-payment" onClick={handlePaymentSubmit}>✅ ตรวจสอบการโอน</button>
+            <button className="cancel-booking">❌ ยกเลิกการจอง</button>
+        </div>
+    </div>
+);
+
 };
 
 export default Payment;
