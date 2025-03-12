@@ -12,13 +12,10 @@ const Navbar = () => {
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
 
   useEffect(() => {
-    // ✅ ดึง Token จาก Local Storage หรือ Session Storage
     const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
-
     if (storedToken) {
       try {
         const decoded = jwtDecode(storedToken);
-        console.log("✅ Token Decoded:", decoded);
         setDecodedToken(decoded);
       } catch (error) {
         console.error("❌ Error decoding token:", error);
@@ -33,8 +30,6 @@ const Navbar = () => {
 
   console.log("📌 userId จาก Navbar:", userId);
   console.log("📌 userType จาก Navbar:", userType);
-
-  // ✅ ฟังก์ชัน Logout พร้อมป๊อปอัปยืนยัน
   const handleLogout = () => {
     setShowLogoutPopup(true);
   };
@@ -66,6 +61,7 @@ const Navbar = () => {
         <div className="navbar-right">
           {!isLoggedIn ? (
             <div className="navbar-links">
+
               <button className="navbar-link" onClick={() => navigate("/login")}>
                 เข้าสู่ระบบ
               </button>
@@ -75,34 +71,34 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="dropdown">
-              <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-                ☰
+              <button
+                className="menu-icon"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                <span className={`icon ${isDropdownOpen ? "rotate" : ""}`}>☰</span>
               </button>
-              {isDropdownOpen && (
-                <div className="dropdown-menu">
-                  {userType === "customer" ? (
-                    <>
-                      <button onClick={() => navigate("/profile")}>บัญชี</button>
-                      <button onClick={() => navigate("/historybooking")}>ประวัติการจอง</button>
-                      <button onClick={() => navigate("/FavoritesList")}>รายการโปรด</button>
-                    </>
-                  ) : (
-                    <>
-                      <button onClick={() => navigate("/OwnerProfile")}>บัญชี</button>
-                      <button onClick={() => navigate("/stadium-list")}>สนามของฉัน</button>
-                      <button onClick={() => navigate(`/Ownerledger/${userId}`)}>บัญชีรายรับ</button>
-                      <button onClick={() => navigate("/addPromotion")}>เพิ่มโปรโมชั่น</button>
-                    </>
-                  )}
-                  <button onClick={handleLogout}>ลงชื่อออก</button>
-                </div>
-              )}
+              <div className={`dropdown-menu ${isDropdownOpen ? "open" : ""}`}>
+                {decodedToken?.role === "customer" ? (
+                  <>
+                    <button onClick={() => navigate("/profile")}>บัญชี</button>
+                    <button onClick={() => navigate("/historybooking")}>ประวัติการจอง</button>
+                    <button onClick={() => navigate("/FavoritesList")}>รายการโปรด</button>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => navigate("/OwnerProfile")}>บัญชี</button>
+                    <button onClick={() => navigate("/stadium-list")}>สนามของฉัน</button>
+                    <button onClick={() => navigate(`/Ownerledger/${decodedToken?.id}`)}>บัญชีรายรับ</button>
+                    <button onClick={() => navigate("/addPromotion")}>เพิ่มโปรโมชั่น</button>
+                  </>
+                )}
+                <button onClick={handleLogout}>ลงชื่อออก</button>
+              </div>
             </div>
           )}
         </div>
       </nav>
 
-      {/* ✅ Popup Logout กลางจอ */}
       {showLogoutPopup && (
         <div className="logout-popup-overlay" onClick={() => setShowLogoutPopup(false)}>
           <div className="logout-popup" onClick={(e) => e.stopPropagation()}>

@@ -50,6 +50,8 @@ const businessInfoRequestRoutes = require('./routes/businessInfoRequestRoutes');
 const reviewRoutes = require("./routes/reviewRoutes");
 const bookingHistoryRoutes = require("./routes/bookingHistoryRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
+
 
 // ✅ กำหนด CORS
 const allowedOrigins = process.env.ALLOWED_ORIGINS
@@ -109,6 +111,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/bookinghistories", bookingHistoryRoutes);
 app.use("/api/businessOwners", businessOwnerRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/payments", paymentRoutes);
 
 // ✅ WebSocket สำหรับ Chat (Socket.io)
 io.on("connection", (socket) => {
@@ -139,6 +142,7 @@ io.on("connection", (socket) => {
     console.log(`❌ User disconnected: ${socket.id}`);
   });
 });
+
 
 // ✅ Error Handling Middleware
 app.use((err, req, res, next) => {

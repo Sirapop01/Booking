@@ -4,7 +4,7 @@ const businessInfoSchema = new mongoose.Schema({
     accountName: { type: String, required: true },
     bank: { type: String, required: true },
     accountNumber: { type: String, required: true },
-    businessOwnerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    businessOwnerId: { type: mongoose.Schema.Types.ObjectId, ref: 'businessowners', required: true },
     images: {
         registration: { type: String, required: true },
         idCard: { type: String, required: true },

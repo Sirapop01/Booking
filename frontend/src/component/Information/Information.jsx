@@ -185,9 +185,8 @@ const Information = () => {
     };
     
     
-
     return (
-        <div className = "information-background">
+        
         <div className="information-container">
             <div className="information-section">
                 {/* 🔹 รูปถ่ายหนังสือจดทะเบียน */}
@@ -277,7 +276,7 @@ const Information = () => {
                 <button className="information-next" onClick={handleSubmit}>ต่อไป</button>
             </div>
         </div>
-        </div>
+        
     );
 };
 
