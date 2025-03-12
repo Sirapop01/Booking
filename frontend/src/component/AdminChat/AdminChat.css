@@ -9,6 +9,7 @@
     height: 100vh;
     color: white;
     font-family: "Kanit", sans-serif;
+    padding: 20px;
 }
 
 /* 🔙 ปุ่มกลับไปยังหน้า Home */
@@ -16,15 +17,15 @@
     position: fixed;
     top: 20px;
     left: 20px;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     background-color: white;
-    border-radius: 15px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
 }
 
 .home-button:hover {
@@ -32,30 +33,34 @@
 }
 
 .home-logo {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
 }
 
 /* ✅ หัวข้อหลักของหน้า */
 .page-title2 {
-    font-size: 36px;
-    margin: 20px 0;
+    font-size: 32px;
+    margin-bottom: 15px;
 }
 
 /* ✅ แยกคอนเทนเนอร์ออกเป็น 2 ส่วน */
 .chat-content {
     display: flex;
     justify-content: space-between;
-    width: 90%;
+    width: 85%;
     max-width: 1200px;
-    height: 80vh;
+    height: 75vh;
+    background: #f8f9fa;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* 📜 รายชื่อผู้ใช้ */
 .user-list-container2 {
-    width: 25%;
-    background: white;
-    border-radius: 10px;
+    width: 30%;
+    background: #1e3a56;
+    border-radius: 10px 0 0 10px;
     overflow-y: auto;
 }
 
@@ -64,37 +69,43 @@
 }
 
 .list-header2 {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     padding: 15px;
     text-align: center;
-    background: #e0e0e0;
-    border-bottom: 2px solid #ddd;
+    background: #00264d;
+    color: white;
+    border-bottom: 2px solid #004080;
 }
 
+/* ✅ ปรับปรุง UI ของรายการผู้ใช้ */
 .user-item2 {
-    padding: 10px;
+    padding: 12px 15px;
     cursor: pointer;
-    border-bottom: 1px solid #ddd;
-    transition: background 0.3s;
+    border-bottom: 1px solid #3c587a;
+    color: white;
+    transition: background 0.3s ease;
+    font-size: 16px;
 }
 
 .user-item2:hover {
-    background: #f1f1f1;
+    background: #004080;
 }
 
 .user-item2.selected {
     background-color: #008cff;
-    color: white;
+    font-weight: bold;
+    border-left: 5px solid white;
 }
 
 /* 💬 กล่องแชท */
 .chat-box-container2 {
-    width: 73%;
+    width: 70%;
     background: white;
-    border-radius: 10px;
+    border-radius: 0 10px 10px 0;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .chat-box {
@@ -103,13 +114,15 @@
     flex: 1;
 }
 
+/* ✅ หัวข้อแชท */
 .chat-header {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
-    padding: 15px;
+    padding: 12px;
     text-align: center;
-    background: #e0e0e0;
-    border-bottom: 2px solid #ddd;
+    background: #008cff;
+    color: white;
+    border-bottom: 2px solid #005f99;
 }
 
 /* ✅ ข้อความ */
@@ -119,21 +132,24 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    background: #f1f1f1;
 }
 
 /* ✅ ข้อความแต่ละอัน */
 .chat-message {
     padding: 10px;
-    margin: 5px 0;
-    border-radius: 10px;
-    max-width: 60%;
+    margin: 6px 0;
+    border-radius: 12px;
+    max-width: 75%;
     word-wrap: break-word;
+    font-size: 14px;
 }
 
 /* ✅ ข้อความของผู้ใช้ */
 .user-message {
-    background: #eee;
+    background: #d4dbe2;
     align-self: flex-start;
+    color: #333;
 }
 
 /* ✅ ข้อความของแอดมิน */
@@ -160,9 +176,10 @@
 /* ✅ กล่องป้อนข้อความ */
 .message-input {
     display: flex;
-    padding: 10px;
+    padding: 12px;
     border-top: 2px solid #ddd;
-    background: #f9f9f9;
+    background: #fff;
+    align-items: center;
 }
 
 .message-input input {
@@ -171,20 +188,27 @@
     border: none;
     font-size: 16px;
     outline: none;
-    border-radius: 5px;
+    border-radius: 6px;
+    background: #f1f1f1;
+    padding-left: 10px;
 }
 
 .message-input button {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 5px;
+    padding: 8px; /* ลดขนาด padding */
+    margin-left: 10px;
+    transition: transform 0.2s ease;
+    width: 40px; /* กำหนดขนาดของปุ่ม */
+    height: 40px; /* ปรับความสูง */
 }
 
 .message-input button:hover {
-    opacity: 0.8;
+    transform: scale(1.05); /* ลดขนาด effect hover */
 }
 
 .message-input img {
-    width: 30px;
+    width: 24px; /* ปรับขนาดรูปภาพให้เล็กลง */
+    height: 24px; /* ปรับขนาดรูปภาพให้พอดี */
 }
