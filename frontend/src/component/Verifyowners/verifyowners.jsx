@@ -79,7 +79,8 @@ const VerifyOwnersPage = () => {
 
     
 
-    const handleApprove = async (ownerId, ownerName) => {
+    const handleApprove = async () => {
+        const ownerId = selectedOwner._id;  // ✅ ใช้ `_id` จาก selectedOwner
         if (!ownerId) {
             Swal.fire("❌ เกิดข้อผิดพลาด!", "Owner ID ไม่ถูกต้อง", "error");
             return;
@@ -88,19 +89,9 @@ const VerifyOwnersPage = () => {
         try {
             const token = localStorage.getItem("token") || sessionStorage.getItem("token");
     
-            // ✅ แสดง Loading ระหว่างเรียก API
-            Swal.fire({
-                title: "กำลังอนุมัติ...",
-                text: "กรุณารอสักครู่",
-                allowOutsideClick: false,
-                showConfirmButton: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
+            Swal.fire({ title: "กำลังอนุมัติ...", text: "กรุณารอสักครู่", allowOutsideClick: false, showConfirmButton: false, didOpen: () => { Swal.showLoading(); } });
     
-            // ✅ เรียก API อนุมัติ
-            const response = await fetch(`http://localhost:4000/api/notifications/approve/${ownerId}`, {
+            const response = await fetch(`http://localhost:4000/api/business-info-requests/approve/${ownerId}`, {
                 method: "PUT",
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -109,30 +100,15 @@ const VerifyOwnersPage = () => {
                 throw new Error("❌ ไม่สามารถอนุมัติคำขอได้");
             }
     
-            // ✅ ลบคำขอจาก UI
-            setOwnersData(prevData => prevData.filter(owner => owner.businessOwnerId?._id !== ownerId));
+            setOwnersData(prevData => prevData.filter(owner => owner._id !== ownerId));
             setSelectedOwner(null);
     
-            // ✅ แสดง Swal Success
-            Swal.fire({
-                icon: "success",
-                title: "✅ อนุมัติสำเร็จ!",
-                text: `เจ้าของสนาม "${ownerName}" ได้รับการอนุมัติแล้ว`,
-                confirmButtonColor: "#16A34A"
-            });
+            Swal.fire({ icon: "success", title: "✅ อนุมัติสำเร็จ!", text: "บันทึกข้อมูลเรียบร้อย", confirmButtonColor: "#16A34A" });
     
         } catch (error) {
-            // ✅ แสดง Swal Error
-            Swal.fire({
-                icon: "error",
-                title: "❌ เกิดข้อผิดพลาด!",
-                text: error.message,
-                confirmButtonColor: "#DC2626"
-            });
+            Swal.fire({ icon: "error", title: "❌ เกิดข้อผิดพลาด!", text: error.message, confirmButtonColor: "#DC2626" });
         }
     };
-    
-    
     
 
 // ✅ ฟังก์ชันปฏิเสธสนามและส่งอีเมลแจ้งเตือน
@@ -306,8 +282,7 @@ const handleSelectOwner = (owner) => {
 
                         <div className="verify-button-group">
                             <button className="verify-button delete" onClick={() => setShowRejectPopup(true)}>ปฏิเสธ</button>
-                            <button className="verify-button confirm" 
-                                onClick={() => handleApprove(selectedOwner.businessOwnerId?._id, selectedOwner.businessOwnerId?.firstName)}>
+                            <button className="verify-button confirm" onClick={() => handleApprove()}>
                                 ยืนยัน
                             </button>
 
