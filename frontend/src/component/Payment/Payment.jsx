@@ -18,24 +18,24 @@ const Payment = () => {
         const fetchPaymentDetails = async () => {
             try {
                 const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-    
+
                 console.log("📌 Token ที่ถูกดึงมา:", token);
                 if (!token) {
                     console.log("❌ No token found in storage");
                     return;
                 }
-    
+
                 let sessionId = bookingData?.sessionId;
                 console.log("📌 sessionId ที่ส่งไป Backend:", sessionId);
-    
+
                 const response = await axios.get(
                     `http://localhost:4000/api/payments/pending?sessionId=${sessionId}`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
-    
+
                 console.log("✅ ข้อมูลที่ได้รับจาก API:", response.data);
                 setPaymentData(response.data);
-    
+
             } catch (error) {
                 console.error("❌ Error fetching payment details:", error);
                 if (error.response) {
@@ -46,11 +46,49 @@ const Payment = () => {
                 setLoading(false);
             }
         };
-    
+
         fetchPaymentDetails();
     }, [bookingData]);
 
-    
+    const cancelBooking = async (sessionId) => {
+        try {
+            const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+            if (!token) {
+                Swal.fire("เกิดข้อผิดพลาด", "กรุณาเข้าสู่ระบบก่อน!", "error");
+                return;
+            }
+
+            const result = await Swal.fire({
+                title: "ยืนยันการยกเลิก?",
+                text: "คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการจองนี้?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "ใช่, ยกเลิกเลย!",
+                cancelButtonText: "ไม่"
+            });
+
+            if (!result.isConfirmed) return;
+
+            console.log("🔹 Sending sessionId:", sessionId); // ✅ ตรวจสอบค่าที่ถูกส่ง
+
+            const response = await axios.put(
+                "http://localhost:4000/api/payments/cancel-booking",
+                { sessionId },  // ✅ ส่ง sessionId ไป backend
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            console.log("✅ Response from server:", response.data); // ✅ ตรวจสอบค่าที่ backend ส่งกลับ
+
+            Swal.fire("ยกเลิกสำเร็จ!", "การจองของคุณถูกยกเลิกแล้ว", "success");
+            navigate("/");
+        } catch (error) {
+            console.error("❌ Error canceling booking:", error);
+            Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถยกเลิกการจองได้", "error");
+        }
+    };
+
 
     const handlePaymentSubmit = async () => {
         if (!transferTime || !amount || !slipImage) {
@@ -114,63 +152,67 @@ const Payment = () => {
 
     const { arenaInfo, booking, stadiumInfo, bankInfo } = paymentData;
     return (
-    <div className="payment-container">
-        <div className="payment-top">
-            <div className="image-top">
-                <img src={arenaInfo?.images?.[0] || "https://via.placeholder.com/350x250"} alt="สนามกีฬา" className="arena-image" />
-            </div>
-            <div className="info-top">
-                <div className="arena-details">
-                    <h2>เลขที่การจอง #{booking?.sessionId || "N/A"}</h2>
-                    <p>📍 สนามกีฬา: {arenaInfo?.fieldName || "ไม่พบข้อมูลสนาม"}</p>
-                    <p>📍 สนามย่อยที่จอง: {bookingData?.details?.map((detail) => detail.name).join(", ") || "ไม่พบข้อมูลสนามย่อย"}</p>
-                    <p>📅 วันที่: {new Date(bookingData?.details?.[0]?.bookingDate || new Date()).toLocaleDateString()}</p>
-                    <p>🕒 เวลาที่จอง: </p>
-                    <ul>
-                        {bookingData?.details?.map((detail, index) => (
-                            <li key={index}>
-                                {detail.name} : {detail.startTime} - {detail.endTime} ({detail.duration} ชั่วโมง)
-                            </li>
-                        ))}
-                    </ul>
-                    <p className="price">💰 ฿{booking?.totalPrice ?? "N/A"}</p>
+        <div className="payment-container">
+            <div className="payment-top">
+                <div className="image-top">
+                    <img src={arenaInfo?.images?.[0] || "https://via.placeholder.com/350x250"} alt="สนามกีฬา" className="arena-image" />
+                </div>
+                <div className="info-top">
+                    <div className="arena-details">
+                        <h2>เลขที่การจอง #{booking?.sessionId || "N/A"}</h2>
+                        <p>📍 สนามกีฬา: {arenaInfo?.fieldName || "ไม่พบข้อมูลสนาม"}</p>
+                        <p>📍 สนามย่อยที่จอง: {bookingData?.details?.map((detail) => detail.name).join(", ") || "ไม่พบข้อมูลสนามย่อย"}</p>
+                        <p>📅 วันที่: {new Date(bookingData?.details?.[0]?.bookingDate || new Date()).toLocaleDateString()}</p>
+                        <p>🕒 เวลาที่จอง: </p>
+                        <ul>
+                            {bookingData?.details?.map((detail, index) => (
+                                <li key={index}>
+                                    {detail.name} : {detail.startTime} - {detail.endTime} ({detail.duration} ชั่วโมง)
+                                </li>
+                            ))}
+                        </ul>
+                        <p className="price">💰 ฿{booking?.totalPrice ?? "N/A"}</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div className="payment-bottom">
-            <div className="qr-section">
-                <h3>ช่องทางการชำระเงิน</h3>
-                <img src={bankInfo?.images.qrCode} alt="QR Code" className="qr-code" />
+            <div className="payment-bottom">
+                <div className="qr-section">
+                    <h3>ช่องทางการชำระเงิน</h3>
+                    <img src={bankInfo?.images.qrCode} alt="QR Code" className="qr-code" />
+                </div>
+
+                <div className="bank-info">
+                    <h3>ข้อมูลธนาคาร</h3>
+                    <p>🏦 ธนาคาร: <strong>{bankInfo?.bank || "ไม่พบข้อมูล"}</strong></p>
+                    <p>💳 เลขบัญชี: <strong>{bankInfo?.accountNumber || "N/A"}</strong></p>
+                    <p>👤 ชื่อบัญชี: {bankInfo?.accountName || "ไม่พบข้อมูล"}</p>
+                    <p className="payment-timer">⏳ ชำระเงินภายใน {new Date(booking?.expiresAt || new Date()).toLocaleTimeString()}</p>
+                </div>
+
+                <div className="slip-upload">
+                    <h3>อัปโหลดหลักฐานการโอน</h3>
+                    <label>⏳ เวลาที่โอนเงิน</label>
+                    <input type="time" value={transferTime} onChange={(e) => setTransferTime(e.target.value)} />
+
+                    <label>💰 จำนวนเงิน</label>
+                    <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="จำนวนเงินที่โอน" />
+
+                    <label>📎 อัปโหลดสลิปโอนเงิน</label>
+                    <input type="file" accept="image/*" onChange={(e) => setSlipImage(e.target.files[0])} />
+                </div>
             </div>
 
-            <div className="bank-info">
-                <h3>ข้อมูลธนาคาร</h3>
-                <p>🏦 ธนาคาร: <strong>{bankInfo?.bank || "ไม่พบข้อมูล"}</strong></p>
-                <p>💳 เลขบัญชี: <strong>{bankInfo?.accountNumber || "N/A"}</strong></p>
-                <p>👤 ชื่อบัญชี: {bankInfo?.accountName || "ไม่พบข้อมูล"}</p>
-                <p className="payment-timer">⏳ ชำระเงินภายใน {new Date(booking?.expiresAt || new Date()).toLocaleTimeString()}</p>
-            </div>
+            <div className="payment-actions">
+                <button className="confirm-payment" onClick={handlePaymentSubmit}>ตรวจสอบการโอน</button>
+                <button onClick={() => cancelBooking(booking.sessionId)}>
+                    ยกเลิกการจอง
+                </button>
 
-            <div className="slip-upload">
-                <h3>อัปโหลดหลักฐานการโอน</h3>
-                <label>⏳ เวลาที่โอนเงิน</label>
-                <input type="time" value={transferTime} onChange={(e) => setTransferTime(e.target.value)} />
 
-                <label>💰 จำนวนเงิน</label>
-                <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="จำนวนเงินที่โอน" />
-
-                <label>📎 อัปโหลดสลิปโอนเงิน</label>
-                <input type="file" accept="image/*" onChange={(e) => setSlipImage(e.target.files[0])} />
             </div>
         </div>
-
-        <div className="payment-actions">
-            <button className="confirm-payment" onClick={handlePaymentSubmit}>✅ ตรวจสอบการโอน</button>
-            <button className="cancel-booking">❌ ยกเลิกการจอง</button>
-        </div>
-    </div>
-);
+    );
 
 };
 
