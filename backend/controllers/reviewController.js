@@ -1,6 +1,7 @@
 const Review = require("../models/Review");
 const Arena = require("../models/Arena");
 const jwt = require("jsonwebtoken");
+const Stadium = require("../models/Stadium");
 require("dotenv").config();
 
 // ✅ ให้ลูกค้าส่งรีวิว (ใช้ Middleware ดีกว่า)
@@ -8,7 +9,7 @@ exports.submitReview = async (req, res) => {
     try {
         const { stadiumId, rating, comment } = req.body;
 
-        // ✅ ดึง Token และถอดรหัส
+        // ✅ ตรวจสอบว่า Token ถูกส่งมาหรือไม่
         const token = req.headers.authorization?.split(" ")[1];
         if (!token) {
             return res.status(401).json({ message: "❌ Unauthorized" });
@@ -18,7 +19,7 @@ exports.submitReview = async (req, res) => {
         const userId = decoded.id;
 
         if (!stadiumId || !rating || !comment) {
-            return res.status(400).json({ message: "❌ ข้อมูลไม่ครบถ้วน" });
+            return res.status(400).json({ message: "❌ ข้อมูลไม่ครบถ้วน กรุณาให้คะแนนและแสดงความคิดเห็น" });
         }
 
         // ✅ ตรวจสอบว่าสนามนี้มีอยู่จริง
@@ -27,16 +28,10 @@ exports.submitReview = async (req, res) => {
             return res.status(404).json({ message: "❌ ไม่พบสนามกีฬานี้" });
         }
 
-        // ✅ ป้องกันการรีวิวซ้ำ (เช็คว่า user เคยรีวิวสนามนี้แล้วหรือไม่)
-        const existingReview = await Review.findOne({ stadiumId, userId });
-        if (existingReview) {
-            return res.status(400).json({ message: "⚠️ คุณได้รีวิวสนามนี้ไปแล้ว" });
-        }
-
-        // ✅ บันทึกรีวิวใหม่
+        // ✅ บันทึกรีวิวใหม่ทุกครั้งที่กดส่งรีวิว
         const newReview = new Review({
             stadiumId,
-            ownerId: stadium.businessOwnerId, // ✅ เพิ่ม Owner ID
+            ownerId: stadium.businessOwnerId, 
             userId,
             rating,
             comment,
@@ -51,9 +46,11 @@ exports.submitReview = async (req, res) => {
 
     } catch (error) {
         console.error("🚨 Error submitting review:", error);
-        res.status(500).json({ message: "❌ ไม่สามารถบันทึกรีวิวได้" });
+        res.status(500).json({ message: "❌ ไม่สามารถบันทึกรีวิวได้", error: error.message });
     }
 };
+
+
 
 // ✅ ลบรีวิวทั้งหมดของเจ้าของสนาม (เช่นเมื่อบัญชีถูกลบ)
 exports.deleteReviewsByOwner = async (req, res) => {
@@ -77,13 +74,36 @@ exports.getStadiumReviews = async (req, res) => {
     try {
         const { stadiumId } = req.params;
 
-        const reviews = await Review.find({ stadiumId })
-            .populate("userId", "firstName lastName email") // ✅ เพิ่มข้อมูล User
-            .sort({ createdAt: -1 }); // ✅ เรียงลำดับใหม่สุดก่อน
+        console.log("📌 Fetching reviews for stadiumId:", stadiumId);
 
-        res.status(200).json(reviews);
+        // ✅ ตรวจสอบว่ามีสนามนี้อยู่จริง
+        const stadium = await Arena.findById(stadiumId);
+        if (!stadium) {
+            return res.status(404).json({ message: "❌ ไม่พบข้อมูลสนามกีฬา" });
+        }
+
+        // ✅ ดึงรีวิวทั้งหมดของสนาม และ populate ข้อมูล user
+        const reviews = await Review.find({ stadiumId })
+            .populate("userId", "firstName lastName email") // ✅ ดึงข้อมูลผู้ใช้ที่รีวิว
+            .sort({ createdAt: -1 });
+
+        console.log("📌 Reviews Data:", reviews);
+
+        res.status(200).json({
+            stadium: {
+                _id: stadium._id,
+                fieldName: stadium.fieldName,
+                ownerName: stadium.ownerName,
+                phone: stadium.phone,
+                startTime: stadium.startTime,
+                endTime: stadium.endTime,
+                location: stadium.location,
+                images: stadium.images
+            },
+            reviews
+        });
     } catch (error) {
-        console.error("🚨 Error fetching reviews:", error);
+        console.error("🚨 Error fetching stadium reviews:", error);
         res.status(500).json({ message: "❌ ไม่สามารถดึงข้อมูลรีวิวได้" });
     }
 };
