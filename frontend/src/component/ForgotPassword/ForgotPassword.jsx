@@ -1,24 +1,70 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 import axios from "axios";
 import "./ForgotPassword.css";
 import logo from '../assets/lago.png';
+import { jwtDecode } from "jwt-decode"
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // ดึง token จาก localStorage หรือ sessionStorage
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+
+    if (token) {
+      try {
+        // Decode Token เพื่อดึงข้อมูล
+        const decoded = jwtDecode(token);
+        setUser(decoded);
+      } catch (error) {
+        console.error("❌ Error decoding token:", error);
+        setUser(null);
+      }
+    } else {
+      setUser(null);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
+    // เช็คว่า email ตรงกับใน token หรือไม่
+    if (user.email && email !== user.email) {
+      Swal.fire({
+        icon: "error",
+        title: "อีเมลไม่ถูกต้อง!",
+        text: "กรุณากรอกอีเมลที่ใช้ลงทะเบียน",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง",
+
+      });
+      return;
+    }
 
     try {
       await axios.post("http://localhost:4000/api/auth/forgot-password", { email });
-      setMessage("✅ กรุณาตรวจสอบอีเมลของคุณ!");
+      Swal.fire({
+        icon: "success",
+        title: " กรุณาตรวจสอบอีเมล!",
+        text: "เราได้ส่งลิงก์สำหรับเปลี่ยนรหัสผ่านไปที่อีเมลของคุณ",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง",
+
+      });
     } catch (error) {
-      console.error(error);
-      setMessage("❌ ไม่พบอีเมลนี้");
+      Swal.fire({
+        icon: "error",
+        title: " ไม่พบอีเมลนี้",
+        text: "โปรดตรวจสอบและลองอีกครั้ง",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "ตกลง",
+
+      });
     }
   };
+
 
   return (
     <div className="new-forgot-password-container">
@@ -31,7 +77,7 @@ function ForgotPassword() {
           <input
             id="email"
             type="email"
-            placeholder="your@email.com"
+            placeholder={user?.email || "กรุณากรอกอีเมล"}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required

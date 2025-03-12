@@ -260,7 +260,7 @@ const BusinessProfile = () => {
         </section>
 
         {isEditable && <button className="save-button" onClick={updateMemberData}>บันทึก</button>}
-        .
+        <h3 className="forgot-password-user" onClick={() => navigate("/forgot-password")}>ลืมรหัสผ่าน ?</h3>
       </main>
 
       {/* 🔹 Logout Popup Modal */}

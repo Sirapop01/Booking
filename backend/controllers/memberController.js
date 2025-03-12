@@ -316,22 +316,28 @@ exports.resetPassword = async (req, res) => {
 exports.delete = async (req, res) => {
   console.log("✅ Delete Member Requested:", req.params.id);
   try {
-    const  userId  = req.params.id;
-    console.log("🗑️ กำลังลบผู้ใช้ ID:", userId);
+    const userId = req.params.id;
+    console.log("🗑️ กำลังปิดบัญชีผู้ใช้ ID:", userId);
 
     if (!userId) {
       return res.status(400).json({ message: "❌ ไม่ได้รับ userId" });
     }
 
-    const deletedUser = await User.findByIdAndDelete(userId);
-    if (!deletedUser) {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { status: "inactive" },  // เปลี่ยนสถานะเป็น inactive
+      { new: true }
+    );
+
+    if (!updatedUser) {
       return res.status(404).json({ message: "❌ ไม่พบผู้ใช้ในระบบ" });
     }
 
-    console.log("✅ ผู้ใช้ถูกลบ:", deletedUser);
-    return res.status(200).json({ message: "ลบข้อมูลผู้ใช้เรียบร้อย", deletedUser });
+    console.log("✅ บัญชีผู้ใช้ถูกปิด:", updatedUser);
+    return res.status(200).json({ message: "บัญชีผู้ใช้ถูกปิดเรียบร้อย", updatedUser });
   } catch (error) {
-    console.error("❌ Error deleting user:", error);
-    return res.status(500).json({ message: "ลบข้อมูลไม่สำเร็จ" });
+    console.error("❌ Error disabling user:", error);
+    return res.status(500).json({ message: "ปิดบัญชีผู้ใช้ไม่สำเร็จ" });
   }
 };
+
