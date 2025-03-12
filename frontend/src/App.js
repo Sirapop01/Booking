@@ -44,8 +44,6 @@ import VerifyOnwers from "./component/Verifyowners/verifyowners";
 import ReviewPage from './component/ReviewPage/ReviewPage';
 import Payment from './component/Payment/Payment';
 import AuthProvider from './AuthProvider';
-import Payment from './component/Payment/Payment'
-import AuthProvider from './AuthProvider'
 import ConfirmBooking from './component/ConfirmBooking/ConfirmBooking';
 
 function App() {
