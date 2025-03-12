@@ -35,7 +35,7 @@ const AdminChat = () => {
       navigate("/login");
     }
   }, [token, decoded, navigate]);
-  
+
   // ✅ โหลดรายชื่อผู้ใช้ที่มีแชท
   useEffect(() => {
     if (!token) return;
@@ -81,71 +81,65 @@ const AdminChat = () => {
       })
       .finally(() => setLoading(false));
 
-}, [token]);
-
+  }, [token]);
 
   // ✅ กรอง Users ตามหมวดหมู่ที่เลือก
-
-    const filteredUsers = users.filter((user) => {
-      if (activeCategory === "customer") return user.role === "customer";
-      if (activeCategory === "owner") return user.role === "owner"; // ปรับเป็น "owner"
-      return false;
-    });     
+  const filteredUsers = users.filter((user) => {
+    if (activeCategory === "customer") return user.role === "customer";
+    if (activeCategory === "owner") return user.role === "owner"; // ปรับเป็น "owner"
+    return false;
+  });
   console.log("📢 Filtering Users for:", activeCategory);
   console.log("✅ Filtered Users:", filteredUsers);
 
+  // ✅ ดึงประวัติแชทของผู้ใช้ที่เลือก
+  const fetchMessages = useCallback(() => {
+    if (!selectedUser || !selectedUser._id || !token) {
+      console.warn("⚠️ fetchMessages skipped due to missing parameters", {
+        selectedUser,
+        token
+      });
+      return;
+    }
 
-  // ✅ ดึงประวัติแชทของผู้ใช้ที่เลือก
-  // ✅ ดึงประวัติแชทของผู้ใช้ที่เลือก
-const fetchMessages = useCallback(() => {
-  if (!selectedUser || !selectedUser._id || !token) {
-    console.warn("⚠️ fetchMessages skipped due to missing parameters", {
-      selectedUser,
-      token
+    console.log("📡 Fetching chat history for:", {
+      userId: selectedUser._id,
+      userModel: selectedUser.role === "customer" ? "User" : "BusinessOwner" // ใช้ BusinessOwner สำหรับ Owner
     });
-    return;
-  }
 
-  console.log("📡 Fetching chat history for:", {
-    userId: selectedUser._id,
-    userModel: selectedUser.role === "customer" ? "User" : "BusinessOwner" // ใช้ BusinessOwner สำหรับ Owner
-  });
+    axios.get(`http://localhost:4000/api/chat/history/${selectedUser._id}/${selectedUser.role === "customer" ? "User" : "BusinessOwner"}`, {
+      headers: { Authorization: token }
+    })
+    .then((response) => {
+      console.log("✅ Chat history received:", response.data);
+      setMessages(response.data.data || []);
+    })
+    .catch((error) => {
+      console.error("❌ Error fetching chat history:", error);
+    });
+  }, [selectedUser, token]);
 
-  axios.get(`http://localhost:4000/api/chat/history/${selectedUser._id}/${selectedUser.role === "customer" ? "User" : "BusinessOwner"}`, {
-    headers: { Authorization: token }
-  })
-  .then((response) => {
-    console.log("✅ Chat history received:", response.data);
-    setMessages(response.data.data || []);
-  })
-  .catch((error) => {
-    console.error("❌ Error fetching chat history:", error);
-  });
-}, [selectedUser, token]);
+  // ✅ การตั้งค่า Socket.io
+  useEffect(() => {
+    const socket = io("http://localhost:4000"); // ใช้ URL ของ server ของคุณ
 
-// ✅ การตั้งค่า Socket.io
-useEffect(() => {
-  const socket = io("http://localhost:4000"); // ใช้ URL ของ server ของคุณ
+    // เมื่อมีข้อความใหม่เข้ามา
+    socket.on("receiveMessage", (newMessage) => {
+      console.log("📡 New message received:", newMessage);
+      setMessages((prevMessages) => [...prevMessages, newMessage]); // เพิ่มข้อความใหม่ใน messages
+    });
 
-  // เมื่อมีข้อความใหม่เข้ามา
-  socket.on("receiveMessage", (newMessage) => {
-    console.log("📡 New message received:", newMessage);
-    setMessages((prevMessages) => [...prevMessages, newMessage]); // เพิ่มข้อความใหม่ใน messages
-  });
+    // Cleanup function เพื่อลบ socket เมื่อ component ถูก unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, []); // ใช้ [] เพื่อให้ทำงานแค่ครั้งเดียวเมื่อ component โหลด
 
-  // Cleanup function เพื่อลบ socket เมื่อ component ถูก unmount
-  return () => {
-    socket.disconnect();
-  };
-}, []); // ใช้ [] เพื่อให้ทำงานแค่ครั้งเดียวเมื่อ component โหลด
-
-// ✅ Scroll ไปยังข้อความล่าสุด
-useEffect(() => {
-  console.log("Updated Messages:", messages); // เพิ่ม console.log เพื่อตรวจสอบค่าของ messages
-  chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-}, [messages]);
-
-  
+  // ✅ Scroll ไปยังข้อความล่าสุด
+  useEffect(() => {
+    console.log("Updated Messages:", messages); // เพิ่ม console.log เพื่อตรวจสอบค่าของ messages
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]); // ใช้ messages เป็น dependency
 
   // ✅ ส่งข้อความ
   const sendMessageToUserOrOwner = () => {
@@ -157,12 +151,12 @@ useEffect(() => {
       });
       return;
     }
-  
+
     console.log("📡 Sending message:", {
       userId: selectedUser?._id,
       content: newMessage,
     });
-  
+
     const payload = {
       senderId: decoded.id,
       senderModel: "Admin",
@@ -172,7 +166,7 @@ useEffect(() => {
       receiverRole: selectedUser.role,
       message: newMessage,
     };
-  
+
     axios
       .post("http://localhost:4000/api/chat/sendMessageToUserOrOwner", payload, {
         headers: { Authorization: token },
@@ -187,14 +181,12 @@ useEffect(() => {
         setError("ไม่สามารถส่งข้อความได้ กรุณาลองใหม่!");
       });
   };
-  
 
   useEffect(() => {
     if (selectedUser) {
       fetchMessages();
     }
   }, [selectedUser, fetchMessages]);
-  
 
   return (
     <div className="admin-chat-container">
