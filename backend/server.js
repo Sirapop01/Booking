@@ -3,12 +3,27 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
-require("dotenv").config(); // ✅ ใช้ .env สำหรับ MONGO_URI
+const http = require("http");
+const { Server } = require("socket.io");
+require("dotenv").config();
 
 const app = express();
+const server = http.createServer(app);
+
+// ✅ ตั้งค่า `Socket.io`
+const io = new Server(server, {
+  cors: { 
+    origin: ["http://localhost:3000", "http://localhost:3001"], 
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+  }
+});
+app.set("io", io); // ✅ ส่ง `io` ไปให้ `chatController.js`
+
 const PORT = process.env.PORT || 4000;
 
 // ✅ Import Routes
+const chatRoutes = require("./routes/chatRoutes");
 const authRoutes = require("./routes/authRoutes");
 const stadiumRoutes = require("./routes/stadiumRoutes");
 const businessRoutes = require("./routes/businessRoutes");
@@ -29,14 +44,12 @@ const sportRoutes = require("./routes/sportRoutes");
 const promotionRoutes = require("./routes/promotionRoutes");
 const sportscategoriesRoutes = require("./routes/sportscategoriesRoutes");
 const subStadiumRoutes = require("./routes/subStadiumRoutes");
-const favoriteRoutes = require("./routes/favoriteRoutes"); // ✅ เพิ่ม Route ของ Favorite
+const favoriteRoutes = require("./routes/favoriteRoutes");
 const locationRoutes = require("./routes/locationRoutes");
-const chatRoutes = require("./routes/chatRoutes");
 const businessInfoRequestRoutes = require('./routes/businessInfoRequestRoutes');
 const reviewRoutes = require("./routes/reviewRoutes");
 const bookingHistoryRoutes = require("./routes/bookingHistoryRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
-
 
 // ✅ กำหนด CORS
 const allowedOrigins = process.env.ALLOWED_ORIGINS
@@ -52,11 +65,10 @@ app.use(cors({
 
 // ✅ Middleware
 app.use(bodyParser.json());
-app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // ✅ ให้สามารถเข้าถึงไฟล์ใน `uploads/`
+app.use("/uploads", express.static(path.join(__dirname, "uploads"))); 
 
 // ✅ เชื่อมต่อ MongoDB
 const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://Booking:Booking@cluster0.1cryq.mongodb.net/BookingDB";
-
 const connectDB = async () => {
   try {
     await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -66,9 +78,11 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-connectDB(); // ✅ เรียกใช้ฟังก์ชันเชื่อมต่อ MongoDB
+connectDB();
 
-// ✅ กำหนด API Routes
+// ✅ ตั้งค่า API Routes
+console.log("🟢 Chat Routes Loaded");
+app.use("/api/chat", chatRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/stadiums", stadiumRoutes);
 app.use("/api/business", businessRoutes);
@@ -88,16 +102,43 @@ app.use("/api/sports", sportRoutes);
 app.use("/api/promotions", promotionRoutes);
 app.use("/api/sportscategories", sportscategoriesRoutes);
 app.use("/api/substadiums", subStadiumRoutes);
-app.use("/api/favoritearena", favoriteRoutes); // ✅ เพิ่ม API Routes สำหรับ Favorite Arena
-app.use("/api/location", locationRoutes);
-app.use("/api/chat", chatRoutes); // ✅ ใช้ "/api/chat" แทน "/api" เพื่อให้ Route ชัดเจน
 app.use("/api/favoritearena", favoriteRoutes);
+app.use("/api/location", locationRoutes);
 app.use("/api/business-info-requests", businessInfoRequestRoutes);
-app.use("/api", reviewRoutes);
+app.use("/api/reviews", reviewRoutes);
 app.use("/api/bookinghistories", bookingHistoryRoutes);
 app.use("/api/businessOwners", businessOwnerRoutes);
 app.use("/api/bookings", bookingRoutes);
 
+// ✅ WebSocket สำหรับ Chat (Socket.io)
+io.on("connection", (socket) => {
+  console.log(`✅ New user connected: ${socket.id}`);
+
+  // ✅ ให้ User Join Room ตาม ID ของตัวเอง
+  socket.on("joinRoom", ({ userId }) => {
+    if (userId) {
+      socket.join(userId);
+      console.log(`👥 User ${userId} joined room: ${userId}`);
+    }
+  });
+
+  socket.on("sendMessage", (data) => {
+    console.log("📩 New message:", data);
+
+    // ✅ ตรวจสอบ receiverId ก่อนส่ง
+    if (data.receiverId) {
+      console.log(`📤 Sending message to Room: ${data.receiverId}`);
+      io.to(data.receiverId).emit("receiveMessage", data);
+    } else {
+      console.log("⚠️ Missing receiverId, broadcasting to all users!");
+      io.emit("receiveMessage", data);
+    }
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`❌ User disconnected: ${socket.id}`);
+  });
+});
 
 // ✅ Error Handling Middleware
 app.use((err, req, res, next) => {
@@ -109,6 +150,6 @@ app.use((err, req, res, next) => {
 });
 
 // ✅ เริ่มต้นเซิร์ฟเวอร์
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`🚀 Server started on port ${PORT}`);
 });

@@ -5,6 +5,8 @@ import "./ManageSubStadium.css";
 import logo from "../assets/logo.png";
 import homeLogo from "../assets/logoalt.png";
 import addIcon from "../assets/icons/add.png";
+import { jwtDecode } from "jwt-decode"; // ✅ ใช้ decode token
+import ChatButton from "../ChatButton/ChatButton"; // ✅ นำเข้า ChatButton
 
 function ManageSubStadium() {
   const navigate = useNavigate();
@@ -14,8 +16,23 @@ function ManageSubStadium() {
   const [showPopup, setShowPopup] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null); // ✅ เพิ่ม state สำหรับยืนยันการลบ
   const [newSport, setNewSport] = useState({ sportName: "", iconUrl: "", description: "" });
+  const [decodedToken, setDecodedToken] = useState(null); // ✅ เพิ่ม state สำหรับ token
 
   console.log("🎯 arenaId:", arenaId);
+
+  useEffect(() => {
+    // ✅ ดึง Token จาก Local Storage หรือ Session Storage
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        console.log("📌 Token Decoded:", decoded);
+        setDecodedToken(decoded);
+      } catch (error) {
+        console.error("❌ Error decoding token:", error);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (!arenaId) {
@@ -177,9 +194,12 @@ function ManageSubStadium() {
           </div>
         </div>
       )}
-
-    </div>
-  );
-}
+      {/* ✅ แสดง ChatButton */}
+      {decodedToken?.id && decodedToken?.role && (
+              <ChatButton userId={decodedToken.id} userType={decodedToken.role} />
+            )}
+          </div>
+        );
+      }
 
 export default ManageSubStadium;

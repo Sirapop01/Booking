@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logo from '../assets/logo.png';
 import { jwtDecode } from 'jwt-decode';
+import ChatButton from "../ChatButton/ChatButton";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -10,14 +11,12 @@ const Navbar = () => {
   const [decodedToken, setDecodedToken] = useState(null);
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
 
-
   useEffect(() => {
-    // ดึง Token จาก Local Storage
+    // ✅ ดึง Token จาก Local Storage หรือ Session Storage
     const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
 
     if (storedToken) {
       try {
-        // ถอดรหัส JWT Token
         const decoded = jwtDecode(storedToken);
         console.log("✅ Token Decoded:", decoded);
         setDecodedToken(decoded);
@@ -29,23 +28,24 @@ const Navbar = () => {
   }, []);
 
   const isLoggedIn = !!decodedToken;
+  const userId = decodedToken?.id || null; // ✅ ดึง `userId` จาก Token
+  const userType = decodedToken?.role?.toLowerCase() || null; // ✅ ดึง `userType` และแปลงเป็นตัวพิมพ์เล็ก
 
+  console.log("📌 userId จาก Navbar:", userId);
+  console.log("📌 userType จาก Navbar:", userType);
 
-
-
-  // ฟังก์ชัน Logout พร้อมป๊อปอัปยืนยัน
+  // ✅ ฟังก์ชัน Logout พร้อมป๊อปอัปยืนยัน
   const handleLogout = () => {
-    setShowLogoutPopup(true); // แสดงป๊อปอัปยืนยัน
-
+    setShowLogoutPopup(true);
   };
 
   const confirmLogout = () => {
-    localStorage.removeItem('token'); // ลบ Token ออกจาก LocalStorage
+    localStorage.removeItem('token');
     sessionStorage.removeItem('token');
-    setDecodedToken(null); // รีเซ็ต Token ใน State
-    setIsDropdownOpen(false); // ปิด Dropdown
-    setShowLogoutPopup(false); // ปิดป๊อปอัป
-    navigate('/'); // Redirect ไปหน้าแรก
+    setDecodedToken(null);
+    setIsDropdownOpen(false);
+    setShowLogoutPopup(false);
+    navigate('/');
     window.location.reload();
   };
 
@@ -63,7 +63,6 @@ const Navbar = () => {
           <span className="navbar-title">MatchWeb</span>
         </div>
 
-
         <div className="navbar-right">
           {!isLoggedIn ? (
             <div className="navbar-links">
@@ -74,20 +73,6 @@ const Navbar = () => {
                 ลงทะเบียน
               </button>
             </div>
-          ) : decodedToken?.role === "customer" ? (
-            <div className="dropdown">
-              <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-                ☰
-              </button>
-              {isDropdownOpen && (
-                <div className="dropdown-menu">
-                  <button onClick={() => navigate("/profile")}>บัญชี</button>
-                  <button onClick={() => navigate("/historybooking")}>ประวัติการจอง</button>
-                  <button onClick={() => navigate("/FavoritesList")}>รายการโปรด</button>
-                  <button onClick={handleLogout}>ลงชื่อออก</button>
-                </div>
-              )}
-            </div>
           ) : (
             <div className="dropdown">
               <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
@@ -95,10 +80,20 @@ const Navbar = () => {
               </button>
               {isDropdownOpen && (
                 <div className="dropdown-menu">
-                  <button onClick={() => navigate("/OwnerProfile")}>บัญชี</button>
-                  <button onClick={() => navigate("/stadium-list")}>สนามของฉัน</button>
-                  <button onClick={() => navigate(`/Ownerledger/${decodedToken?.id}`)}>บัญชีรายรับ</button>
-                  <button onClick={() => navigate("/addPromotion")}>เพิ่มโปรโมชั่น</button>
+                  {userType === "customer" ? (
+                    <>
+                      <button onClick={() => navigate("/profile")}>บัญชี</button>
+                      <button onClick={() => navigate("/historybooking")}>ประวัติการจอง</button>
+                      <button onClick={() => navigate("/FavoritesList")}>รายการโปรด</button>
+                    </>
+                  ) : (
+                    <>
+                      <button onClick={() => navigate("/OwnerProfile")}>บัญชี</button>
+                      <button onClick={() => navigate("/stadium-list")}>สนามของฉัน</button>
+                      <button onClick={() => navigate(`/Ownerledger/${userId}`)}>บัญชีรายรับ</button>
+                      <button onClick={() => navigate("/addPromotion")}>เพิ่มโปรโมชั่น</button>
+                    </>
+                  )}
                   <button onClick={handleLogout}>ลงชื่อออก</button>
                 </div>
               )}
@@ -118,6 +113,11 @@ const Navbar = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* ✅ ตรวจสอบว่า ChatButton โหลดได้ถูกต้อง */}
+      {isLoggedIn && userId && (userType === "customer" || userType === "owner") && (
+        <ChatButton userId={userId} userType={userType} />
       )}
     </>
   );
