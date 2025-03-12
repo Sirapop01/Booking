@@ -95,3 +95,135 @@ textarea {
     margin-top: 20px;
     font-size: 14px;
 }
+
+
+/* ✅ ปรับให้รีวิวเลื่อนได้ */
+.review-page-container {
+    text-align: center;
+  }
+  
+  .review-stadium-image-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .review-stadium-image {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+  }
+  
+  .review-slider {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .review-slide {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  .review-user {
+    font-weight: bold;
+    color: black;
+  }
+  
+  .review-rating {
+    font-size: 1.2em;
+    color: gold;
+  }
+  
+  .review-comment {
+    font-style: italic;
+    color: #333;
+  }
+  
+  /* ✅ ปรับการแสดงผลของปุ่มรีวิว */
+  .review-rating-section {
+    margin-top: 20px;
+  }
+  
+  .review-star {
+    font-size: 2em;
+    cursor: pointer;
+  }
+  
+  .review-star.active {
+    color: gold;
+  }
+  
+  .review-textarea {
+    width: 100%;
+    max-width: 600px;
+    height: 120px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    resize: vertical;
+    box-sizing: border-box;
+    text-align: left; /* ทำให้ข้อความชิดซ้ายภายใน */
+}
+
+  
+.review-submit-button {
+    width: 100%;
+    max-width: 200px; /* ปรับขนาดปุ่มให้พอดี */
+    padding: 12px;
+    font-size: 18px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 15px;
+    text-align: center;
+    display: flex;
+    justify-content: center; /* จัดปุ่มให้อยู่ตรงกลาง */
+    align-items: center;
+}
+
+  .review-submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* ✅ ให้ Slider แสดงจุดนำทางด้านบน */
+  .slick-dots {
+    top: -30px !important;
+  }
+  
+  /* ✅ ให้ลูกศรเลื่อนรีวิวแสดงผลถูกต้อง */
+  .slick-prev, .slick-next {
+    z-index: 1000;
+  }
+
+  .review-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 20px 0;
+    width: 100%; /* ให้ข้อความอยู่กึ่งกลางเต็มจอ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #f0f8ff;
+}
+
+.review-form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* จัดให้อยู่ตรงกลางแนวตั้ง */
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto; /* ทำให้ textarea และปุ่มอยู่ตรงกลาง */
+    text-align: center;
+}
+
+
+  
