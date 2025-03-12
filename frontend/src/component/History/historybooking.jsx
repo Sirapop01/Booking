@@ -78,6 +78,16 @@ const HistoryBooking = () => {
                       {booking.status}
                     </span>
                   </p>
+                   {/* ✅ ปุ่ม รีวิวสนาม */}
+                   <button 
+                    className="review-button" 
+                    onClick={(e) => {
+                      e.stopPropagation(); // ป้องกันการคลิกที่ Card แล้วไปหน้า Booking
+                      navigate(`/review/${booking.stadiumId}`);
+                    }}
+                  >
+                    รีวิวสนาม
+                  </button>
                 </div>
                 <div className="history-image">
                   <img 

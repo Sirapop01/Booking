@@ -86,7 +86,7 @@ function App() {
         <Route path="/Addpromotion" element={<Addpromotion />} />
         <Route path="/Promoowner" element={<Promoowner />} />
         <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
-        <Route path="/review" element={<ReviewPage />} />
+        <Route path="/review/:stadiumId" element={<ReviewPage />} />
         <Route path="/Booking" element={<Booking />} />
         <Route path="/historybooking" element={<HistoryBooking />} />
         <Route path='/payment' element={<Payment />} />
