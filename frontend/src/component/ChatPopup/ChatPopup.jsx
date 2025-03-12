@@ -13,7 +13,7 @@ const ChatPopup = ({ isOpen, onClose, userId, userType }) => {
   // ✅ โหลดประวัติแชท
   useEffect(() => {
     if (!isOpen || !userId || !userType) return;
-    
+
     const userModel = userType === "customer" ? "User" : "BusinessOwner";
     console.log("📢 Fetching chat history for:", { userId, userModel });
 
@@ -29,8 +29,7 @@ const ChatPopup = ({ isOpen, onClose, userId, userType }) => {
             }
         })
         .catch((err) => console.error("❌ Error loading chat history:", err));
-}, [isOpen, userId, userType]);
-
+  }, [isOpen, userId, userType]);
 
   // ✅ ฟังก์ชันส่งข้อความ
   const sendMessage = () => {
@@ -64,7 +63,7 @@ const ChatPopup = ({ isOpen, onClose, userId, userType }) => {
           setMessages((prev) => [...prev, response.data]);
           setMessage("");
           scrollToBottom();
-          socket.emit("sendMessage", response.data);
+          socket.emit("sendMessage", response.data); // ส่งข้อความใหม่ไปที่ socket
         } else {
           console.error("❌ Failed to send message:", response.message);
         }
@@ -78,7 +77,7 @@ const ChatPopup = ({ isOpen, onClose, userId, userType }) => {
       console.log("📩 Received New Message:", newMessage);
       setMessages((prev) => {
         if (!prev.some((msg) => msg._id === newMessage._id)) {
-          return [...prev, newMessage];
+          return [...prev, newMessage]; // หากยังไม่มีข้อความนี้ใน messages, เพิ่มเข้าไป
         }
         return prev;
       });
