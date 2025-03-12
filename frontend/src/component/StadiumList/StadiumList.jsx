@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import "./StadiumList.css";
-import NavbarStadiumlist from "../NavbarStadiumlist/NavbarStadiumlist";
+import Navbar from "../Navbar/Navbar";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css"; // ✅ นำเข้า CSS ของ SweetAlert2
 
@@ -137,7 +137,7 @@ function StadiumList() {
     
     return (
         <div className="stadium-page-container">
-            <NavbarStadiumlist />
+            <Navbar/>
 
             {/* ✅ ตารางสนาม */}
             <table className="stadium-table-stadiumlist">
@@ -193,31 +193,40 @@ function StadiumList() {
                     className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
                     onClick={() => navigate(`/Registerarena/${selectedStadium}`)} 
                     disabled={!selectedStadium}
-                >
-                    แก้ไข
+                    >
+                แก้ไข
                 </button>
 
                 <button onClick={() => navigate("/Registerarena")} className="btn-stadiumlist">
-                    เพิ่มสนามใหม่
+                เพิ่มสนามใหม่
                 </button>
 
                 <button 
                     className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
                     onClick={() => navigate(`/manage-sub-stadium/${selectedStadium}`)} 
                     disabled={!selectedStadium}
-                >
-                    จัดการสนามย่อย
+                    >
+                จัดการสนามย่อย
+                </button>
+
+                {/* ✅ ปุ่ม "ยืนยันการจอง" */}
+                <button 
+                    className={`confirm-booking-btn ${selectedStadium ? "" : "disabled"}`} 
+                    onClick={() => navigate(`/confirm-bookings/${selectedStadium}`)}
+                    disabled={!selectedStadium}
+                    >
+                ตรวจสอบการจอง
                 </button>
 
                 <button 
                     className={`delete-btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
                     onClick={() => deleteStadium(selectedStadium)}
                     disabled={!selectedStadium}
-                >
-                    ลบสนาม
+                    >
+                ลบสนาม
                 </button>
-            </div>
 
+            </div>
         </div>
     );
 }
