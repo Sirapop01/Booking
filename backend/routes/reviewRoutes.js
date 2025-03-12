@@ -13,7 +13,7 @@ if (!submitReview || !getStadiumReviews || !deleteReviewsByOwner) {
 }
 
 // ✅ ให้ลูกค้าส่งรีวิว (ตรวจสอบ Token ภายใน Controller)
-router.post("/reviews", submitReview);
+router.post("/", submitReview);
 
 // ✅ ดึงรีวิวของสนาม (ผู้ใช้ทั่วไปสามารถดูได้)
 router.get("/:stadiumId", getStadiumReviews); // ✅ แก้ไขเส้นทางให้ถูกต้อง
