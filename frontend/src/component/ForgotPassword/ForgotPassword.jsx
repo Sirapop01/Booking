@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 import axios from "axios";
 import "./ForgotPassword.css";
 import logo from '../assets/lago.png';
@@ -29,16 +30,41 @@ function ForgotPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
+    // เช็คว่า email ตรงกับใน token หรือไม่
+    if (user.email && email !== user.email) {
+      Swal.fire({
+        icon: "error",
+        title: "อีเมลไม่ถูกต้อง!",
+        text: "กรุณากรอกอีเมลที่ใช้ลงทะเบียน",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง",
+
+      });
+      return;
+    }
 
     try {
       await axios.post("http://localhost:4000/api/auth/forgot-password", { email });
-      setMessage("✅ กรุณาตรวจสอบอีเมลของคุณ!");
+      Swal.fire({
+        icon: "success",
+        title: " กรุณาตรวจสอบอีเมล!",
+        text: "เราได้ส่งลิงก์สำหรับเปลี่ยนรหัสผ่านไปที่อีเมลของคุณ",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง",
+
+      });
     } catch (error) {
-      console.error(error);
-      setMessage("❌ ไม่พบอีเมลนี้");
+      Swal.fire({
+        icon: "error",
+        title: " ไม่พบอีเมลนี้",
+        text: "โปรดตรวจสอบและลองอีกครั้ง",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "ตกลง",
+
+      });
     }
   };
+
 
   return (
     <div className="new-forgot-password-container">
@@ -51,7 +77,7 @@ function ForgotPassword() {
           <input
             id="email"
             type="email"
-            placeholder={user.email}
+            placeholder={user?.email || "กรุณากรอกอีเมล"}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
