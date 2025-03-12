@@ -333,4 +333,10 @@
   color: red;
 }
 
+/* ทำให้จุดนำทาง (dots) อยู่ด้านบน */
+.slick-dots {
+  top: -30px !important; /* ย้ายขึ้นไป 30px */
+  bottom: auto !important;
+}
+
 
