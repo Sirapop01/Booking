@@ -145,7 +145,6 @@ const UserProfile = () => {
         console.log("✅ Profile Image Updated:", uploadResponse.data);
         imageUrl = uploadResponse.data.profileImage;
         updatedData.profileImage = imageUrl;
-
       }
 
       console.log("📤 Sending Updated Data:", updatedData);
@@ -154,7 +153,14 @@ const UserProfile = () => {
       const response = await axios.put(`http://localhost:4000/api/auth/update/${id}`, updatedData);
 
       console.log("✅ Updated Member Data:", response.data);
-      alert("🎉 อัปเดตข้อมูลสำเร็จ!");
+
+      // ✅ แจ้งเตือนอัปเดตสำเร็จด้วย SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "🎉 อัปเดตข้อมูลสำเร็จ!",
+        text: "ข้อมูลของคุณได้รับการอัปเดตเรียบร้อยแล้ว",
+        confirmButtonText: "ตกลง",
+      });
 
       // ✅ โหลดข้อมูลใหม่จาก API ทันที
       await getMB();
@@ -164,7 +170,14 @@ const UserProfile = () => {
       setNewProfileImage(null);
     } catch (error) {
       console.error("❌ Error updating member data:", error);
-      alert("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
+
+      // ✅ แจ้งเตือนเมื่อเกิดข้อผิดพลาด
+      Swal.fire({
+        icon: "error",
+        title: "❌ เกิดข้อผิดพลาด!",
+        text: "ไม่สามารถอัปเดตข้อมูลได้ กรุณาลองใหม่อีกครั้ง",
+        confirmButtonText: "ตกลง",
+      });
     }
   };
 
@@ -336,11 +349,20 @@ const UserProfile = () => {
             </div>
             <div className="input-group">
               <label>เพศ</label>
-              <input type="text" name="gender" value={member?.gender || ""} onChange={handleChange} readOnly={!isEditable} />
+              {isEditable ? (
+                <select name="gender" value={member?.gender || ""} onChange={handleChange} className="new-input">
+                  <option value="">-- กรุณาเลือกเพศ --</option>
+                  <option value="ชาย">ชาย</option>
+                  <option value="หญิง">หญิง</option>
+                  <option value="อื่นๆ">อื่นๆ</option>
+                </select>
+              ) : (
+                <input type="text" name="gender" value={member?.gender || ""} readOnly className="new-input" />
+              )}
             </div>
             <div className="input-group">
               <label>หมายเลขโทรศัพท์</label>
-              <input type="text" name="phoneNumber" value={member?.phoneNumber || ""} onChange={handleChange} readOnly={!isEditable} />
+              <input type="text" name="phoneNumber" value={member?.phoneNumber || ""} inputMode="numeric" maxLength="10" onChange={handleChange} readOnly={!isEditable} />
             </div>
             <div className="input-group">
               <label>กีฬาที่สนใจ</label>

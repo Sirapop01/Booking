@@ -5,6 +5,7 @@ import { FaPencilAlt } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const BusinessProfile = () => {
   const [isEditable, setIsEditable] = useState(false);
@@ -113,7 +114,13 @@ const BusinessProfile = () => {
       const response = await axios.put(`http://localhost:4000/api/business/update/${id}`, updatedData);
 
       console.log("✅ Updated Member Data:", response.data);
-      alert("🎉 อัปเดตข้อมูลสำเร็จ!");
+      Swal.fire({
+        icon: "success",
+        title: "🎉 อัปเดตข้อมูลสำเร็จ!",
+        text: "ข้อมูลของคุณถูกอัปเดตเรียบร้อยแล้ว",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง",
+      });
 
       // ✅ โหลดข้อมูลใหม่จาก API ทันที
       await getMB();
@@ -123,7 +130,13 @@ const BusinessProfile = () => {
       setNewProfileImage(null);
     } catch (error) {
       console.error("❌ Error updating member data:", error);
-      alert("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
+      Swal.fire({
+        icon: "error",
+        title: "❌ เกิดข้อผิดพลาด!",
+        text: "ไม่สามารถอัปเดตข้อมูลได้ กรุณาลองใหม่อีกครั้ง",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "ตกลง",
+      });
     }
   };
 
@@ -231,7 +244,7 @@ const BusinessProfile = () => {
             </div>
             <div className="input-group">
               <label>หมายเลขโทรศัพท์</label>
-              <input type="text" name="phoneNumber" value={member?.phoneNumber || ""} onChange={handleChange} readOnly={!isEditable} />
+              <input type="text" name="phoneNumber" value={member?.phoneNumber || ""} inputMode="numeric" maxLength="10" onChange={handleChange} readOnly={!isEditable} />
             </div>
 
 
@@ -254,7 +267,7 @@ const BusinessProfile = () => {
             </div>
             <div className="input-group">
               <label>หมายเลขบัตรประชาชน</label>
-              <input type="idCard" name="idCard" value={member?.idCard || ""} readOnly />
+              <input type="idCard" name="idCard"  value={member?.idCard || ""}  readOnly />
             </div>
           </div>
         </section>

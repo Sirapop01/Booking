@@ -142,13 +142,13 @@ function RegisterCustomer() {
   return (
     <div className="container1">
       <div className="right-side">
-            <header className="register-header">
-        <h1>
-          <img src={logo} alt="MatchWeb Logo" className="register-logo" />
-          <span>MatchWeb</span> {/* 🔹 ใส่ <span> เพื่อให้ขยับเฉพาะข้อความ */}
-        </h1>
-            <p>ระบบลงทะเบียนสำหรับผู้ใช้งาน</p>
-            </header>
+        <header className="register-header">
+          <h1>
+            <img src={logo} alt="MatchWeb Logo" className="register-logo" />
+            <span>MatchWeb</span> {/* 🔹 ใส่ <span> เพื่อให้ขยับเฉพาะข้อความ */}
+          </h1>
+          <p>ระบบลงทะเบียนสำหรับผู้ใช้งาน</p>
+        </header>
 
         <h2 className="register-heading">ยืนยันข้อมูลการสมัครสมาชิกสำหรับผู้ใช้งาน</h2>
         <p className="subtext">กรุณากรอกข้อมูลและตรวจสอบให้ครบถ้วน</p>
@@ -165,15 +165,15 @@ function RegisterCustomer() {
             <div className="gender-section">
               <label>เพศ *{errors.gender && <span className="error-message-register">{errors.gender}</span>}</label>
               <select name="gender" value={formData.gender} onChange={handleChange}>
-                <option value="">เลือกเพศ</option>
-                <option value="male">ชาย</option>
-                <option value="female">หญิง</option>
-                <option value="other">อื่นๆ</option>
+                <option value="">-- กรุณาเลือกเพศ --</option>
+                <option value="ชาย">ชาย</option>
+                <option value="หญิง">หญิง</option>
+                <option value="อื่นๆ">อื่นๆ</option>
               </select>
             </div>
             <div className="phone-section">
               <label>เบอร์โทรศัพท์มือถือ *{errors.phoneNumber && <span className="error-message-register">{errors.phoneNumber}</span>}</label>
-              <input type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
+              <input type="tel" name="phoneNumber" value={formData.phoneNumber} inputMode="numeric" maxLength="10" onChange={handleChange} />
             </div>
           </div>
 
