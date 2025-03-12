@@ -1,11 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./ForgotPassword.css";
 import logo from '../assets/lago.png';
+import { jwtDecode } from "jwt-decode"
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // ดึง token จาก localStorage หรือ sessionStorage
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+
+    if (token) {
+      try {
+        // Decode Token เพื่อดึงข้อมูล
+        const decoded = jwtDecode(token);
+        setUser(decoded);
+      } catch (error) {
+        console.error("❌ Error decoding token:", error);
+        setUser(null);
+      }
+    } else {
+      setUser(null);
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +51,7 @@ function ForgotPassword() {
           <input
             id="email"
             type="email"
-            placeholder="your@email.com"
+            placeholder={user.email}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
