@@ -9,7 +9,6 @@ exports.submitReview = async (req, res) => {
     try {
         const { stadiumId, rating, comment } = req.body;
 
-        // ✅ ตรวจสอบว่า Token ถูกส่งมาหรือไม่
         const token = req.headers.authorization?.split(" ")[1];
         if (!token) {
             return res.status(401).json({ message: "❌ Unauthorized" });
@@ -28,7 +27,7 @@ exports.submitReview = async (req, res) => {
             return res.status(404).json({ message: "❌ ไม่พบสนามกีฬานี้" });
         }
 
-        // ✅ บันทึกรีวิวใหม่ทุกครั้งที่กดส่งรีวิว
+        // ✅ บันทึกรีวิวใหม่
         const newReview = new Review({
             stadiumId,
             ownerId: stadium.businessOwnerId, 
@@ -73,21 +72,18 @@ exports.deleteReviewsByOwner = async (req, res) => {
 exports.getStadiumReviews = async (req, res) => {
     try {
         const { stadiumId } = req.params;
-
         console.log("📌 Fetching reviews for stadiumId:", stadiumId);
 
-        // ✅ ตรวจสอบว่ามีสนามนี้อยู่จริง
+        // ✅ ค้นหาข้อมูลสนามจาก arenas (แทนที่จะเป็น Stadiums)
         const stadium = await Arena.findById(stadiumId);
         if (!stadium) {
             return res.status(404).json({ message: "❌ ไม่พบข้อมูลสนามกีฬา" });
         }
 
-        // ✅ ดึงรีวิวทั้งหมดของสนาม และ populate ข้อมูล user
+        // ✅ ดึงรีวิวที่เกี่ยวข้อง
         const reviews = await Review.find({ stadiumId })
-            .populate("userId", "firstName lastName email") // ✅ ดึงข้อมูลผู้ใช้ที่รีวิว
+            .populate("userId", "firstName lastName email")
             .sort({ createdAt: -1 });
-
-        console.log("📌 Reviews Data:", reviews);
 
         res.status(200).json({
             stadium: {
@@ -107,3 +103,6 @@ exports.getStadiumReviews = async (req, res) => {
         res.status(500).json({ message: "❌ ไม่สามารถดึงข้อมูลรีวิวได้" });
     }
 };
+
+
+
