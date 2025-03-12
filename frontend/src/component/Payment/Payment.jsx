@@ -3,6 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2"; // ✅ นำเข้า SweetAlert2
 import "./Payment.css";
 import { useNavigate } from "react-router-dom"
+import { useLocation } from "react-router-dom";
 const Payment = () => {
     const [paymentData, setPaymentData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -10,30 +11,46 @@ const Payment = () => {
     const [amount, setAmount] = useState("");
     const [slipImage, setSlipImage] = useState(null);
     const navigate = useNavigate();
+    const location = useLocation();
+    const bookingData = location.state?.bookingData || null;
+
     useEffect(() => {
         const fetchPaymentDetails = async () => {
             try {
                 const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+    
+                console.log("📌 Token ที่ถูกดึงมา:", token);
                 if (!token) {
-                    console.log("❌ No token found");
+                    console.log("❌ No token found in storage");
                     return;
                 }
-
-                const response = await axios.get("http://localhost:4000/api/payments/pending", {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-
+    
+                let sessionId = bookingData?.sessionId;
+                console.log("📌 sessionId ที่ส่งไป Backend:", sessionId);
+    
+                const response = await axios.get(
+                    `http://localhost:4000/api/payments/pending?sessionId=${sessionId}`,
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+    
+                console.log("✅ ข้อมูลที่ได้รับจาก API:", response.data);
                 setPaymentData(response.data);
-                console.log("✅ Payment Data:", response.data);
+    
             } catch (error) {
                 console.error("❌ Error fetching payment details:", error);
+                if (error.response) {
+                    console.error("❌ API Response Status:", error.response.status);
+                    console.error("❌ API Response Data:", error.response.data);
+                }
             } finally {
                 setLoading(false);
             }
         };
-
+    
         fetchPaymentDetails();
-    }, []);
+    }, [bookingData]);
+
+    
 
     const handlePaymentSubmit = async () => {
         if (!transferTime || !amount || !slipImage) {
@@ -91,43 +108,34 @@ const Payment = () => {
         return <p>กำลังโหลดข้อมูล...</p>;
     }
 
-    if (!paymentData || !paymentData.booking) {
+    if (!paymentData) {
         return <p>❌ ไม่พบข้อมูลการจอง</p>;
     }
 
     const { arenaInfo, booking, stadiumInfo, bankInfo } = paymentData;
-
     return (
         <div className="payment-container">
             <div className="payment-top">
                 <div className="image-top">
-                    <div className="arena-details">
-                        <img src={arenaInfo?.[0].images?.[0]} alt="สนามกีฬา" className="arena-image" />
-                    </div>
+                <div className="arena-details">
+                    <img src={arenaInfo?.images?.[0] || "https://via.placeholder.com/150"} alt="สนามกีฬา" className="arena-image" />
+                </div>
                 </div>
                 <div className="info-top">
                     <div className="arena-details">
                         <h2>เลขที่การจอง #{booking?.sessionId || "N/A"}</h2>
-                        <p>📍 {arenaInfo?.[0]?.fieldName || "ไม่พบข้อมูลสนาม"}</p>
-                        <p>📍 {stadiumInfo?.map((stadium) => stadium.name).join(", ") || "ไม่พบข้อมูลสนาม"}</p>
-                        <p>📅 วันที่: {new Date(booking?.details?.[0]?.bookingDate || new Date()).toLocaleDateString()}</p>
-                        <div>
-                            <p>🕒 เวลาที่จอง:</p>
-                            <ul>
-                                {booking?.details?.map((detail, index) => {
-                                    const matchedStadium = stadiumInfo?.find(stadium =>
-                                        stadium._id.toString() === detail.subStadiumId.toString()
-                                    );
-                                    return (
-                                        <li key={index}>
-                                            <strong>{matchedStadium?.name || "ไม่พบชื่อสนาม"}</strong>:
-                                            {detail.startTime} - {detail.endTime} ({detail.duration} ชั่วโมง)
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                        <p className="price">💰 ฿{booking?.totalPrice || "N/A"}</p>
+                        <p>📍 สนามกีฬา: {arenaInfo?.fieldName || "ไม่พบข้อมูลสนาม"}</p>
+                        <p>📍 สนามย่อยที่จอง: {bookingData?.details?.map((detail) => detail.name).join(", ") || "ไม่พบข้อมูลสนามย่อย"}</p>
+                        <p>📅 วันที่: {new Date(paymentData?.details?.[0]?.bookingDate || new Date()).toLocaleDateString()}</p>
+                        <p>🕒 เวลาที่จอง: </p>
+                        <ul>
+                            {bookingData?.details?.map((detail, index) => (
+                                <li key={index}>
+                                    {detail.name} : {detail.startTime} - {detail.endTime} ({detail.duration} ชั่วโมง)
+                                </li>
+                            ))}
+                        </ul>
+                        <p className="price">💰 ฿{booking?.totalPrice ?? "N/A"}</p>
                     </div>
                 </div>
             </div>

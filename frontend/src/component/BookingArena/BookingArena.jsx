@@ -202,6 +202,12 @@ const handleBooking = () => {
       if (selectedSubStadiums.length > 0) {
           console.log("📌 ข้อมูลที่จะส่งไปหน้า Booking:", selectedSubStadiums); // Debug
 
+          // ✅ ตรวจสอบว่า arena มี fieldName หรือไม่
+          const fieldName = arena?.fieldName || "ไม่พบชื่อสนาม";
+
+          // ✅ ดึงภาพสนามหลัก (arena) ถ้ามี
+          const stadiumImage = arena?.images?.[0] || "https://via.placeholder.com/150";
+
           // ✅ ตรวจสอบว่าทุกสนามย่อยมี name และ price
           const hasInvalidData = selectedSubStadiums.some(sub => !sub.name || !sub.price);
           if (hasInvalidData) {
@@ -209,7 +215,10 @@ const handleBooking = () => {
               return;
           }
 
-          navigate(`/booking`, { state: { selectedSubStadiums, userId } });
+          console.log("📌 ส่งข้อมูลไป Booking:", { selectedSubStadiums, userId, fieldName, stadiumImage }); // Debug
+
+          // ✅ ส่งข้อมูลไปยัง Booking.jsx พร้อม fieldName และ stadiumImage
+          navigate(`/booking`, { state: { selectedSubStadiums, userId, fieldName, stadiumImage } });
       } else {
           Swal.fire({
               title: "กรุณาเลือกสนาม!",

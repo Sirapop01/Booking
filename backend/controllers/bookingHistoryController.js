@@ -122,10 +122,22 @@ exports.confirmBooking = async (req, res) => {
     try {
         console.log("📌 ข้อมูลที่ได้รับจาก Frontend:", req.body);
 
-        const { sessionId, userId, stadiumId, ownerId, bookingDate, expiresAt, totalPrice, details } = req.body;
+        let { sessionId, userId, stadiumId, ownerId, bookingDate, expiresAt, totalPrice, details, fieldName, stadiumImage } = req.body;
 
         if (!details || !Array.isArray(details) || details.length === 0) {
             return res.status(400).json({ message: "❌ ไม่มีข้อมูลการจองที่ถูกต้อง" });
+        }
+
+        // ✅ ถ้า fieldName ไม่มีค่า ให้ดึงจากฐานข้อมูล
+        if (!fieldName || fieldName === "ไม่พบชื่อสนาม") {
+            const stadium = await Stadium.findById(stadiumId);
+            fieldName = stadium?.name || "ไม่ระบุชื่อสนาม";
+        }
+
+        // ✅ ถ้า stadiumImage ไม่มีค่า ให้ดึงจากฐานข้อมูล
+        if (!stadiumImage) {
+            const stadium = await Stadium.findById(stadiumId);
+            stadiumImage = stadium?.images?.[0] || "https://via.placeholder.com/150"; // ✅ ใช้ placeholder ถ้าไม่มีรูป
         }
 
         // ✅ ตรวจสอบว่ามี sessionId ซ้ำหรือไม่
@@ -134,12 +146,14 @@ exports.confirmBooking = async (req, res) => {
             return res.status(400).json({ message: "❌ Session นี้มีอยู่แล้วในระบบ" });
         }
 
-        // ✅ สร้าง BookingHistory เดียวที่รวมข้อมูลทั้งหมด
+        // ✅ บันทึกข้อมูลการจอง
         const newBooking = new BookingHistory({
             sessionId,
             userId,
             stadiumId,
             ownerId,
+            fieldName, // ✅ บันทึก fieldName
+            stadiumImage, // ✅ เพิ่ม stadiumImage ลงในฐานข้อมูล
             bookingDate,
             expiresAt,
             totalPrice,
@@ -154,6 +168,8 @@ exports.confirmBooking = async (req, res) => {
         res.status(500).json({ message: "❌ ไม่สามารถบันทึกการจองได้", error: error.message });
     }
 };
+
+
 
 
 
