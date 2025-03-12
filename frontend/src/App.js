@@ -42,6 +42,7 @@ import VerifyOnwers from "./component/Verifyowners/verifyowners"
 import ReviewPage from './component/ReviewPage/ReviewPage';
 import Payment from './component/Payment/Payment'
 import AuthProvider from './AuthProvider'
+import ConfirmBooking from './component/ConfirmBooking/ConfirmBooking';
 
 /**/
 
@@ -90,6 +91,7 @@ function App() {
         <Route path="/Booking" element={<Booking />} />
         <Route path="/historybooking" element={<HistoryBooking />} />
         <Route path='/payment' element={<Payment />} />
+        <Route path="/confirm-bookings/:stadiumId" element={<ConfirmBooking />} />
 
 
         <Route element={<ProtectedRoute role="superadmin" />}>

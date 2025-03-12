@@ -276,3 +276,44 @@
   box-shadow: none;
   opacity: 0.8;
 }
+
+/* ✅ ปุ่ม "ยืนยันการจอง" (ธีมเดียวกับปุ่มหลัก) */
+.confirm-booking-btn {
+  background-color: #07213A; /* ✅ ใช้สีพื้นหลังเดียวกับปุ่มหลัก */
+  color: white;
+  padding: 14px 26px;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  min-width: 200px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Kanit', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+
+.confirm-booking-btn:hover {
+  background-color: #003399; /* ✅ เปลี่ยนเป็นสีน้ำเงินเข้มเมื่อ hover */
+  box-shadow: 0px 8px 16px rgba(0, 123, 255, 0.4);
+}
+
+.confirm-booking-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* ✅ ปุ่มที่กดไม่ได้ */
+.confirm-booking-btn.disabled {
+  background-color: #c1c1c1;
+  color: #777;
+  cursor: not-allowed;
+  opacity: 0.8;
+  box-shadow: none;
+}
+
