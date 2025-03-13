@@ -12,33 +12,39 @@
 /* หัวข้อหลัก */
 .history-title {
   font-size: 28px;
+  margin-top: 100px;  /* ✅ เพิ่มระยะห่างด้านบน */
   margin-bottom: 20px;
   color: white;
   font-weight: bold;
+  text-align: center; /* ✅ จัดให้อยู่ตรงกลาง */
 }
 
 /* คอนเทนเนอร์ของการ์ด */
 .history-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* ✅ จัดให้อยู่ตรงกลางแนวตั้ง */
+  justify-content: center; /* ✅ จัดให้อยู่ตรงกลางแนวนอน */
   width: 100%;
+  max-width: 600px; /* ✅ กำหนดขนาดเพื่อให้กึ่งกลาง */
+  margin: 0 auto; /* ✅ บังคับให้กึ่งกลางของหน้า */
+  gap: 20px;
 }
 
 /* การ์ดแต่ละรายการ */
 .history-card {
   width: 90%;
-  max-width: 650px;
+  max-width: 600px; /* ✅ จำกัดความกว้างให้เหมาะสม */
   background: white;
-  margin: 15px 0;
   padding: 20px;
   border-radius: 15px;
-  cursor: pointer;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column; /* ✅ ทำให้เนื้อหาเรียงลงมา */
+  align-items: center; /* ✅ จัดเนื้อหาให้ตรงกลาง */
+  justify-content: center; /* ✅ จัดเนื้อหาให้กึ่งกลางแนวตั้ง */
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  text-align: center; /* ✅ จัดข้อความให้ตรงกลาง */
 }
 
 /* เอฟเฟกต์ hover */
@@ -49,20 +55,26 @@
 
 /* รายละเอียดของประวัติ */
 .history-details {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   width: 100%;
-  color: #333;
+  max-width: 500px;
+  text-align: center; /* ✅ ข้อความตรงกลาง */
 }
+
+/* ✅ ปรับสีของ "สถานะ:" ให้เป็นสีดำ */
+.status-label {
+  color: black;
+  font-weight: bold;
+}
+
 
 /* รูปภาพสนาม */
 .history-image img {
-  width: 110px;
-  height: 110px;
-  border-radius: 15px;
+  width: 120px;
+  height: 120px;
+  border-radius: 10px;
   object-fit: cover;
-  border: 3px solid #6a11cb;
+  border: 2px solid #6a11cb;
+  margin-top: 10px; /* ✅ ให้รูปภาพเว้นระยะจากเนื้อหา */
 }
 
 /* ข้อความเมื่อไม่มีประวัติการจอง */
@@ -80,7 +92,7 @@
   font-size: 14px;
   display: inline-block;
   text-transform: uppercase;
-  margin-top: 5px;
+  margin-top: 5px auto;
 }
 
 /* สีของแต่ละสถานะ */
@@ -97,6 +109,16 @@
 .status.pending {
   color: black;
   background-color: #ffc107;
+}
+
+.status.confirmed {
+  color: white;
+  background-color: #167503;
+}
+
+.status.rejected {
+  color: white;
+  background-color: #960f0f;
 }
 
 /* สไตล์รายการกีฬาแต่ละรายการ */
