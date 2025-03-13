@@ -15,7 +15,7 @@
 .booking-content {
   display: flex;
   flex-wrap: wrap; /* ให้การ์ดล้นแล้วขึ้นบรรทัดใหม่ */
-  justify-content: center !important; /* จัดให้อยู่กึ่งกลาง */
+  justify-content: center; /* จัดให้อยู่กึ่งกลาง */
   gap: 20px;
   width: 100%;
 }
@@ -141,9 +141,22 @@
 }
 
 .time-slot.reserved {
-  background-color: #ccc;
-  color: #666;
+  background-color: red;
+  color: white;
   cursor: not-allowed;
+}
+
+.time-slot.pending {
+  background-color: yellow;
+  color: black;
+  border: 2px solid orange;
+  cursor: not-allowed;
+}
+
+.time-slot.canceled {
+  background-color: white !important; /* ✅ เวลาถูกยกเลิกจะกลับมาเป็นสีปกติ */
+  border: 1px solid #ccc !important;
+  cursor: pointer !important;
 }
 
 .swal2-actions button {
@@ -169,4 +182,36 @@
 
 .swal2-cancel:hover {
   background-color: #545b62;
+}
+
+.time-slot-legend {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: black;
+}
+
+.legend-box {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  margin-right: 5px;
+  border-radius: 3px;
+}
+
+.legend-box.pending {
+  background-color: yellow !important;
+  border: 1px solid orange;
+}
+
+.legend-box.reserved {
+  background-color: red !important;
+  border: 1px solid darkred;
 }

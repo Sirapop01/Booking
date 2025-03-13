@@ -33,142 +33,149 @@ const Booking = () => {
 
   const fetchStadiumDetails = async (subStadiumId, selectedDate) => {
     try {
-      console.log(`🔍 กำลังดึงข้อมูลสนาม: ${subStadiumId}, วันที่: ${selectedDate}`);
+        console.log(`🔍 กำลังดึงข้อมูลสนาม: ${subStadiumId}, วันที่: ${selectedDate}`);
 
-      const response = await axios.get(
-        `http://localhost:4000/api/substadiums/details/${subStadiumId}?date=${selectedDate}`
-      );
+        const response = await axios.get(
+            `http://localhost:4000/api/substadiums/details/${subStadiumId}?date=${selectedDate}`
+        );
 
-      const { openTime, closeTime, reservedSlots = [] } = response.data;
-      console.log(`🕒 เวลาทำการ: ${openTime} - ${closeTime}`);
-      console.log(`⛔ เวลาที่ถูกจอง: ${reservedSlots}`);
+        const { openTime, closeTime, reservedSlots = [], pendingSlots = [], canceledSlots = [] } = response.data;
 
-      const availableTimes = generateTimeSlots(openTime, closeTime, reservedSlots);
+        console.log(`🕒 เวลาทำการ: ${openTime} - ${closeTime}`);
+        console.log(`⛔ เวลาที่ถูกจอง: ${reservedSlots}`);
+        console.log(`⏳ เวลาที่อยู่ระหว่างรอชำระเงิน: ${pendingSlots}`);
+        console.log(`🟢 เวลาที่ยกเลิกแล้ว (จองได้): ${canceledSlots}`);
 
-      setBookingData((prev) => ({
-        ...prev,
-        [subStadiumId]: { availableTimes, selectedTime: "", openTime, closeTime },
-      }));
+        const availableTimes = generateTimeSlots(openTime, closeTime, reservedSlots, pendingSlots, canceledSlots);
+
+        setBookingData((prev) => ({
+            ...prev,
+            [subStadiumId]: { availableTimes, selectedTime: "", openTime, closeTime },
+        }));
     } catch (error) {
-      console.error("❌ Error fetching stadium details:", error);
+        console.error("❌ Error fetching stadium details:", error);
     }
-  };
+};
 
-  const generateTimeSlots = (openTime, closeTime, reservedSlots = []) => {
-    let times = [];
-    let startHour = parseInt(openTime.split(":")[0]);
-    let endHour = parseInt(closeTime.split(":")[0]);
-    let currentHour = startHour;
-    let isCrossDay = endHour < startHour;
 
-    const reservedSet = new Set(reservedSlots.map((slot) => slot.trim()));
 
-    while (true) {
+const generateTimeSlots = (openTime, closeTime, reservedSlots = [], pendingSlots = [], canceledSlots = []) => {
+  let times = [];
+  let startHour = parseInt(openTime.split(":")[0]);
+  let endHour = parseInt(closeTime.split(":")[0]);
+  let currentHour = startHour;
+  let isCrossDay = endHour < startHour;
+
+  const reservedSet = new Set(reservedSlots);
+  const pendingSet = new Set(pendingSlots);
+  const canceledSet = new Set(canceledSlots);
+
+  while (true) {
       let nextHour = (currentHour + 1) % 24;
       let timeSlot = `${currentHour.toString().padStart(2, "0")}:00 - ${nextHour.toString().padStart(2, "0")}:00`;
 
       let isReserved = reservedSet.has(timeSlot);
-      times.push({ time: timeSlot, reserved: isReserved });
+      let isPending = pendingSet.has(timeSlot);
+      let isCanceled = canceledSet.has(timeSlot);
+
+      times.push({
+          time: timeSlot,
+          reserved: isReserved,
+          pending: isPending,
+          canceled: isCanceled,
+      });
 
       currentHour = nextHour;
       if (!isCrossDay && currentHour >= endHour) break;
       if (isCrossDay && currentHour === endHour) break;
-    }
+  }
 
-    return times;
-  };
+  return times;
+};
 
-  const showAvailableTimes = (subStadiumId) => {
-    const selectedDate = selectedDates[subStadiumId]; // ✅ ใช้ selectedDates ของแต่ละสนาม
-    console.log(`📅 วันที่ที่เลือกสำหรับสนาม ${subStadiumId}:`, selectedDate);
-    console.log(`🔎 bookingData สำหรับสนาม ${subStadiumId}:`, bookingData[subStadiumId]);
-  
-    if (!selectedDates[subStadiumId]) {
-      console.warn("⚠ กรุณาเลือกวันที่ก่อนเลือกเวลา");
+
+
+const showAvailableTimes = (subStadiumId) => {
+  const selectedDate = selectedDates[subStadiumId];
+
+  if (!selectedDate) {
       Swal.fire("⚠ กรุณาเลือกวันที่ก่อน", "", "warning");
       return;
-    }
-  
-    console.log(`📅 วันที่ที่เลือกสำหรับสนาม ${subStadiumId}:`, selectedDate);
-  
-    const timeslots = bookingData[subStadiumId]?.availableTimes || [];
-  
-    if (timeslots.length === 0) {
-      console.warn("❌ ไม่มีช่วงเวลาว่าง กรุณาเลือกวันอื่น");
+  }
+
+  const timeslots = bookingData[subStadiumId]?.availableTimes || [];
+
+  if (timeslots.length === 0) {
       Swal.fire("⚠ ไม่มีช่วงเวลาว่าง", "กรุณาลองเลือกวันอื่น", "warning");
       return;
-    }
-  
-    console.log(`🕒 แสดงช่วงเวลาที่เลือกสำหรับสนาม ${subStadiumId}`);
-  
-    Swal.fire({
+  }
+
+  Swal.fire({
       title: "เลือกเวลาที่ต้องการ",
       html: `
-        <div class="time-slot-container">
+      <div class="time-slot-container">
           ${timeslots
-            .map(
-              (slot, index) => `
-                <button class="time-slot ${slot.reserved ? "reserved" : ""}" 
-                    data-index="${index}" 
-                    ${slot.reserved ? "disabled" : ""}>
-                    ${slot.time}
-                </button>`
-            )
-            .join("")}
-        </div>`,
+              .map(
+                  (slot, index) => `
+                  <button class="time-slot ${slot.reserved ? "reserved" : slot.pending ? "pending" : ""}" 
+                      data-index="${index}" 
+                      ${slot.reserved || slot.pending ? "disabled" : ""}>
+                      ${slot.time}
+                  </button>`
+              )
+              .join("")}
+      </div>`,
       showCancelButton: true,
       cancelButtonText: "ปิด",
       showConfirmButton: true,
       confirmButtonText: "ยืนยัน",
       didOpen: () => {
-        let selectedTimes = [];
-  
-        document.querySelectorAll(".time-slot").forEach((button) => {
-          button.addEventListener("click", () => {
-            const index = button.getAttribute("data-index");
-            const time = timeslots[index].time;
-  
-            if (selectedTimes.includes(time)) {
-              selectedTimes = selectedTimes.filter((t) => t !== time);
-              button.classList.remove("selected");
-            } else {
-              selectedTimes.push(time);
-              button.classList.add("selected");
-            }
+          let selectedTimes = [];
+
+          document.querySelectorAll(".time-slot").forEach((button) => {
+              button.addEventListener("click", () => {
+                  const index = button.getAttribute("data-index");
+                  const time = timeslots[index].time;
+
+                  if (selectedTimes.includes(time)) {
+                      selectedTimes = selectedTimes.filter((t) => t !== time);
+                      button.classList.remove("selected");
+                  } else {
+                      selectedTimes.push(time);
+                      button.classList.add("selected");
+                  }
+              });
           });
-        });
-  
-        Swal.getConfirmButton().addEventListener("click", () => {
-          if (selectedTimes.length === 0) {
-            Swal.fire("⚠ กรุณาเลือกช่วงเวลาก่อนกดยืนยัน", "", "warning");
-            console.warn("⚠ ยังไม่ได้เลือกช่วงเวลา");
-            return;
-          }
-  
-          // ✅ เรียงเวลาให้เป็นช่วงต่อเนื่อง
-          selectedTimes.sort((a, b) => {
-            const hourA = parseInt(a.split(":")[0], 10);
-            const hourB = parseInt(b.split(":")[0], 10);
-            return hourA - hourB;
+
+          Swal.getConfirmButton().addEventListener("click", () => {
+              if (selectedTimes.length === 0) {
+                  Swal.fire("⚠ กรุณาเลือกช่วงเวลาก่อนกดยืนยัน", "", "warning");
+                  return;
+              }
+
+              selectedTimes.sort((a, b) => {
+                  const hourA = parseInt(a.split(":")[0], 10);
+                  const hourB = parseInt(b.split(":")[0], 10);
+                  return hourA - hourB;
+              });
+
+              const firstSlot = selectedTimes[0].split(" - ")[0];
+              const lastSlot = selectedTimes[selectedTimes.length - 1].split(" - ")[1];
+              const displayTime = `${firstSlot} - ${lastSlot}`;
+
+              setBookingData((prev) => ({
+                  ...prev,
+                  [subStadiumId]: { ...prev[subStadiumId], selectedTime: displayTime },
+              }));
+
+              Swal.close();
           });
-  
-          // ✅ รวมช่วงเวลาให้ดูเข้าใจง่าย
-          const firstSlot = selectedTimes[0].split(" - ")[0];
-          const lastSlot = selectedTimes[selectedTimes.length - 1].split(" - ")[1];
-          const displayTime = `${firstSlot} - ${lastSlot}`;
-  
-          console.log(`✅ ช่วงเวลาที่เลือก: ${displayTime}`);
-  
-          setBookingData((prev) => ({
-            ...prev,
-            [subStadiumId]: { ...prev[subStadiumId], selectedTime: displayTime },
-          }));
-  
-          Swal.close();
-        });
       },
-    });
-  };  
+  });
+};
+
+
+  
   
   const handleConfirmBooking = async () => {
     try {
@@ -303,41 +310,53 @@ const handleDateChange = (subStadiumId, date) => {
 };
 
 
-  return (
-    <div className="booking-container">
-      <Navbar />
-      <div className="booking-content">
-        {selectedSubStadiums.map((sub) => (
-          <form key={sub._id} className="booking-card">
-            <div className="booking-left">
-              <img src={sub.images?.[0] || "https://via.placeholder.com/400"} alt="Stadium" className="booking-image" />
-            </div>
-            <div className="booking-right">
-              <h2 className="booking-title">{sub.name}</h2>
-              <label>วันที่จอง</label>
-              <input
-                type="date"
-                min={new Date().toISOString().split("T")[0]} // ✅ ห้ามเลือกย้อนหลัง
-                value={selectedDates[sub._id] || ""}
-                onChange={(e) => handleDateChange(sub._id, e.target.value)}
-                required
-              />
-              <label>ช่วงเวลา</label>
-              <input
-                type="text"
-                value={bookingData[sub._id]?.selectedTime || ""}
-                readOnly
-                onClick={() => showAvailableTimes(sub._id)}
-                required
-              />
-              <p className="booking-price">ราคา: ฿ {sub.price || "ไม่ระบุ"} / ชั่วโมง</p>
-            </div>
-          </form>
-        ))}
-      </div>
-      <button className="confirm-button" onClick={handleConfirmBooking}>ยืนยันการจอง</button>
+return (
+  <div className="booking-container">
+    <Navbar />
+    <div className="booking-content">
+      {selectedSubStadiums.map((sub) => (
+        <form key={sub._id} className="booking-card">
+          <div className="booking-left">
+            <img src={sub.images?.[0] || "https://via.placeholder.com/400"} alt="Stadium" className="booking-image" />
+          </div>
+          <div className="booking-right">
+            <h2 className="booking-title">{sub.name}</h2>
+            <label>วันที่จอง</label>
+            <input
+              type="date"
+              min={new Date().toISOString().split("T")[0]} // ✅ ห้ามเลือกย้อนหลัง
+              value={selectedDates[sub._id] || ""}
+              onChange={(e) => handleDateChange(sub._id, e.target.value)}
+              required
+            />
+            <label>ช่วงเวลา</label>
+            <input
+              type="text"
+              value={bookingData[sub._id]?.selectedTime || ""}
+              readOnly
+              onClick={() => showAvailableTimes(sub._id)}
+              required
+            />
+            <p className="booking-price">ราคา: ฿ {sub.price || "ไม่ระบุ"} / ชั่วโมง</p>
+          </div>
+        </form>
+      ))}
     </div>
-  );
+    
+    {/* ปุ่มยืนยันการจอง */}
+    <button className="confirm-button" onClick={handleConfirmBooking}>ยืนยันการจอง</button>
+
+    {/* 🔻 Legend อธิบายสีของช่วงเวลา */}
+    <div className="time-slot-legend">
+      <div className="legend-item">
+        <span className="legend-box pending"></span> <span>สถานะการดำเนินการจ่ายตัง</span>
+      </div>
+      <div className="legend-item">
+        <span className="legend-box reserved"></span> <span>ติดจอง</span>
+      </div>
+    </div>
+  </div>
+);
 };
 
 export default Booking;
