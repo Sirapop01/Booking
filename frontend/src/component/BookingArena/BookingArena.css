@@ -339,4 +339,41 @@
   bottom: auto !important;
 }
 
+.review-filter {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: center;
+}
+
+.review-filter button {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.review-filter button.active {
+  background: #ffc107;
+  color: white;
+  font-weight: bold;
+}
+
+.star-filter {
+  color: gold;
+  font-size: 18px;
+}
+
+.review-no-reviews {
+  color: black;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+}
+
+
 
