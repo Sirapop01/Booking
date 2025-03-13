@@ -176,68 +176,57 @@ exports.logout = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
-      const { id } = req.params;
-      let updateData = req.body;
-
-      const existingUser = await User.findById(id);
-      if (!existingUser) {
-          return res.status(404).json({ message: "ไม่พบผู้ใช้ในระบบ" });
-      }
-
-
-      updateData.profileImage = req.file ? req.file.path : null;
-
-      // ✅ ตรวจสอบและอัปเดตตำแหน่ง (Lat/Lng)
-      if (updateData.province || updateData.district || updateData.subdistrict) {
-          const addressQuery = `${updateData.subdistrict}, ${updateData.district}, ${updateData.province}, Thailand`;
-          const googleApiKey = process.env.GOOGLE_API;
-
-          try {
-              const response = await axios.get(
-                  `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(addressQuery)}&key=${googleApiKey}`
-              );
-
-              if (response.data.status === "OK") {
-                  const { lat, lng } = response.data.results[0].geometry.location;
-                  updateData.location = {
-                      type: "Point",
-                      coordinates: [lng, lat],
-                  };
-              } else {
-                  return res.status(400).json({ message: "❌ ไม่สามารถดึงพิกัดจาก Google Maps ได้" });
-              }
-          } catch (error) {
-              console.error("❌ Error fetching geolocation:", error);
-              return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตพิกัด" });
-          }
-      }
-
-      const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
-
-      res.status(200).json({ message: "✅ อัปเดตข้อมูลสำเร็จ!", user: updatedUser });
-  } catch (error) {
-      console.error("❌ Error updating user:", error);
-      res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูล" });
-  }
-};
-
-exports.updateProfileImage = async (req, res) => {
-  try {
     const { id } = req.params;
-    if (!req.file) {
-      return res.status(400).json({ message: "ไม่มีไฟล์ที่อัปโหลด" });
+    let updateData = req.body;
+
+    const existingUser = await User.findById(id);
+    if (!existingUser) {
+      return res.status(404).json({ message: "ไม่พบผู้ใช้ในระบบ" });
     }
 
-    const profileImage = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+    // ✅ ถ้าไม่มีไฟล์ใหม่ที่อัปโหลด จะไม่อัปเดต profileImage
+    if (req.file) {
+      updateData.profileImage = req.file.path;
+    } else {
+      updateData.profileImage = existingUser.profileImage; // ✅ ใช้รูปเดิม
+    }
 
-    const updatedUser = await User.findByIdAndUpdate(id, { profileImage }, { new: true });
+    // ✅ ตรวจสอบและอัปเดตตำแหน่ง (Lat/Lng) ถ้ามีการเปลี่ยนแปลงที่อยู่
+    if (updateData.province || updateData.district || updateData.subdistrict) {
+      const addressQuery = `${updateData.subdistrict}, ${updateData.district}, ${updateData.province}, Thailand`;
+      const googleApiKey = process.env.GOOGLE_API;
 
-    res.status(200).json({ message: "อัปโหลดรูปภาพสำเร็จ!", profileImage });
+      try {
+        const response = await axios.get(
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(addressQuery)}&key=${googleApiKey}`
+        );
+
+        if (response.data.status === "OK") {
+          const { lat, lng } = response.data.results[0].geometry.location;
+          updateData.location = {
+            type: "Point",
+            coordinates: [lng, lat],
+          };
+        } else {
+          return res.status(400).json({ message: "❌ ไม่สามารถดึงพิกัดจาก Google Maps ได้" });
+        }
+      } catch (error) {
+        console.error("❌ Error fetching geolocation:", error);
+        return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตพิกัด" });
+      }
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
+
+    res.status(200).json({ message: "✅ อัปเดตข้อมูลสำเร็จ!", user: updatedUser });
   } catch (error) {
-    console.error("❌ Error updating profile image:", error);
-    res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตรูปภาพ" });
+    console.error("❌ Error updating user:", error);
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูล" });
   }
 };
+
+
+
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
