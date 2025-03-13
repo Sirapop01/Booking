@@ -162,7 +162,21 @@ const Payment = () => {
                         <h2>เลขที่การจอง #{booking?.sessionId || "N/A"}</h2>
                         <p>📍 สนามกีฬา: {arenaInfo?.fieldName || "ไม่พบข้อมูลสนาม"}</p>
                         <p>📍 สนามย่อยที่จอง: {bookingData?.details?.map((detail) => detail.name).join(", ") || "ไม่พบข้อมูลสนามย่อย"}</p>
-                        <p>📅 วันที่: {new Date(bookingData?.details?.[0]?.bookingDate || new Date()).toLocaleDateString()}</p>
+                        <p>📅 วันที่:</p>
+                            <ul>
+                            {Object.entries(
+                                bookingData?.details?.reduce((acc, detail) => {
+                                const stadiumName = detail.name; // ✅ ใช้ชื่อสนามเป็น Key
+                                if (!acc[stadiumName]) acc[stadiumName] = [];
+                                acc[stadiumName].push(detail.bookingDate);
+                                return acc;
+                                }, {})
+                            ).map(([stadiumName, dates], index) => (
+                                <li key={index}>
+                                <span>{stadiumName} :</span> {new Date(dates[0]).toLocaleDateString()}
+                                </li>
+                            ))}
+                            </ul>
                         <p>🕒 เวลาที่จอง: </p>
                         <ul>
                             {bookingData?.details?.map((detail, index) => (
