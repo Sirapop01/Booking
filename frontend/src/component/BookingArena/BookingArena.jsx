@@ -105,13 +105,15 @@ useEffect(() => {
       );
 
       setReviews(uniqueReviews || []);
+      setFilteredReviews(uniqueReviews || []); // ✅ ตั้งค่า filteredReviews ด้วยค่ารีวิวทั้งหมดตอนโหลดครั้งแรก
     } catch (error) {
       console.error("🚨 Error fetching reviews:", error);
     }
   };
 
   fetchReviews();
-}, [id]); 
+}, [id]);
+
 
 
 

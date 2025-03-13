@@ -1,9 +1,32 @@
-.review-container {
-    max-width: 600px;
-    margin: 20px auto;
-    text-align: center;
-    font-family: Arial, sans-serif;
+.review-page-container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 80px auto 20px; /* ✅ เพิ่ม margin-top: 80px เพื่อขยับลง */
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
+
+.review-page-container h1 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.review-page-container h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
+}
+.review-page-container p {
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
+}
+
 
 .stadium-list12 {
     display: flex;
@@ -105,14 +128,17 @@ textarea {
   .review-stadium-image-container {
     display: flex;
     justify-content: center;
+    align-items: center;
     margin-bottom: 20px;
-  }
-  
-  .review-stadium-image {
-    width: 100%;
-    max-width: 400px;
-    border-radius: 10px;
-  }
+}
+
+.review-stadium-image {
+  width: 300px;  /* ✅ กำหนดความกว้างเป็น 500px */
+  height: 300px; /* ✅ กำหนดความสูงเป็น 500px */
+  object-fit: cover; /* ✅ ป้องกันการบีบอัดและตัดภาพให้พอดี */
+  border-radius: 10px; /* ✅ ทำให้มุมมน */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* ✅ เพิ่มเงาให้ดูมีมิติ */
+}
   
   .review-slider {
     max-width: 600px;
@@ -128,8 +154,9 @@ textarea {
   }
   
   .review-user {
-    font-weight: bold;
+    font-weight: normal;
     color: black;
+    font-size: 18px;
   }
   
   .review-rating {
@@ -138,9 +165,12 @@ textarea {
   }
   
   .review-comment {
-    font-style: italic;
+    font-weight: normal;  /* ✅ เปลี่ยนจากตัวหนาเป็นตัวปกติ */
+    font-style: normal;  /* ✅ เอาตัวเอียงออก ถ้าไม่ต้องการ */
     color: #333;
-  }
+    font-size: 16px; /* ✅ ปรับขนาดฟอนต์ให้เหมาะสม */
+}
+  
   
   /* ✅ ปรับการแสดงผลของปุ่มรีวิว */
   .review-rating-section {
@@ -150,6 +180,7 @@ textarea {
   .review-star {
     font-size: 2em;
     cursor: pointer;
+    color: #ccc; 
   }
   
   .review-star.active {
@@ -202,7 +233,7 @@ textarea {
     z-index: 1000;
   }
 
-  .review-title {
+  .review-title3{
     text-align: center;
     font-size: 24px;
     font-weight: bold;
@@ -211,7 +242,7 @@ textarea {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #f0f8ff;
+    color: black;
 }
 
 .review-form-container {
@@ -224,6 +255,48 @@ textarea {
     margin: 20px auto; /* ทำให้ textarea และปุ่มอยู่ตรงกลาง */
     text-align: center;
 }
+
+
+.review-filter55 {
+  display: flex;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row; /* ✅ ให้เรียงแนวนอน */
+  justify-content: center; 
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 300px;
+  position: relative; /* ✅ ไม่ให้ลอยทับรีวิว */
+  flex-wrap: wrap; /* ✅ ป้องกันปุ่มล้นจอ */
+}
+
+
+.review-filter55 button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background-color: #2C3E50;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.review-filter55 button.active {
+  background-color: #28a745;
+}
+
+.review-filter55 button:hover {
+  transform: scale(1.05);
+}
+
 
 
   
