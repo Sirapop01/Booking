@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User"); // Import User Model
-const BusinessOwner = require("../models/BusinessOwner"); // Import BusinessOwner Model
+const Owner = require("../models/BusinessOwner"); // Import BusinessOwner Model
 const jwt = require("jsonwebtoken");
 const secret = "MatchWeb";
 require("dotenv").config();
@@ -97,7 +97,7 @@ exports.login = async (req, res) => {
 
     const [existingUser, existingOwner] = await Promise.all([
       User.findOne({ email }), // ค้นหาใน Collection `users`
-      BusinessOwner.findOne({ email }) // ค้นหาใน Collection `businessowners`
+      Owner.findOne({ email }) // ค้นหาใน Collection `businessowners`
     ]);
 
     let exitResult = null;
@@ -241,35 +241,41 @@ exports.sendResetPasswordEmail = async (req, res) => {
   const { email } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+      // ✅ ค้นหาผู้ใช้ใน `User` หรือ `Owner`
+      let user = await User.findOne({ email });
+      let owner = await Owner.findOne({ email });
 
-    if (!user) {
-      return res.status(404).json({ message: "❌ ไม่พบอีเมลนี้ในระบบ" });
-    }
+      if (!user && !owner) {
+          return res.status(404).json({ message: "❌ ไม่พบอีเมลนี้ในระบบ" });
+      }
 
-    // ✅ สร้าง Token ที่มีอายุ 15 นาที
-    const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
+      // ✅ กำหนด `userId` และ `userType`
+      const userId = user ? user._id : owner._id;
+      const userType = user ? "user" : "owner";
 
-    // ✅ สร้างลิงก์ Reset Password โดยแนบ Token
-    const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
+      // ✅ สร้าง Token ที่มีอายุ 15 นาที
+      const resetToken = jwt.sign({ id: userId, type: userType }, process.env.JWT_SECRET, { expiresIn: "15m" });
 
-    // ✅ ส่งอีเมลแจ้งเตือน
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "🔑 รีเซ็ตรหัสผ่านของคุณ",
-      html: `<p>คุณได้รับคำขอรีเซ็ตรหัสผ่าน</p>
-             <p>กดที่ลิงก์ด้านล่างเพื่อเปลี่ยนรหัสผ่านใหม่:</p>
-             <a href="${resetLink}" target="_blank">${resetLink}</a>
-             <p>ลิงก์นี้จะหมดอายุภายใน 15 นาที</p>`,
-    };
+      // ✅ สร้างลิงก์ Reset Password โดยแนบ Token
+      const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
 
-    await transporter.sendMail(mailOptions);
-    return res.status(200).json({ message: "✅ กรุณาตรวจสอบอีเมลของคุณ" });
+      // ✅ ส่งอีเมลแจ้งเตือน
+      const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: email,
+          subject: "🔑 รีเซ็ตรหัสผ่านของคุณ",
+          html: `<p>คุณได้รับคำขอรีเซ็ตรหัสผ่าน</p>
+                 <p>กดที่ลิงก์ด้านล่างเพื่อเปลี่ยนรหัสผ่านใหม่:</p>
+                 <a href="${resetLink}" target="_blank">${resetLink}</a>
+                 <p>ลิงก์นี้จะหมดอายุภายใน 15 นาที</p>`,
+      };
+
+      await transporter.sendMail(mailOptions);
+      return res.status(200).json({ message: "✅ กรุณาตรวจสอบอีเมลของคุณ" });
 
   } catch (error) {
-    console.error("❌ Error sending reset password email:", error);
-    return res.status(500).json({ message: "เกิดข้อผิดพลาดในการส่งอีเมล" });
+      console.error("❌ Error sending reset password email:", error);
+      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการส่งอีเมล" });
   }
 };
 
@@ -279,21 +285,26 @@ exports.resetPassword = async (req, res) => {
   const { newPassword } = req.body;
 
   try {
-    // ✅ ถอดรหัส Token เพื่อดึง userId
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
+      // ✅ ถอดรหัส Token เพื่อดึง `userId` และ `userType`
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = decoded.id;
+      const userType = decoded.type; // ✅ ตรวจสอบว่าเป็น user หรือ owner
 
-    // ✅ เข้ารหัสรหัสผ่านใหม่
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+      // ✅ เข้ารหัสรหัสผ่านใหม่
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // ✅ อัปเดตรหัสผ่านใหม่ในฐานข้อมูล
-    await User.findByIdAndUpdate(userId, { password: hashedPassword });
+      // ✅ อัปเดตรหัสผ่านใหม่ในฐานข้อมูล
+      if (userType === "user") {
+          await User.findByIdAndUpdate(userId, { password: hashedPassword });
+      } else if (userType === "owner") {
+          await Owner.findByIdAndUpdate(userId, { password: hashedPassword });
+      }
 
-    return res.status(200).json({ message: "✅ เปลี่ยนรหัสผ่านสำเร็จ!" });
+      return res.status(200).json({ message: "✅ เปลี่ยนรหัสผ่านสำเร็จ!" });
 
   } catch (error) {
-    console.error("❌ Error resetting password:", error);
-    return res.status(400).json({ message: "❌ ลิงก์หมดอายุหรือไม่ถูกต้อง" });
+      console.error("❌ Error resetting password:", error);
+      return res.status(400).json({ message: "❌ ลิงก์หมดอายุหรือไม่ถูกต้อง" });
   }
 };
 
