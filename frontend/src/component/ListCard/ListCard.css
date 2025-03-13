@@ -71,6 +71,22 @@
     color: gray;
     margin-left: 5px;
   }
+
+.for-rating {
+  display: flex;
+  justify-content: space-between; /* เพิ่มตรงนี้ */
+  align-items: center;
+}
+
+.rating-container {
+  margin-left: auto; /* จะทำให้ rating ไปชิดขวาสุด */
+}
+
+.rating,
+.no-rating {
+  font-size: 12px;
+}
+
   
   
   /* Responsive Layout */

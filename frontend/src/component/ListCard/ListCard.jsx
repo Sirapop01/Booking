@@ -33,21 +33,23 @@ const ListCard = ({ stadiums }) => {  // ✅ รับ props stadiums จาก 
                 className="stadium-image"
               />
               <div className="stadium-info">
-                <h3>
-                  {stadium.averageRating !== undefined ? (
-                    <span className="rating"> ⭐ {stadium.averageRating}</span>
-                  ) : (
-                    <span className="no-rating"> ⭐ -</span>
-                  )}
 
-                </h3>
                 <h3>
                   {stadium.fieldName}
                 </h3>
 
                 <p>โทร: {stadium.phone}</p>
                 <p>เวลาเปิด: {stadium.startTime} - {stadium.endTime}</p>
-                <p>ระยะห่าง: {stadium.distance ? `${stadium.distance.toFixed(2)} กม.` : "ไม่ระบุ"}</p>
+                <div className='for-rating'>
+                  <p>ระยะห่าง: {stadium.distance ? `${stadium.distance.toFixed(2)} กม.` : "ไม่ระบุ"}</p>
+                  <p className="rating-container">
+                    {stadium.averageRating !== undefined ? (
+                      <span className="rating">⭐ {stadium.averageRating}</span>
+                    ) : (
+                      <span className="no-rating">⭐ -</span>
+                    )}
+                  </p>
+                </div>
               </div>
             </div>
           ))
