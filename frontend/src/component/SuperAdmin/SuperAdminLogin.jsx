@@ -4,13 +4,16 @@ import axios from "axios";
 import "./SuperAdminLogin.css"; // ✅ Import CSS
 
 const SuperAdminLogin = () => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [error, setError] = useState(""); // ✅ เก็บข้อความ Error
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -18,16 +21,17 @@ const SuperAdminLogin = () => {
     setError("");
 
     try {
-      console.log(formData)
       const response = await axios.post("http://localhost:4000/api/superadmin/login", formData);
-      console.log("✅ Login Success:", response.data);
 
-      // 🔑 บันทึก Token ใน LocalStorage
-      localStorage.setItem("token", response.data.token);
+      const { token, user } = response.data;
 
+      // ✅ เก็บ token ไว้ใน session storage
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("token", response.data.token); // 👈 เก็บ token ใน session storage
+
+      alert("✅ เข้าสู่ระบบสำเร็จ!");
       navigate("/superadmin/dashboard");
     } catch (error) {
-      console.error("❌ Login Failed:", error.response?.data?.message || error.message);
       setError(error.response?.data?.message || "เกิดข้อผิดพลาด");
     }
   };

@@ -1,7 +1,7 @@
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
 const SuperAdmin = require("../models/SuperAdmin");
-
+const Admin = require("../models/Admin");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 exports.loginSuperAdmin = async (req, res) => {
   try {
@@ -11,11 +11,9 @@ exports.loginSuperAdmin = async (req, res) => {
       return res.status(400).json({ message: "กรุณากรอกอีเมลและรหัสผ่าน" });
     }
 
-    // 🔍 ค้นหาใน SuperAdmin ก่อน
     let user = await SuperAdmin.findOne({ email });
     let role = "superadmin";
 
-    // ถ้าไม่พบใน SuperAdmin ให้ค้นหาใน Admin
     if (!user) {
       user = await Admin.findOne({ email });
       role = "admin";
@@ -43,5 +41,3 @@ exports.loginSuperAdmin = async (req, res) => {
     res.status(500).json({ message: "เกิดข้อผิดพลาดภายในเซิร์ฟเวอร์" });
   }
 };
-
-
