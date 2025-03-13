@@ -57,8 +57,8 @@ const UserProfile = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setNewProfileImage(file); // ✅ เก็บไฟล์ไว้ แต่ยังไม่อัปโหลด
-      setProfileImage(URL.createObjectURL(file)); // ✅ แสดงรูปที่เลือกเป็น preview
+      setNewProfileImage(file); // ✅ เก็บไฟล์ไว้ก่อน
+      setProfileImage(URL.createObjectURL(file)); // ✅ แสดง Preview
     }
   };
 
@@ -128,59 +128,80 @@ const UserProfile = () => {
 
   const updateMemberData = async () => {
     try {
-      let updatedData = { ...member };
-      let imageUrl = profileImage;
-  
-      if (newProfileImage) {
-        await uploadImage(newProfileImage); // ✅ Upload image first
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+      if (!token) {
+        Swal.fire("กรุณาเข้าสู่ระบบ", "โปรดเข้าสู่ระบบก่อนทำการแก้ไข", "warning");
+        return;
       }
-  
-      console.log("📤 Sending Updated Data:", updatedData);
-  
-      const response = await axios.put(`http://localhost:4000/api/auth/update/${id}`, updatedData);
-      console.log("✅ Updated Member Data:", response.data);
-  
-      alert("🎉 อัปเดตข้อมูลสำเร็จ!");
+
+      const formData = new FormData();
+      formData.append("firstName", member.firstName);
+      formData.append("lastName", member.lastName);
+      formData.append("gender", member.gender);
+      formData.append("phoneNumber", member.phoneNumber);
+      formData.append("birthdate", member.birthdate);
+      formData.append("province", member.province);
+      formData.append("district", member.district);
+      formData.append("subdistrict", member.subdistrict);
+      formData.append("interestedSports", member.interestedSports);
+      if (newProfileImage) {
+        formData.append("profileImage", newProfileImage); // ✅ เพิ่มรูปภาพเข้าไปใน FormData
+      }
+
+      Swal.fire({
+        title: "กำลังอัปเดตข้อมูล...",
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
+
+      const response = await axios.put(
+        `http://localhost:4000/api/auth/update/${id}`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` } }
+      );
+
+      Swal.fire("สำเร็จ!", "อัปเดตข้อมูลเรียบร้อย", "success");
+
       await getMB();
       setIsEditable(false);
       setNewProfileImage(null);
     } catch (error) {
       console.error("❌ Error updating member data:", error);
-      alert("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
+      Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถอัปเดตข้อมูลได้", "error");
     }
   };
-  
+
   const uploadImage = async (file) => {
     try {
-        if (!file) {
-            alert("กรุณาเลือกไฟล์ก่อนอัปโหลด");
-            return;
+      if (!file) {
+        alert("กรุณาเลือกไฟล์ก่อนอัปโหลด");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("profileImage", file);
+
+      console.log("📤 กำลังอัปโหลดไฟล์:", file);
+
+      const response = await axios.put(
+        `http://localhost:4000/api/auth/updateProfileImage/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
         }
+      );
 
-        const formData = new FormData();
-        formData.append("profileImage", file);
-
-        console.log("📤 กำลังอัปโหลดไฟล์:", file);
-
-        const response = await axios.put(
-            `http://localhost:4000/api/auth/updateProfileImage/${id}`,
-            formData,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            }
-        );
-
-        console.log("✅ อัปโหลดรูปภาพสำเร็จ:", response.data);
-        alert("🎉 อัปโหลดรูปภาพสำเร็จ!");
-        getMB(); // โหลดข้อมูลใหม่
-        setIsEditable(false);
+      console.log("✅ อัปโหลดรูปภาพสำเร็จ:", response.data);
+      alert("🎉 อัปโหลดรูปภาพสำเร็จ!");
+      getMB(); // โหลดข้อมูลใหม่
+      setIsEditable(false);
     } catch (error) {
-        console.error("❌ อัปโหลดรูปไม่สำเร็จ:", error);
-        alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
+      console.error("❌ อัปโหลดรูปไม่สำเร็จ:", error);
+      alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
     }
-};
+  };
 
 
   const toggleLogout = () => {
@@ -284,7 +305,7 @@ const UserProfile = () => {
           <button onClick={() => navigate("/Discount")}>คูปอง</button>
         </nav>
       </header>
-  
+
       {/* 🔹 Profile Card (Left Side) */}
       <aside className="profile-card">
         <div className="profile-image">
@@ -301,24 +322,25 @@ const UserProfile = () => {
             )}
           </label>
         </div>
-  
+
+
         {/* ✅ "Edit Profile" Button (Only when NOT editing) */}
-{!isEditable && (
-  <button className="edit-profile-button" onClick={toggleEdit}>
-    แก้ไขโปรไฟล์และข้อมูล
-  </button>
-)}
+        {!isEditable && (
+          <button className="edit-profile-button" onClick={toggleEdit}>
+            แก้ไขโปรไฟล์และข้อมูล
+          </button>
+        )}
 
-{/* ✅ "บันทึก" (Save) Button (Only when Editing) */}
-{isEditable && (
-  <button className="save-button" onClick={updateMemberData}>
-    บันทึก
-  </button>
-)}
+        {/* ✅ "บันทึก" (Save) Button (Only when Editing) */}
+        {isEditable && (
+          <button className="save-button" onClick={updateMemberData}>
+            บันทึก
+          </button>
+        )}
 
-  
-        
-  
+
+
+
         {/* ✅ Account Actions: Forgot Password & Delete Account */}
         <div className="account-actions">
           <h3 className="forgot-password-user" onClick={() => navigate("/forgot-password")}>
@@ -328,13 +350,13 @@ const UserProfile = () => {
             ลบบัญชี !
           </h3>
         </div>
-  
+
         {/* ✅ Logout Button */}
         <button className="logout-button" onClick={toggleLogout}>
           ลงชื่อออก
         </button>
       </aside>
-  
+
       {/* 🔹 Profile Content (Right Side) */}
       <main className="profile-content">
         {/* ✅ Personal Info Card */}
@@ -371,7 +393,7 @@ const UserProfile = () => {
             </div>
           </div>
         </div>
-  
+
         {/* ✅ Location Info Card */}
         <div className="info-card">
           <h3>📍 บริเวณที่สนใจ</h3>
@@ -425,7 +447,7 @@ const UserProfile = () => {
           </div>
         </div>
       </main>
-  
+
       {/* ✅ Logout Popup Modal */}
       {showLogoutModal && (
         <div className="logout-popup-overlay" onClick={() => setShowLogoutModal(false)}>
@@ -440,7 +462,7 @@ const UserProfile = () => {
       )}
     </div>
   );
-  
+
 };
 
 

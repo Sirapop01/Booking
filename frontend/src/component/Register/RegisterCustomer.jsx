@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './RegisterCustomer.css';
 import logo from '../assets/logo.png';
 import axios from 'axios';
-
+import Swal from 'sweetalert2';
 function RegisterCustomer() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -34,6 +34,11 @@ function RegisterCustomer() {
       .then((res) => setProvinces(res.data))
       .catch((err) => console.error("❌ Error fetching provinces:", err));
   }, []);
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    return today.toISOString().split("T")[0]; // ✅ แปลงเป็น YYYY-MM-DD
+  };
 
   // ✅ โหลดรายชื่ออำเภอเมื่อเปลี่ยนจังหวัด
   const handleProvinceChange = async (e) => {
@@ -125,18 +130,47 @@ function RegisterCustomer() {
         submitFormData.append(key, value);
       });
 
+      Swal.fire({
+        title: "กำลังสมัครสมาชิก...",
+        text: "โปรดรอสักครู่",
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
+
       await axios.post('http://localhost:4000/api/auth/register', submitFormData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      alert('✅ สมัครสมาชิกสำเร็จ!');
-      navigate('/login');
+      // ✅ ให้ผู้ใช้กด "ตกลง" ก่อนเปลี่ยนหน้า
+      Swal.fire({
+        title: "สมัครสมาชิกสำเร็จ!",
+        text: "คุณสามารถเข้าสู่ระบบได้ทันที",
+        icon: "success",
+        confirmButtonText: "ตกลง"
+      }).then(() => {
+        navigate('/login'); // ✅ เปลี่ยนหน้าไป login เมื่อกด "ตกลง"
+      });
     } catch (err) {
       console.error('❌ Registration Error:', err);
-      alert('❌ เกิดข้อผิดพลาด: ' + (err.response?.data?.message || 'ลองใหม่อีกครั้ง'));
+      Swal.fire("เกิดข้อผิดพลาด", err.response?.data?.message || "ลองใหม่อีกครั้ง", "error");
     }
   };
 
+  const sportsOptions = [
+    "Football",
+    "Basketball",
+    "Badminton",
+    "Tennis",
+    "Volleyball",
+    "Table Tennis",
+    "Boxing",
+    "Bowling",
+    "Golf"
+  ];
+
+  const handleSportChange = (e) => {
+    setFormData({ ...formData, interestedSports: e.target.value });
+  };
 
 
   return (
@@ -183,10 +217,21 @@ function RegisterCustomer() {
               <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} />
               <label>นามสกุล *{errors.lastName && <span className="error-message-register">{errors.lastName}</span>}</label>
               <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} />
-              <label>กีฬาที่สนใจ *{errors.interestedSports && <span className="error-message-register">{errors.interestedSports}</span>}</label>
-              <input type="text" name="interestedSports" value={formData.interestedSports} onChange={handleChange} />
+              <label>กีฬาที่สนใจ *</label>
+              <select
+                name="interestedSports"
+                value={formData.interestedSports || ""}
+                onChange={handleSportChange}
+              >
+                <option value="">-- เลือกกีฬา --</option>
+                {sportsOptions.map((sport) => (
+                  <option key={sport} value={sport}>
+                    {sport}
+                  </option>
+                ))}
+              </select>
               <label>วัน/เดือน/ปีเกิด *{errors.birthdate && <span className="error-message-register">{errors.birthdate}</span>}</label>
-              <input type="date" name="birthdate" value={formData.birthdate} onChange={handleChange} />
+              <input type="date" name="birthdate" value={formData.birthdate} max={getCurrentDate()} onChange={handleChange} />
             </div>
 
             <div className="form-column">

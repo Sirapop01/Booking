@@ -176,53 +176,48 @@ exports.logout = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
-    const { id } = req.params;
-    let updateData = req.body;
+      const { id } = req.params;
+      let updateData = req.body;
 
-    // ✅ ตรวจสอบว่าผู้ใช้มีอยู่จริงหรือไม่
-    const existingUser = await User.findById(id);
-    if (!existingUser) {
-      return res.status(404).json({ message: "ไม่พบผู้ใช้ในระบบ" });
-    }
-
-    // ✅ ตรวจสอบว่ามีการเปลี่ยนแปลงที่อยู่หรือไม่
-    if (updateData.province || updateData.district || updateData.subdistrict) {
-      const addressQuery = `${updateData.subdistrict}, ${updateData.district}, ${updateData.province}, Thailand`;
-      const encodedAddress = encodeURIComponent(addressQuery);
-
-      try {
-        // 🔹 ใช้ Google Maps API เพื่อดึงค่าพิกัด lat, lng
-        const googleApiKey = process.env.GOOGLE_API; // 🔥 ใส่ API Key ของคุณตรงนี้
-        const response = await axios.get(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${googleApiKey}`
-        );
-
-        if (response.data.status === "OK") {
-          const { lat, lng } = response.data.results[0].geometry.location;
-          updateData.location = {
-            type: "Point",
-            coordinates: [lng, lat],
-          };
-          console.log("📌 อัปเดตพิกัดใหม่จาก Google Maps:", updateData.location);
-        } else {
-          return res.status(400).json({ message: "❌ ไม่สามารถดึงพิกัดจาก Google Maps ได้" });
-        }
-      } catch (error) {
-        console.error("❌ Error fetching geolocation from Google Maps:", error);
-        return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตพิกัด" });
+      const existingUser = await User.findById(id);
+      if (!existingUser) {
+          return res.status(404).json({ message: "ไม่พบผู้ใช้ในระบบ" });
       }
-    }
 
-    // ✅ อัปเดตข้อมูลผู้ใช้ใน Database
-    const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
 
-    return res.status(200).json({
-      message: "✅ อัปเดตข้อมูลสำเร็จ!",
-      user: updatedUser,
-    });
+      updateData.profileImage = req.file ? req.file.path : null;
+
+      // ✅ ตรวจสอบและอัปเดตตำแหน่ง (Lat/Lng)
+      if (updateData.province || updateData.district || updateData.subdistrict) {
+          const addressQuery = `${updateData.subdistrict}, ${updateData.district}, ${updateData.province}, Thailand`;
+          const googleApiKey = process.env.GOOGLE_API;
+
+          try {
+              const response = await axios.get(
+                  `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(addressQuery)}&key=${googleApiKey}`
+              );
+
+              if (response.data.status === "OK") {
+                  const { lat, lng } = response.data.results[0].geometry.location;
+                  updateData.location = {
+                      type: "Point",
+                      coordinates: [lng, lat],
+                  };
+              } else {
+                  return res.status(400).json({ message: "❌ ไม่สามารถดึงพิกัดจาก Google Maps ได้" });
+              }
+          } catch (error) {
+              console.error("❌ Error fetching geolocation:", error);
+              return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตพิกัด" });
+          }
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
+
+      res.status(200).json({ message: "✅ อัปเดตข้อมูลสำเร็จ!", user: updatedUser });
   } catch (error) {
-    console.error("❌ Error updating user:", error);
-    return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูล" });
+      console.error("❌ Error updating user:", error);
+      res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูล" });
   }
 };
 
