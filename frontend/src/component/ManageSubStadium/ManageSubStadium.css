@@ -197,6 +197,8 @@
     position: relative;
 }
 
+
+
 .substadium-image-upload {
     display: flex;
     align-items: center;
@@ -277,4 +279,17 @@
     transform: scale(1.05);
 }
 
+
+.substadium-delete-btn{
+    background-color: #004494;
+  color: #ffffff;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  font-family: "Kanit", sans-serif;
+}
   

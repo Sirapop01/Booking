@@ -262,7 +262,7 @@ useEffect(() => {
                     <td>{court.name}</td>
                     <td>
                     <button 
-                      className={court.status === "เปิด" ? "btn-open" : "btn-closed"} 
+                      className={court.status === "เปิด" ? "btn-open-sta" : "btn-closed-sta"} 
                       onClick={(e) => { e.stopPropagation(); toggleStatus(court._id, court.status); }}
                     >
                       {court.status}
