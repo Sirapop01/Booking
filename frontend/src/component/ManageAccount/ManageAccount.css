@@ -31,14 +31,14 @@
     text-decoration: none;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
-  }
+}
 
-  .home-logo {
+.home-logo {
     width: 35px;
     height: 35px;
-  }
+}
 
-/* 📌 แยก container สำหรับ user list และ user details */
+/* 📌 โครงสร้าง Layout หลัก */
 .account-content {
     display: flex;
     width: 80%;
@@ -56,14 +56,6 @@
     flex-direction: column;
 }
 
-.user-list {
-    width: 100%;
-    border-right: 2px solid black;
-    display: flex;
-    flex-direction: column;
-}
-
-/* ✅ ปรับตำแหน่งของหัวข้อบัญชีผู้ใช้ */
 .list-header {
     font-size: 20px;
     font-weight: bold;
@@ -72,11 +64,10 @@
     background: #ddd;
     color: black;
     display: flex;
-    justify-content: space-between; /* ✅ กระจายตำแหน่ง */
+    justify-content: space-between;
     align-items: center;
 }
 
-/* ✅ ไอคอนลูกศรข้างหัวข้อบัญชีผู้ใช้ */
 .header-forward-icon {
     width: 20px;
     height: 20px;
@@ -84,12 +75,10 @@
     transition: transform 0.2s ease;
 }
 
-/* ✅ เมื่อ hover ให้ขยับลูกศรเล็กน้อย */
 .list-header:hover .header-forward-icon {
     transform: translateX(5px);
     opacity: 1;
 }
-
 
 .user-items {
     flex: 1;
@@ -120,11 +109,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
 }
 
-.user-header{
-  font-size: 32px;
-  text-align: center;
+.user-header {
+    font-size: 32px;
+    text-align: center;
 }
 
 /* ✅ รูปโปรไฟล์ */
@@ -167,22 +157,20 @@
     font-weight: 700;
 }
 
-/* 📌 Blacklisted Users */
-.user-item.blacklisted {
-    background: #ffb3b3;
-    color: red;
-}
-
-.blacklisted-text {
-    color: red;
-}
-
 /* 📌 ปุ่มดำเนินการ */
 .action-buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 10px;
     width: 100%;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ddd;
+}
+
+.action-buttons button {
+    flex: 1;
+    margin: 5px;
+    text-align: center;
 }
 
 .delete-button3 {
@@ -203,13 +191,79 @@
     border-radius: 5px;
 }
 
-/* 📌 ปุ่มเมื่ออยู่ใน Blacklist */
 .blacklist-button.remove-blacklist {
     background-color: red;
 }
 
 .blacklist-button:hover {
     background-color: #333;
+}
+
+/* ✅ ปุ่มประวัติการจอง */
+.history-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    margin-left: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.history-button:hover {
+    background-color: #2980b9;
+}
+
+/* ✅ รายการสนามของ Owner */
+.stadium-list-container {
+    width: 100%;
+    margin-top: 15px;
+    max-height: 200px; /* ✅ จำกัดความสูงเพื่อไม่ให้ยืดยาว */
+    overflow-y: auto;
+    padding: 10px;
+    border-top: 2px solid #ddd;
+}
+
+/* ✅ ปรับปรุง UI ของรายการสนาม */
+.stadium-list-title {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.stadium-item {
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.stadium-item p {
+    font-size: 14px;
+    margin: 2px 0;
+}
+
+.no-stadium {
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+}
+
+/* ✅ Scrollbar ที่สวยงาม */
+.stadium-list-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.stadium-list-container::-webkit-scrollbar-thumb {
+    background: #3498db;
+    border-radius: 6px;
+}
+
+.stadium-list-container::-webkit-scrollbar-thumb:hover {
+    background: #2980b9;
 }
 
 /* ✅ Pop-up ยืนยันการลบบัญชี */
@@ -232,21 +286,18 @@
     border-radius: 10px;
     text-align: center;
     width: 350px;
-    font-family: 'Kanit', sans-serif;
 }
 
 .popup-content2 h2 {
     font-size: 24px;
     margin-bottom: 10px;
     color: black;
-    font-family: 'Kanit', sans-serif;
 }
 
 .popup-content2 p {
     font-size: 16px;
     margin-bottom: 10px;
     color: black;
-    font-family: 'Kanit', sans-serif;
 }
 
 .delete-input2 {
@@ -256,14 +307,11 @@
     border-radius: 5px;
     text-align: center;
     font-size: 16px;
-    margin-bottom: 10px;
-    font-family: 'Kanit', sans-serif;
 }
 
 .popup-buttons2 {
     display: flex;
     justify-content: space-between;
-    font-family: 'Kanit', sans-serif;
 }
 
 .confirm-delete2 {
@@ -273,7 +321,6 @@
     border: none;
     cursor: pointer;
     border-radius: 5px;
-    font-family: 'Kanit', sans-serif;
 }
 
 .cancel-delete2 {
@@ -283,21 +330,4 @@
     border: none;
     cursor: pointer;
     border-radius: 5px;
-    font-family: 'Kanit', sans-serif;
 }
-
-.history-button {
-    background-color: #3498db; /* สีฟ้า */
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    margin-left: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .history-button:hover {
-    background-color: #2980b9; /* สีฟ้าเข้มเมื่อ hover */
-  }
-  

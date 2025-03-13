@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom"; // ✅ เพิ่ม useParams
 import axios from "axios";
 import Navbar from "../Navbar/Navbar";
 import "./historybooking.css";
 
 const HistoryBooking = () => {
   const navigate = useNavigate();
+  const { userId } = useParams(); // ✅ รับ userId จาก URL (ถ้ามี)
   const [decodedToken, setDecodedToken] = useState(null);
   const [loading, setLoading] = useState(true);
   const [bookingHistory, setBookingHistory] = useState([]);
@@ -25,29 +26,23 @@ const HistoryBooking = () => {
   }, []);
 
   useEffect(() => {
-    if (!decodedToken) return;
-
     const fetchBookingHistory = async () => {
-        try {
-            const response = await axios.get(`http://localhost:4000/api/bookinghistories?userId=${decodedToken.id}`);
-            console.log("📌 Booking History Data:", response.data);
-            setBookingHistory(response.data);
-        } catch (error) {
-            console.error("❌ ไม่สามารถดึงข้อมูลประวัติการจอง:", error);
-        }
+      const targetUserId = userId || (decodedToken ? decodedToken.id : null); // ✅ ใช้ userId จาก URL ถ้ามี
+      if (!targetUserId) return; // ⛔ ถ้าไม่มี userId เลย ให้ออกเลย
+
+      try {
+        const response = await axios.get(`http://localhost:4000/api/bookinghistories?userId=${targetUserId}`);
+        console.log("📌 Booking History Data:", response.data);
+        setBookingHistory(response.data);
+      } catch (error) {
+        console.error("❌ ไม่สามารถดึงข้อมูลประวัติการจอง:", error);
+      }
     };
 
-    fetchBookingHistory();
-    
-    // 🔄 ตั้ง interval ดึงข้อมูลทุก 10 วินาที
-    const interval = setInterval(() => {
-        console.log("🔄 กำลังเช็คสถานะการจอง...");
-        fetchBookingHistory();
-    }, 10000);
-
-    return () => clearInterval(interval); // ✅ ล้าง interval เมื่อ component ถูก unmount
-}, [decodedToken]);
-
+    if (decodedToken || userId) {
+      fetchBookingHistory();
+    }
+  }, [decodedToken, userId]); // ✅ ดึงข้อมูลใหม่เมื่อ userId หรือ token เปลี่ยน
 
 
   if (loading) return <div>กำลังโหลดข้อมูล...</div>;

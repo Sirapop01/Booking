@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Owner = require("../models/BusinessOwner");
 const Blacklist = require("../models/Blacklist"); // เพิ่ม Model Blacklist
+const Arena = require("../models/Arena"); // ✅ Import Arena Model
 
 // 📌 ฟังก์ชันดึงข้อมูลผู้ใช้ทั้งหมด
 exports.getUsers = async (req, res) => {
@@ -41,6 +42,33 @@ exports.getOwnerById = async (req, res) => {
     res.json(owner);
   } catch (error) {
     res.status(500).json({ message: "เกิดข้อผิดพลาดในการค้นหาเจ้าของสนาม", error });
+  }
+};
+
+// 📌 ดึงรายการสนามของเจ้าของสนาม
+exports.getStadiumsByOwner = async (req, res) => {
+  try {
+    const { ownerId } = req.params;
+
+    console.log("📌 กำลังดึงข้อมูลสนามของ Owner ID:", ownerId);
+
+    // ✅ ตรวจสอบว่า ownerId ถูกต้อง
+    const owner = await Owner.findById(ownerId);
+    if (!owner) {
+      console.log("❌ ไม่พบเจ้าของสนามในระบบ!");
+      return res.status(404).json({ message: "ไม่พบเจ้าของสนาม" });
+    }
+
+    console.log("✅ พบเจ้าของสนาม:", owner.fullName);
+
+    // ✅ ค้นหาสนามที่เป็นของ businessOwnerId
+    const stadiums = await Arena.find({ businessOwnerId: ownerId });
+
+    console.log("✅ จำนวนสนามที่พบ:", stadiums.length);
+    res.json(stadiums);
+  } catch (error) {
+    console.error("❌ Error fetching stadiums:", error);
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูลสนาม", error: error.message });
   }
 };
 

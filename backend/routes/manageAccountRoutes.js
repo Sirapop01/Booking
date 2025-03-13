@@ -8,7 +8,8 @@ const {
   deleteUser,
   deleteOwner,
   toggleBlacklistUser,
-  toggleBlacklistOwner
+  toggleBlacklistOwner,
+  getStadiumsByOwner // ✅ เพิ่ม Controller ที่สร้างใหม่
 } = require("../controllers/manageAccountController");
 
 // 🔹 เส้นทางดึงข้อมูลผู้ใช้ทั้งหมด
@@ -34,5 +35,8 @@ router.put("/users/blacklist/:id", toggleBlacklistUser);
 
 // 🔹 เส้นทางตั้ง/ยกเลิก Blacklist เจ้าของสนาม
 router.put("/owners/blacklist/:id", toggleBlacklistOwner);
+
+// ✅ เส้นทางดึงข้อมูลสนามของเจ้าของสนาม
+router.get("/owners/stadiums/:ownerId", getStadiumsByOwner);
 
 module.exports = router;
