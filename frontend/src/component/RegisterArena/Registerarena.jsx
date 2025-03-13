@@ -407,7 +407,6 @@ const MatchWebForm = () => {
                 type="tel"
                 name="phone"
                 value={formData.phone}
-                maxLength="10"
                 onChange={handleInputChange}
                 placeholder="ระบุเบอร์โทรศัพท์"
               />
@@ -435,7 +434,7 @@ const MatchWebForm = () => {
               <span style={{ marginLeft: "10px", fontWeight: "bold", color: "#007bff" }}>
                 📍 {mapLocation[0]?.toFixed(5)}, {mapLocation[1]?.toFixed(5)}
               </span>
-              <Mapping location={mapLocation} setLocation={setMapLocation} />
+              <Mapping location={mapLocation || DEFAULT_LOCATION} setLocation={setMapLocation} />
             </div>
 
             {/* ✅ ส่วนเพิ่มเติม (สิ่งอำนวยความสะดวก + ข้อมูลเพิ่มเติม) */}
