@@ -5,7 +5,6 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import "./OwnerLedger.css";
-import homeLogo from "../assets/logoalt.png";
 import filterIcon from "../assets/icons/filter.png";
 import NavbarOwnerLedgerDetails from "../NavbarOwnerLedgerDetails/NavbarOwnerLedgerDetails";
 
@@ -40,6 +39,7 @@ const OwnerLedger = () => {
   }, [businessOwnerId]);
 
   useEffect(() => {
+    console.log("📌 Selected Stadium ID:", selectedStadium);
     const fetchLedgerData = async () => {
       if (!selectedStadium) return;
       try {
@@ -54,6 +54,7 @@ const OwnerLedger = () => {
     };
     fetchLedgerData();
   }, [selectedStadium]);
+    
 
   const getMonthFromDate = (dateString) => {
     if (!dateString) return "";
@@ -85,6 +86,10 @@ const OwnerLedger = () => {
   const totalAmount = filteredData.reduce((acc, entry) => acc + entry.amount, 0).toFixed(2);
   const totalTaxAmount = filteredData.reduce((acc, entry) => acc + entry.amount * 0.1, 0).toFixed(2);
   const netAmount = (totalAmount - totalTaxAmount).toFixed(2);
+  const totalAmountAfterTax = filteredData.reduce((acc, entry) => {
+    const taxAmount = entry.amount * 0.1; // คำนวณภาษี 10%
+    return acc + (entry.amount - taxAmount); // บวกยอดหลังหักภาษี
+  }, 0).toFixed(2);
 
   const chartData = filteredData.map((entry) => ({
     date: new Date(entry.dateTime).toLocaleDateString(),
@@ -189,24 +194,32 @@ const OwnerLedger = () => {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {filteredData.map((entry) => (
-                                    <tr key={entry._id}>
-                                      <td>{new Date(entry.dateTime).toLocaleString()}</td>
-                                      <td>{entry.item}</td>
-                                      <td>{entry.quantity || "1"}</td>
-                                      <td>{entry.amount.toFixed(2)} B</td>
-                                      <td>{(entry.amount * 0.1).toFixed(2)} B</td>
-                                      <td>{(entry.amount * 0.9).toFixed(2)} B</td>
-                                    </tr>
-                                  ))}
+                                  {filteredData.map((entry) => {
+                                    const detail = entry.details?.[0]; // ✅ ดึงข้อมูลจาก details array ตัวแรก
+                                    return (
+                                      <tr key={entry._id}>
+                                        <td>
+                                          {detail?.bookingDate
+                                            ? new Date(detail.bookingDate).toLocaleDateString("th-TH")
+                                            : "ไม่ระบุ"}
+                                        </td>
+                                        <td>{detail?.sportName || "ไม่ระบุ"}</td>
+                                        <td>{entry.quantity || "1"}</td>
+                                        <td>{entry.amount.toFixed(2)} B</td>
+                                        <td>{(entry.amount * 0.1).toFixed(2)} B</td>
+                                        <td>{(entry.amount * 0.9).toFixed(2)} B</td>
+                                      </tr>
+                                    );
+                                  })}
                                 </tbody>
                               </table>
                             </div>
             
                             {/* ✅ Total Box ✅ */}
-                          <div className="owner-ledger-total-box">
-                            <p><strong>รวมทั้งหมด:</strong> {totalAmount} B</p>
-                          </div>
+                            <div className="details-total-box">
+                              <p><strong>ค่าธรรมเนียม 10%:</strong> {totalTaxAmount} B</p>
+                                <p><strong>รวมทั้งหมด:</strong> {totalAmountAfterTax} B</p>
+                              </div>
                           </>
                         )}
             <button className="owner-ledger-manage-button" onClick={() => setShowChart(!showChart)}>
