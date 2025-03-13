@@ -4,8 +4,6 @@ const SubStadium = require("../models/subStadiumModel");
 const BusinessInfo = require("../models/BusinessInfo");
 const Payment = require("../models/Payment");
 const Arena = require("../models/Arena");
-const { ObjectId } = require("mongoose").Types; // ✅ นำเข้า ObjectId
-
 
 exports.getPendingPayment = async (req, res) => {
   try {
@@ -133,3 +131,115 @@ exports.submitPayment = async (req, res) => {
       res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
     }
   };
+
+  exports.getPaidUsers = async (req, res) => {
+    try {
+        const paidUsers = await Payment.find({ status: "paid" })
+            .populate({
+                path: "userId", 
+                select: "firstName lastName email"
+            })
+            .lean();
+
+        console.log("✅ Paid Users Found:", paidUsers); // ✅ ตรวจสอบค่าที่ได้จาก Database
+
+        if (!paidUsers || paidUsers.length === 0) {
+            return res.status(404).json({ message: "ไม่มีผู้ใช้ที่ชำระเงิน" });
+        }
+
+        res.json(paidUsers);
+    } catch (error) {
+        console.error("❌ Error fetching paid users:", error);
+        res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้ที่ชำระเงินแล้ว" });
+    }
+};
+
+
+exports.getUserBookings = async (req, res) => {
+  const { userId, sessionId } = req.query;
+
+  if (!userId || !sessionId) return res.status(400).json({ message: "❌ ต้องระบุ userId และ sessionId" });
+
+  try {
+      const bookings = await Payment.find({ userId, sessionId, status: "paid" })
+          .select("_id amount slipImage status details") // ✅ ดึง `details` จาก `Payment`
+          .lean();
+
+      if (!bookings.length) return res.status(404).json({ message: "ไม่มีข้อมูลการจองของ sessionId นี้" });
+
+      console.log("✅ ข้อมูลการจองที่ถูกส่งไปยัง Frontend:", bookings);
+      res.json(bookings);
+  } catch (error) {
+      console.error("❌ Error fetching user bookings:", error);
+      res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูลการจอง" });
+  }
+};
+
+const { ObjectId } = require("mongoose").Types; // ✅ นำเข้า ObjectId
+
+
+exports.confirmBooking = async (req, res) => {
+    console.log("🛠️ Debug Params จาก Frontend:", req.params); // ✅ ตรวจสอบค่าที่รับจาก Frontend
+
+    let { id } = req.params;
+
+    if (!id) return res.status(400).json({ message: "❌ ต้องระบุ ID การจอง" });
+
+    if (!ObjectId.isValid(id)) {
+        console.log("❌ ID ผิดรูปแบบ:", id);
+        return res.status(400).json({ message: "❌ ID การจองไม่ถูกต้อง" });
+    }
+
+    try {
+        const updatedBooking = await Payment.findByIdAndUpdate(
+            new ObjectId(id), 
+            { status: "confirmed" }, 
+            { new: true }
+        );
+
+        if (!updatedBooking) {
+            console.log("❌ ไม่พบข้อมูลการจองใน MongoDB:", id);
+            return res.status(404).json({ message: "❌ ไม่พบข้อมูลการจอง" });
+        }
+
+        console.log("✅ การจองถูกยืนยันแล้ว:", updatedBooking);
+        res.status(200).json({ message: "✅ การจองถูกยืนยันแล้ว", booking: updatedBooking });
+    } catch (error) {
+        console.error("❌ Error confirming booking:", error);
+        res.status(500).json({ message: "เกิดข้อผิดพลาดในการยืนยันการจอง" });
+    }
+};
+
+
+exports.rejectBooking = async (req, res) => {
+    console.log("🛠️ Debug Params จาก Frontend:", req.params);
+
+    let { id } = req.params;
+
+    if (!id) return res.status(400).json({ message: "❌ ต้องระบุ ID การจอง" });
+
+    if (!ObjectId.isValid(id)) {
+        console.log("❌ ID ผิดรูปแบบ:", id);
+        return res.status(400).json({ message: "❌ ID การจองไม่ถูกต้อง" });
+    }
+
+    try {
+        const updatedBooking = await Payment.findByIdAndUpdate(
+            new ObjectId(id), 
+            { status: "rejected" }, 
+            { new: true }
+        );
+
+        if (!updatedBooking) {
+            console.log("❌ ไม่พบข้อมูลการจองใน MongoDB:", id);
+            return res.status(404).json({ message: "❌ ไม่พบข้อมูลการจอง" });
+        }
+
+        console.log("✅ การจองถูกปฏิเสธแล้ว:", updatedBooking);
+        res.status(200).json({ message: "✅ การจองถูกปฏิเสธแล้ว", booking: updatedBooking });
+    } catch (error) {
+        console.error("❌ Error rejecting booking:", error);
+        res.status(500).json({ message: "เกิดข้อผิดพลาดในการปฏิเสธการจอง" });
+    }
+};
+
