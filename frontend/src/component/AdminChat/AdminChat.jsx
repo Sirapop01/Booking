@@ -28,6 +28,8 @@ const AdminChat = () => {
   const token = getToken();
   const decoded = token ? jwtDecode(token) : null;
   const adminId = decoded?.id;
+  const [newMessages, setNewMessages] = useState({});
+
 
   useEffect(() => {
     if (!token || !decoded) {
@@ -115,19 +117,31 @@ const AdminChat = () => {
 
   // ✅ การตั้งค่า Socket.io
   useEffect(() => {
-    const socket = io("http://localhost:4000"); // ใช้ URL ของ server ของคุณ
-
-    // เมื่อมีข้อความใหม่เข้ามา
+    const socket = io("http://localhost:4000"); // เชื่อมต่อกับเซิร์ฟเวอร์ WebSocket
+  
     socket.on("receiveMessage", (newMessage) => {
-      console.log("📡 New message received:", newMessage);
-      setMessages((prevMessages) => [...prevMessages, newMessage]); // เพิ่มข้อความใหม่ใน messages
+      console.log("📩 New message received:", newMessage);
+  
+      // ✅ ตรวจสอบว่าแชทที่ได้รับมาจาก User จริง ๆ
+      const senderId = newMessage.senderId || newMessage.userId; 
+  
+      // ✅ ถ้าแชทที่เปิดอยู่เป็นของ senderId → ไม่ต้องแจ้งเตือน
+      if (selectedUser && selectedUser._id === senderId) {
+        return;
+      }
+  
+      // ✅ อัปเดต state เพื่อบอกว่า userId นี้มีข้อความใหม่
+      setNewMessages((prev) => ({
+        ...prev,
+        [senderId]: true, // เพิ่ม userId ที่มีข้อความใหม่
+      }));
     });
-
-    // Cleanup function เพื่อลบ socket เมื่อ component ถูก unmount
+  
     return () => {
-      socket.disconnect();
+      socket.off("receiveMessage"); // Cleanup WebSocket เมื่อ component ถูก unmount
     };
-  }, []); // ใช้ [] เพื่อให้ทำงานแค่ครั้งเดียวเมื่อ component โหลด
+  }, [selectedUser]);
+  
 
   // ✅ Scroll ไปยังข้อความล่าสุด
   useEffect(() => {
@@ -184,6 +198,7 @@ const AdminChat = () => {
 
     return () => clearInterval(interval);
   }, [selectedUser, fetchMessages]);
+  
 
   return (
     <div className="admin-chat-container">
@@ -221,12 +236,23 @@ const AdminChat = () => {
             <div className="list-header2">ผู้ใช้</div>
             {filteredUsers.map((user) => (
               <div
-                key={user._id}
-                className={`user-item2 ${selectedUser?._id === user._id ? "selected" : ""}`}
-                onClick={() => setSelectedUser(user)}
-              >
-                {user.name || user.email || "ไม่ทราบชื่อ"} {/* ตรวจสอบการตั้งค่า name */}
-              </div>
+              key={user._id}
+              className={`user-item2 ${selectedUser?._id === user._id ? "selected" : ""}`}
+              onClick={() => {
+                setSelectedUser(user);
+            
+                // ✅ เคลียร์การแจ้งเตือนเมื่อเปิดแชท
+                setNewMessages((prev) => ({
+                  ...prev,
+                  [user._id]: false, 
+                }));
+              }}
+            >
+              {user.name || user.email || "ไม่ทราบชื่อ"}
+              
+              {/* ✅ แสดง Red Dot Notification */}
+              {newMessages[user._id] && <span className="chat-notification-dot"></span>}
+            </div>            
             ))}
           </div>
         </div>

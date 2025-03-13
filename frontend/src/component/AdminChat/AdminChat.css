@@ -78,6 +78,20 @@
     border-bottom: 2px solid #004080;
 }
 
+/* ✅ จุดแจ้งเตือนข้อความใหม่ */
+.chat-notification-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    margin-left: 8px;
+    position: absolute;  /* ✅ ให้ Red Dot อยู่ด้านขวา */
+    right: 10px;  /* ✅ ชิดขวาของ .user-item2 */
+    top: 50%;
+    transform: translateY(-50%); /* ✅ จัดกึ่งกลางแนวตั้ง */
+}
+
 /* ✅ ปรับปรุง UI ของรายการผู้ใช้ */
 .user-item2 {
     padding: 12px 15px;
@@ -86,7 +100,12 @@
     color: white;
     transition: background 0.3s ease;
     font-size: 16px;
+    position: relative;  /* ✅ รองรับ Red Dot */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
+
 
 .user-item2:hover {
     background: #004080;
@@ -97,6 +116,7 @@
     font-weight: bold;
     border-left: 5px solid white;
 }
+
 
 /* ✅ กล่องแชท */
 .chat-box-container2 {
