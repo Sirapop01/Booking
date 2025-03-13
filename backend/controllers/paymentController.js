@@ -134,59 +134,31 @@ exports.submitPayment = async (req, res) => {
 
 exports.cancelBooking = async (req, res) => {
   try {
-      console.log("🔹 Cancel Booking API Called");
-      console.log("🔹 Request Body:", req.body); // ✅ ตรวจสอบค่า sessionId ที่ frontend ส่งมา
+      console.log("🔹 รับ sessionId จาก frontend:", req.body.sessionId);
 
-      const token = req.headers.authorization?.split(" ")[1];
-      if (!token) {
-          return res.status(401).json({ message: "ไม่ได้รับ Token" });
+      if (!req.body.sessionId) {
+          return res.status(400).json({ message: "❌ sessionId หายไป" });
       }
 
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const userId = decoded.id;
-      const { sessionId } = req.body;
-
-      if (!sessionId) {
-          console.error("❌ sessionId is missing");
-          return res.status(400).json({ message: "sessionId จำเป็นต้องระบุ" });
-      }
-
-      console.log("🔹 sessionId received:", sessionId);
-
-      // ✅ ค้นหาโดยใช้ sessionId แทน _id
-      const booking = await BookingHistory.findOneAndUpdate(
-          { sessionId: sessionId, userId: userId, status: "pending" }, // เปลี่ยนจาก `_id` เป็น `sessionId`
-          { status: "canceled" },
-          { new: true }
-      );
+      const booking = await BookingHistory.findOne({ sessionId: req.body.sessionId });
 
       if (!booking) {
-          console.error("❌ Booking not found for sessionId:", sessionId);
-          return res.status(404).json({ message: "ไม่พบคำสั่งจองที่สามารถยกเลิกได้" });
+          return res.status(404).json({ message: "❌ ไม่พบคำสั่งจอง" });
       }
-      // ✅ บันทึกข้อมูลลง Database
-      const newPayment = new Payment({
-        userId,
-        sessionId,
-        bookingId: booking._id,
-        amount,
-        transferTime,
-        slipImage, 
-        status: "paid",
-        details: booking.details, // ✅ เก็บข้อมูลการจอง
-      });
-  
-      await newPayment.save();
-  
-      // ✅ อัปเดตสถานะ Booking เป็น "paid"
-      await BookingHistory.findOneAndUpdate({ sessionId }, { status: "paid" });
-  
-      res.status(201).json({ message: "บันทึกข้อมูลการชำระเงินเรียบร้อย", payment: newPayment });
-    } catch (error) {
-      console.error("❌ Error processing payment:", error);
-      res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
-    }
-  };
+
+      // ✅ อัปเดตสถานะเป็น "canceled"
+      booking.status = "canceled";
+      await booking.save();
+
+      console.log("✅ การจองถูกยกเลิกแล้ว:", booking);
+      res.status(200).json({ message: "✅ การจองถูกยกเลิกแล้ว" });
+
+  } catch (error) {
+      console.error("❌ Error canceling booking:", error);
+      res.status(500).json({ message: "❌ เกิดข้อผิดพลาดในการยกเลิก" });
+  }
+};
+
 
   exports.getPaidUsers = async (req, res) => {
     try {
