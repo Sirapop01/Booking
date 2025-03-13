@@ -6,7 +6,7 @@ import { IoEyeSharp } from "react-icons/io5";
 import { FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import Swal from "sweetalert2";
 
 //Fix
 const RegistrationForm = () => {
@@ -26,6 +26,11 @@ const RegistrationForm = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    return today.toISOString().split("T")[0]; // ✅ แปลงเป็น YYYY-MM-DD
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -89,6 +94,15 @@ const RegistrationForm = () => {
     e.preventDefault();
     if (!validateForm()) return;
 
+
+    Swal.fire({
+      title: "กำลังสมัครสมาชิก...",
+      text: "กรุณารอสักครู่",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
     console.log("🚀 Data being sent to backend:", formData);
 
     try {
@@ -101,15 +115,30 @@ const RegistrationForm = () => {
         // ✅ เก็บ Token และ Email
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("registeredEmail", formData.email);
-
-        alert("✅ สมัครสมาชิกสำเร็จ! โปรดกรอกข้อมูลสนามและรอการอนุมัติ!");
-        navigate("/RegisterArena");
+        Swal.fire({
+          title: "✅ สมัครสมาชิกสำเร็จ!",
+          text: "โปรดกรอกข้อมูลสนามและรอการอนุมัติ!",
+          icon: "success",
+          confirmButtonText: "ตกลง",
+        }).then(() => {
+          navigate("/RegisterArena");
+        });
       } else {
-        alert(response.data.message || "❌ เกิดข้อผิดพลาดในการสมัครสมาชิก");
+        Swal.fire({
+          title: "❌ เกิดข้อผิดพลาด",
+          text: response.data.message || "เกิดข้อผิดพลาดในการสมัครสมาชิก",
+          icon: "error",
+          confirmButtonText: "ตกลง",
+        });
       }
     } catch (error) {
       console.error("🚨 Error registering user:", error.response?.data || error);
-      alert("❌ เกิดข้อผิดพลาด: " + (error.response?.data?.message || "ลองใหม่อีกครั้ง"));
+      Swal.fire({
+        title: "❌ เกิดข้อผิดพลาด",
+        text: error.response?.data?.message || "ลองใหม่อีกครั้ง",
+        icon: "error",
+        confirmButtonText: "ตกลง",
+      });
     }
   };
 
@@ -161,7 +190,7 @@ const RegistrationForm = () => {
 
               <label>
                 วัน/เดือน/ปีเกิด * {errors.dob && <span className="error-message">{errors.dob}</span>}
-                <input type="date" name="dob" value={formData.dob} onChange={handleChange} />
+                <input type="date" name="dob" value={formData.dob} max={getCurrentDate()} onChange={handleChange} />
               </label>
             </div>
 
