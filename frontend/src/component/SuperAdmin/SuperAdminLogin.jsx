@@ -34,15 +34,18 @@ const SuperAdminLogin = () => {
 
   return (
     <div className="superadmin-login-container">
-      <form onSubmit={handleSubmit} className="login-form">
+      <form onSubmit={handleSubmit} className="login-super-form">
         <h2>Super Admin Login</h2>
+        <p className="super-admin-subtitle">"สำหรับผู้ดูแลระบบที่ได้รับอนุญาตเท่านั้น"</p>
 
         {error && <p className="error-message">{error}</p>} {/* ✅ แสดงข้อความ Error */}
 
         <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
         <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
+        
+        
+        <button type="submit" className="login-buttonss">เข้าสู่ระบบ</button>
 
-        <button type="submit">เข้าสู่ระบบ</button>
       </form>
     </div>
   );

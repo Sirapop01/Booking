@@ -72,7 +72,7 @@ const BusinessProfile = () => {
     try {
       const res = await axios.get(`http://localhost:4000/api/business/getinfo/${id}`);
       console.log("📥 Updated Member Data from DB:", res.data);
-      
+
       // ✅ เช็คว่าข้อมูลเปลี่ยนหรือไม่ก่อนอัปเดต UI
       setMember((prevMember) => {
         if (JSON.stringify(prevMember) !== JSON.stringify(res.data)) {
@@ -209,15 +209,6 @@ const BusinessProfile = () => {
               <label>หมายเลขโทรศัพท์</label>
               <input type="text" name="phoneNumber" value={member?.phoneNumber || ""} inputMode="numeric" maxLength="10" onChange={handleChange} readOnly={!isEditable} />
             </div>
-
-
-          </div>
-        </section>
-
-
-        <section className="location-info">
-
-          <div className="form-grid">
             <div className="input-group">
               <label>วัน/เดือน/ปีเกิด</label>
               <input
@@ -230,7 +221,7 @@ const BusinessProfile = () => {
             </div>
             <div className="input-group">
               <label>หมายเลขบัตรประชาชน</label>
-              <input type="idCard" name="idCard" value={member?.idCard || ""} readOnly />
+              <input type="text" name="idCard" value={member?.idCard || ""} readOnly />
             </div>
           </div>
 

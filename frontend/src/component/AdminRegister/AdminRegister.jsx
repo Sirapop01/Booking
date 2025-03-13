@@ -96,41 +96,47 @@ const AdminRegister = () => {
       setLoading(false);
     }
   };
-
   return (
-    <div className="admin-register-container">
-      <h2>สมัคร Admin</h2>
-      <form onSubmit={handleSubmit} className="admin-register-form">
-        <input type="text" name="firstName" placeholder="ชื่อจริง" onChange={handleChange} required />
-        {errors.firstName && <p className="error-message">{errors.firstName}</p>}
+    <div className="admin-register-background">
+      <div className="admin-register-container">
+        <h2>สมัคร Admin</h2>
+        <form onSubmit={handleSubmit} className="admin-register-form">
+          <input type="text" name="firstName" placeholder="ชื่อจริง" onChange={handleChange} required />
+          {errors.firstName && <p className="error-message">{errors.firstName}</p>}
+  
+          <input type="text" name="lastName" placeholder="นามสกุล" onChange={handleChange} required />
+          {errors.lastName && <p className="error-message">{errors.lastName}</p>}
+  
+          <input type="date" name="birthdate" onChange={handleChange} required />
+          {errors.birthdate && <p className="error-message">{errors.birthdate}</p>}
+  
+          <input type="text" name="idCardNumber" placeholder="เลขบัตรประชาชน" maxLength="13" onChange={handleChange} required />
+          {errors.idCardNumber && <p className="error-message">{errors.idCardNumber}</p>}
+  
+          <input type="tel" name="phoneNumber" placeholder="เบอร์โทรศัพท์" maxLength="10" onChange={handleChange} required />
+          {errors.phoneNumber && <p className="error-message">{errors.phoneNumber}</p>}
+  
+          <input type="email" name="email" placeholder="อีเมล" onChange={handleChange} required />
+          {errors.email && <p className="error-message">{errors.email}</p>}
+  
+          <input type="password" name="password" placeholder="รหัสผ่าน (ขั้นต่ำ 6 ตัว)" onChange={handleChange} required />
+          {errors.password && <p className="error-message">{errors.password}</p>}
+  
+          <label>รูปโปรไฟล์:</label>
+          <input type="file" name="profileImage" accept="image/*" onChange={handleChange} required />
+          
+          {errors.profileImage && <p className="error-message">{errors.profileImage}</p>}
+  
+          {errors.form && <p className="error-message">{errors.form}</p>}
+          <button type="submit" className="admin-register-button" disabled={loading}>
+          {loading ? "⏳ กำลังสมัคร..." : " สมัคร Admin"}
+          </button>
 
-        <input type="text" name="lastName" placeholder="นามสกุล" onChange={handleChange} required />
-        {errors.lastName && <p className="error-message">{errors.lastName}</p>}
-
-        <input type="date" name="birthdate" onChange={handleChange} required />
-        {errors.birthdate && <p className="error-message">{errors.birthdate}</p>}
-
-        <input type="text" name="idCardNumber" placeholder="เลขบัตรประชาชน" maxLength="13" onChange={handleChange} required />
-        {errors.idCardNumber && <p className="error-message">{errors.idCardNumber}</p>}
-
-        <input type="tel" name="phoneNumber" placeholder="เบอร์โทรศัพท์" maxLength="10" onChange={handleChange} required />
-        {errors.phoneNumber && <p className="error-message">{errors.phoneNumber}</p>}
-
-        <input type="email" name="email" placeholder="อีเมล" onChange={handleChange} required />
-        {errors.email && <p className="error-message">{errors.email}</p>}
-
-        <input type="password" name="password" placeholder="รหัสผ่าน (ขั้นต่ำ 6 ตัว)" onChange={handleChange} required />
-        {errors.password && <p className="error-message">{errors.password}</p>}
-
-        <label>รูปโปรไฟล์:</label>
-        <input type="file" name="profileImage" accept="image/*" onChange={handleChange} required />
-        {errors.profileImage && <p className="error-message">{errors.profileImage}</p>}
-
-        {errors.form && <p className="error-message">{errors.form}</p>}
-        <button type="submit" disabled={loading}>{loading ? "กำลังสมัคร..." : "สมัคร Admin"}</button>
-      </form>
+        </form>
+      </div>
     </div>
   );
+  
 };
 
 export default AdminRegister;
