@@ -46,18 +46,20 @@ const BusinessProfile = () => {
 
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setMember((prevMember) => {
-      const updatedMember = { ...prevMember, [e.target.name]: e.target.value };
-      console.log("✏️ Member Updated Locally:", updatedMember);
+      let updatedValue = value;
+
+      // ✅ แปลงค่าที่ได้รับจาก input type="date" ให้เป็น Date object
+      if (name === "dob") {
+        updatedValue = new Date(value).toISOString(); // แปลงเป็น ISO String format
+      }
+
+      const updatedMember = { ...prevMember, [name]: updatedValue };
+      console.log("✏️ Updated Member Data Locally:", updatedMember);
       return updatedMember;
     });
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setNewProfileImage(file); // ✅ เก็บไฟล์ไว้ แต่ยังไม่อัปเดต DB
-    setProfileImage(URL.createObjectURL(file)); // แสดง preview
-    uploadImage(file);
   };
 
   useEffect(() => {
@@ -141,28 +143,6 @@ const BusinessProfile = () => {
     }
   };
 
-  const uploadImage = async (file) => {
-    try {
-      const formData = new FormData();
-      formData.append("profileImage", file);
-      formData.append("id", id);
-
-      const response = await axios.put(
-        `http://localhost:4000/api/upload/images/${id}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-
-      console.log("✅ Profile Image Updated:", response.data);
-      alert("🎉 อัปโหลดรูปภาพสำเร็จ!");
-      getMB(); // โหลดข้อมูลใหม่
-      setIsEditable(false);
-    } catch (error) {
-      console.error("❌ Error uploading image:", error);
-      alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
-    }
-  };
-
   const toggleLogout = () => {
     setShowLogoutModal(true); // ✅ Open the modal
   };
@@ -231,7 +211,13 @@ const BusinessProfile = () => {
             </div>
             <div className="input-group">
               <label>วัน/เดือน/ปีเกิด</label>
-              <input type="date" name="birthdate" value={member?.dob ? member.dob.substring(0, 10) : ""} onChange={handleChange} readOnly={!isEditable} />
+              <input
+                type="date"
+                name="dob"
+                value={member?.dob ? new Date(member.dob).toISOString().split("T")[0] : ""}
+                onChange={handleChange}
+                readOnly={!isEditable}
+              />
             </div>
             <div className="input-group">
               <label>หมายเลขบัตรประชาชน</label>
