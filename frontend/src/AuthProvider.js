@@ -10,6 +10,19 @@ const AuthChecker = () => {
         const checkToken = () => {
             const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
+            // ✅ กำหนด "หน้าสาธารณะ" ที่ไม่ต้องล็อกอิน
+            const publicRoutes = [
+                "/",
+                "/RegisterChoice",
+                "/customer-register",
+                "/RegisterOpera",
+                "/RegisterArena",
+                "/forgot-password",
+                "/reset-password"
+            ];
+
+            const currentPath = window.location.pathname;
+
             if (token) {
                 try {
                     const decoded = jwtDecode(token);
@@ -24,8 +37,11 @@ const AuthChecker = () => {
                     logout();
                 }
             } else {
-                console.warn("⚠️ ไม่พบ Token, ไปที่หน้า Login");
-                navigate("/login");
+                // ✅ ถ้าหน้านั้นอยู่ใน publicRoutes -> ไม่ต้อง Redirect ไป Login
+                if (!publicRoutes.some(route => currentPath.startsWith(route))) {
+                    console.warn("⚠️ ไม่พบ Token, ไปที่หน้า Login");
+                    navigate("/login");
+                }
             }
         };
 

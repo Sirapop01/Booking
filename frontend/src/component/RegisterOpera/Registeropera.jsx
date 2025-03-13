@@ -197,7 +197,7 @@ const RegistrationForm = () => {
             <div className="form-group">
               <label>
                 เบอร์โทรศัพท์มือถือ * {errors.phoneNumber && <span className="error-message">{errors.phoneNumber}</span>}
-                <input type="text" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
+                <input type="text" name="phoneNumber" value={formData.phoneNumber} maxLength="10" onChange={handleChange} />
               </label>
 
               <label>
