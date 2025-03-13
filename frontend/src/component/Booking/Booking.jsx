@@ -16,6 +16,7 @@ const Booking = () => {
   const fieldName = location.state?.fieldName || "ไม่พบชื่อสนาม"; // ✅ ดึง fieldName
   const stadiumImage = location.state?.stadiumImage || "https://via.placeholder.com/150"; // ✅ ดึง stadiumImage
   const [selectedDates, setSelectedDates] = useState({}); // ✅ ใช้ object เก็บวันที่ของแต่ละสนามย่อย
+  const [loadingSlots, setLoadingSlots] = useState(false); // ✅ ตัวแปรเช็คว่ากำลังโหลดข้อมูล
   
   console.log("📌 ข้อมูลที่ได้รับจาก BookingArena:", { selectedSubStadiums, fieldName, stadiumImage });
   const formatDateForAPI = (dateString) => {
@@ -94,8 +95,7 @@ const generateTimeSlots = (openTime, closeTime, reservedSlots = [], pendingSlots
 };
 
 
-
-const showAvailableTimes = (subStadiumId) => {
+const showAvailableTimes = async (subStadiumId) => {
   const selectedDate = selectedDates[subStadiumId];
 
   if (!selectedDate) {
@@ -103,9 +103,15 @@ const showAvailableTimes = (subStadiumId) => {
       return;
   }
 
+  setLoadingSlots(true); // ✅ เริ่มโหลดข้อมูล
+
+  await fetchStadiumDetails(subStadiumId, selectedDate); // ✅ ดึงข้อมูลใหม่
+
+  setLoadingSlots(false); // ✅ เสร็จสิ้นการโหลด
+
   const timeslots = bookingData[subStadiumId]?.availableTimes || [];
 
-  if (timeslots.length === 0) {
+  if (!loadingSlots && timeslots.length === 0) {
       Swal.fire("⚠ ไม่มีช่วงเวลาว่าง", "กรุณาลองเลือกวันอื่น", "warning");
       return;
   }
@@ -173,9 +179,6 @@ const showAvailableTimes = (subStadiumId) => {
       },
   });
 };
-
-
-  
   
   const handleConfirmBooking = async () => {
     try {
@@ -296,17 +299,24 @@ const showAvailableTimes = (subStadiumId) => {
 };
 
 
-const handleDateChange = (subStadiumId, date) => {
+const handleDateChange = async (subStadiumId, date) => {
   setSelectedDates((prev) => ({
     ...prev,
     [subStadiumId]: date, // ✅ อัปเดตวันที่ของแต่ละสนาม
   }));
 
-  // ✅ เคลียร์ช่วงเวลาที่เลือกเมื่อเปลี่ยนวันที่
-  setBookingData((prev) => ({
-    ...prev,
-    [subStadiumId]: { ...prev[subStadiumId], selectedTime: "" },
-  }));
+  try {
+    await fetchStadiumDetails(subStadiumId, date);
+
+    // ✅ เคลียร์ช่วงเวลาที่เลือกเมื่อเปลี่ยนวันที่
+    setBookingData((prev) => ({
+      ...prev,
+      [subStadiumId]: { ...prev[subStadiumId], selectedTime: "" },
+    }));
+  } catch (error) {
+    console.error("❌ ไม่สามารถดึงข้อมูลสนาม:", error);
+    Swal.fire("❌ เกิดข้อผิดพลาด", "ไม่สามารถโหลดเวลาว่างของสนามได้", "error");
+  }
 };
 
 
