@@ -6,7 +6,7 @@ import { IoEyeSharp } from "react-icons/io5";
 import { FaEyeSlash } from "react-icons/fa";
 import bgImage from './images/bluee.jpg';
 import axios from 'axios';
-
+import Swal from "sweetalert2";
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -46,35 +46,56 @@ function Login() {
   }, []);
 
   const handleLogin = async () => {
-  if (!validateForm()) {
-    return; // หยุดการทำงานหากการตรวจสอบล้มเหลว
-  }
-
-  let members = {
-    email,
-    password 
-  }
-
-  try {
-    const response = await axios.post("http://localhost:4000/api/auth/login", members);
-    
-    if (response.data.message === "เข้าสู่ระบบสำเร็จ") {
-      if (rememberMe) {
-        localStorage.setItem('token', response.data.token);
-      } else {
-        sessionStorage.setItem('token', response.data.token);
-      }
-      navigate("/");
-    } else {
-      setErrorMessage("อีเมลหรือรหัสผ่านไม่ถูกต้อง");  // แสดงข้อความเมื่อเข้าสู่ระบบไม่สำเร็จ
+    if (!validateForm()) {
+      return; // หยุดการทำงานหากการตรวจสอบล้มเหลว
     }
-
-    console.log(response.data.message);
-  } catch (err) {
-    console.log(err);
-    alert("เกิดข้อผิดพลาดในการเข้าสู่ระบบ กรุณาลองใหม่อีกครั้ง");  // จัดการข้อผิดพลาดทั่วไป เช่น เซิร์ฟเวอร์ล่ม
-  }
-};
+  
+    let members = {
+      email,
+      password 
+    }
+  
+    try {
+      const response = await axios.post("http://localhost:4000/api/auth/login", members);
+      
+      if (response.data.message === "เข้าสู่ระบบสำเร็จ") {
+        if (rememberMe) {
+          localStorage.setItem('token', response.data.token);
+        } else {
+          sessionStorage.setItem('token', response.data.token);
+        }
+        navigate("/");
+      } else if (response.data.message === "ไม่พบบัญชีผู้ใช้") {
+        Swal.fire({
+          title: "ไม่พบบัญชีผู้ใช้!",
+          text: "กรุณาตรวจสอบอีเมลของคุณหรือสมัครบัญชีใหม่",
+          icon: "error",
+          confirmButtonColor: "#d33",
+          confirmButtonText: "ตกลง"
+        });
+      } else {
+        Swal.fire({
+          title: "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+          text: "กรุณาลองใหม่อีกครั้ง",
+          icon: "warning",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "ตกลง"
+        });
+      }
+  
+      console.log(response.data.message);
+    } catch (err) {
+      console.log(err);
+      Swal.fire({
+        title: "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+        text: "ไม่สามารถเข้าสู่ระบบได้ กรุณาลองใหม่อีกครั้ง",
+        icon: "error",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "ตกลง"
+      });
+    }
+  };
+  
 
   const handleInputChange = (setter) => (e) => {
     setter(e.target.value);
