@@ -113,12 +113,13 @@ exports.submitPayment = async (req, res) => {
       userId,
       sessionId,
       bookingId: booking._id,
+      stadiumId: booking.stadiumId, // ✅ เพิ่ม field stadiumId
       amount,
       transferTime,
       slipImage,
       status: "paid",
-      details: booking.details, // ✅ เก็บข้อมูลการจอง
-    });
+      details: booking.details,
+    });    
 
     await newPayment.save();
 
@@ -160,27 +161,37 @@ exports.cancelBooking = async (req, res) => {
 };
 
 
-  exports.getPaidUsers = async (req, res) => {
-    try {
-        const paidUsers = await Payment.find({ status: "paid" })
-            .populate({
-                path: "userId", 
-                select: "firstName lastName email"
-            })
-            .lean();
+exports.getPaidUsers = async (req, res) => {
+  try {
+    const { stadiumId } = req.query; // 📌 รับ stadiumId จาก request
 
-        console.log("✅ Paid Users Found:", paidUsers); // ✅ ตรวจสอบค่าที่ได้จาก Database
-
-        if (!paidUsers || paidUsers.length === 0) {
-            return res.status(404).json({ message: "ไม่มีผู้ใช้ที่ชำระเงิน" });
-        }
-
-        res.json(paidUsers);
-    } catch (error) {
-        console.error("❌ Error fetching paid users:", error);
-        res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้ที่ชำระเงินแล้ว" });
+    let filter = { status: "paid" };
+    
+    if (stadiumId) {
+        filter.stadiumId = stadiumId; // ✅ กรองเฉพาะสนามที่ต้องการ
     }
+    
+    const paidUsers = await Payment.find(filter)
+      .populate({
+          path: "userId",
+          select: "firstName lastName email"
+      })
+      .lean();
+    
+
+      console.log("✅ Paid Users Found:", paidUsers); // ✅ ตรวจสอบค่าที่ได้จาก Database
+
+      if (!paidUsers || paidUsers.length === 0) {
+          return res.status(404).json({ message: "ไม่มีผู้ใช้ที่ชำระเงินสำหรับสนามนี้" });
+      }
+
+      res.json(paidUsers);
+  } catch (error) {
+      console.error("❌ Error fetching paid users:", error);
+      res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้ที่ชำระเงินแล้ว" });
+  }
 };
+
 
 
 exports.getUserBookings = async (req, res) => {
