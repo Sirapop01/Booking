@@ -251,6 +251,16 @@
   color: white;
 }
 
+.disabled-substadium {
+  background-color: #d3d3d3 !important; /* เปลี่ยนสีปุ่มเป็นเทา */
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
+.disabled-substadium img {
+  filter: grayscale(100%); /* ทำให้รูปเป็นขาวดำ */
+}
+
 
 /* ✅ ปุ่มจอง */
 .booking101-button {
