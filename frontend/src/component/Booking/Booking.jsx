@@ -15,6 +15,7 @@ const Booking = () => {
   const navigate = useNavigate();
   const fieldName = location.state?.fieldName || "ไม่พบชื่อสนาม"; // ✅ ดึง fieldName
   const stadiumImage = location.state?.stadiumImage || "https://via.placeholder.com/150"; // ✅ ดึง stadiumImage
+  const [selectedDates, setSelectedDates] = useState({}); // ✅ ใช้ object เก็บวันที่ของแต่ละสนามย่อย
   
   console.log("📌 ข้อมูลที่ได้รับจาก BookingArena:", { selectedSubStadiums, fieldName, stadiumImage });
   const formatDateForAPI = (dateString) => {
@@ -25,19 +26,10 @@ const Booking = () => {
 
   
   useEffect(() => {
-    if (!selectedDate) {
-      console.warn("⚠ กรุณาเลือกวันที่ก่อน");
-      return;
-    }
-
-    console.log(`📅 วันที่ที่เลือก: ${selectedDate}`);
-
-    const formattedDate = formatDateForAPI(selectedDate);
-
-    selectedSubStadiums.forEach((stadium) => {
-      fetchStadiumDetails(stadium._id, formattedDate);
+    Object.keys(selectedDates).forEach((subStadiumId) => {
+        fetchStadiumDetails(subStadiumId, selectedDates[subStadiumId]);
     });
-  }, [selectedSubStadiums, selectedDate]);
+  }, [selectedDates]);
 
   const fetchStadiumDetails = async (subStadiumId, selectedDate) => {
     try {
@@ -87,11 +79,17 @@ const Booking = () => {
   };
 
   const showAvailableTimes = (subStadiumId) => {
-    if (!selectedDate) {
+    const selectedDate = selectedDates[subStadiumId]; // ✅ ใช้ selectedDates ของแต่ละสนาม
+    console.log(`📅 วันที่ที่เลือกสำหรับสนาม ${subStadiumId}:`, selectedDate);
+    console.log(`🔎 bookingData สำหรับสนาม ${subStadiumId}:`, bookingData[subStadiumId]);
+  
+    if (!selectedDates[subStadiumId]) {
       console.warn("⚠ กรุณาเลือกวันที่ก่อนเลือกเวลา");
       Swal.fire("⚠ กรุณาเลือกวันที่ก่อน", "", "warning");
       return;
     }
+  
+    console.log(`📅 วันที่ที่เลือกสำหรับสนาม ${subStadiumId}:`, selectedDate);
   
     const timeslots = bookingData[subStadiumId]?.availableTimes || [];
   
@@ -170,7 +168,7 @@ const Booking = () => {
         });
       },
     });
-  };
+  };  
   
   const handleConfirmBooking = async () => {
     try {
@@ -191,7 +189,7 @@ const Booking = () => {
             return;
         }
 
-        if (!userId || !selectedDate) {
+        if (!userId || Object.keys(selectedDates).length === 0) {
             Swal.fire("⚠ กรุณาเลือกวันที่ก่อน", "", "warning");
             return;
         }
@@ -201,6 +199,12 @@ const Booking = () => {
 
         selectedSubStadiums.forEach((sub) => {
           const selectedTimeSlots = bookingData[sub._id]?.selectedTime?.split(", ") || [];
+          const selectedBookingDate = selectedDates[sub._id]; // ✅ ใช้วันที่ของแต่ละสนาม
+          if (!selectedBookingDate) {
+              console.warn(`❌ ไม่พบวันที่ของสนาม ${sub.name}`);
+              return;
+          }
+      
           if (selectedTimeSlots.length > 0) {
               const startTime = selectedTimeSlots[0].split(" - ")[0];
               const endTime = selectedTimeSlots[selectedTimeSlots.length - 1].split(" - ")[1];
@@ -209,23 +213,15 @@ const Booking = () => {
               const startHour = parseInt(startTime.split(":")[0]);
               const endHour = parseInt(endTime.split(":")[0]);
       
-              // ✅ แก้ไขปัญหาช่วงเวลาข้ามวัน (00:00)
-              let duration;
-              if (endHour < startHour) {
-                  duration = (24 - startHour) + endHour; // คำนวณเวลาข้ามวัน
-              } else {
-                  duration = endHour - startHour;
-              }
-      
-              // ✅ ป้องกัน duration ติดลบ
-              if (duration < 0) duration = 0;
+              let duration = endHour >= startHour ? endHour - startHour : (24 - startHour) + endHour;
+              if (duration < 0) duration = 0; // ✅ ป้องกัน duration ติดลบ
       
               const pricePerHour = parseFloat(sub.price) || 0;
               const price = pricePerHour * duration;
               totalPrice += price;
       
               details.push({
-                  bookingDate: formatDateForAPI(selectedDate),
+                  bookingDate: formatDateForAPI(selectedBookingDate), // ✅ ใช้วันที่ของสนามที่ถูกต้อง
                   subStadiumId: sub._id,
                   sportName: sub.sportName,
                   name: sub.name || "ไม่พบชื่อสนามย่อย",
@@ -236,7 +232,7 @@ const Booking = () => {
                   price,
               });
           }
-      });
+      });      
 
         if (details.length === 0) {
             Swal.fire("⚠ กรุณาเลือกเวลาอย่างน้อย 1 ช่วง", "", "warning");
@@ -286,6 +282,18 @@ const Booking = () => {
     }
 };
 
+const handleDateChange = (subStadiumId, date) => {
+  setSelectedDates((prev) => ({
+    ...prev,
+    [subStadiumId]: date, // ✅ อัปเดตวันที่ของแต่ละสนาม
+  }));
+
+  // ✅ เคลียร์ช่วงเวลาที่เลือกเมื่อเปลี่ยนวันที่
+  setBookingData((prev) => ({
+    ...prev,
+    [subStadiumId]: { ...prev[subStadiumId], selectedTime: "" },
+  }));
+};
 
 
   return (
@@ -300,9 +308,21 @@ const Booking = () => {
             <div className="booking-right">
               <h2 className="booking-title">{sub.name}</h2>
               <label>วันที่จอง</label>
-              <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} required />
+              <input
+                type="date"
+                min={new Date().toISOString().split("T")[0]} // ✅ ห้ามเลือกย้อนหลัง
+                value={selectedDates[sub._id] || ""}
+                onChange={(e) => handleDateChange(sub._id, e.target.value)}
+                required
+              />
               <label>ช่วงเวลา</label>
-              <input type="text" value={bookingData[sub._id]?.selectedTime || ""} readOnly onClick={() => showAvailableTimes(sub._id)} required />
+              <input
+                type="text"
+                value={bookingData[sub._id]?.selectedTime || ""}
+                readOnly
+                onClick={() => showAvailableTimes(sub._id)}
+                required
+              />
               <p className="booking-price">ราคา: ฿ {sub.price || "ไม่ระบุ"} / ชั่วโมง</p>
             </div>
           </form>
