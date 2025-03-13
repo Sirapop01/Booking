@@ -219,7 +219,7 @@ const RegistrationForm = () => {
                 />
                 <button
                   type="button"
-                  className="toggle-password"
+                  className="toggle-password-aeye"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <IoEyeSharp /> : <FaEyeSlash />}
@@ -253,9 +253,9 @@ const RegistrationForm = () => {
             </div>
 
 
-            <div className="submit-button-container">
-              <button type="submit" className="submit-button">ดำเนินการต่อ</button>
-            </div>
+            
+              <button type="submit" className="submit-button-rehere">ดำเนินการต่อ</button>
+            
           </form>
         </main>
       </div>
