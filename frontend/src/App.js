@@ -69,6 +69,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <AuthProvider/>
       <Routes>
         <Route path='/' element={<Homepage />} />
         <Route path="/RegisterChoice" element={<RegisterChoice />} />
