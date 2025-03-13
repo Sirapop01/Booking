@@ -6,9 +6,6 @@ const { protect, superAdminAuth } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
 // ✅ สมัคร Admin (เฉพาะ SuperAdmin)
-router.post("/register", protect, superAdminAuth, upload.fields([
-  { name: "profileImage", maxCount: 1 },
-  { name: "idCardImage", maxCount: 1 },
-]), registerAdmin);
+router.post("/register", protect, superAdminAuth, upload.single('profileImage'), registerAdmin);
 
 module.exports = router;
