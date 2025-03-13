@@ -34,37 +34,15 @@ const Homepage = () => {
     setLoading(false);
   }, []);
   
-  const fetchArenas = async () => { // ✅ ประกาศฟังก์ชันให้ชัดเจน
+  const fetchArenas = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/api/arenas/getArenas");
+      const res = await axios.get("http://localhost:4000/api/arenas/arenasWithRatings");
       setArenas(res.data);
-      console.log("Arena Fetch", arenas)
     } catch (error) {
       console.error("❌ Error fetching arenas:", error);
     }
   };
-
-  const searchBySport = async (sportName) => {
-    setLoading(true);
-    try {
-      const res = await axios.get(`http://localhost:4000/api/sportscategories/searchBySport?sportName=${sportName}`);
-      setArenas(res.data);
-    } catch (error) {
-      console.error("❌ Error searching by sport:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSportSelection = (sport) => {
-    setSelectedSports((prevSports) => {
-      if (prevSports.includes(sport)) {
-        return prevSports.filter((s) => s !== sport);
-      } else {
-        return [...prevSports, sport];
-      }
-    });
-  };
+  
 
   const handleSportClick = (sportName) => {
     let updatedSports = [...selectedSports];
@@ -101,12 +79,12 @@ const Homepage = () => {
 
       const sortedArenas = res.data.sort((a, b) => a.distance - b.distance);
       setArenas(sortedArenas);
+
+      console.log("📢 Arenas Data:", sortedArenas); // ✅ Debugging
     } catch (error) {
       console.error("❌ Error searching arenas:", error);
     }
   };
-
-
 
   if (loading) return <div>Loading...</div>;
 
