@@ -23,9 +23,11 @@ const BookingHistorySchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "completed", "canceled"],
+      enum: ["pending", "completed", "canceled", "rejected"], // ✅ เพิ่ม "rejected"
       default: "pending",
     },
+    rejectionReason: { type: String, default: null }, // ✅ เพิ่มช่องเก็บเหตุผลการปฏิเสธ
+
     totalPrice: {
       type: Number,
       required: true,

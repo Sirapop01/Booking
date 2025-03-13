@@ -6,7 +6,7 @@ const Stadium = require("../models/Stadium");
 // ✅ ฟังก์ชันเพิ่มการจองใหม่
 exports.addBookingHistory = async (req, res) => {
     try {
-        const { userId, stadiumId, subStadiumId, ownerId, sportName, timeSlots, bookingDate, status } = req.body;
+        const { userId, stadiumId, subStadiumId, ownerId, sportName, timeSlots, bookingDate, status , rejectionReason } = req.body;
 
         // ✅ ตรวจสอบข้อมูลที่ต้องมี
         if (!userId || !stadiumId || !subStadiumId || !ownerId || !sportName || !timeSlots || !bookingDate) {
@@ -62,12 +62,13 @@ exports.getUserBookingHistory = async (req, res) => {
 
         console.log("🔍 กำลังดึงประวัติการจองของ userId:", userId);
 
-        // ✅ ดึงข้อมูลการจองพร้อมข้อมูลสนามย่อย
+        // ✅ ดึงข้อมูล `rejectionReason` เพิ่มเติม
         const bookings = await BookingHistory.find({ userId })
+            .select("_id fieldName stadiumId status rejectionReason totalPrice expiresAt details")
             .populate({ path: "details.subStadiumId", select: "name images", options: { strictPopulate: false } })
             .lean();
 
-        console.log("📌 Raw Bookings from DB:", bookings);
+            console.log("📌 Raw Bookings from DB:", bookings); // ✅ ตรวจสอบว่ามี rejectionReason หรือไม่
 
         if (!bookings.length) {
             console.log("❌ ไม่พบประวัติการจอง");
@@ -92,11 +93,12 @@ exports.getUserBookingHistory = async (req, res) => {
                 stadiumImage: arena?.images?.[0] || "https://via.placeholder.com/150",
                 totalPrice: booking.totalPrice,
                 status: booking.status,
+                rejectionReason: booking.rejectionReason || null, // ✅ เพิ่ม rejectionReason
                 expiresAt: booking.expiresAt,
                 details: booking.details.map(detail => ({
                     subStadiumId: detail.subStadiumId?._id || null,
                     subStadiumName: detail.subStadiumId?.name || "ไม่พบชื่อสนามย่อย",
-                    sportName: detail.sportName, // ✅ ดึง sportName มาด้วย
+                    sportName: detail.sportName,
                     bookingDate: detail.bookingDate,
                     startTime: detail.startTime,
                     endTime: detail.endTime,
@@ -114,7 +116,6 @@ exports.getUserBookingHistory = async (req, res) => {
         res.status(500).json({ message: "❌ ไม่สามารถดึงประวัติการจองได้" });
     }
 };
-
 
 
 // ✅ ฟังก์ชันใหม่สำหรับบันทึกการจองโดยตรง
