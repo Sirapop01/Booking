@@ -24,6 +24,10 @@ const Homepageopera = () => {
     }
   }, []);
 
+  const handleNavigate = () => {
+    navigate("/reviewowner");
+  };
+
   return (
     <>
       <Navbar />
@@ -88,9 +92,9 @@ const Homepageopera = () => {
               className="chat-icon77"
               aria-label="ไอคอนรีวิวทั้งหมด"
             />
-            <button className="review-text77" aria-label="ดูรีวิวทั้งหมด">
-              รีวิวทั้งหมด
-            </button>
+          <button onClick={() => navigate(`/reviewowner/${ownerId}`)}>
+      รีวิวทั้งหมด
+    </button>
           </div>
         </div>
       </div>

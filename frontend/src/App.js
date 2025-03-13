@@ -45,6 +45,7 @@ import ReviewPage from './component/ReviewPage/ReviewPage';
 import Payment from './component/Payment/Payment';
 import AuthProvider from './AuthProvider';
 import ConfirmBooking from './component/ConfirmBooking/ConfirmBooking';
+import ReviewOwner from './component/reviewowner/reviewowner';
 
 function App() {
   const token = localStorage.getItem("token") || sessionStorage.getItem("token");
@@ -106,6 +107,7 @@ function App() {
         <Route path="/Promoowner" element={<Promoowner />} />
         <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
         <Route path="/review/:stadiumId" element={<ReviewPage />} />
+        <Route path="/reviewowner/:ownerId" element={<ReviewOwner />} />
         <Route path="/Booking" element={<Booking />} />
         <Route path="/historybooking" element={<HistoryBooking />} />
         <Route path='/payment' element={<Payment />} />
