@@ -251,6 +251,16 @@
   color: white;
 }
 
+.disabled-substadium {
+  background-color: #d3d3d3 !important; /* เปลี่ยนสีปุ่มเป็นเทา */
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
+.disabled-substadium img {
+  filter: grayscale(100%); /* ทำให้รูปเป็นขาวดำ */
+}
+
 
 /* ✅ ปุ่มจอง */
 .booking101-button {
@@ -338,5 +348,42 @@
   top: -30px !important; /* ย้ายขึ้นไป 30px */
   bottom: auto !important;
 }
+
+.review-filter {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: center;
+}
+
+.review-filter button {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.review-filter button.active {
+  background: #ffc107;
+  color: white;
+  font-weight: bold;
+}
+
+.star-filter {
+  color: gold;
+  font-size: 18px;
+}
+
+.review-no-reviews {
+  color: black;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+}
+
 
 

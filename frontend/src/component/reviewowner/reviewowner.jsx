@@ -3,17 +3,18 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Slider from "react-slick";
 import { FaStar } from "react-icons/fa";
-import Swal from "sweetalert2";
 import "./reviewowner.css";
+import Navbar from "../Navbar/Navbar";
 
 const API_URL = "http://localhost:4000/api"; // ✅ URL Backend
 
 const ReviewOwner = () => {
-  const { ownerId } = useParams(); // ✅ ดึง ownerId จาก URL
-  const [reviews, setReviews] = useState([]); // ✅ เก็บข้อมูลรีวิว
-  const [stadiumName, setStadiumName] = useState(""); // ✅ เก็บชื่อสนาม
+  const { ownerId } = useParams();
+  const [reviews, setReviews] = useState({});
+  const [filteredReviews, setFilteredReviews] = useState({});
+  const [selectedRating, setSelectedRating] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const reviewRef = useRef(null); // ✅ ใช้ Ref เพื่อเลื่อนลงไปที่กล่องรีวิวอัตโนมัติ
+  const reviewRef = useRef(null);
 
   console.log("📌 ownerId:", ownerId);
 
@@ -25,34 +26,36 @@ const ReviewOwner = () => {
 
   useEffect(() => {
     if (!isLoading && reviewRef.current) {
-      reviewRef.current.scrollIntoView({ behavior: "smooth" }); // ✅ เลื่อนลงไปที่กล่องรีวิวอัตโนมัติ
+      reviewRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [isLoading]);
 
-  // ✅ ดึงข้อมูลรีวิวของเจ้าของสนาม
   const fetchOwnerReviews = async () => {
     try {
       setIsLoading(true);
       console.log("📡 Fetching owner reviews from:", `${API_URL}/reviews/owner/${ownerId}`);
-  
+
       const response = await axios.get(`${API_URL}/reviews/owner/${ownerId}`);
       console.log("📌 Owner Reviews Data:", response.data);
-  
+
       if (response.data.length > 0) {
-        // ✅ จัดกลุ่มรีวิวตามสนาม
         const groupedReviews = response.data.reduce((acc, review) => {
           const stadiumId = review.stadiumId?._id;
-          const stadiumName = review.stadiumId?.fieldName || "ไม่ทราบชื่อสนาม";
-          
+          const stadiumName = review.stadiumId?.fieldName || "";
+
+          // ✅ ถ้าไม่มีชื่อสนาม ให้ข้ามไป
+          if (!stadiumName.trim()) return acc;
+
           if (!acc[stadiumId]) {
             acc[stadiumId] = { stadiumName, reviews: [] };
           }
           acc[stadiumId].reviews.push(review);
-  
+
           return acc;
         }, {});
-  
+
         setReviews(groupedReviews);
+        setFilteredReviews(groupedReviews);
       }
     } catch (error) {
       console.error("🚨 Error fetching owner reviews:", error.response?.data || error.message);
@@ -60,14 +63,34 @@ const ReviewOwner = () => {
       setIsLoading(false);
     }
   };
-  
-  
+
+  const filterReviewsByRating = (rating) => {
+    setSelectedRating(rating);
+
+    if (rating === 0) {
+      setFilteredReviews(reviews);
+      return;
+    }
+
+    const newFilteredReviews = Object.keys(reviews).reduce((acc, stadiumId) => {
+      const stadiumName = reviews[stadiumId].stadiumName;
+      const filtered = reviews[stadiumId].reviews.filter((review) => review.rating === rating);
+
+      if (filtered.length > 0) {
+        acc[stadiumId] = { stadiumName, reviews: filtered };
+      }
+
+      return acc;
+    }, {});
+
+    setFilteredReviews(newFilteredReviews);
+  };
 
   const reviewSliderSettings = {
     dots: true,
     infinite: false,
     speed: 500,
-    slidesToShow: 1,
+    slidesToShow: 2,
     slidesToScroll: 1,
     autoplay: false,
     arrows: true,
@@ -75,15 +98,33 @@ const ReviewOwner = () => {
 
   return (
     <div className="review-owner-container">
+      <Navbar />
       <h1>🏟️ รีวิวสนามของฉัน</h1>
-  
+
+      <div className="review-filter">
+        <button className={selectedRating === 0 ? "active" : ""} onClick={() => filterReviewsByRating(0)}>
+           ทั้งหมด
+        </button>
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            className={selectedRating === star ? "active" : ""}
+            onClick={() => filterReviewsByRating(star)}
+          >
+            {[...Array(star)].map((_, index) => (
+              <FaStar key={index} className="star-filter" />
+            ))}
+          </button>
+        ))}
+      </div>
+
       {isLoading ? (
         <p>⏳ กำลังโหลดข้อมูล...</p>
-      ) : Object.keys(reviews).length > 0 ? (
+      ) : Object.keys(filteredReviews).length > 0 ? (
         <div>
-          {Object.keys(reviews).map((stadiumId) => {
-            const { stadiumName, reviews: stadiumReviews } = reviews[stadiumId];
-  
+          {Object.keys(filteredReviews).map((stadiumId) => {
+            const { stadiumName, reviews: stadiumReviews } = filteredReviews[stadiumId];
+
             return (
               <div key={stadiumId} className="review-section">
                 <h2 className="review-stadium-title">🏟️ {stadiumName}</h2>
@@ -110,11 +151,10 @@ const ReviewOwner = () => {
           })}
         </div>
       ) : (
-        <p>❌ ยังไม่มีรีวิวสำหรับสนามของคุณ</p>
+        <p className="review-no-reviews">❌ ยังไม่ได้รับรีวิว</p>
       )}
     </div>
   );
-  
 };
 
 export default ReviewOwner;

@@ -16,6 +16,8 @@ const PaymentSchema = new mongoose.Schema(
       default: "paid",
     }, // สถานะของการชำระเงิน
 
+    rejectionReason: { type: String, default: null }, // ✅ เพิ่มช่องเก็บเหตุผลการปฏิเสธ
+
     details: [
       {
         subStadiumId: { type: mongoose.Schema.Types.ObjectId, ref: "SubStadium" },

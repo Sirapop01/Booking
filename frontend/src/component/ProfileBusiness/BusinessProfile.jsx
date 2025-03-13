@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import "./BusinessProfile.css";
 
 const BusinessProfile = () => {
   const [isEditable, setIsEditable] = useState(false);
@@ -169,46 +170,28 @@ const BusinessProfile = () => {
   };
 
   return (
-    <div className="profile-container" style={{
-      overflowY: "hidden",
-      display: "flex",
-      minHeight: "100vh",
-    }}>
-      {/* เมนูด้านซ้าย */}
-      <aside
-        className="sidebar"
-        style={{
-          backgroundColor: "#0d1b2a", // น้ำเงินเข้มแบบเต็ม
-          height: "100vh", // เต็มความสูงของหน้าจอ
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          paddingTop: "8%"
-        }}
-      >
-
-
-        <nav>
+    <div className="business-profile-container">
+      {/* 🔹 Header Navigation */}
+      <header className="business-profile-header">
+        <nav className="business-nav-menu">
           <button onClick={() => navigate("/stadium-list")}>สนามของฉัน</button>
           <button onClick={() => navigate(`/Ownerledger/${id}`)}>บัญชีรายรับ</button>
           <button onClick={() => navigate(`/Addpromotion`)}>เพิ่มโปรโมชั่น</button>
           <button>รีวิวทั้งหมด</button>
           <button>ตรวจสอบการจ่ายเงิน</button>
-          <button className="logout-button" onClick={toggleLogout}>ลงชื่อออก</button>
+          
         </nav>
-
-      </aside>
-
-      {/* ข้อมูลผู้ใช้ */}
-      <main className="profile-content">
-        <h2>ข้อมูลเจ้าของสนาม</h2>
-
-        {/* ข้อมูลส่วนตัว */}
-        <section className="user-info">
-          <h3>
-            📌 ข้อมูลส่วนตัว
-            <FaPencilAlt className="edit-icon" onClick={toggleEdit} />
-          </h3>
+      </header>
+  
+      {/* 🔹 Profile Content (Combined Card) */}
+      <main className="business-profile-content">
+        
+  
+        {/* ✅ รวมข้อมูลส่วนตัว + บริเวณที่สนใจ */}
+        <section className="business-profile-card">
+        <div className="business-profile-card-header">
+              <h2>ข้อมูลเจ้าของสนาม</h2>
+        </div>
           <div className="form-grid">
             <div className="input-group">
               <label>ชื่อ</label>
@@ -250,12 +233,28 @@ const BusinessProfile = () => {
               <input type="idCard" name="idCard" value={member?.idCard || ""} readOnly />
             </div>
           </div>
+
+
+          {/* ✅ ปุ่มบันทึก + ลืมรหัสผ่าน + แก้ไขโปรไฟล์ + Logout */}
+          {isEditable && <button className="business-save-button" onClick={updateMemberData}>บันทึก</button>}
+
+        
+         {/* ✅ Buttons Aligned Horizontally */}
+          <div className="business-action-container">
+            <button className="business-edit-profile-button" onClick={toggleEdit}>
+              แก้ไขโปรไฟล์
+            </button>
+           
+            <button className="business-logout-button" onClick={toggleLogout}>
+              ลงชื่อออก
+            </button>
+          </div>
+          <h3 className="business-forgot-password" onClick={() => navigate("/forgot-password")}>
+              ลืมรหัสผ่าน ?
+            </h3>
         </section>
-
-        {isEditable && <button className="save-button" onClick={updateMemberData}>บันทึก</button>}
-        <h3 className="forgot-password-user" onClick={() => navigate("/forgot-password")}>ลืมรหัสผ่าน ?</h3>
       </main>
-
+  
       {/* 🔹 Logout Popup Modal */}
       {showLogoutModal && (
         <div className="logout-popup-overlay" onClick={() => setShowLogoutModal(false)}>
@@ -263,15 +262,15 @@ const BusinessProfile = () => {
             <p>คุณต้องการออกจากระบบหรือไม่?</p>
             <div className="logout-buttons">
               <button className="confirm-btn" onClick={confirmLogout}>ยืนยัน</button>
-              <button className="cancel-btn" onClick={() => setShowLogoutModal(false)}>ยกเลิก</button>
+              <button className="confirm-btn" onClick={() => setShowLogoutModal(false)}>ยกเลิก</button>
             </div>
           </div>
         </div>
       )}
     </div>
-
-
   );
+  
+  
 };
 
 export default BusinessProfile;

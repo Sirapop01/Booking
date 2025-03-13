@@ -78,24 +78,25 @@ const Homepageopera = () => {
               </button>
             </div>
 
-            {/* รีวิวล่าสุด */}
-            <div className="menu-box77 review-box77" tabIndex="0">
-              <h2 className="review-title77">รีวิวล่าสุด</h2>
+             {/* รีวิวทั้งหมด */}
+             <div className="menu-box77" tabIndex="0">
+              <img
+                src={commentregisIcon}
+                alt="รีวิวทั้งหมด"
+                className="menu-icon77"
+                aria-label="ไอคอนรีวิวทั้งหมด"
+              />
+              <button
+                className="menu-text77"
+                aria-label="ดูรีวิวทั้งหมด"
+                onClick={() => navigate(`/reviewowner/${ownerId}`)}
+              >
+                รีวิวทั้งหมด
+              </button>
             </div>
           </div>
 
-          {/* รีวิวทั้งหมด */}
-          <div className="review-all77" tabIndex="0">
-            <img
-              src={commentregisIcon}
-              alt="รีวิวทั้งหมด"
-              className="chat-icon77"
-              aria-label="ไอคอนรีวิวทั้งหมด"
-            />
-          <button onClick={() => navigate(`/reviewowner/${ownerId}`)}>
-      รีวิวทั้งหมด
-    </button>
-          </div>
+         
         </div>
       </div>
     </>

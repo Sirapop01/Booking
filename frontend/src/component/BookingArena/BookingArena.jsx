@@ -7,6 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import Swal from "sweetalert2";
 import Navbar from '../Navbar/Navbar';
 import Slider from "react-slick";
+import { FaStar } from "react-icons/fa";
 
 const BookingArena = () => {
   const { id } = useParams(); // รับ arenaId จาก URL
@@ -19,6 +20,9 @@ const BookingArena = () => {
   const [isFavorite, setIsFavorite] = useState(false); // ✅ เช็คว่าสนามเป็นรายการโปรดหรือไม่
   const [userId, setUserId] = useState(null); // ✅ กำหนดค่า userId
   const [reviews, setReviews] = useState([]);
+  const [selectedRating, setSelectedRating] = useState(0); // ⭐ จำนวนดาวที่เลือก
+  const [filteredReviews, setFilteredReviews] = useState([]); // ✅ รีวิวที่ถูกกรอง
+
   const imageCount = arena?.images?.length || 0;
   const API_URL = "http://localhost:4000/api";
 
@@ -42,8 +46,19 @@ const BookingArena = () => {
     autoplaySpeed: 3000,   // ✅ ความเร็วการเปลี่ยนรีวิว (3 วินาที)
     adaptiveHeight: true,  // ✅ ปรับความสูงตามเนื้อหา
   };
-  
 
+  const filterReviewsByRating = (rating) => {
+    setSelectedRating(rating);
+  
+    if (rating === 0) {
+      setFilteredReviews(reviews); // ✅ แสดงทุกรีวิวถ้าเลือก "ทั้งหมด"
+      return;
+    }
+  
+    const filtered = reviews.filter((review) => review.rating === rating);
+    setFilteredReviews(filtered);
+  };
+  
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
@@ -355,12 +370,29 @@ const handleBooking = () => {
                   </span>
                 </div>
               </h2>
+              <div className="review-filter">
+  <button className={selectedRating === 0 ? "active" : ""} onClick={() => filterReviewsByRating(0)}>
+    ทั้งหมด
+  </button>
+  {[1, 2, 3, 4, 5].map((star) => (
+    <button
+      key={star}
+      className={selectedRating === star ? "active" : ""}
+      onClick={() => filterReviewsByRating(star)}
+    >
+      {[...Array(star)].map((_, index) => (
+        <FaStar key={index} className="star-filter" />
+      ))}
+    </button>
+  ))}
+</div>
+
                {/* ✅ ส่วนแสดงรีวิวของลูกค้า */}
             {/* ✅ ส่วนแสดงรีวิวของลูกค้าแบบเลื่อนอัตโนมัติ */}
             <h3>รีวิวจากลูกค้า</h3>
-{reviews.length > 0 ? (
-  <Slider {...reviewSettings}>  {/* ✅ ใช้ Slider */}
-    {reviews.map((review) => (
+{filteredReviews.length > 0 ? (
+  <Slider {...reviewSettings}>
+    {filteredReviews.map((review) => (
       <div key={review._id} className="review-item">
         <p><strong>{review.userId?.firstName || "ไม่ทราบชื่อ"} {review.userId?.lastName || ""}</strong></p>
         <p>⭐ {review.rating}</p>
@@ -369,8 +401,9 @@ const handleBooking = () => {
     ))}
   </Slider>
 ) : (
-  <p>❌ ยังไม่มีรีวิว</p>
+  <p className="review-no-reviews">❌ ไม่มีรีวิวที่ตรงกับการค้นหา</p>
 )}
+
 
 
               <div className="google-map-box">
@@ -407,27 +440,26 @@ const handleBooking = () => {
                 Object.entries(subStadiums).map(([sportName, stadiums]) => (
                   <div key={sportName} className="sport-group">
                     <h3 className="sport-title">{sportName}</h3>
-                    <div className="sub-stadium-row">
-                      {stadiums.map((sub) => (
-                        <button
-                        key={sub._id}
-                        className={`sub-stadium-button ${selectedSubStadiums.some(s => s._id === sub._id) ? "selected" : ""}`}
-                        onClick={() => toggleSubStadiumSelection(sub._id)}
-                      >
-                        {/* รูปภาพของสนามย่อย */}
-                        <img src={sub.images.length > 0 ? sub.images[0] : "https://via.placeholder.com/150"} alt={sub.name} />
-                      
-                        {/* ชื่อสนามย่อย */}
-                        <p>{sub.name}</p>
-                      
-                        {/* เอฟเฟกต์เส้นขอบ */}
-                        <svg viewBox="0 0 180 140">
-                          <polyline points="1,1 179,1 179,139 1,139 1,1"/>
-                        </svg>
-                      </button>
-                      
-                      ))}
-                    </div>
+                      <div className="sub-stadium-row">
+                        {stadiums.map((sub) => (
+                          <button
+                            key={sub._id}
+                            className={`sub-stadium-button ${selectedSubStadiums.some(s => s._id === sub._id) ? "selected" : ""} ${sub.status === "ปิดชั่วคราว" ? "disabled-substadium" : ""}`}
+                            onClick={() => sub.status !== "ปิดชั่วคราว" && toggleSubStadiumSelection(sub._id)}
+                            disabled={sub.status === "ปิดชั่วคราว"}
+                          >
+                            <img 
+                              src={sub.images.length > 0 ? sub.images[0] : "https://via.placeholder.com/150"} 
+                              alt={sub.name} 
+                              className={sub.status === "ปิดชั่วคราว" ? "grayscale" : ""}
+                            />
+                            <p>{sub.name}</p>
+                            <svg viewBox="0 0 180 140">
+                              <polyline points="1,1 179,1 179,139 1,139 1,1"/>
+                            </svg>
+                          </button>
+                        ))}
+                      </div>
                   </div>
                 ))
               ) : (
@@ -437,9 +469,13 @@ const handleBooking = () => {
           </div>
 
         {/* ปุ่มจอง */}
-        <button className="booking101-button" onClick={handleBooking}>
-          จองสนาม ({selectedSubStadiums.length})
-        </button>
+          <button 
+              className="booking101-button" 
+              onClick={handleBooking} 
+              disabled={!arena.open}
+          >
+              {arena.open ? `จองสนาม (${selectedSubStadiums.length})` : "สนามปิดในขณะนี้"}
+          </button>
       </div>
       </div>
     </>
