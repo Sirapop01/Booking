@@ -87,13 +87,19 @@ useEffect(() => {
   };
 
   return (
+    <div className = "background-manage-account">
     <div className="manage-account-container">
       {/* ✅ ปุ่มกลับไปยังหน้า Home */}
-      <a href="/superadmin/dashboard" className="home-button">
-        <img src={homeLogo} alt="Home Logo" className="home-logo" />
-      </a>
+        <header className="admin-header">
+        {/* ✅ ปุ่มกลับไปยังหน้า Dashboard */}
+        <a href="/superadmin/dashboard" className="home-button">
+          <img src={homeLogo} alt="Home Logo" className="home-logo" />
+        </a>
 
-      <h1 className="page-title">การจัดการบัญชี</h1>
+        {/* ✅ ชื่อหัวข้อหน้า */}
+        <h1 className="page-title-manage">การจัดการบัญชี</h1>
+      </header>
+
 
       <div className="account-content">
         {/* 📌 Container สำหรับ User List */}
@@ -180,22 +186,24 @@ useEffect(() => {
     </div>
 
     {/* ✅ ปุ่มดำเนินการ */}
-    <div className="action-buttons">
-      <button className="delete-button3" onClick={() => setShowDeletePopup(true)}>ลบบัญชี</button>
-      <button className={`blacklist-button ${selectedUser.status === "blacklisted" ? "remove-blacklist" : ""}`} 
-        onClick={() => toggleBlacklist(selectedUser._id)}>
-        {selectedUser.status === "blacklisted" ? "ยกเลิก Blacklist" : "เพิ่มใน Blacklist"}
-      </button>
-    </div>
-    {/* ✅ ปุ่มใหม่ไปยังประวัติการจอง */}
+<div className="action-buttons-manage">
+  <button className="delete-button-manage" onClick={() => setShowDeletePopup(true)}>ลบบัญชี</button>
+  <button className={`blacklist-button-manage ${selectedUser.status === "blacklisted" ? "remove-blacklist" : ""}`} 
+    onClick={() => toggleBlacklist(selectedUser._id)}>
+    {selectedUser.status === "blacklisted" ? "ยกเลิก Blacklist" : "เพิ่มใน Blacklist"}
+  </button>
+
+  {/* ✅ ปุ่มใหม่ไปยังประวัติการจอง (เฉพาะผู้ใช้ทั่วไป) */}
   {!isOwnerMode && (
     <button 
-      className="history-button" 
+      className="history-button-manage" 
       onClick={() => navigate(`/historybooking/${selectedUser._id}`)}
     >
       ดูประวัติการจอง
     </button>
   )}
+</div>
+
   </div>
 )}
       </div>
@@ -219,6 +227,7 @@ useEffect(() => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };
