@@ -1,0 +1,119 @@
+.review-owner-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  .review-owner-container h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 15px;
+  }
+
+  .reviewowner-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #34495e;
+    margin-bottom: 10px;
+    text-align: center; /* ✅ จัดให้อยู่ตรงกลาง */
+    display: block; /* ✅ ทำให้เป็นบล็อกเพื่อให้ text-align มีผล */
+}
+
+  
+  .review-owner-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .review-owner-card {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .review-owner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+  }
+  
+  .review-owner-date {
+    font-size: 14px;
+    color: gray;
+  }
+  
+  .review-owner-rating {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin: 5px 0;
+  }
+  
+  .review-owner-star {
+    color: gold;
+  }
+  
+  .review-owner-text {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .review-owner-empty {
+    font-size: 18px;
+    color: #888;
+  }
+  
+  .review-slider {
+    margin: 20px auto;
+  }
+  .review-slide {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .review-comment {
+    font-size: 16px;
+    color: #333;
+    margin-top: 10px;
+  }
+  .review-slide {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .review-stadium-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 15px;
+  }
+  .review-section {
+    margin-bottom: 40px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .reviewowner-user {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+  }
