@@ -39,49 +39,43 @@ const AdminChat = () => {
   // ✅ โหลดรายชื่อผู้ใช้ที่มีแชท
   useEffect(() => {
     if (!token) return;
-
-    setLoading(true);
-    console.log("📡 Fetching all chat users with token:", token);
-
-    axios
-      .get("http://localhost:4000/api/chat/chat-users", {
-        headers: { Authorization: token },
-      })
-      .then((response) => {
-        console.log("✅ Users received from API:", response.data.data);
-
-        if (!Array.isArray(response.data.data)) {
-          throw new Error("รูปแบบข้อมูลจาก API ไม่ถูกต้อง");
-        }
-
-        // ✅ ตรวจสอบ `user.role` ก่อนใช้ `map()`
-        response.data.data.forEach(user => {
-          console.log("🔍 Checking user:", user);
+  
+    const fetchUserList = () => {
+      console.log("📡 Fetching chat users...");
+      axios
+        .get("http://localhost:4000/api/chat/chat-users", {
+          headers: { Authorization: token },
+        })
+        .then((response) => {
+          console.log("✅ Users list updated:", response.data.data);
+  
+          if (!Array.isArray(response.data.data)) {
+            throw new Error("⚠️ API response format incorrect");
+          }
+  
+          const processedUsers = response.data.data.map(user => ({
+            ...user,
+            name: user.name || user.businessName || user.email || "ไม่ทราบชื่อ",
+          }));
+  
+          setUsers(processedUsers);
+  
+          // ถ้าไม่มี user ที่ถูกเลือกอยู่แล้ว ให้เลือกคนแรก
+          if (!selectedUser || !processedUsers.some(u => u._id === selectedUser?._id)) {
+            setSelectedUser(processedUsers[0] || null);
+          }
+        })
+        .catch((error) => {
+          console.error("❌ Error loading users:", error.response ? error.response.data : error.message);
         });
-
-        // ✅ ตรวจสอบให้แน่ใจว่า name มีค่าถูกต้อง
-        const processedUsers = response.data.data.map(user => ({
-          ...user,
-          name: user.name || user.businessName || user.email || "ไม่ทราบชื่อ"
-        }));
-
-        console.log("✅ Processed Users:", processedUsers);
-
-        setUsers(processedUsers);
-
-        if (processedUsers.length > 0 && processedUsers[0]._id) {
-          setSelectedUser(processedUsers[0]);
-        } else {
-          setSelectedUser(null);
-        }
-      })
-      .catch((error) => {
-        console.error("❌ Error fetching users:", error.response ? error.response.data : error.message);
-        setError("เกิดข้อผิดพลาดในการโหลดรายชื่อผู้ใช้");
-      })
-      .finally(() => setLoading(false));
-
-  }, [token]);
+    };
+  
+    fetchUserList(); // โหลดรายชื่อครั้งแรก
+    const userInterval = setInterval(fetchUserList, 5000); // รีเฟรชทุก 5 วินาที
+  
+    return () => clearInterval(userInterval); // ล้าง interval เมื่อ component ถูก unmount
+  }, [token, selectedUser]);
+  
 
   // ✅ กรอง Users ตามหมวดหมู่ที่เลือก
   const filteredUsers = users.filter((user) => {
@@ -183,9 +177,12 @@ const AdminChat = () => {
   };
 
   useEffect(() => {
-    if (selectedUser) {
-      fetchMessages();
-    }
+    if (!selectedUser) return;
+
+    fetchMessages();
+    const interval = setInterval(fetchMessages, 5000);
+
+    return () => clearInterval(interval);
   }, [selectedUser, fetchMessages]);
 
   return (
