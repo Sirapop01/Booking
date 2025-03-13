@@ -110,6 +110,21 @@ const ConfirmBooking = () => {
     console.log("🛠️ Debug: Booking ID ที่จะปฏิเสธ:", bookingId);
     console.log("🛠️ Debug: API URL:", apiUrl);
   
+    // ✅ Popup ให้แอดมินกรอกเหตุผล
+    const { value: rejectionReason } = await Swal.fire({
+      title: "กรุณาระบุเหตุผลที่ปฏิเสธ",
+      input: "textarea",
+      inputPlaceholder: "พิมพ์เหตุผลที่นี่...",
+      showCancelButton: true,
+      confirmButtonText: "✔️ ส่งเหตุผล",
+      cancelButtonText: "❌ ยกเลิก",
+    });
+  
+    if (!rejectionReason) {
+      Swal.fire("❌ ปฏิเสธไม่สำเร็จ", "กรุณาระบุเหตุผลในการปฏิเสธ", "error");
+      return;
+    }
+  
     Swal.fire({
       title: "ปฏิเสธการจอง?",
       text: "คุณแน่ใจหรือไม่ว่าต้องการปฏิเสธการจองนี้?",
@@ -117,13 +132,13 @@ const ConfirmBooking = () => {
       showCancelButton: true,
       confirmButtonText: "❌ ปฏิเสธ",
       cancelButtonText: "ยกเลิก",
-      reverseButtons: true
+      reverseButtons: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           const response = await axios.put(
             apiUrl,
-            {}, // ✅ ไม่ต้องใส่ body เพราะ id อยู่ใน URL แล้ว
+            { rejectionReason }, // ✅ ส่งเหตุผลไปด้วย
             { headers: { Authorization: `Bearer ${token}` } }
           );
   
@@ -134,7 +149,7 @@ const ConfirmBooking = () => {
           setBookings((prevBookings) =>
             prevBookings.map((booking) =>
               booking._id === selectedBooking._id
-                ? { ...booking, status: "rejected" }
+                ? { ...booking, status: "rejected", rejectionReason }
                 : booking
             )
           );
@@ -146,9 +161,7 @@ const ConfirmBooking = () => {
         }
       }
     });
-  };
-  
-  
+  };  
   
   
   return (

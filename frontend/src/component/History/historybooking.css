@@ -136,3 +136,12 @@
   text-align: center;
   width: fit-content;
 }
+
+/* ✅ ปรับสไตล์ให้เหตุผลปฏิเสธอยู่ติดกับ Status */
+.rejection-reason {
+  color: #d9534f; /* สีแดงเข้ม */
+  font-weight: bold;
+  margin-left: 10px; /* เว้นระยะห่างจาก Status */
+  display: inline-block; /* ให้อยู่ในบรรทัดเดียวกัน */
+}
+

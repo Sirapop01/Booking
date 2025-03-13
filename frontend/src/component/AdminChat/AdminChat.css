@@ -78,6 +78,20 @@
     border-bottom: 2px solid #004080;
 }
 
+/* ✅ จุดแจ้งเตือนข้อความใหม่ */
+.chat-notification-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    margin-left: 8px;
+    position: absolute;  /* ✅ ให้ Red Dot อยู่ด้านขวา */
+    right: 10px;  /* ✅ ชิดขวาของ .user-item2 */
+    top: 50%;
+    transform: translateY(-50%); /* ✅ จัดกึ่งกลางแนวตั้ง */
+}
+
 /* ✅ ปรับปรุง UI ของรายการผู้ใช้ */
 .user-item2 {
     padding: 12px 15px;
@@ -86,7 +100,12 @@
     color: white;
     transition: background 0.3s ease;
     font-size: 16px;
+    position: relative;  /* ✅ รองรับ Red Dot */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
+
 
 .user-item2:hover {
     background: #004080;
@@ -98,7 +117,8 @@
     border-left: 5px solid white;
 }
 
-/* 💬 กล่องแชท */
+
+/* ✅ กล่องแชท */
 .chat-box-container2 {
     width: 70%;
     background: white;
@@ -125,14 +145,15 @@
     border-bottom: 2px solid #005f99;
 }
 
-/* ✅ ข้อความ */
+/* ✅ ข้อความ (เพิ่ม Scrollbar) */
 .chat-messages {
     flex: 1;
     padding: 15px;
-    overflow-y: auto;
+    overflow-y: auto; /* ✅ เพิ่ม Scrollbar */
     display: flex;
     flex-direction: column;
     background: #f1f1f1;
+    max-height: 60vh; /* ✅ กำหนดความสูงสูงสุด */
 }
 
 /* ✅ ข้อความแต่ละอัน */
@@ -173,13 +194,15 @@
     border-radius: 4px;
 }
 
-/* ✅ กล่องป้อนข้อความ */
+/* ✅ ป้องกัน Input หายไป */
 .message-input {
     display: flex;
     padding: 12px;
     border-top: 2px solid #ddd;
     background: #fff;
     align-items: center;
+    position: sticky;  /* ✅ ให้ Input คงที่ */
+    bottom: 0;  /* ✅ อยู่ติดด้านล่าง */
 }
 
 .message-input input {

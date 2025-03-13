@@ -11,24 +11,31 @@ const ChatPopup = ({ isOpen, onClose, userId, userType }) => {
   const chatBoxRef = useRef(null);
 
   // ✅ โหลดประวัติแชท
+  // ✅ ฟังก์ชันโหลดประวัติแชททุก 5 วินาที (อัพเดตข้อความใหม่ตลอด)
   useEffect(() => {
     if (!isOpen || !userId || !userType) return;
 
     const userModel = userType === "customer" ? "User" : "BusinessOwner";
-    console.log("📢 Fetching chat history for:", { userId, userModel });
 
-    fetch(`http://localhost:4000/api/chat/history/${userId}/${userModel}`)
+    const fetchMessages = () => {
+      console.log("📢 Fetching chat history for:", { userId, userModel });
+
+      fetch(`http://localhost:4000/api/chat/history/${userId}/${userModel}`)
         .then((res) => res.json())
         .then((data) => {
-            console.log("📜 Received Chat Data:", data);
-            if (data.success) {
-                setMessages(data.data);
-            } else {
-                console.warn("⚠️ No chat history found");
-                setMessages([]);
-            }
+          console.log("📜 Received Chat Data:", data);
+          if (data.success) {
+            setMessages(data.data);
+            scrollToBottom();
+          }
         })
         .catch((err) => console.error("❌ Error loading chat history:", err));
+    };
+
+    fetchMessages(); // โหลดแชทครั้งแรก
+    const interval = setInterval(fetchMessages, 5000); // รีเฟรชทุก 5 วินาที
+
+    return () => clearInterval(interval);
   }, [isOpen, userId, userType]);
 
   // ✅ ฟังก์ชันส่งข้อความ

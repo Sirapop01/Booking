@@ -13,6 +13,7 @@ const Payment = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const bookingData = location.state?.bookingData || null;
+    const [timeLeft, setTimeLeft] = useState(300); // ✅ นับเวลาถอยหลังเริ่มที่ 3 นาที
 
     useEffect(() => {
         const fetchPaymentDetails = async () => {
@@ -49,6 +50,25 @@ const Payment = () => {
 
         fetchPaymentDetails();
     }, [bookingData]);
+
+    useEffect(() => {
+        if (timeLeft <= 0) {
+            Swal.fire({
+                icon: "error",
+                title: "⏳ หมดเวลาชำระเงิน!",
+                text: "ระบบจะพาคุณกลับไปยังหน้าเลือกสนาม",
+                confirmButtonText: "ตกลง"
+            }).then(() => {
+                navigate("/"); // ✅ กลับไปหน้าเลือกสนาม
+            });
+        }
+
+        const timer = setInterval(() => {
+            setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [timeLeft, navigate]);
 
     const cancelBooking = async (sessionId) => {
         try {
@@ -91,6 +111,17 @@ const Payment = () => {
 
 
     const handlePaymentSubmit = async () => {
+        if (timeLeft <= 0) {
+            Swal.fire({
+                icon: "error",
+                title: "❌ เลยกำหนดเวลาชำระเงิน",
+                text: "กรุณาจองใหม่อีกครั้ง",
+            }).then(() => {
+                navigate("/BookingArena");
+            });
+            return;
+        }
+
         if (!transferTime || !amount || !slipImage) {
             Swal.fire({
                 icon: "warning",
@@ -129,7 +160,7 @@ const Payment = () => {
                 text: "ข้อมูลการชำระเงินถูกบันทึกเรียบร้อย",
                 confirmButtonText: "ตกลง",
             }).then(() => {
-                navigate("/historybooking") // ✅ รีโหลดหน้าใหม่
+                navigate("/"); 
             });
 
         } catch (error) {
@@ -162,7 +193,21 @@ const Payment = () => {
                         <h2>เลขที่การจอง #{booking?.sessionId || "N/A"}</h2>
                         <p>📍 สนามกีฬา: {arenaInfo?.fieldName || "ไม่พบข้อมูลสนาม"}</p>
                         <p>📍 สนามย่อยที่จอง: {bookingData?.details?.map((detail) => detail.name).join(", ") || "ไม่พบข้อมูลสนามย่อย"}</p>
-                        <p>📅 วันที่: {new Date(bookingData?.details?.[0]?.bookingDate || new Date()).toLocaleDateString()}</p>
+                        <p>📅 วันที่:</p>
+                            <ul>
+                            {Object.entries(
+                                bookingData?.details?.reduce((acc, detail) => {
+                                const stadiumName = detail.name; // ✅ ใช้ชื่อสนามเป็น Key
+                                if (!acc[stadiumName]) acc[stadiumName] = [];
+                                acc[stadiumName].push(detail.bookingDate);
+                                return acc;
+                                }, {})
+                            ).map(([stadiumName, dates], index) => (
+                                <li key={index}>
+                                <span>{stadiumName} :</span> {new Date(dates[0]).toLocaleDateString()}
+                                </li>
+                            ))}
+                            </ul>
                         <p>🕒 เวลาที่จอง: </p>
                         <ul>
                             {bookingData?.details?.map((detail, index) => (
@@ -186,8 +231,10 @@ const Payment = () => {
                     <h3>ข้อมูลธนาคาร</h3>
                     <p>🏦 ธนาคาร: <strong>{bankInfo?.bank || "ไม่พบข้อมูล"}</strong></p>
                     <p>💳 เลขบัญชี: <strong>{bankInfo?.accountNumber || "N/A"}</strong></p>
-                    <p>👤 ชื่อบัญชี: {bankInfo?.accountName || "ไม่พบข้อมูล"}</p>
-                    <p className="payment-timer">⏳ ชำระเงินภายใน {new Date(booking?.expiresAt || new Date()).toLocaleTimeString()}</p>
+                    <p>👤 ชื่อบัญชี: <strong>{bankInfo?.accountName || "ไม่พบข้อมูล"}</strong></p>
+                    <p className="payment-timer">
+                        ⏳ เหลือเวลาชำระเงิน: <strong>{Math.floor(timeLeft / 60)} นาที {timeLeft % 60} วินาที</strong>
+                    </p>
                 </div>
 
                 <div className="slip-upload">
@@ -204,7 +251,9 @@ const Payment = () => {
             </div>
 
             <div className="payment-actions">
-                <button className="confirm-payment" onClick={handlePaymentSubmit}>ตรวจสอบการโอน</button>
+                <button className="confirm-payment" onClick={handlePaymentSubmit} disabled={timeLeft <= 0}>
+                    ตรวจสอบการโอน
+                </button>
                 <button onClick={() => cancelBooking(booking.sessionId)}>
                     ยกเลิกการจอง
                 </button>

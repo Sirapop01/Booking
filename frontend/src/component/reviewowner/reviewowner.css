@@ -1,13 +1,15 @@
+/* ✅ เพิ่มระยะห่างระหว่าง Navbar กับเนื้อหา */
 .review-owner-container {
     width: 100%;
-    max-width: 900px;
-    margin: 20px auto;
+    max-width: 1100px;
+    margin: 80px auto 20px; /* ✅ เพิ่ม margin-top: 80px เพื่อขยับลง */
     padding: 20px;
     background: white;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
   }
+  
 
   .review-owner-container h1 {
     font-size: 24px;
@@ -117,3 +119,46 @@
     font-weight: bold;
     color: #2c3e50;
   }
+
+  /* ✅ ปุ่มตัวกรองรีวิว */
+.review-filter {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .review-filter button {
+    background: #2c3e50;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 14px;
+  }
+  
+  .review-filter button:hover {
+    background: #69acbd;
+  }
+  
+  .review-filter button.active {
+    background: #289640;
+    color: white;
+    font-weight: bold;
+  }
+  
+  /* ✅ ปรับแต่งไอคอนดาว */
+  .star-filter {
+    color: gold;
+    font-size: 16px;
+  }
+  
+  .review-no-reviews {
+    color: black;  /* เปลี่ยนสีเป็นดำ */
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+  }
+  

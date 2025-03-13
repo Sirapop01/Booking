@@ -28,6 +28,8 @@ const AdminChat = () => {
   const token = getToken();
   const decoded = token ? jwtDecode(token) : null;
   const adminId = decoded?.id;
+  const [newMessages, setNewMessages] = useState({});
+
 
   useEffect(() => {
     if (!token || !decoded) {
@@ -39,49 +41,43 @@ const AdminChat = () => {
   // ✅ โหลดรายชื่อผู้ใช้ที่มีแชท
   useEffect(() => {
     if (!token) return;
-
-    setLoading(true);
-    console.log("📡 Fetching all chat users with token:", token);
-
-    axios
-      .get("http://localhost:4000/api/chat/chat-users", {
-        headers: { Authorization: token },
-      })
-      .then((response) => {
-        console.log("✅ Users received from API:", response.data.data);
-
-        if (!Array.isArray(response.data.data)) {
-          throw new Error("รูปแบบข้อมูลจาก API ไม่ถูกต้อง");
-        }
-
-        // ✅ ตรวจสอบ `user.role` ก่อนใช้ `map()`
-        response.data.data.forEach(user => {
-          console.log("🔍 Checking user:", user);
+  
+    const fetchUserList = () => {
+      console.log("📡 Fetching chat users...");
+      axios
+        .get("http://localhost:4000/api/chat/chat-users", {
+          headers: { Authorization: token },
+        })
+        .then((response) => {
+          console.log("✅ Users list updated:", response.data.data);
+  
+          if (!Array.isArray(response.data.data)) {
+            throw new Error("⚠️ API response format incorrect");
+          }
+  
+          const processedUsers = response.data.data.map(user => ({
+            ...user,
+            name: user.name || user.businessName || user.email || "ไม่ทราบชื่อ",
+          }));
+  
+          setUsers(processedUsers);
+  
+          // ถ้าไม่มี user ที่ถูกเลือกอยู่แล้ว ให้เลือกคนแรก
+          if (!selectedUser || !processedUsers.some(u => u._id === selectedUser?._id)) {
+            setSelectedUser(processedUsers[0] || null);
+          }
+        })
+        .catch((error) => {
+          console.error("❌ Error loading users:", error.response ? error.response.data : error.message);
         });
-
-        // ✅ ตรวจสอบให้แน่ใจว่า name มีค่าถูกต้อง
-        const processedUsers = response.data.data.map(user => ({
-          ...user,
-          name: user.name || user.businessName || user.email || "ไม่ทราบชื่อ"
-        }));
-
-        console.log("✅ Processed Users:", processedUsers);
-
-        setUsers(processedUsers);
-
-        if (processedUsers.length > 0 && processedUsers[0]._id) {
-          setSelectedUser(processedUsers[0]);
-        } else {
-          setSelectedUser(null);
-        }
-      })
-      .catch((error) => {
-        console.error("❌ Error fetching users:", error.response ? error.response.data : error.message);
-        setError("เกิดข้อผิดพลาดในการโหลดรายชื่อผู้ใช้");
-      })
-      .finally(() => setLoading(false));
-
-  }, [token]);
+    };
+  
+    fetchUserList(); // โหลดรายชื่อครั้งแรก
+    const userInterval = setInterval(fetchUserList, 5000); // รีเฟรชทุก 5 วินาที
+  
+    return () => clearInterval(userInterval); // ล้าง interval เมื่อ component ถูก unmount
+  }, [token, selectedUser]);
+  
 
   // ✅ กรอง Users ตามหมวดหมู่ที่เลือก
   const filteredUsers = users.filter((user) => {
@@ -121,19 +117,31 @@ const AdminChat = () => {
 
   // ✅ การตั้งค่า Socket.io
   useEffect(() => {
-    const socket = io("http://localhost:4000"); // ใช้ URL ของ server ของคุณ
-
-    // เมื่อมีข้อความใหม่เข้ามา
+    const socket = io("http://localhost:4000"); // เชื่อมต่อกับเซิร์ฟเวอร์ WebSocket
+  
     socket.on("receiveMessage", (newMessage) => {
-      console.log("📡 New message received:", newMessage);
-      setMessages((prevMessages) => [...prevMessages, newMessage]); // เพิ่มข้อความใหม่ใน messages
+      console.log("📩 New message received:", newMessage);
+  
+      // ✅ ตรวจสอบว่าแชทที่ได้รับมาจาก User จริง ๆ
+      const senderId = newMessage.senderId || newMessage.userId; 
+  
+      // ✅ ถ้าแชทที่เปิดอยู่เป็นของ senderId → ไม่ต้องแจ้งเตือน
+      if (selectedUser && selectedUser._id === senderId) {
+        return;
+      }
+  
+      // ✅ อัปเดต state เพื่อบอกว่า userId นี้มีข้อความใหม่
+      setNewMessages((prev) => ({
+        ...prev,
+        [senderId]: true, // เพิ่ม userId ที่มีข้อความใหม่
+      }));
     });
-
-    // Cleanup function เพื่อลบ socket เมื่อ component ถูก unmount
+  
     return () => {
-      socket.disconnect();
+      socket.off("receiveMessage"); // Cleanup WebSocket เมื่อ component ถูก unmount
     };
-  }, []); // ใช้ [] เพื่อให้ทำงานแค่ครั้งเดียวเมื่อ component โหลด
+  }, [selectedUser]);
+  
 
   // ✅ Scroll ไปยังข้อความล่าสุด
   useEffect(() => {
@@ -183,10 +191,14 @@ const AdminChat = () => {
   };
 
   useEffect(() => {
-    if (selectedUser) {
-      fetchMessages();
-    }
+    if (!selectedUser) return;
+
+    fetchMessages();
+    const interval = setInterval(fetchMessages, 5000);
+
+    return () => clearInterval(interval);
   }, [selectedUser, fetchMessages]);
+  
 
   return (
     <div className="admin-chat-container">
@@ -224,12 +236,23 @@ const AdminChat = () => {
             <div className="list-header2">ผู้ใช้</div>
             {filteredUsers.map((user) => (
               <div
-                key={user._id}
-                className={`user-item2 ${selectedUser?._id === user._id ? "selected" : ""}`}
-                onClick={() => setSelectedUser(user)}
-              >
-                {user.name || user.email || "ไม่ทราบชื่อ"} {/* ตรวจสอบการตั้งค่า name */}
-              </div>
+              key={user._id}
+              className={`user-item2 ${selectedUser?._id === user._id ? "selected" : ""}`}
+              onClick={() => {
+                setSelectedUser(user);
+            
+                // ✅ เคลียร์การแจ้งเตือนเมื่อเปิดแชท
+                setNewMessages((prev) => ({
+                  ...prev,
+                  [user._id]: false, 
+                }));
+              }}
+            >
+              {user.name || user.email || "ไม่ทราบชื่อ"}
+              
+              {/* ✅ แสดง Red Dot Notification */}
+              {newMessages[user._id] && <span className="chat-notification-dot"></span>}
+            </div>            
             ))}
           </div>
         </div>
