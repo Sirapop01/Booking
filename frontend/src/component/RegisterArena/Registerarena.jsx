@@ -407,6 +407,8 @@ const MatchWebForm = () => {
                 type="tel"
                 name="phone"
                 value={formData.phone}
+                inputMode="numeric"
+                maxLength="10"
                 onChange={handleInputChange}
                 placeholder="ระบุเบอร์โทรศัพท์"
               />

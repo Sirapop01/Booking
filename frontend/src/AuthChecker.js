@@ -17,11 +17,11 @@ const AuthChecker = () => {
                 "/customer-register",
                 "/forgot-password",
                 "/reset-password",
-                "/",
                 "/information",
                 "/promotion",
                 "/RegisterOpera",
                 "/RegisterArena",
+                "/RegisterChoice",
                 "/admin/register",
                 "/verifyOwners",
                 "/superadmin/login"

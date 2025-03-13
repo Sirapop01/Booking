@@ -43,7 +43,7 @@ import HistoryBooking from "./component/History/historybooking";
 import VerifyOnwers from "./component/Verifyowners/verifyowners";
 import ReviewPage from './component/ReviewPage/ReviewPage';
 import Payment from './component/Payment/Payment';
-import AuthProvider from './AuthProvider';
+import AuthChecker from './AuthChecker';
 import ConfirmBooking from './component/ConfirmBooking/ConfirmBooking';
 import ReviewOwner from './component/reviewowner/reviewowner';
 
@@ -69,7 +69,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <AuthProvider/>
+      <AuthChecker/>
       <Routes>
         <Route path='/' element={<Homepage />} />
         <Route path="/RegisterChoice" element={<RegisterChoice />} />
@@ -114,7 +114,7 @@ function App() {
         <Route path='/payment' element={<Payment />} />
         <Route path="/confirm-bookings/:stadiumId" element={<ConfirmBooking />} />
 
-        <Route element={<ProtectedRoute role="superadmin" />}>
+        <Route element={<ProtectedRoute roles={["superadmin", "admin"]} />}>
           <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/verifyOwners" element={<VerifyOnwers />} />
         </Route>

@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+
 /* ✅ Navbar หลัก */
 .navbar-homepage {
     display: flex;
@@ -100,6 +103,7 @@
     transition: opacity 0.3s ease, transform 0.3s ease;
     visibility: hidden;
     overflow: hidden;
+    
 }
 
 /* ✅ แสดง Dropdown เมื่อเปิด */
@@ -107,6 +111,7 @@
     opacity: 1;
     transform: translateY(0);
     visibility: visible;
+    
 }
 
 /* ✅ ปรับแต่งปุ่มใน Dropdown */
@@ -116,13 +121,13 @@
     padding: 8px 12px;
     text-align: left;
     font-size: 16px;
-    font-weight: bold;
     display: flex;
     align-items: center;
     gap: 6px;
     white-space: nowrap;
     width: 100%;
     transition: color 0.3s ease, transform 0.3s ease;
+    font-family: 'Kanit', sans-serif;
 }
 
 /* ✅ ปรับ `|` ให้อยู่ชิดซ้ายพอดี */

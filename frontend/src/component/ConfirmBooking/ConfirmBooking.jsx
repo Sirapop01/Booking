@@ -4,6 +4,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import "./ConfirmBooking.css";
 import Navbar from "../Navbar/Navbar";
+import { useParams } from "react-router-dom";
 
 const ConfirmBooking = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const ConfirmBooking = () => {
   const [bookings, setBookings] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+  const { stadiumId } = useParams();
 
   if (!token) {
     console.warn("🚨 Token missing! Redirecting to login...");
@@ -19,10 +21,9 @@ const ConfirmBooking = () => {
   }
 
   useEffect(() => {
-    axios
-      .get("http://localhost:4000/api/payments/paid-users", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+    axios.get(`http://localhost:4000/api/payments/paid-users?stadiumId=${stadiumId}`, { 
+      headers: { Authorization: `Bearer ${token}` }
+    })  
       .then(({ data }) => {
         console.log("✅ Paid Users Fetched", data);
         setUsers(data);

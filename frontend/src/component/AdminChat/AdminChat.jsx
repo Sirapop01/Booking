@@ -202,86 +202,95 @@ const AdminChat = () => {
 
   return (
     <div className="admin-chat-container">
-      <a href="/" className="home-button">
-        <img src={homeLogo} alt="Home Logo" className="home-logo" />
-      </a>
+      
+      <header className="admin-chat-header">
+        <a href="/superadmin/dashboard" className="home-button">
+          <img src={homeLogo} alt="Home Logo" className="home-logo" />
+        </a>
+        <h1 className="page-title2">ศูนย์ช่วยเหลือ</h1>
+      </header>
 
-      <h1 className="page-title2">ศูนย์ช่วยเหลือ</h1>
 
-      {/* ✅ ปุ่ม Toggle ลูกค้า / เจ้าของสนาม */}
-        <div className="category-toggle">
-          <button
-            className={activeCategory === "customer" ? "active" : ""}
-            onClick={() => {
-              console.log("📢 Switching to Customers");
-              setActiveCategory("customer");
-            }}
-          >
-            ลูกค้า (Customers)
-          </button>
-          <button
-            className={activeCategory === "owner" ? "active" : ""}
-            onClick={() => {
-              console.log("📢 Switching to Owners");
-              setActiveCategory("owner");
-            }}
-          >
-            เจ้าของสนาม (Owners)
-          </button>
-        </div>
+        
 
-      <div className="chat-content">
-        <div className="user-list-container2">
-          <div className="user-list2">
-            <div className="list-header2">ผู้ใช้</div>
-            {filteredUsers.map((user) => (
-              <div
-              key={user._id}
-              className={`user-item2 ${selectedUser?._id === user._id ? "selected" : ""}`}
-              onClick={() => {
-                setSelectedUser(user);
-            
-                // ✅ เคลียร์การแจ้งเตือนเมื่อเปิดแชท
-                setNewMessages((prev) => ({
-                  ...prev,
-                  [user._id]: false, 
-                }));
-              }}
-            >
-              {user.name || user.email || "ไม่ทราบชื่อ"}
-              
-              {/* ✅ แสดง Red Dot Notification */}
-              {newMessages[user._id] && <span className="chat-notification-dot"></span>}
-            </div>            
-            ))}
-          </div>
-        </div>
+     
+      <div className="chat-layout">
+  {/* 🔵 User List Container */}
+  <div className="user-list-container2">
+    
+    {/* ✅ ปุ่ม Toggle ลูกค้า / เจ้าของสนาม */}
+    <div className="category-toggle">
+      <button
+        className={activeCategory === "customer" ? "active" : ""}
+        onClick={() => setActiveCategory("customer")}
+      >
+        ลูกค้า
+      </button>
+      <button
+        className={activeCategory === "owner" ? "active" : ""}
+        onClick={() => setActiveCategory("owner")}
+      >
+        เจ้าของสนาม
+      </button>
+    </div>
 
-        <div className="chat-box-container2">
-          <div className="chat-box">
-            <div className="chat-header">
-              {selectedUser ? `แชทกับ ${selectedUser.name || selectedUser.email}` : "เลือกผู้ใช้"}
-            </div>
-            <div className="chat-messages">
-              {messages.length > 0
-                ? messages.map((msg, index) => (
-                    <div key={index} className={`chat-message ${msg.senderRole === "admin" ? "admin-message" : "user-message"}`}>
-                      <span>{msg.message}</span>
-                    </div>
-                  ))
-                : <div className="no-messages">📭 ไม่มีข้อความ</div>}
-            </div>
-          </div>
+    {/* ✅ รายชื่อผู้ใช้ */}
+    <div className="user-list2">
+      <div className="list-header2">ผู้ใช้</div>
+      {filteredUsers.map((user) => (
+        <div
+          key={user._id}
+          className={`user-item2 ${selectedUser?._id === user._id ? "selected" : ""}`}
+          onClick={() => {
+            setSelectedUser(user);
+            setNewMessages((prev) => ({
+              ...prev,
+              [user._id]: false, 
+            }));
+          }}
+        >
+          {user.name || user.email || "ไม่ทราบชื่อ"}
+          {newMessages[user._id] && <span className="chat-notification-dot"></span>}
+        </div>            
+      ))}
+    </div>
+  </div>
 
-          <div className="message-input">
-            <input type="text" placeholder="พิมพ์ข้อความ..." value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => e.key === "Enter" && sendMessageToUserOrOwner()} disabled={!selectedUser} />
-            <button onClick={sendMessageToUserOrOwner} disabled={!selectedUser}>
-              <img src={sendIcon} alt="Send" />
-            </button>
-          </div>
-        </div>
+  {/* 🟠 Chat Box Container */}
+  <div className="chat-box-container2">
+    <div className="chat-box">
+      <div className="chat-header">
+        {selectedUser ? `แชทกับ ${selectedUser.name || selectedUser.email}` : "เลือกผู้ใช้"}
+      </div>
+      <div className="chat-messages">
+        {messages.length > 0
+          ? messages.map((msg, index) => (
+              <div key={index} className={`chat-message ${msg.senderRole === "admin" ? "admin-message" : "user-message"}`}>
+                <span>{msg.message}</span>
+              </div>
+            ))
+          : <div className="no-messages">📭 ไม่มีข้อความ</div>}
       </div>
     </div>
+
+    <div className="message-input">
+      <input 
+        type="text" 
+        placeholder="พิมพ์ข้อความ..." 
+        value={newMessage} 
+        onChange={(e) => setNewMessage(e.target.value)} 
+        onKeyDown={(e) => e.key === "Enter" && sendMessageToUserOrOwner()} 
+        disabled={!selectedUser} 
+      />
+      <button onClick={sendMessageToUserOrOwner} disabled={!selectedUser}>
+        <img src={sendIcon} alt="Send" />
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+
+    
   );
 };
 

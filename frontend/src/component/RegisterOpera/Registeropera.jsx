@@ -197,7 +197,7 @@ const RegistrationForm = () => {
             <div className="form-group">
               <label>
                 เบอร์โทรศัพท์มือถือ * {errors.phoneNumber && <span className="error-message">{errors.phoneNumber}</span>}
-                <input type="text" name="phoneNumber" value={formData.phoneNumber} maxLength="10" onChange={handleChange} />
+                <input type="text" name="phoneNumber" value={formData.phoneNumber} maxLength="10" inputMode="numeric" onChange={handleChange} />
               </label>
 
               <label>
@@ -219,7 +219,7 @@ const RegistrationForm = () => {
                 />
                 <button
                   type="button"
-                  className="toggle-password"
+                  className="toggle-password-aeye"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <IoEyeSharp /> : <FaEyeSlash />}
@@ -253,9 +253,9 @@ const RegistrationForm = () => {
             </div>
 
 
-            <div className="submit-button-container">
-              <button type="submit" className="submit-button">ดำเนินการต่อ</button>
-            </div>
+            
+              <button type="submit" className="submit-button-rehere">ดำเนินการต่อ</button>
+            
           </form>
         </main>
       </div>

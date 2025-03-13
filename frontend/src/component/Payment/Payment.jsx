@@ -13,43 +13,75 @@ const Payment = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const bookingData = location.state?.bookingData || null;
-    const [timeLeft, setTimeLeft] = useState(300); // ✅ นับเวลาถอยหลังเริ่มที่ 3 นาที
+    const [timeLeft, setTimeLeft] = useState(300); // ✅ นับเวลาถอยหลังเริ่มที่ 5 นาที
 
     useEffect(() => {
         const fetchPaymentDetails = async () => {
             try {
                 const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-
-                console.log("📌 Token ที่ถูกดึงมา:", token);
+    
                 if (!token) {
                     console.log("❌ No token found in storage");
                     return;
                 }
-
+    
                 let sessionId = bookingData?.sessionId;
                 console.log("📌 sessionId ที่ส่งไป Backend:", sessionId);
-
+    
                 const response = await axios.get(
                     `http://localhost:4000/api/payments/pending?sessionId=${sessionId}`,
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
-
+    
                 console.log("✅ ข้อมูลที่ได้รับจาก API:", response.data);
                 setPaymentData(response.data);
-
+    
+                // ✅ ดึงค่าหมดเวลา (`expiresAt`) จาก API และตรวจสอบก่อนบันทึก
+                let expiresAt = new Date(response.data.booking.expiresAt).getTime();
+                const storedExpiresAt = localStorage.getItem("expiresAt");
+    
+                if (!storedExpiresAt || parseInt(storedExpiresAt) < expiresAt) {
+                    localStorage.setItem("expiresAt", expiresAt);
+                }
+    
+                updateCountdown(expiresAt);
             } catch (error) {
                 console.error("❌ Error fetching payment details:", error);
-                if (error.response) {
-                    console.error("❌ API Response Status:", error.response.status);
-                    console.error("❌ API Response Data:", error.response.data);
-                }
             } finally {
                 setLoading(false);
             }
         };
-
+    
         fetchPaymentDetails();
     }, [bookingData]);
+    
+
+    // ✅ ฟังก์ชันอัปเดตเวลาที่เหลือ
+    const updateCountdown = (expiresAt) => {
+        const now = new Date().getTime();
+        const remainingTime = Math.max((expiresAt - now) / 1000, 0); // แปลง ms เป็นวินาที
+        setTimeLeft(remainingTime);
+    };
+
+    // ✅ ตั้งค่าให้จับเวลาลดลงโดยไม่รีเซ็ตเมื่อรีเฟรช
+    useEffect(() => {
+        let expiresAt = localStorage.getItem("expiresAt");
+        
+        if (expiresAt) {
+            expiresAt = parseInt(expiresAt, 10);
+            updateCountdown(expiresAt);
+        }
+    
+        const timer = setInterval(() => {
+            let storedExpiresAt = localStorage.getItem("expiresAt");
+            if (storedExpiresAt) {
+                updateCountdown(parseInt(storedExpiresAt, 10));
+            }
+        }, 1000);
+    
+        return () => clearInterval(timer);
+    }, []);
+    
 
     useEffect(() => {
         if (timeLeft <= 0) {
@@ -59,15 +91,10 @@ const Payment = () => {
                 text: "ระบบจะพาคุณกลับไปยังหน้าเลือกสนาม",
                 confirmButtonText: "ตกลง"
             }).then(() => {
-                navigate("/"); // ✅ กลับไปหน้าเลือกสนาม
+                localStorage.removeItem("expiresAt"); // ลบค่าเมื่อหมดเวลา
+                navigate("/"); // กลับไปหน้าเลือกสนาม
             });
         }
-
-        const timer = setInterval(() => {
-            setTimeLeft((prevTime) => (prevTime > 0 ? prevTime - 1 : 0));
-        }, 1000);
-
-        return () => clearInterval(timer);
     }, [timeLeft, navigate]);
 
     const cancelBooking = async (sessionId) => {
@@ -233,7 +260,7 @@ const Payment = () => {
                     <p>💳 เลขบัญชี: <strong>{bankInfo?.accountNumber || "N/A"}</strong></p>
                     <p>👤 ชื่อบัญชี: <strong>{bankInfo?.accountName || "ไม่พบข้อมูล"}</strong></p>
                     <p className="payment-timer">
-                        ⏳ เหลือเวลาชำระเงิน: <strong>{Math.floor(timeLeft / 60)} นาที {timeLeft % 60} วินาที</strong>
+                        ⏳ เหลือเวลาชำระเงิน: <strong>{Math.floor(timeLeft / 60)} นาที {Math.floor(timeLeft % 60)} วินาที</strong>
                     </p>
                 </div>
 
@@ -243,7 +270,7 @@ const Payment = () => {
                     <input type="time" value={transferTime} onChange={(e) => setTransferTime(e.target.value)} />
 
                     <label>💰 จำนวนเงิน</label>
-                    <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="จำนวนเงินที่โอน" />
+                    <input type="text" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="จำนวนเงินที่โอน" />
 
                     <label>📎 อัปโหลดสลิปโอนเงิน</label>
                     <input type="file" accept="image/*" onChange={(e) => setSlipImage(e.target.files[0])} />
@@ -254,7 +281,7 @@ const Payment = () => {
                 <button className="confirm-payment" onClick={handlePaymentSubmit} disabled={timeLeft <= 0}>
                     ตรวจสอบการโอน
                 </button>
-                <button onClick={() => cancelBooking(booking.sessionId)}>
+                <button className="cancel-booking"onClick={() => cancelBooking(booking.sessionId)}>
                     ยกเลิกการจอง
                 </button>
 

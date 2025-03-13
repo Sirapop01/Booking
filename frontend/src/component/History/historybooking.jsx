@@ -83,9 +83,9 @@ const HistoryBooking = () => {
               <p className="total-price"><strong>รวม:</strong> {booking.totalPrice} บาท</p>
 
                 <p>
-                  <strong>สถานะ:</strong> 
-                  <span className={`status ${booking.status.toLowerCase()}`}>
-                    {booking.status}
+                <strong className="status-label">สถานะ : </strong> 
+  <span className={`status ${booking.status.toLowerCase()}`}>
+    {booking.status}
                   </span>
 
                   {/* ✅ แสดงเหตุผลการปฏิเสธถ้าสถานะเป็น "rejected" */}

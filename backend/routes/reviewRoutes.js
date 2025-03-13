@@ -2,7 +2,8 @@ const express = require("express");
 const {
     submitReview,
     getStadiumReviews,
-    deleteReviewsByOwner
+    deleteReviewsByOwner,
+    deleteReview
 } = require("../controllers/reviewController");
 const Review = require("../models/Review");
 const router = express.Router();
@@ -49,6 +50,9 @@ router.get("/owner/:ownerId", async (req, res) => {
         res.status(500).json({ message: "❌ ไม่สามารถดึงข้อมูลรีวิวได้" });
     }
 });
+
+// ✅ ลบรีวิวเดี่ยว (เฉพาะเจ้าของรีวิว หรือแอดมิน)
+router.delete("/:reviewId", deleteReview);
 
 
 module.exports = router;
