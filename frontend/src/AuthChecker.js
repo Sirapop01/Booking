@@ -17,7 +17,6 @@ const AuthChecker = () => {
                 "/customer-register",
                 "/forgot-password",
                 "/reset-password",
-                "/",
                 "/information",
                 "/promotion",
                 "/RegisterOpera",
