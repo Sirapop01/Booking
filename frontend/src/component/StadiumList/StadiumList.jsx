@@ -219,9 +219,10 @@ function StadiumList() {
                     className={`confirm-booking-btn ${selectedStadium ? "" : "disabled"}`} 
                     onClick={() => navigate(`/confirm-bookings/${selectedStadium}`)}
                     disabled={!selectedStadium}
-                    >
-                ตรวจสอบการจอง
+                >
+                    ตรวจสอบการจอง
                 </button>
+
 
                 <button 
                     className={`delete-btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 

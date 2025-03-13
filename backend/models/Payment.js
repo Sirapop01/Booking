@@ -5,6 +5,7 @@ const PaymentSchema = new mongoose.Schema(
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // ผู้ใช้ที่ชำระเงิน
     sessionId: { type: String, required: true, unique: true }, // รหัสอ้างอิงการจอง
     bookingId: { type: mongoose.Schema.Types.ObjectId, ref: "BookingHistory", required: true }, // อ้างอิงคำสั่งจอง
+    stadiumId: { type: mongoose.Schema.Types.ObjectId, ref: "Arena", required: true }, // ✅ อ้างอิงไปยัง Arena model
 
     amount: { type: Number, required: true }, // จำนวนเงินที่โอน
     transferTime: { type: String, required: true }, // เวลาที่โอนเงิน
