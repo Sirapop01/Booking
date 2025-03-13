@@ -46,35 +46,43 @@ function Login() {
   }, []);
 
   const handleLogin = async () => {
-  if (!validateForm()) {
-    return; // หยุดการทำงานหากการตรวจสอบล้มเหลว
-  }
-
-  let members = {
-    email,
-    password 
-  }
-
-  try {
-    const response = await axios.post("http://localhost:4000/api/auth/login", members);
-    
-    if (response.data.message === "เข้าสู่ระบบสำเร็จ") {
-      if (rememberMe) {
-        localStorage.setItem('token', response.data.token);
-      } else {
-        sessionStorage.setItem('token', response.data.token);
-      }
-      navigate("/");
-    } else {
-      setErrorMessage("อีเมลหรือรหัสผ่านไม่ถูกต้อง");  // แสดงข้อความเมื่อเข้าสู่ระบบไม่สำเร็จ
+    if (!validateForm()) {
+      return; // หยุดการทำงานหากการตรวจสอบล้มเหลว
     }
-
-    console.log(response.data.message);
-  } catch (err) {
-    console.log(err);
-    alert("เกิดข้อผิดพลาดในการเข้าสู่ระบบ กรุณาลองใหม่อีกครั้ง");  // จัดการข้อผิดพลาดทั่วไป เช่น เซิร์ฟเวอร์ล่ม
-  }
-};
+  
+    try {
+      const response = await axios.post("http://localhost:4000/api/auth/login", {
+        email,
+        password
+      });
+  
+      // ✅ ตรวจสอบการเข้าสู่ระบบสำเร็จ
+      if (response.data.token) {
+        if (rememberMe) {
+          localStorage.setItem('token', response.data.token);
+        } else {
+          sessionStorage.setItem('token', response.data.token);
+        }
+        navigate("/");
+      }
+    } catch (error) {
+      if (error.response) {
+        const { message, errorType } = error.response.data;
+  
+        // ✅ ตรวจสอบกรณีบัญชีถูก Blacklist
+        if (errorType === "blacklisted_account") {
+          setErrorMessage("⛔ บัญชีของคุณถูกระงับ ไม่สามารถเข้าสู่ระบบได้");
+        } else if (errorType === "invalid_credentials") {
+          setErrorMessage("❌ อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+        } else {
+          setErrorMessage(message || "❌ เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+        }
+      } else {
+        setErrorMessage("❌ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์");
+      }
+    }
+  };
+  
 
   const handleInputChange = (setter) => (e) => {
     setter(e.target.value);
