@@ -59,6 +59,19 @@
     font-size: 12px;
     color: #666;
   }
+
+  .rating {
+    font-size: 14px;
+    color: #ffcc00; /* สีเหลือง */
+    margin-left: 5px;
+  }
+  
+  .no-rating {
+    font-size: 12px;
+    color: gray;
+    margin-left: 5px;
+  }
+  
   
   /* Responsive Layout */
   @media (min-width: 1200px) {

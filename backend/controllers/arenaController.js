@@ -1,10 +1,41 @@
 const mongoose = require("mongoose");
 const Arena = require("../models/Arena");
 const User = require("../models/User")
+const Review = require("../models/Review");
 const SportsCategory = require("../models/SportsCategory")
 const BusinessOwner = require("../models/BusinessOwner");
 const jwt = require("jsonwebtoken");
-// ✅ ฟังก์ชัน Register สนามกีฬา (รับ URL ของรูปภาพ)
+
+exports.getArenasWithRatings = async (req, res) => {
+  try {
+    const arenas = await Arena.aggregate([
+      {
+        $lookup: {
+          from: "reviews",
+          localField: "_id",
+          foreignField: "arenaId",
+          as: "reviews",
+        },
+      },
+      {
+        $addFields: {
+          averageRating: { $round: [{ $avg: "$reviews.rating" }, 0] } // ✅ ปัดเป็นจำนวนเต็ม
+        },
+      },
+      {
+        $project: {
+          reviews: 0, // ไม่ต้องส่งข้อมูลรีวิวทั้งหมด
+        },
+      },
+    ]);
+
+    res.json(arenas);
+  } catch (error) {
+    console.error("❌ Error fetching arenas with ratings:", error);
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
+  }
+};
+
 exports.registerArena = async (req, res) => {
   try {
     console.log("📩 Register Arena Request Body:", req.body);
@@ -235,15 +266,28 @@ exports.getFilteredArenas = async (req, res) => {
     }
 
     const arenas = await Arena.find(filter).lean();
-    const arenasWithDistance = arenas.map(arena => {
-      const arenaLocation = arena.location?.coordinates;
-      const distance = getDistance(userLocation, arenaLocation);
-      return { ...arena, distance };
-    });
 
-    arenasWithDistance.sort((a, b) => a.distance - b.distance);
+    // ✅ คำนวณค่าเฉลี่ยของ `rating` สำหรับแต่ละสนาม
+    const arenasWithRating = await Promise.all(
+      arenas.map(async (arena) => {
+        const reviews = await Review.find({ stadiumId: arena._id });
 
-    res.json(arenasWithDistance);
+        console.log(`📌 Reviews for Arena: ${arena.fieldName} (${arena._id})`, reviews.map(r => r.rating));
+        const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+        const averageRating = reviews.length > 0 ? Math.round(totalRating / reviews.length) : 0;
+
+        const arenaLocation = arena.location?.coordinates;
+        const distance = getDistance(userLocation, arenaLocation);
+
+        return { ...arena, distance, averageRating };
+      })
+    );
+
+    //console.log("📌 Arenas with Rating:", arenasWithRating);
+    // ✅ เรียงลำดับตามระยะทาง
+    arenasWithRating.sort((a, b) => a.distance - b.distance);
+
+    res.json(arenasWithRating);
   } catch (error) {
     console.error("❌ Error filtering arenas:", error);
     res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
