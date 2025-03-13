@@ -204,7 +204,7 @@ const AdminChat = () => {
     <div className="admin-chat-container">
       
       <header className="admin-chat-header">
-        <a href="/" className="home-button">
+        <a href="/superadmin/dashboard" className="home-button">
           <img src={homeLogo} alt="Home Logo" className="home-logo" />
         </a>
         <h1 className="page-title2">ศูนย์ช่วยเหลือ</h1>

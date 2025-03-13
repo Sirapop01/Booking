@@ -1,47 +1,87 @@
+
+.admin-register-background {
+  background-color: #fafafa;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: "Kanit", sans-serif;
+}
+
 .admin-register-container {
-  max-width: 400px;
-  margin: 40px auto;
-  padding: 20px;
+  width: 1000px;
+  margin: 100px auto;
+  padding: 30px;
   background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-.admin-register-container h2{
-  color : #000
-}
-
+/* ✅ ใช้ Grid Layout จัดให้เป็น 2 คอลัมน์ */
 .admin-register-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px 20px;
+  align-items: center;
 }
 
-input, button {
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
+.admin-register-container h2{
+  color : #1E40AF;
 }
 
-input {
+.admin-register-form label {
+  grid-column: span 2;
+  text-align: left;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.admin-register-form input {
   width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
 }
 
-button {
-  background: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
+.admin-register-form input[type="file"] {
+  grid-column: span 2;
+  text-align: center;
+  padding: 12px;
 }
 
-button:disabled {
-  background: #aaa;
-  cursor: not-allowed;
+.admin-register-form input[type="file"],
+.admin-register-form button {
+  flex: 0 0 100%;
 }
-
 .error-message {
   color: red;
   font-size: 14px;
+}
+
+/* ✅ ปรับสไตล์ปุ่มสมัคร Admin */
+.admin-register-button {
+  grid-column: span 2;
+  padding: 14px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background-color: #1E40AF;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  width: 100%;
+  max-width: 300px;
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* ✅ ให้ไอคอนมีระยะห่างที่สมดุล */
+}
+
+/* ✅ Hover effect */
+.admin-register-button:hover {
+  background-color: #163797;
+  transform: scale(1.02);
 }
