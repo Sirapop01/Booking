@@ -160,7 +160,7 @@ exports.deleteSubStadium = async (req, res) => {
 exports.getSubStadiumDetails = async (req, res) => {
     try {
         const { id } = req.params;
-        const { date } = req.query; // ✅ รับค่าของวันที่จาก Query Parameters
+        const { date } = req.query;
         console.log("📌 ดึงข้อมูลสนาม ID:", id, "วันที่:", date);
 
         const subStadium = await SubStadium.findById(id);
@@ -168,26 +168,79 @@ exports.getSubStadiumDetails = async (req, res) => {
             return res.status(404).json({ message: "❌ ไม่พบสนามย่อย" });
         }
 
-        // ✅ ถ้าไม่มีวันที่ ให้ใช้วันที่ปัจจุบัน
         const selectedDate = date || moment().format("YYYY-MM-DD");
 
-        // ✅ ดึงรายการเวลาที่ถูกจองของวันนี้จาก BookingHistory
-        const reservations = await BookingHistory.find({
-            stadiumId: id, // ✅ ต้องใช้ `stadiumId` ให้ตรงกับ Schema ของ `BookingHistory`
-            bookingDate: new Date(selectedDate), // ✅ ใช้ `bookingDate` แทน `date`
-        }).select("timeRange");
-
-        // ✅ รวมเวลาที่ถูกจองทั้งหมดเป็น Array
-        let reservedSlots = [];
-        reservations.forEach((res) => {
-            if (res.timeRange) {
-                reservedSlots.push(res.timeRange);
-            }
+        // ✅ ดึงเวลาที่ถูกจองและยืนยันแล้ว
+        const confirmedBookings = await BookingHistory.find({
+            "details.subStadiumId": id,
+            "details.bookingDate": selectedDate,
+            status: "confirmed",
         });
 
-        console.log("📌 เวลาที่ถูกจองแล้ว:", reservedSlots);
+        const reservedSlots = confirmedBookings.flatMap((booking) =>
+            booking.details
+                .filter((detail) => detail.subStadiumId.toString() === id)
+                .flatMap((detail) => {
+                    const startHour = parseInt(detail.startTime.split(":")[0]);
+                    const endHour = parseInt(detail.endTime.split(":")[0]);
+                    let slots = [];
+        
+                    for (let hour = startHour; hour < endHour; hour++) {
+                        let nextHour = (hour + 1) % 24;
+                        slots.push(`${hour.toString().padStart(2, "0")}:00 - ${nextHour.toString().padStart(2, "0")}:00`);
+                    }
+                    return slots;
+                })
+        );
 
-        res.status(200).json({ ...subStadium._doc, reservedSlots });
+        // ✅ ดึงเวลาที่อยู่ระหว่างรอชำระเงิน (pending)
+        const pendingBookings = await BookingHistory.find({
+            "details.subStadiumId": id,
+            "details.bookingDate": selectedDate,
+            status: "pending",
+            status: "paid",
+        });
+
+        const pendingSlots = pendingBookings.flatMap((booking) =>
+            booking.details
+                .filter((detail) => detail.subStadiumId.toString() === id)
+                .flatMap((detail) => {
+                    const startHour = parseInt(detail.startTime.split(":")[0]);
+                    const endHour = parseInt(detail.endTime.split(":")[0]);
+                    let slots = [];
+        
+                    for (let hour = startHour; hour < endHour; hour++) {
+                        let nextHour = (hour + 1) % 24;
+                        slots.push(`${hour.toString().padStart(2, "0")}:00 - ${nextHour.toString().padStart(2, "0")}:00`);
+                    }
+                    return slots;
+                })
+        );
+
+        // ✅ ดึงเวลาที่ถูกยกเลิก (canceled) และทำให้สามารถจองใหม่ได้
+        const canceledBookings = await BookingHistory.find({
+            "details.subStadiumId": id,
+            "details.bookingDate": selectedDate,
+            status: "canceled",
+            status: "rejected",
+        });
+
+        const canceledSlots = canceledBookings.flatMap((booking) =>
+            booking.details
+                .filter((detail) => detail.subStadiumId.toString() === id)
+                .map((detail) => `${detail.startTime} - ${detail.endTime}`)
+        );
+
+        console.log("✅ เวลาที่ถูกจอง (แดง):", reservedSlots);
+        console.log("⏳ เวลาที่อยู่ระหว่างรอชำระเงิน (เหลือง):", pendingSlots);
+        console.log("🟢 เวลาที่ยกเลิกแล้ว (จองได้):", canceledSlots);
+
+        res.status(200).json({
+            ...subStadium._doc,
+            reservedSlots,
+            pendingSlots,
+            canceledSlots, // ✅ ส่งไปที่ Frontend เพื่อให้สามารถจองใหม่ได้
+        });
     } catch (error) {
         console.error("❌ ไม่สามารถดึงข้อมูลสนามย่อย:", error);
         res.status(500).json({ message: "❌ เกิดข้อผิดพลาด", error });
