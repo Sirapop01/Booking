@@ -440,27 +440,26 @@ const handleBooking = () => {
                 Object.entries(subStadiums).map(([sportName, stadiums]) => (
                   <div key={sportName} className="sport-group">
                     <h3 className="sport-title">{sportName}</h3>
-                    <div className="sub-stadium-row">
-                      {stadiums.map((sub) => (
-                        <button
-                        key={sub._id}
-                        className={`sub-stadium-button ${selectedSubStadiums.some(s => s._id === sub._id) ? "selected" : ""}`}
-                        onClick={() => toggleSubStadiumSelection(sub._id)}
-                      >
-                        {/* รูปภาพของสนามย่อย */}
-                        <img src={sub.images.length > 0 ? sub.images[0] : "https://via.placeholder.com/150"} alt={sub.name} />
-                      
-                        {/* ชื่อสนามย่อย */}
-                        <p>{sub.name}</p>
-                      
-                        {/* เอฟเฟกต์เส้นขอบ */}
-                        <svg viewBox="0 0 180 140">
-                          <polyline points="1,1 179,1 179,139 1,139 1,1"/>
-                        </svg>
-                      </button>
-                      
-                      ))}
-                    </div>
+                      <div className="sub-stadium-row">
+                        {stadiums.map((sub) => (
+                          <button
+                            key={sub._id}
+                            className={`sub-stadium-button ${selectedSubStadiums.some(s => s._id === sub._id) ? "selected" : ""} ${sub.status === "ปิดชั่วคราว" ? "disabled-substadium" : ""}`}
+                            onClick={() => sub.status !== "ปิดชั่วคราว" && toggleSubStadiumSelection(sub._id)}
+                            disabled={sub.status === "ปิดชั่วคราว"}
+                          >
+                            <img 
+                              src={sub.images.length > 0 ? sub.images[0] : "https://via.placeholder.com/150"} 
+                              alt={sub.name} 
+                              className={sub.status === "ปิดชั่วคราว" ? "grayscale" : ""}
+                            />
+                            <p>{sub.name}</p>
+                            <svg viewBox="0 0 180 140">
+                              <polyline points="1,1 179,1 179,139 1,139 1,1"/>
+                            </svg>
+                          </button>
+                        ))}
+                      </div>
                   </div>
                 ))
               ) : (
@@ -470,9 +469,13 @@ const handleBooking = () => {
           </div>
 
         {/* ปุ่มจอง */}
-        <button className="booking101-button" onClick={handleBooking}>
-          จองสนาม ({selectedSubStadiums.length})
-        </button>
+          <button 
+              className="booking101-button" 
+              onClick={handleBooking} 
+              disabled={!arena.open}
+          >
+              {arena.open ? `จองสนาม (${selectedSubStadiums.length})` : "สนามปิดในขณะนี้"}
+          </button>
       </div>
       </div>
     </>
