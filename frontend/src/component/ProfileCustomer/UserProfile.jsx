@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./UserProfile.css";
-import defaultProfilePic from "../assets/threeman.png";
 import { FaPencilAlt } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
@@ -56,12 +55,19 @@ const UserProfile = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+
     if (file) {
-      setNewProfileImage(file); // ✅ เก็บไฟล์ไว้ก่อน
+      setNewProfileImage(file); // ✅ เก็บไฟล์ไว้สำหรับอัปโหลด
       setProfileImage(URL.createObjectURL(file)); // ✅ แสดง Preview
+    } else {
+      // ✅ ถ้าไม่มีไฟล์ใหม่ ใช้รูปจาก database ถ้ามี
+      if (member.profileImage) {
+        setProfileImage(member.profileImage); // ใช้รูปที่มีอยู่
+      } else {
+        setProfileImage(null); // ✅ ถ้าไม่มีรูปใน database ก็ไม่ต้องแสดงอะไรเลย
+      }
     }
   };
-
 
   useEffect(() => {
     if (id) {
@@ -144,8 +150,10 @@ const UserProfile = () => {
       formData.append("district", member.district);
       formData.append("subdistrict", member.subdistrict);
       formData.append("interestedSports", member.interestedSports);
+
+      // ✅ เพิ่มรูปเฉพาะกรณีที่มีการอัปโหลดรูปใหม่
       if (newProfileImage) {
-        formData.append("profileImage", newProfileImage); // ✅ เพิ่มรูปภาพเข้าไปใน FormData
+        formData.append("profileImage", newProfileImage);
       }
 
       Swal.fire({
@@ -171,37 +179,6 @@ const UserProfile = () => {
     }
   };
 
-  const uploadImage = async (file) => {
-    try {
-      if (!file) {
-        alert("กรุณาเลือกไฟล์ก่อนอัปโหลด");
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("profileImage", file);
-
-      console.log("📤 กำลังอัปโหลดไฟล์:", file);
-
-      const response = await axios.put(
-        `http://localhost:4000/api/auth/updateProfileImage/${id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        }
-      );
-
-      console.log("✅ อัปโหลดรูปภาพสำเร็จ:", response.data);
-      alert("🎉 อัปโหลดรูปภาพสำเร็จ!");
-      getMB(); // โหลดข้อมูลใหม่
-      setIsEditable(false);
-    } catch (error) {
-      console.error("❌ อัปโหลดรูปไม่สำเร็จ:", error);
-      alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
-    }
-  };
 
 
   const toggleLogout = () => {
@@ -310,7 +287,7 @@ const UserProfile = () => {
       <aside className="profile-card">
         <div className="profile-image">
           <label htmlFor="fileUpload" className="image-upload-label">
-            <img src={profileImage || defaultProfilePic} alt="Profile" />
+            <img src={profileImage} alt="Profile" />
             {isEditable && (
               <input
                 id="fileUpload"
