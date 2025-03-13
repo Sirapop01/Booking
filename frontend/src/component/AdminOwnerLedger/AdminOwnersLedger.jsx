@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";  // ✅ ใช้สำหรับเปลี่ยนหน้า
 import "./AdminOwnersLedger.css";
-import homeLogo from "../assets/logoalt.png";
 import NavbarAdminLedger from "../NavbarAdminLedger/NavbarAdminLedger";
 
 const AdminOwnersLedger = () => {
@@ -11,15 +10,16 @@ const AdminOwnersLedger = () => {
   const navigate = useNavigate();  // ✅ ใช้สำหรับเปลี่ยนหน้า
 
   useEffect(() => {
-    axios.get("http://localhost:4000/api/business-owners")
+    axios.get("http://localhost:4000/api/businessOwners") // ✅ อัปเดตให้ตรงกับ API ใหม่
       .then(response => {
-        console.log("Fetched Data:", response.data);
+        console.log("📌 Business Owners Data:", response.data);
         setOwners(response.data);
       })
       .catch(error => {
-        console.error("Error fetching business owners:", error);
+        console.error("❌ Error fetching business owners:", error);
       });
   }, []);
+    
 
   const handleCheckLedger = (ownerId) => {
     navigate(`/OwnerLedgerDetail/${ownerId}`); // ✅ ส่ง ownerId ไปหน้า OwnerLedgerDetail
