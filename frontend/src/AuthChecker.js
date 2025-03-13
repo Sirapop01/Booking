@@ -21,6 +21,7 @@ const AuthChecker = () => {
                 "/promotion",
                 "/RegisterOpera",
                 "/RegisterArena",
+                "/RegisterChoice",
                 "/admin/register",
                 "/verifyOwners",
                 "/superadmin/login"
