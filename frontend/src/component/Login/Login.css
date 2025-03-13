@@ -280,6 +280,21 @@ html, body {
   text-decoration: underline;
 }
 
+.login-admin {
+  text-align: center;
+  font-family: "Inder", sans-serif;
+}
+
+.login-admin a {
+  color: #39BBDF;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-admin a:hover {
+  text-decoration: underline;
+}
+
 /* ปุ่ม Login */
 .login-button {
   width: 100%;
