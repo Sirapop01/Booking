@@ -15,7 +15,7 @@
 .booking-content {
   display: flex;
   flex-wrap: wrap; /* ให้การ์ดล้นแล้วขึ้นบรรทัดใหม่ */
-  justify-content: center; /* จัดให้อยู่กึ่งกลาง */
+  justify-content: center !important; /* จัดให้อยู่กึ่งกลาง */
   gap: 20px;
   width: 100%;
 }
