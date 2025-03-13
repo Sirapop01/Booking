@@ -57,26 +57,28 @@ const PromotionPage = () => {
       <h1 className="promotion-title">PROMOTION</h1>
 
       <div className="promotion-card-container">
-        {/* ✅ แสดงโปรโมชั่นทั้งหมดจากฐานข้อมูล */}
-        {promotions.length > 0 ? (
-          promotions.map((promo) => (
-            <div className="promotion-card" key={promo._id}>
-              <img src={promo.promotionImageUrl} alt={promo.promotionTitle} className="promotion-card-image" />
-              <div className="promotion-details">
-                <h2>{promo.promotionTitle}</h2>
-                <p><strong>สนาม:</strong> {promo.stadiumId?.fieldName || "ไม่ระบุ"}</p>
-                <p><strong>ประเภทกีฬา:</strong> {promo.sportName}</p>
-                <p><strong>ส่วนลด:</strong> {promo.discount}%</p>
-                <p><strong>ช่วงเวลา:</strong> {promo.timeRange}</p>
-                <p><strong>วันที่:</strong> {promo.startDate.substring(0, 10).split("-").reverse().join("-")} ถึง {promo.endDate.substring(0, 10).split("-").reverse().join("-")}</p>
+  {/* ✅ แสดงเฉพาะโปรโมชั่นที่มีข้อมูลสนาม */}
+  {promotions.filter(promo => promo.stadiumId?.fieldName).length > 0 ? (
+    promotions
+      .filter(promo => promo.stadiumId?.fieldName) // ✅ กรองเฉพาะที่มีสนาม
+      .map((promo) => (
+        <div className="promotion-card" key={promo._id}>
+          <img src={promo.promotionImageUrl} alt={promo.promotionTitle} className="promotion-card-image" />
+          <div className="promotion-details">
+            <h2>{promo.promotionTitle}</h2>
+            <p><strong>สนาม:</strong> {promo.stadiumId?.fieldName}</p>
+            <p><strong>ประเภทกีฬา:</strong> {promo.sportName}</p>
+            <p><strong>ส่วนลด:</strong> {promo.discount}%</p>
+            <p><strong>ช่วงเวลา:</strong> {promo.timeRange}</p>
+            <p><strong>วันที่:</strong> {promo.startDate.substring(0, 10).split("-").reverse().join("-")} ถึง {promo.endDate.substring(0, 10).split("-").reverse().join("-")}</p>
+          </div>
+        </div>
+      ))
+  ) : (
+    <p className="no-promotions">ไม่มีโปรโมชั่นในขณะนี้</p>
+  )}
+</div>
 
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className="no-promotions">ไม่มีโปรโมชั่นในขณะนี้</p>
-        )}
-      </div>
 
       <button className="promotion-booking-button" onClick={() => navigate("/")}>
         กลับหน้าหลัก
