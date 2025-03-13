@@ -149,6 +149,11 @@ function Login() {
           <p className="login-forgot-password">
             <a href="/forgot-password">Forgot password?</a>
           </p>
+
+          <p className="login-admin">
+            <a href="/superadmin/login">Admin Login</a>
+          </p>
+
           <p className="login-signup-link">
             Don't have an Account? <a href="/RegisterChoice">Sign Up</a>
           </p>
