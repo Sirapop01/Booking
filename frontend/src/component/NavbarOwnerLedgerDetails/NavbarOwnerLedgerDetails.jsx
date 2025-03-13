@@ -25,7 +25,7 @@ const NavbarOwnerLedgerDetails = () => {
   return (
     <nav className="owner-ledger-navbar">
       {/* ✅ ปุ่ม Home (ด้านซ้าย) */}
-      <Link to="/" className="ledger-home-button">
+      <Link to="/superadmin/dashboard" className="ledger-home-button">
         <img src={homeLogo} alt="Home Logo" className="ledger-home-logo" />
       </Link>
 

@@ -114,7 +114,7 @@ function App() {
         <Route path='/payment' element={<Payment />} />
         <Route path="/confirm-bookings/:stadiumId" element={<ConfirmBooking />} />
 
-        <Route element={<ProtectedRoute role="superadmin" />}>
+        <Route element={<ProtectedRoute roles={["superadmin", "admin"]} />}>
           <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/verifyOwners" element={<VerifyOnwers />} />
         </Route>
