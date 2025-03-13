@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
 
 const AuthChecker = () => {
     const navigate = useNavigate();
@@ -12,7 +13,7 @@ const AuthChecker = () => {
             if (token) {
                 try {
                     const decoded = jwtDecode(token);
-                    const currentTime = Date.now() / 1000;
+                    const currentTime = Date.now() / 1000; // ✅ เวลาปัจจุบันในรูปแบบ UNIX Timestamp
 
                     if (decoded.exp < currentTime) {
                         console.warn("❌ Token หมดอายุ ออกจากระบบ...");
@@ -31,7 +32,17 @@ const AuthChecker = () => {
         const logout = () => {
             localStorage.removeItem("token");
             sessionStorage.removeItem("token");
-            navigate("/login");
+
+            // ✅ แสดงแจ้งเตือนก่อนเปลี่ยนไปหน้า Login
+            Swal.fire({
+                title: "หมดเวลาการใช้งาน!",
+                text: "กรุณาเข้าสู่ระบบใหม่",
+                icon: "warning",
+                confirmButtonText: "ไปที่หน้า Login",
+                allowOutsideClick: false,
+            }).then(() => {
+                navigate("/login");
+            });
         };
 
         checkToken();
