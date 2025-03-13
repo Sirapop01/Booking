@@ -110,7 +110,8 @@ function App() {
         <Route path="/review/:stadiumId" element={<ReviewPage />} />
         <Route path="/reviewowner/:ownerId" element={<ReviewOwner />} />
         <Route path="/Booking" element={<Booking />} />
-        <Route path="/historybooking" element={<HistoryBooking />} />
+        <Route path="/historybooking" element={<HistoryBooking />} /> 
+        <Route path="/historybooking/:userId" element={<HistoryBooking />} />
         <Route path='/payment' element={<Payment />} />
         <Route path="/confirm-bookings/:stadiumId" element={<ConfirmBooking />} />
 

@@ -12,6 +12,7 @@ const ManageAccount = () => {
   const [isOwnerMode, setIsOwnerMode] = useState(false);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [deleteInput, setDeleteInput] = useState("");
+  const [stadiums, setStadiums] = useState([]); // ✅ รายการสนามของ Owner
   const navigate = useNavigate(); // ✅ ใช้ Hook เพื่อนำทางไปยังหน้าใหม่
 
 
@@ -30,6 +31,20 @@ const ManageAccount = () => {
       })
       .catch(error => console.error("Error fetching users:", error));
   }, [isOwnerMode]);
+
+  // 📌 ดึงข้อมูลสนามของ Owner ที่เลือก
+useEffect(() => {
+  if (!isOwnerMode || !selectedUser) return;
+
+  axios.get(`http://localhost:4000/api/manage-account/owners/stadiums/${selectedUser._id}`)
+    .then(response => {
+      setStadiums(response.data);
+    })
+    .catch(error => {
+      console.error("❌ Error fetching stadiums:", error);
+      setStadiums([]); // ✅ รีเซ็ตถ้าเกิดข้อผิดพลาด
+    });
+}, [selectedUser, isOwnerMode]); // ✅ โหลดข้อมูลใหม่เมื่อเลือก Owner
 
   // 📌 ฟังก์ชันลบบัญชี (จะถูกเรียกเมื่อกดยืนยัน)
   const confirmDeleteUser = () => {
@@ -144,8 +159,24 @@ const ManageAccount = () => {
         </span>
       </p>
 
-      {/* ✅ แสดงชื่อสนามของเจ้าของสนาม */}
-      {isOwnerMode && <p><strong>สนามของ:</strong> {selectedUser.firstName}</p>}
+      {/* ✅ แสดงรายการสนามของ Owner */}
+      {isOwnerMode && (
+          <div className="stadium-list-container">
+            <h2 className="stadium-list-title">รายการสนามที่ลงทะเบียน</h2>
+            {stadiums.length > 0 ? (
+              stadiums.map(stadium => (
+                <div key={stadium._id} className="stadium-item">
+                  <p><strong>ชื่อสนาม:</strong> {stadium.fieldName}</p>
+                  <p><strong>เบอร์ติดต่อ:</strong> {stadium.phone}</p>
+                  <p><strong>เวลาเปิด-ปิด:</strong> {stadium.startTime} - {stadium.endTime}</p>
+                  <p><strong>สถานะ:</strong> {stadium.open ? "เปิดให้บริการ" : "ปิดชั่วคราว"}</p>
+                </div>
+              ))
+            ) : (
+              <p className="no-stadium">ไม่มีสนามที่ลงทะเบียน</p>
+            )}
+          </div>
+        )}
     </div>
 
     {/* ✅ ปุ่มดำเนินการ */}
@@ -156,9 +187,12 @@ const ManageAccount = () => {
         {selectedUser.status === "blacklisted" ? "ยกเลิก Blacklist" : "เพิ่มใน Blacklist"}
       </button>
     </div>
-    {/* ✅ ปุ่ม "ดูประวัติการจอง" (เฉพาะบัญชีผู้ใช้) */}
+    {/* ✅ ปุ่มใหม่ไปยังประวัติการจอง */}
   {!isOwnerMode && (
-    <button className="history-button" onClick={() => navigate(`/historybooking/${selectedUser._id}`)}>
+    <button 
+      className="history-button" 
+      onClick={() => navigate(`/historybooking/${selectedUser._id}`)}
+    >
       ดูประวัติการจอง
     </button>
   )}
