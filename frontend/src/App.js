@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import "leaflet/dist/leaflet.css";
+import { jwtDecode } from "jwt-decode";  // ✅ นำเข้า jwt-decode
+import ChatButton from "./component/ChatButton/ChatButton"; // ✅ นำเข้า ChatButton
 import Homepage from './component/Homepage/Homepage';
 import Login from './component/Login/Login';
 import RegisterChoice from './component/RegisterChoice/RegisterChoice';
@@ -38,15 +40,31 @@ import Addpromotion from "./component/AddPromo/Addpromotion";
 import Promoowner from "./component/Promotionowner/Promoowner";
 import Booking from "./component/Booking/Booking";
 import HistoryBooking from "./component/History/historybooking";
-import VerifyOnwers from "./component/Verifyowners/verifyowners"
+import VerifyOnwers from "./component/Verifyowners/verifyowners";
 import ReviewPage from './component/ReviewPage/ReviewPage';
-import Payment from './component/Payment/Payment'
-import AuthProvider from './AuthProvider'
+import Payment from './component/Payment/Payment';
+import AuthProvider from './AuthProvider';
 import ConfirmBooking from './component/ConfirmBooking/ConfirmBooking';
 
-/**/
-
 function App() {
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+  let userId = null;
+  let userType = null;
+  let role = null;
+
+  if (token) {
+    try {
+      const decoded = jwtDecode(token);
+      userId = decoded.userId;
+      userType = decoded.userType;
+      role = decoded.role;
+    } catch (error) {
+      console.error("❌ Invalid token:", error);
+    }
+  }
+
+  // ✅ แสดงปุ่มแชทเฉพาะถ้าไม่ใช่ Admin หรือ SuperAdmin
+  const showChatButton = token && (role === "customer" || role === "owner");
 
   return (
     <BrowserRouter>
@@ -60,7 +78,7 @@ function App() {
         <Route path="/OperaRequri" element={<OperaRequri />} />
         <Route path="/RegisterOpera" element={<RegisterOpera />} />
         <Route path="/RegisterArena" element={<RegisterArena />} />
-        <Route path="/RegisterArena/:arenaId" element={<RegisterArena />} />  {/* สำหรับแก้ไขสนาม */}
+        <Route path="/RegisterArena/:arenaId" element={<RegisterArena />} />
         <Route path="/stadium-list" element={<StadiumList />} />
         <Route path='/FavoritesList' element={<FavoriteList />} />
         <Route path='/profile' element={<UserProfile />} />
@@ -93,19 +111,16 @@ function App() {
         <Route path='/payment' element={<Payment />} />
         <Route path="/confirm-bookings/:stadiumId" element={<ConfirmBooking />} />
 
-
         <Route element={<ProtectedRoute role="superadmin" />}>
           <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/verifyOwners" element={<VerifyOnwers />} />
         </Route>
-
       </Routes>
+
+      {/* ✅ แสดงปุ่มแชทถ้าผู้ใช้ล็อกอินและไม่ใช่ Admin */}
+      {showChatButton && <ChatButton userId={userId} userType={userType} />}
     </BrowserRouter>
   );
 }
-
-
-
-
 
 export default App;

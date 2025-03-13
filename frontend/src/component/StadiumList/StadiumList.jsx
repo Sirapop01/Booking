@@ -6,6 +6,7 @@ import "./StadiumList.css";
 import Navbar from "../Navbar/Navbar";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css"; // ✅ นำเข้า CSS ของ SweetAlert2
+import ChatButton from "../ChatButton/ChatButton"; // ✅ Import ChatButton
 
 function StadiumList() {
     const navigate = useNavigate();
@@ -13,32 +14,33 @@ function StadiumList() {
     const [selectedStadium, setSelectedStadium] = useState(null);
     const [loading, setLoading] = useState(false); // ✅ ป้องกันการกดปุ่มซ้ำ
     const [ownerId, setOwnerId] = useState(null);
+    const [userType, setUserType] = useState(null); // ✅ เพิ่ม userType
 
     useEffect(() => {
         const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-
         if (!token) {
             alert("Session หมดอายุ! กรุณาเข้าสู่ระบบใหม่");
             navigate("/login");
             return;
         }
-
+    
         try {
             const decoded = jwtDecode(token);
-            const userId = decoded.id;
-
-            if (!userId) {
-                console.error("⚠️ ไม่พบ ID ใน Token");
+            console.log("📢 Token Decoded:", decoded); // ✅ ตรวจสอบค่า token
+            
+            if (!decoded.id || !decoded.role) {
+                console.error("❌ ไม่พบ userId หรือ userType ใน token");
                 return;
             }
-
-            setOwnerId(userId);
+    
+            setOwnerId(decoded.id);
         } catch (error) {
-            console.error("⚠️ ไม่สามารถถอดรหัส Token:", error);
+            console.error("❌ Error decoding token:", error);
             alert("Session ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่");
             navigate("/login");
         }
     }, [navigate]);
+    
 
     // ✅ ฟังก์ชันโหลดข้อมูลสนาม
     const fetchStadiumsStatus = async () => {
@@ -138,6 +140,9 @@ function StadiumList() {
     return (
         <div className="stadium-page-container">
             <Navbar/>
+
+            {/* ✅ เพิ่ม ChatButton ตรงนี้ */}
+            {ownerId && userType && <ChatButton userId={ownerId} userType={userType} />}
 
             {/* ✅ ตารางสนาม */}
             <table className="stadium-table-stadiumlist">

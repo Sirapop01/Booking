@@ -5,6 +5,7 @@ const upload = require("../middlewares/upload")
 
 router.post("/submit", upload.single("slipImage"), paymentController.submitPayment);
 router.get("/pending", paymentController.getPendingPayment);
+router.put("/cancel-booking", paymentController.cancelBooking);
 
 router.get("/paid-users", paymentController.getPaidUsers);
 router.get("/user-bookings", paymentController.getUserBookings);

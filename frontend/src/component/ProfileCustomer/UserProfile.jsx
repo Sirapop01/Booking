@@ -130,78 +130,58 @@ const UserProfile = () => {
     try {
       let updatedData = { ...member };
       let imageUrl = profileImage;
-
-      // ✅ อัปโหลดรูปถ้ามีการเปลี่ยนแปลง
+  
       if (newProfileImage) {
-        const formData = new FormData();
-        formData.append("profileImage", newProfileImage);
-
-        const uploadResponse = await axios.put(
-          `http://localhost:4000/api/auth/updateProfileImage/${id}`,
-          formData,
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
-
-        console.log("✅ Profile Image Updated:", uploadResponse.data);
-        imageUrl = uploadResponse.data.profileImage;
-        updatedData.profileImage = imageUrl;
+        await uploadImage(newProfileImage); // ✅ Upload image first
       }
-
+  
       console.log("📤 Sending Updated Data:", updatedData);
-
-      // ✅ อัปเดตข้อมูลผู้ใช้
+  
       const response = await axios.put(`http://localhost:4000/api/auth/update/${id}`, updatedData);
-
       console.log("✅ Updated Member Data:", response.data);
-
-      // ✅ แจ้งเตือนอัปเดตสำเร็จด้วย SweetAlert
-      Swal.fire({
-        icon: "success",
-        title: "🎉 อัปเดตข้อมูลสำเร็จ!",
-        text: "ข้อมูลของคุณได้รับการอัปเดตเรียบร้อยแล้ว",
-        confirmButtonText: "ตกลง",
-      });
-
-      // ✅ โหลดข้อมูลใหม่จาก API ทันที
+  
+      alert("🎉 อัปเดตข้อมูลสำเร็จ!");
       await getMB();
-
-      // ✅ ปิดโหมดแก้ไข
       setIsEditable(false);
       setNewProfileImage(null);
     } catch (error) {
       console.error("❌ Error updating member data:", error);
-
-      // ✅ แจ้งเตือนเมื่อเกิดข้อผิดพลาด
-      Swal.fire({
-        icon: "error",
-        title: "❌ เกิดข้อผิดพลาด!",
-        text: "ไม่สามารถอัปเดตข้อมูลได้ กรุณาลองใหม่อีกครั้ง",
-        confirmButtonText: "ตกลง",
-      });
+      alert("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
     }
   };
-
+  
   const uploadImage = async (file) => {
     try {
-      const formData = new FormData();
-      formData.append("profileImage", file);
-      formData.append("id", id);
+        if (!file) {
+            alert("กรุณาเลือกไฟล์ก่อนอัปโหลด");
+            return;
+        }
 
-      const response = await axios.put(
-        `http://localhost:4000/api/auth/updateProfileImage/${id}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+        const formData = new FormData();
+        formData.append("profileImage", file);
 
-      console.log("✅ Profile Image Updated:", response.data);
-      alert("🎉 อัปโหลดรูปภาพสำเร็จ!");
-      getMB(); // โหลดข้อมูลใหม่
-      setIsEditable(false);
+        console.log("📤 กำลังอัปโหลดไฟล์:", file);
+
+        const response = await axios.put(
+            `http://localhost:4000/api/auth/updateProfileImage/${id}`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            }
+        );
+
+        console.log("✅ อัปโหลดรูปภาพสำเร็จ:", response.data);
+        alert("🎉 อัปโหลดรูปภาพสำเร็จ!");
+        getMB(); // โหลดข้อมูลใหม่
+        setIsEditable(false);
     } catch (error) {
-      console.error("❌ Error uploading image:", error);
-      alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
+        console.error("❌ อัปโหลดรูปไม่สำเร็จ:", error);
+        alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
     }
-  };
+};
+
 
   const toggleLogout = () => {
     setShowLogoutModal(true); // ✅ Open the modal
@@ -294,18 +274,22 @@ const UserProfile = () => {
 
   return (
     <div className="profile-container" type="user-profile">
-      {/* เมนูด้านซ้าย */}
-      <aside className="sidebar">
+      {/* 🔹 Header Navigation */}
+      <header className="profile-header">
+        <nav className="nav-menu">
+          <button onClick={() => navigate("/historybooking")}>ประวัติการจอง</button>
+          <button onClick={() => navigate("/FavoritesList")}>รายการโปรด</button>
+          <button onClick={() => navigate("/")}>ค้นหาสนาม</button>
+          <button onClick={() => navigate("/promotion")}>โปรโมชั่น</button>
+          <button onClick={() => navigate("/Discount")}>คูปอง</button>
+        </nav>
+      </header>
+  
+      {/* 🔹 Profile Card (Left Side) */}
+      <aside className="profile-card">
         <div className="profile-image">
           <label htmlFor="fileUpload" className="image-upload-label">
             <img src={profileImage || defaultProfilePic} alt="Profile" />
-
-            {isEditable && (
-              <div className="edit-icon-container">
-                <FaPencilAlt className="edit-icon" />
-              </div>
-            )}
-
             {isEditable && (
               <input
                 id="fileUpload"
@@ -317,27 +301,45 @@ const UserProfile = () => {
             )}
           </label>
         </div>
+  
+        {/* ✅ "Edit Profile" Button (Only when NOT editing) */}
+{!isEditable && (
+  <button className="edit-profile-button" onClick={toggleEdit}>
+    แก้ไขโปรไฟล์และข้อมูล
+  </button>
+)}
 
-        <nav>
-          <button onClick={() => navigate('/historybooking')}>ประวัติการจอง</button>
-          <button onClick={() => navigate('/FavoritesList')}>รายการโปรด</button>
-          <button onClick={() => navigate('/')}>ค้นหาสนาม</button>
-          <button onClick={() => navigate('/promotion')}>โปรโมชั่น</button>
-          <button onClick={() => navigate('/Discount')}>คูปอง</button>
-        </nav>
-        <button className="logout-button" onClick={toggleLogout}>ลงชื่อออก</button>
-      </aside>
+{/* ✅ "บันทึก" (Save) Button (Only when Editing) */}
+{isEditable && (
+  <button className="save-button" onClick={updateMemberData}>
+    บันทึก
+  </button>
+)}
 
-      {/* ข้อมูลผู้ใช้ */}
-      <main className="profile-content">
-        <h2>ข้อมูลผู้ใช้</h2>
-
-        {/* ข้อมูลส่วนตัว */}
-        <section className="user-info">
-          <h3>
-            📌 ข้อมูลส่วนตัว
-            <FaPencilAlt className="edit-icon" onClick={toggleEdit} />
+  
+        
+  
+        {/* ✅ Account Actions: Forgot Password & Delete Account */}
+        <div className="account-actions">
+          <h3 className="forgot-password-user" onClick={() => navigate("/forgot-password")}>
+            ลืมรหัสผ่าน ?
           </h3>
+          <h3 className="user-delete" onClick={DeleteUser}>
+            ลบบัญชี !
+          </h3>
+        </div>
+  
+        {/* ✅ Logout Button */}
+        <button className="logout-button" onClick={toggleLogout}>
+          ลงชื่อออก
+        </button>
+      </aside>
+  
+      {/* 🔹 Profile Content (Right Side) */}
+      <main className="profile-content">
+        {/* ✅ Personal Info Card */}
+        <div className="info-card">
+          <h3>📌 ข้อมูลส่วนตัว</h3>
           <div className="form-grid">
             <div className="input-group">
               <label>ชื่อ</label>
@@ -349,20 +351,11 @@ const UserProfile = () => {
             </div>
             <div className="input-group">
               <label>เพศ</label>
-              {isEditable ? (
-                <select name="gender" value={member?.gender || ""} onChange={handleChange} className="new-input">
-                  <option value="">-- กรุณาเลือกเพศ --</option>
-                  <option value="ชาย">ชาย</option>
-                  <option value="หญิง">หญิง</option>
-                  <option value="อื่นๆ">อื่นๆ</option>
-                </select>
-              ) : (
-                <input type="text" name="gender" value={member?.gender || ""} readOnly className="new-input" />
-              )}
+              <input type="text" name="gender" value={member?.gender || ""} onChange={handleChange} readOnly={!isEditable} />
             </div>
             <div className="input-group">
               <label>หมายเลขโทรศัพท์</label>
-              <input type="text" name="phoneNumber" value={member?.phoneNumber || ""} inputMode="numeric" maxLength="10" onChange={handleChange} readOnly={!isEditable} />
+              <input type="text" name="phoneNumber" value={member?.phoneNumber || ""} onChange={handleChange} readOnly={!isEditable} />
             </div>
             <div className="input-group">
               <label>กีฬาที่สนใจ</label>
@@ -374,23 +367,14 @@ const UserProfile = () => {
             </div>
             <div className="input-group">
               <label>วัน/เดือน/ปีเกิด</label>
-              <input
-                type="date"
-                name="birthdate"
-                value={member?.birthdate ? member.birthdate.substring(0, 10) : ""}
-                onChange={handleChange}
-                readOnly={!isEditable}
-              />
+              <input type="date" name="birthdate" value={member?.birthdate ? member.birthdate.substring(0, 10) : ""} onChange={handleChange} readOnly={!isEditable} />
             </div>
           </div>
-        </section>
-
-        {/* บริเวณที่สนใจ */}
-        <section className="location-info">
-          <h3>
-            📍 บริเวณที่สนใจ
-            <FaPencilAlt className="edit-icon" onClick={() => setIsEditable(true)} />
-          </h3>
+        </div>
+  
+        {/* ✅ Location Info Card */}
+        <div className="info-card">
+          <h3>📍 บริเวณที่สนใจ</h3>
           <div className="form-grid">
             {isEditable ? (
               <>
@@ -439,16 +423,10 @@ const UserProfile = () => {
               </>
             )}
           </div>
-        </section>
-
-        {isEditable && <button className="save-button" onClick={updateMemberData}>บันทึก</button>}
-        <div className="account-actions">
-          <h3 className="forgot-password-user" onClick={() => navigate("/forgot-password")}>ลืมรหัสผ่าน ?</h3>
-          <h3 className="user-delete" onClick={DeleteUser}>ลบบัญชี !</h3>
         </div>
       </main>
-
-      {/* 🔹 Logout Popup Modal */}
+  
+      {/* ✅ Logout Popup Modal */}
       {showLogoutModal && (
         <div className="logout-popup-overlay" onClick={() => setShowLogoutModal(false)}>
           <div className="logout-popup" onClick={(e) => e.stopPropagation()}>
@@ -461,9 +439,10 @@ const UserProfile = () => {
         </div>
       )}
     </div>
-
-
   );
+  
 };
+
+
 
 export default UserProfile;

@@ -18,7 +18,10 @@ const BookingArena = () => {
   const [selectedSubStadiums, setSelectedSubStadiums] = useState([]); // เก็บสนามย่อยที่ถูกเลือก
   const [isFavorite, setIsFavorite] = useState(false); // ✅ เช็คว่าสนามเป็นรายการโปรดหรือไม่
   const [userId, setUserId] = useState(null); // ✅ กำหนดค่า userId
+  const [reviews, setReviews] = useState([]);
   const imageCount = arena?.images?.length || 0;
+  const API_URL = "http://localhost:4000/api";
+
   const settings = {
     dots: true, // Show navigation dots
     infinite: true, // Infinite scroll
@@ -28,6 +31,18 @@ const BookingArena = () => {
     autoplay: true, // Auto slide images
     autoplaySpeed: 2000, 
   };
+
+  const reviewSettings = {
+    dots: true,            // ✅ แสดงจุดนำทาง
+    infinite: true,        // ✅ เลื่อนไปเรื่อย ๆ
+    speed: 500,            // ✅ ความเร็วในการเลื่อน
+    slidesToShow: 2,       // ✅ แสดง 2 รีวิวต่อครั้ง (ปรับได้)
+    slidesToScroll: 1,     // ✅ เลื่อนทีละ 1 รีวิว
+    autoplay: true,        // ✅ เลื่อนอัตโนมัติ
+    autoplaySpeed: 3000,   // ✅ ความเร็วการเปลี่ยนรีวิว (3 วินาที)
+    adaptiveHeight: true,  // ✅ ปรับความสูงตามเนื้อหา
+  };
+  
 
 
   useEffect(() => {
@@ -42,6 +57,48 @@ const BookingArena = () => {
         }
     }
 }, []);
+
+useEffect(() => {
+  axios.get(`${API_URL}/arenas/getArenaById/${id}`)
+      .then((response) => {
+          setArena(response.data);
+          setLoading(false);
+      })
+      .catch((error) => {
+          console.error("Error fetching arena data:", error);
+          setLoading(false);
+      });
+
+  // ✅ ดึงรีวิวของสนาม
+  axios.get(`${API_URL}/reviews/${id}`)
+      .then((response) => {
+          setReviews(response.data.reviews || []);
+      })
+      .catch((error) => console.error("Error fetching reviews:", error));
+}, [id]);
+
+useEffect(() => {
+  const fetchReviews = async () => {
+    try {
+      setReviews([]); // ✅ เคลียร์รีวิวก่อนโหลดใหม่
+      const response = await axios.get(`${API_URL}/reviews/${id}`);
+      console.log("📌 Reviews Loaded:", response.data.reviews); // ✅ ตรวจสอบ API Response
+
+      // ✅ กรองข้อมูลไม่ให้ซ้ำ
+      const uniqueReviews = response.data.reviews.filter((v, i, a) => 
+        a.findIndex(t => (t._id === v._id)) === i
+      );
+
+      setReviews(uniqueReviews || []);
+    } catch (error) {
+      console.error("🚨 Error fetching reviews:", error);
+    }
+  };
+
+  fetchReviews();
+}, [id]); 
+
+
 
 
 useEffect(() => {
@@ -298,6 +355,23 @@ const handleBooking = () => {
                   </span>
                 </div>
               </h2>
+               {/* ✅ ส่วนแสดงรีวิวของลูกค้า */}
+            {/* ✅ ส่วนแสดงรีวิวของลูกค้าแบบเลื่อนอัตโนมัติ */}
+            <h3>รีวิวจากลูกค้า</h3>
+{reviews.length > 0 ? (
+  <Slider {...reviewSettings}>  {/* ✅ ใช้ Slider */}
+    {reviews.map((review) => (
+      <div key={review._id} className="review-item">
+        <p><strong>{review.userId?.firstName || "ไม่ทราบชื่อ"} {review.userId?.lastName || ""}</strong></p>
+        <p>⭐ {review.rating}</p>
+        <p>{review.comment}</p>
+      </div>
+    ))}
+  </Slider>
+) : (
+  <p>❌ ยังไม่มีรีวิว</p>
+)}
+
 
               <div className="google-map-box">
                 {arena.location?.coordinates?.length === 2 && (
