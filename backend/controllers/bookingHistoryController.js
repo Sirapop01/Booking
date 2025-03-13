@@ -169,6 +169,34 @@ exports.confirmBooking = async (req, res) => {
     }
 };
 
+exports.cancelExpiredBooking = async (req, res) => {
+    try {
+        const { sessionId } = req.body;
+
+        const booking = await BookingHistory.findOne({ sessionId });
+
+        if (!booking) {
+            return res.status(404).json({ message: "❌ ไม่พบคำสั่งจองนี้" });
+        }
+
+        if (booking.status !== "pending") {
+            return res.status(400).json({ message: "❌ คำสั่งจองนี้ไม่สามารถยกเลิกได้" });
+        }
+
+        const currentTime = new Date();
+        if (currentTime >= booking.expiresAt) {
+            booking.status = "canceled";
+            await booking.save();
+            console.log("🚨 คำสั่งจองถูกยกเลิกอัตโนมัติ:", sessionId);
+            return res.status(200).json({ message: "✅ คำสั่งจองถูกยกเลิกอัตโนมัติ" });
+        } else {
+            return res.status(400).json({ message: "✅ คำสั่งจองยังไม่หมดเวลา" });
+        }
+    } catch (error) {
+        console.error("❌ Error canceling expired booking:", error);
+        res.status(500).json({ message: "❌ เกิดข้อผิดพลาด" });
+    }
+};
 
 
 

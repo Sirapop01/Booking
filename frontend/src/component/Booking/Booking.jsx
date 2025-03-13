@@ -198,66 +198,60 @@ const Booking = () => {
         let details = [];
 
         selectedSubStadiums.forEach((sub) => {
-          const selectedTimeSlots = bookingData[sub._id]?.selectedTime?.split(", ") || [];
-          const selectedBookingDate = selectedDates[sub._id]; // ✅ ใช้วันที่ของแต่ละสนาม
-          if (!selectedBookingDate) {
-              console.warn(`❌ ไม่พบวันที่ของสนาม ${sub.name}`);
-              return;
-          }
-      
-          if (selectedTimeSlots.length > 0) {
-              const startTime = selectedTimeSlots[0].split(" - ")[0];
-              const endTime = selectedTimeSlots[selectedTimeSlots.length - 1].split(" - ")[1];
-      
-              // ✅ แปลงเวลาเป็นชั่วโมง
-              const startHour = parseInt(startTime.split(":")[0]);
-              const endHour = parseInt(endTime.split(":")[0]);
-      
-              let duration = endHour >= startHour ? endHour - startHour : (24 - startHour) + endHour;
-              if (duration < 0) duration = 0; // ✅ ป้องกัน duration ติดลบ
-      
-              const pricePerHour = parseFloat(sub.price) || 0;
-              const price = pricePerHour * duration;
-              totalPrice += price;
-      
-              details.push({
-                  bookingDate: formatDateForAPI(selectedBookingDate), // ✅ ใช้วันที่ของสนามที่ถูกต้อง
-                  subStadiumId: sub._id,
-                  sportName: sub.sportName,
-                  name: sub.name || "ไม่พบชื่อสนามย่อย",
-                  startTime,
-                  endTime,
-                  duration,
-                  pricePerHour,
-                  price,
-              });
-          }
-      });      
+            const selectedBookingDate = selectedDates[sub._id];
+            const selectedTimeSlots = bookingData[sub._id]?.selectedTime?.split(", ") || [];
+            if (!selectedBookingDate) {
+                console.warn(`❌ ไม่พบวันที่ของสนาม ${sub.name}`);
+                return;
+            }
+
+            if (selectedTimeSlots.length > 0) {
+                const startTime = selectedTimeSlots[0].split(" - ")[0];
+                const endTime = selectedTimeSlots[selectedTimeSlots.length - 1].split(" - ")[1];
+
+                const startHour = parseInt(startTime.split(":")[0]);
+                const endHour = parseInt(endTime.split(":")[0]);
+                let duration = endHour >= startHour ? endHour - startHour : (24 - startHour) + endHour;
+                if (duration < 0) duration = 0;
+
+                const pricePerHour = parseFloat(sub.price) || 0;
+                const price = pricePerHour * duration;
+                totalPrice += price;
+
+                details.push({
+                    bookingDate: formatDateForAPI(selectedBookingDate),
+                    subStadiumId: sub._id,
+                    sportName: sub.sportName,
+                    name: sub.name || "ไม่พบชื่อสนามย่อย",
+                    startTime,
+                    endTime,
+                    duration,
+                    pricePerHour,
+                    price,
+                });
+            }
+        });
 
         if (details.length === 0) {
             Swal.fire("⚠ กรุณาเลือกเวลาอย่างน้อย 1 ช่วง", "", "warning");
             return;
         }
 
-        // ✅ ดึงรูปภาพของสนามกีฬา (ถ้ามี)
-        const stadiumImage = selectedSubStadiums[0]?.image || "https://via.placeholder.com/150";
-
+        const sessionId = nanoid(10);
         const bookingPayload = {
-            sessionId: nanoid(10),
+            sessionId,
             userId,
             stadiumId: selectedSubStadiums[0].arenaId,
             ownerId: selectedSubStadiums[0].ownerId,
-            fieldName, // ✅ ส่ง fieldName ไปโดยตรง
+            fieldName,
             stadiumImage,
-            bookingDate: formatDateForAPI(selectedDate),
-            expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+            expiresAt: new Date(Date.now() + 5 * 60 * 1000), // ✅ หมดอายุใน 10 นาที
             totalPrice,
             details,
         };
 
         console.log("📌 ข้อมูลที่ส่งไปยัง Backend:", bookingPayload);
 
-        // ✅ ส่งข้อมูลไปยัง Backend
         const response = await axios.post(
             "http://localhost:4000/api/bookinghistories/confirm-booking",
             bookingPayload,
@@ -271,16 +265,29 @@ const Booking = () => {
                 text: "ระบบได้บันทึกการจองของคุณแล้ว",
                 confirmButtonText: "ไปที่หน้าชำระเงิน",
             }).then(() => {
-                // ✅ นำทางไปยังหน้า Payment.jsx พร้อมข้อมูลการจอง
-                console.log("📌 ข้อมูลที่กำลังนำไปยังหน้า Payment:", bookingPayload);
-                navigate("/payment", { state: { bookingData: bookingPayload } });
+              navigate("/payment", { state: { bookingData: bookingPayload } });
             });
+
+            // ✅ ตั้งเวลายกเลิกอัตโนมัติใน 10 วินาที
+            setTimeout(async () => {
+                try {
+                    await axios.post(
+                        "http://localhost:4000/api/bookinghistories/cancel-expired",
+                        { sessionId },
+                        { headers: { Authorization: `Bearer ${token}` } }
+                    );
+                    console.log("🚨 คำสั่งจองหมดอายุและถูกยกเลิกแล้ว:", sessionId);
+                } catch (error) {
+                    console.error("❌ ไม่สามารถยกเลิกการจองอัตโนมัติ:", error);
+                }
+            }, 5 * 60 * 1000);
         }
     } catch (error) {
         console.error("🚨 Error confirming booking:", error);
         Swal.fire("❌ เกิดข้อผิดพลาด", "ไม่สามารถยืนยันการจองได้ กรุณาลองใหม่", "error");
     }
 };
+
 
 const handleDateChange = (subStadiumId, date) => {
   setSelectedDates((prev) => ({
