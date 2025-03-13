@@ -27,20 +27,28 @@ const HistoryBooking = () => {
   useEffect(() => {
     if (!decodedToken) return;
 
-    console.log("📌 Fetching booking history for userId:", decodedToken.id);
-
     const fetchBookingHistory = async () => {
-      try {
-        const response = await axios.get(`http://localhost:4000/api/bookinghistories?userId=${decodedToken.id}`);
-        console.log("📌 Booking History Data:", response.data);
-        setBookingHistory(response.data);
-      } catch (error) {
-        console.error("❌ ไม่สามารถดึงข้อมูลประวัติการจอง:", error);
-      }
+        try {
+            const response = await axios.get(`http://localhost:4000/api/bookinghistories?userId=${decodedToken.id}`);
+            console.log("📌 Booking History Data:", response.data);
+            setBookingHistory(response.data);
+        } catch (error) {
+            console.error("❌ ไม่สามารถดึงข้อมูลประวัติการจอง:", error);
+        }
     };
 
     fetchBookingHistory();
-  }, [decodedToken]);
+    
+    // 🔄 ตั้ง interval ดึงข้อมูลทุก 10 วินาที
+    const interval = setInterval(() => {
+        console.log("🔄 กำลังเช็คสถานะการจอง...");
+        fetchBookingHistory();
+    }, 10000);
+
+    return () => clearInterval(interval); // ✅ ล้าง interval เมื่อ component ถูก unmount
+}, [decodedToken]);
+
+
 
   if (loading) return <div>กำลังโหลดข้อมูล...</div>;
 
@@ -74,12 +82,17 @@ const HistoryBooking = () => {
 
               <p className="total-price"><strong>รวม:</strong> {booking.totalPrice} บาท</p>
 
-              <p>
-                <strong>สถานะ:</strong> 
-                <span className={`status ${booking.status.toLowerCase()}`}>
-                  {booking.status}
-                </span>
-              </p>
+                <p>
+                  <strong>สถานะ:</strong> 
+                  <span className={`status ${booking.status.toLowerCase()}`}>
+                    {booking.status}
+                  </span>
+
+                  {/* ✅ แสดงเหตุผลการปฏิเสธถ้าสถานะเป็น "rejected" */}
+                  {booking.status === "rejected" && booking.rejectionReason && (
+                    <span className="rejection-reason"> (เหตุผล: {booking.rejectionReason})</span>
+                  )}
+                </p>
 
               {/* ✅ ปุ่ม รีวิวสนาม */}
               <button 

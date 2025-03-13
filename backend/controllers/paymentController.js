@@ -230,6 +230,12 @@ exports.confirmBooking = async (req, res) => {
             return res.status(404).json({ message: "❌ ไม่พบข้อมูลการจอง" });
         }
 
+        // ✅ อัปเดต BookingHistory ให้ตรงกัน
+        await BookingHistory.findOneAndUpdate(
+          { _id: updatedBooking.bookingId },
+          { status: "confirmed" }
+      );
+
         console.log("✅ การจองถูกยืนยันแล้ว:", updatedBooking);
         res.status(200).json({ message: "✅ การจองถูกยืนยันแล้ว", booking: updatedBooking });
     } catch (error) {
@@ -240,33 +246,40 @@ exports.confirmBooking = async (req, res) => {
 
 
 exports.rejectBooking = async (req, res) => {
-    console.log("🛠️ Debug Params จาก Frontend:", req.params);
+  console.log("🛠️ Debug Params จาก Frontend:", req.params);
+  let { id } = req.params;
+  let { rejectionReason } = req.body; // ✅ รับค่าจาก frontend
 
-    let { id } = req.params;
+  if (!id) return res.status(400).json({ message: "❌ ต้องระบุ ID การจอง" });
 
-    if (!id) return res.status(400).json({ message: "❌ ต้องระบุ ID การจอง" });
+  if (!ObjectId.isValid(id)) {
+      console.log("❌ ID ผิดรูปแบบ:", id);
+      return res.status(400).json({ message: "❌ ID การจองไม่ถูกต้อง" });
+  }
 
-    if (!ObjectId.isValid(id)) {
-        console.log("❌ ID ผิดรูปแบบ:", id);
-        return res.status(400).json({ message: "❌ ID การจองไม่ถูกต้อง" });
-    }
+  try {
+      const updatedBooking = await Payment.findByIdAndUpdate(
+          new ObjectId(id), 
+          { status: "rejected", rejectionReason },  // ✅ บันทึกเหตุผลไปด้วย
+          { new: true }
+      );
 
-    try {
-        const updatedBooking = await Payment.findByIdAndUpdate(
-            new ObjectId(id), 
-            { status: "rejected" }, 
-            { new: true }
-        );
+      if (!updatedBooking) {
+          console.log("❌ ไม่พบข้อมูลการจองใน MongoDB:", id);
+          return res.status(404).json({ message: "❌ ไม่พบข้อมูลการจอง" });
+      }
 
-        if (!updatedBooking) {
-            console.log("❌ ไม่พบข้อมูลการจองใน MongoDB:", id);
-            return res.status(404).json({ message: "❌ ไม่พบข้อมูลการจอง" });
-        }
+      // ✅ อัปเดต BookingHistory ให้ตรงกัน
+      await BookingHistory.findOneAndUpdate(
+          { _id: updatedBooking.bookingId },  
+          { status: "rejected", rejectionReason }  // ✅ อัปเดตเหตุผลในประวัติการจองด้วย
+      );
 
-        console.log("✅ การจองถูกปฏิเสธแล้ว:", updatedBooking);
-        res.status(200).json({ message: "✅ การจองถูกปฏิเสธแล้ว", booking: updatedBooking });
-    } catch (error) {
-        console.error("❌ Error rejecting booking:", error);
-        res.status(500).json({ message: "เกิดข้อผิดพลาดในการปฏิเสธการจอง" });
-    }
+      console.log("✅ การจองถูกปฏิเสธแล้ว:", updatedBooking);
+      res.status(200).json({ message: "✅ การจองถูกปฏิเสธแล้ว", booking: updatedBooking });
+  } catch (error) {
+      console.error("❌ Error rejecting booking:", error);
+      res.status(500).json({ message: "เกิดข้อผิดพลาดในการปฏิเสธการจอง" });
+  }
 };
+
