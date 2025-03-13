@@ -1,12 +1,24 @@
 const User = require("../models/User");
+const Owner = require("../models/BusinessOwner");
+const Blacklist = require("../models/Blacklist"); // เพิ่ม Model Blacklist
 
-// 📌 ดึงข้อมูลผู้ใช้ทั้งหมด (ไม่ส่ง password)
+// 📌 ฟังก์ชันดึงข้อมูลผู้ใช้ทั้งหมด
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้", error });
+  }
+};
+
+// 📌 ฟังก์ชันดึงข้อมูลเจ้าของสนามทั้งหมด
+exports.getOwners = async (req, res) => {
+  try {
+    const owners = await Owner.find().select("-password");
+    res.json(owners);
+  } catch (error) {
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในการดึงข้อมูลเจ้าของสนาม", error });
   }
 };
 
@@ -18,6 +30,17 @@ exports.getUserById = async (req, res) => {
     res.json(user);
   } catch (error) {
     res.status(500).json({ message: "เกิดข้อผิดพลาดในการค้นหาผู้ใช้", error });
+  }
+};
+
+// 📌 ดึงข้อมูลเจ้าของสนามตาม ID
+exports.getOwnerById = async (req, res) => {
+  try {
+    const owner = await Owner.findById(req.params.id).select("-password");
+    if (!owner) return res.status(404).json({ message: "ไม่พบเจ้าของสนาม" });
+    res.json(owner);
+  } catch (error) {
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในการค้นหาเจ้าของสนาม", error });
   }
 };
 
@@ -33,18 +56,80 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
+// 📌 ลบบัญชีเจ้าของสนาม
+exports.deleteOwner = async (req, res) => {
+  try {
+    const deletedOwner = await Owner.findByIdAndDelete(req.params.id);
+    if (!deletedOwner) return res.status(404).json({ message: "ไม่พบเจ้าของสนาม" });
+
+    res.json({ message: "ลบบัญชีเจ้าของสนามเรียบร้อย" });
+  } catch (error) {
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในการลบข้อมูล", error });
+  }
+};
+
 // 📌 ตั้ง/ยกเลิก Blacklist ผู้ใช้
 exports.toggleBlacklistUser = async (req, res) => {
   try {
+    console.log("📌 รับค่า req.params.id:", req.params.id);
+    
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: "ไม่พบผู้ใช้" });
 
-    // เปลี่ยน status เป็น "blacklisted" หรือ "active"
-    user.status = user.status === "blacklisted" ? "active" : "blacklisted";
-    await user.save();
+    const blacklistEntry = await Blacklist.findOne({ accountId: user._id });
 
-    res.json({ message: `บัญชี ${user.status === "blacklisted" ? "ถูกเพิ่มใน Blacklist" : "ถูกปลดจาก Blacklist"}` });
+    if (!blacklistEntry) {
+      console.log("📌 เพิ่มเข้าสู่ Blacklist:", user._id);
+      await Blacklist.create({ 
+        accountId: user._id, 
+        userType: "User", 
+        reason: req.body.reason || "ละเมิดเงื่อนไข" 
+      });
+
+      await User.findByIdAndUpdate(user._id, { status: "blacklisted" }, { new: true, runValidators: false });
+      return res.json({ message: "บัญชีถูกเพิ่มใน Blacklist" });
+    } else {
+      console.log("📌 เอาออกจาก Blacklist:", user._id);
+      await Blacklist.findByIdAndDelete(blacklistEntry._id);
+
+      await User.findByIdAndUpdate(user._id, { status: "active" }, { new: true, runValidators: false });
+      return res.json({ message: "บัญชีถูกปลดจาก Blacklist" });
+    }
   } catch (error) {
-    res.status(500).json({ message: "เกิดข้อผิดพลาดในการเปลี่ยนสถานะ Blacklist", error });
+    console.error("❌ เกิดข้อผิดพลาดในการเปลี่ยนสถานะ Blacklist:", error);
+    return res.status(500).json({ message: "เกิดข้อผิดพลาดในการเปลี่ยนสถานะ Blacklist", error: error.message });
+  }
+};
+
+// 📌 ตั้ง/ยกเลิก Blacklist เจ้าของสนาม (แก้ไขให้ถูกต้อง)
+exports.toggleBlacklistOwner = async (req, res) => {
+  try {
+    console.log("📌 รับค่า req.params.id:", req.params.id);
+    
+    const owner = await Owner.findById(req.params.id); // ✅ แก้จาก User เป็น Owner
+    if (!owner) return res.status(404).json({ message: "ไม่พบเจ้าของสนาม" });
+
+    const blacklistEntry = await Blacklist.findOne({ accountId: owner._id });
+
+    if (!blacklistEntry) {
+      console.log("📌 เพิ่มเข้าสู่ Blacklist:", owner._id);
+      await Blacklist.create({ 
+        accountId: owner._id, 
+        userType: "BusinessOwner", 
+        reason: req.body.reason || "ละเมิดเงื่อนไข" 
+      });
+
+      await Owner.findByIdAndUpdate(owner._id, { status: "blacklisted" }, { new: true, runValidators: false });
+      return res.json({ message: "บัญชีเจ้าของสนามถูกเพิ่มใน Blacklist" });
+    } else {
+      console.log("📌 เอาออกจาก Blacklist:", owner._id);
+      await Blacklist.findByIdAndDelete(blacklistEntry._id);
+
+      await Owner.findByIdAndUpdate(owner._id, { status: "active" }, { new: true, runValidators: false });
+      return res.json({ message: "บัญชีเจ้าของสนามถูกปลดจาก Blacklist" });
+    }
+  } catch (error) {
+    console.error("❌ เกิดข้อผิดพลาดในการเปลี่ยนสถานะ Blacklist:", error);
+    return res.status(500).json({ message: "เกิดข้อผิดพลาดในการเปลี่ยนสถานะ Blacklist", error: error.message });
   }
 };

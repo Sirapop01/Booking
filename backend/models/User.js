@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     type: { type: String, enum: ['Point'], required: true },
     coordinates: { type: [Number], required: true },
   },
-  status: { type: String, enum: ["active", "inactive"], default: "active" }
+  status: { type: String, enum: ["active", "blacklisted"], default: "active" }
 });
 
 const User = mongoose.model('User', userSchema);

@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom"; // ✅ ใช้เพื่อเปลี่ยนหน้า
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./ManageAccount.css";
@@ -11,12 +12,14 @@ const ManageAccount = () => {
   const [isOwnerMode, setIsOwnerMode] = useState(false);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [deleteInput, setDeleteInput] = useState("");
+  const navigate = useNavigate(); // ✅ ใช้ Hook เพื่อนำทางไปยังหน้าใหม่
+
 
   // 📌 โหลดข้อมูลบัญชีจาก API
   useEffect(() => {
     const apiUrl = isOwnerMode
-      ? "http://localhost:4000/api/manage-owner" // ✅ API สำหรับเจ้าของสนาม
-      : "http://localhost:4000/api/manage-account"; // ✅ API สำหรับบัญชีผู้ใช้
+  ? "http://localhost:4000/api/manage-account/owners"  // ✅ ดึงข้อมูลเจ้าของสนาม
+  : "http://localhost:4000/api/manage-account/users";  // ✅ ดึงข้อมูลผู้ใช้
 
     axios.get(apiUrl)
       .then(response => {
@@ -32,8 +35,8 @@ const ManageAccount = () => {
   const confirmDeleteUser = () => {
     if (deleteInput === "Delete") {
       const deleteUrl = isOwnerMode
-        ? `http://localhost:4000/api/manage-owner/${selectedUser._id}`
-        : `http://localhost:4000/api/manage-account/${selectedUser._id}`;
+  ? `http://localhost:4000/api/manage-account/owners/${selectedUser._id}`
+  : `http://localhost:4000/api/manage-account/users/${selectedUser._id}`;
 
       axios.delete(deleteUrl)
         .then(() => {
@@ -51,8 +54,9 @@ const ManageAccount = () => {
   // 📌 ฟังก์ชันตั้งหรือยกเลิก Blacklist
   const toggleBlacklist = (id) => {
     const blacklistUrl = isOwnerMode
-      ? `http://localhost:4000/api/manage-owner/blacklist/${id}`
-      : `http://localhost:4000/api/manage-account/blacklist/${id}`;
+  ? `http://localhost:4000/api/manage-account/owners/blacklist/${id}`
+  : `http://localhost:4000/api/manage-account/users/blacklist/${id}`;
+
 
     axios.put(blacklistUrl)
       .then(() => {
@@ -70,7 +74,7 @@ const ManageAccount = () => {
   return (
     <div className="manage-account-container">
       {/* ✅ ปุ่มกลับไปยังหน้า Home */}
-      <a href="/" className="home-button">
+      <a href="/superadmin/dashboard" className="home-button">
         <img src={homeLogo} alt="Home Logo" className="home-logo" />
       </a>
 
@@ -101,44 +105,65 @@ const ManageAccount = () => {
         </div>
 
         {/* 📌 Container สำหรับ User Details */}
-        {selectedUser && (
-          <div className="user-details-container">
-            <div className="user-header">รายละเอียด</div>
-            {/* ✅ รูปโปรไฟล์ */}
-            <div className="profile-image">
-              <img src={selectedUser.profileImage || "https://via.placeholder.com/100"} alt="User Profile" />
-            </div>
+{selectedUser && (
+  <div className="user-details-container">
+    <div className="user-header">รายละเอียด</div>
 
-            {/* ✅ หัวข้อ "ข้อมูลส่วนตัว" */}
-            <div className="details-header">ข้อมูลส่วนตัว</div>
+    {/* ✅ รูปโปรไฟล์ (แสดงเฉพาะผู้ใช้ทั่วไป) */}
+    {!isOwnerMode && (
+      <div className="profile-image">
+        <img src={selectedUser.profileImage || "https://via.placeholder.com/100"} alt="User Profile" />
+      </div>
+    )}
 
-            {/* ✅ ข้อมูลผู้ใช้แสดงแบบ 3 คอลัมน์ */}
-            <div className="info-section">
-              <p><strong>ชื่อ:</strong> {selectedUser.firstName}</p>
-              <p><strong>นามสกุล:</strong> {selectedUser.lastName}</p>
-              <p><strong>เพศ:</strong> {selectedUser.gender || "-"}</p>
-              <p><strong>หมายเลขโทรศัพท์:</strong> {selectedUser.phoneNumber}</p>
-              <p><strong>อีเมล:</strong> {selectedUser.email}</p>
-              <p><strong>สนใจกีฬา:</strong> {selectedUser.interestedSports || "-"}</p>
-              <p><strong>ที่อยู่:</strong> {`${selectedUser.subdistrict}, ${selectedUser.district}, ${selectedUser.province}`}</p>
-              <p><strong>สถานะ:</strong> 
-                <span className={selectedUser.status === "blacklisted" ? "blacklisted-text" : "active-text"}>
-                  {selectedUser.status}
-                </span>
-              </p>
-              {isOwnerMode && <p><strong>สนามของ:</strong> {selectedUser.firstName}</p>}
-            </div>
+    {/* ✅ หัวข้อ "ข้อมูลส่วนตัว" */}
+    <div className="details-header">ข้อมูลส่วนตัว</div>
 
-            {/* ✅ ปุ่มดำเนินการ */}
-            <div className="action-buttons">
-              <button className="delete-button3" onClick={() => setShowDeletePopup(true)}>ลบบัญชี</button>
-              <button className={`blacklist-button ${selectedUser.status === "blacklisted" ? "remove-blacklist" : ""}`} 
-                onClick={() => toggleBlacklist(selectedUser._id)}>
-                {selectedUser.status === "blacklisted" ? "ยกเลิก Blacklist" : "เพิ่มใน Blacklist"}
-              </button>
-            </div>
-          </div>
-        )}
+    {/* ✅ ข้อมูลผู้ใช้แสดงแบบ 3 คอลัมน์ */}
+    <div className="info-section">
+      <p><strong>ชื่อ:</strong> {selectedUser.firstName}</p>
+      <p><strong>นามสกุล:</strong> {selectedUser.lastName}</p>
+
+      {/* ✅ แสดงเพศ และ สนใจกีฬา เฉพาะบัญชีผู้ใช้ */}
+      {!isOwnerMode && <p><strong>เพศ:</strong> {selectedUser.gender || "-"}</p>}
+      <p><strong>หมายเลขโทรศัพท์:</strong> {selectedUser.phoneNumber}</p>
+      <p><strong>อีเมล:</strong> {selectedUser.email}</p>
+
+      {/* ✅ แสดงเฉพาะผู้ใช้ */}
+      {!isOwnerMode && <p><strong>สนใจกีฬา:</strong> {selectedUser.interestedSports || "-"}</p>}
+
+      {/* ✅ แสดงที่อยู่เฉพาะผู้ใช้ */}
+      {!isOwnerMode && (
+        <p><strong>ที่อยู่:</strong> {`${selectedUser.subdistrict || "-"}, ${selectedUser.district || "-"}, ${selectedUser.province || "-"}`}</p>
+      )}
+
+      {/* ✅ สถานะบัญชี */}
+      <p><strong>สถานะ:</strong> 
+        <span className={selectedUser.status === "blacklisted" ? "blacklisted-text" : "active-text"}>
+          {selectedUser.status}
+        </span>
+      </p>
+
+      {/* ✅ แสดงชื่อสนามของเจ้าของสนาม */}
+      {isOwnerMode && <p><strong>สนามของ:</strong> {selectedUser.firstName}</p>}
+    </div>
+
+    {/* ✅ ปุ่มดำเนินการ */}
+    <div className="action-buttons">
+      <button className="delete-button3" onClick={() => setShowDeletePopup(true)}>ลบบัญชี</button>
+      <button className={`blacklist-button ${selectedUser.status === "blacklisted" ? "remove-blacklist" : ""}`} 
+        onClick={() => toggleBlacklist(selectedUser._id)}>
+        {selectedUser.status === "blacklisted" ? "ยกเลิก Blacklist" : "เพิ่มใน Blacklist"}
+      </button>
+    </div>
+    {/* ✅ ปุ่ม "ดูประวัติการจอง" (เฉพาะบัญชีผู้ใช้) */}
+  {!isOwnerMode && (
+    <button className="history-button" onClick={() => navigate(`/historybooking/${selectedUser._id}`)}>
+      ดูประวัติการจอง
+    </button>
+  )}
+  </div>
+)}
       </div>
 
       {/* ✅ Pop-up ยืนยันการลบบัญชี */}

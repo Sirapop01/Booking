@@ -286,3 +286,18 @@
     font-family: 'Kanit', sans-serif;
 }
 
+.history-button {
+    background-color: #3498db; /* สีฟ้า */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    margin-left: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .history-button:hover {
+    background-color: #2980b9; /* สีฟ้าเข้มเมื่อ hover */
+  }
+  
