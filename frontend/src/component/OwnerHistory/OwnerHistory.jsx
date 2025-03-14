@@ -12,6 +12,7 @@ const OwnerHistory = () => {
     const [bookings, setBookings] = useState([]);
     const [filteredBookings, setFilteredBookings] = useState([]);
     const [selectedMonth, setSelectedMonth] = useState("");
+    const [selectedStadium, setSelectedStadium] = useState("ทั้งหมด"); // ✅ ตัวเลือกสนาม Default เป็น "ทั้งหมด"
     const [ownerId, setOwnerId] = useState(null);
     const reportRef = useRef(null); // ✅ ใช้ Ref ครอบพื้นที่ต้องการบันทึก PDF
 
@@ -31,9 +32,9 @@ const OwnerHistory = () => {
     // ✅ ดึงรายการสนามที่เป็นของเจ้าของ
     useEffect(() => {
         if (!ownerId) return;
-
+    
         axios
-            .get(`http://localhost:4000/api/owner-stadiums?ownerId=${ownerId}`)
+            .get(`http://localhost:4000/api/owner-history/owner-stadiums?ownerId=${ownerId}`) // ✅ เพิ่ม ownerId ใน query string
             .then((response) => {
                 console.log("📌 สนามที่พบ:", response.data);
                 setStadiums(response.data);
@@ -58,20 +59,22 @@ const OwnerHistory = () => {
             });
     }, [stadiums.length > 0 || ownerId]);
 
-    // ✅ ฟังก์ชันกรองข้อมูลตามเดือนที่เลือก
-    const handleFilterChange = (event) => {
-        const month = event.target.value;
-        setSelectedMonth(month);
+    // ✅ ฟังก์ชันกรองข้อมูลตามเดือนและสนามที่เลือก
+    useEffect(() => {
+        let filtered = bookings;
 
-        if (!month) {
-            setFilteredBookings(bookings);
-        } else {
-            const filtered = bookings.filter((booking) =>
-                booking.details.some((detail) => detail.bookingDate.startsWith(month))
+        if (selectedMonth) {
+            filtered = filtered.filter((booking) =>
+                booking.details.some((detail) => detail.bookingDate.startsWith(selectedMonth))
             );
-            setFilteredBookings(filtered);
         }
-    };
+
+        if (selectedStadium !== "ทั้งหมด") {
+            filtered = filtered.filter((booking) => booking.fieldName === selectedStadium);
+        }
+
+        setFilteredBookings(filtered);
+    }, [selectedMonth, selectedStadium, bookings]);
 
     // ✅ จัดกลุ่มข้อมูลสำหรับ Bar Chart
     const monthlyData = filteredBookings.reduce((acc, booking) => {
@@ -127,11 +130,25 @@ const OwnerHistory = () => {
                 <div ref={reportRef}> {/* ✅ ครอบเฉพาะพื้นที่ที่ต้องการบันทึก PDF */}
                     <h1 className="title">ภาพรวมการจองสนาม</h1>
 
-                    {/* ✅ ตัวเลือกกรองเดือน */}
+                    {/* ✅ ตัวเลือกกรอง */}
                     <div className="filter-container">
                         <label htmlFor="month">เลือกเดือน:</label>
-                        <input type="month" id="month" value={selectedMonth} onChange={handleFilterChange} />
-                    </div>
+                        <input type="month" id="month" value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)} />
+
+                        <label htmlFor="stadium">เลือกสนาม:</label>
+                            <select id="stadium" value={selectedStadium} onChange={(e) => setSelectedStadium(e.target.value)}>
+                                <option value="ทั้งหมด">ทั้งหมด</option>
+                                {stadiums.length > 0 ? (
+                                    stadiums.map((stadium) => (
+                                        <option key={stadium._id} value={stadium.fieldName || "ไม่ระบุ"}>
+                                            {stadium.fieldName || "ไม่ระบุ"}
+                                        </option>
+                                    ))
+                                ) : (
+                                    <option disabled>ไม่มีข้อมูลสนาม</option>
+                                )}
+                            </select>
+                        </div>
 
                     {/* ✅ ตารางแสดงประวัติการจอง */}
                     <table className="booking-table">

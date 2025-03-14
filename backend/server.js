@@ -113,7 +113,7 @@ app.use("/api/bookinghistories", bookingHistoryRoutes);
 app.use("/api/businessOwners", businessOwnerRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/payments", paymentRoutes);
-app.use("/api/owner-history", ownerHistoryRoutes);
+app.use("/api/owner-history", ownerHistoryRoutes); // ✅ ต้องมี
 
 // ✅ WebSocket สำหรับ Chat (Socket.io)
 io.on("connection", (socket) => {

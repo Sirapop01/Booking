@@ -35,12 +35,10 @@ const ChatButton = () => {
       .then((data) => {
         if (data.success) {
           const newCount = data.data.length;
-          console.log(`📩 Loaded Messages: ${newCount}, Previous: ${messageCount}`);
 
           // ✅ ถ้า ChatPopup ไม่ได้เปิดอยู่ และมีข้อความใหม่ → แสดงจุดแจ้งเตือน
           if (!isOpen && newCount > messageCount) {
             setHasNewMessage(true);
-            console.log("🔴 Showing notification dot!");
           }
 
           setMessageCount(newCount);
@@ -66,7 +64,6 @@ const ChatButton = () => {
       // ✅ ถ้า ChatPopup ไม่ได้เปิดอยู่ → แสดงจุดแจ้งเตือน
       if (!isOpen) {
         setHasNewMessage(true);
-        console.log("🔴 Showing notification dot!");
       }
     });
 
