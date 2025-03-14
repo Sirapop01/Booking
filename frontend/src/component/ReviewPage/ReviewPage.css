@@ -1,302 +1,214 @@
 .review-page-container {
-  width: 100%;
-  max-width: 1100px;
-  margin: 80px auto 20px; /* ✅ เพิ่ม margin-top: 80px เพื่อขยับลง */
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
   padding: 20px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
+  background: linear-gradient(to bottom, #f8f9fa, #e9ecef); /* ✅ พื้นหลังไล่สีสวย ๆ */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Kanit", sans-serif;
 }
 
-.review-page-container h1 {
-  font-size: 24px;
+/* ✅ ทำให้ชื่อสนามและเวลาทำงานดูโดดเด่น */
+h2 {
+  font-size: 28px;
   font-weight: bold;
-  color: #2c3e50;
-  margin-bottom: 15px;
+  color: #333;
+  margin-top: 10px;
 }
 
-.review-page-container h2 {
-  font-size: 24px;
-  font-weight: bold;
-  color: black;
-}
-.review-page-container p {
-  font-size: 24px;
-  font-weight: bold;
-  color: black;
+p {
+  font-size: 18px;
+  color: #555;
 }
 
-
-.stadium-list12 {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin: 20px 0;
+/* ✅ Container รูปภาพสนาม */
+.review-stadium-image-container {
+  margin: 20px auto;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
 }
 
-.stadium-item12 {
-    width: 80%;
-    padding: 10px;
-    border: 2px solid #007bff;
-    background: #f0f8ff;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: 0.3s;
-}
-
-.stadium-item:hover {
-    background: #007bff;
-    color: white;
-}
-
-.selected {
-    background: #007bff;
-    color: white;
-}
-
-.review-form {
-    background: #f9f9f9;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-top: 20px;
-}
-
-.rating-section {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.star {
-    font-size: 25px;
-    cursor: pointer;
-    transition: 0.2s;
-    color: #ddd;
-}
-
-.star.active {
-    color: #ffcc00;
-    transform: scale(1.2);
-}
-
-textarea {
-    width: 100%;
-    height: 80px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-top: 10px;
-    font-size: 14px;
-}
-
-.submit-button {
-    background: #007bff;
-    color: white;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-    margin-top: 10px;
-    transition: 0.3s;
-}
-
-.submit-button:hover {
-    background: #0056b3;
-}
-
-.review-message {
-    background: #28a745;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    margin-top: 20px;
-    font-size: 14px;
-}
-
-
-/* ✅ ปรับให้รีวิวเลื่อนได้ */
-.review-page-container {
-    text-align: center;
-  }
-  
-  .review-stadium-image-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
+/* ✅ ปรับขนาดรูปภาพสนามให้สวย */
 .review-stadium-image {
-  width: 300px;  /* ✅ กำหนดความกว้างเป็น 500px */
-  height: 300px; /* ✅ กำหนดความสูงเป็น 500px */
-  object-fit: cover; /* ✅ ป้องกันการบีบอัดและตัดภาพให้พอดี */
-  border-radius: 10px; /* ✅ ทำให้มุมมน */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* ✅ เพิ่มเงาให้ดูมีมิติ */
-}
-  
-  .review-slider {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .review-slide {
-    background: #f9f9f9;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    text-align: center;
-  }
-  
-  .review-user {
-    font-weight: normal;
-    color: black;
-    font-size: 18px;
-  }
-  
-  .review-rating {
-    font-size: 1.2em;
-    color: gold;
-  }
-  
-  .review-comment {
-    font-weight: normal;  /* ✅ เปลี่ยนจากตัวหนาเป็นตัวปกติ */
-    font-style: normal;  /* ✅ เอาตัวเอียงออก ถ้าไม่ต้องการ */
-    color: #333;
-    font-size: 16px; /* ✅ ปรับขนาดฟอนต์ให้เหมาะสม */
-}
-  
-  
-  /* ✅ ปรับการแสดงผลของปุ่มรีวิว */
-  .review-rating-section {
-    margin-top: 20px;
-  }
-  
-  .review-star {
-    font-size: 2em;
-    cursor: pointer;
-    color: #ccc; 
-  }
-  
-  .review-star.active {
-    color: gold;
-  }
-  
-  .review-textarea {
-    width: 100%;
-    max-width: 600px;
-    height: 120px;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    resize: vertical;
-    box-sizing: border-box;
-    text-align: left; /* ทำให้ข้อความชิดซ้ายภายใน */
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
 }
 
-  
-.review-submit-button {
-    width: 100%;
-    max-width: 200px; /* ปรับขนาดปุ่มให้พอดี */
-    padding: 12px;
-    font-size: 18px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s;
-    margin-top: 15px;
-    text-align: center;
-    display: flex;
-    justify-content: center; /* จัดปุ่มให้อยู่ตรงกลาง */
-    align-items: center;
+/* ✅ เพิ่ม Animation เมื่อ Hover */
+.review-stadium-image:hover {
+  transform: scale(1.02);
+  transition: all 0.3s ease-in-out;
 }
-
-  .review-submit-button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* ✅ ให้ Slider แสดงจุดนำทางด้านบน */
-  .slick-dots {
-    top: -30px !important;
-  }
-  
-  /* ✅ ให้ลูกศรเลื่อนรีวิวแสดงผลถูกต้อง */
-  .slick-prev, .slick-next {
-    z-index: 1000;
-  }
-
-  .review-title3{
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    margin: 20px 0;
-    width: 100%; /* ให้ข้อความอยู่กึ่งกลางเต็มจอ */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: black;
-}
-
-.review-form-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* จัดให้อยู่ตรงกลางแนวตั้ง */
-    justify-content: center;
-    width: 100%;
-    max-width: 600px;
-    margin: 20px auto; /* ทำให้ textarea และปุ่มอยู่ตรงกลาง */
-    text-align: center;
-}
-
-
 .review-filter55 {
   display: flex;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: row; /* ✅ ให้เรียงแนวนอน */
-  justify-content: center; 
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-  width: 300px;
-  position: relative; /* ✅ ไม่ให้ลอยทับรีวิว */
-  flex-wrap: wrap; /* ✅ ป้องกันปุ่มล้นจอ */
-}
-
-
-.review-filter55 button {
-  display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 5px;
-  background-color: #2C3E50;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 10px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ ปุ่มตัวกรอง */
+.review-filter55 button {
+  background: linear-gradient(135deg, #007bff, #0056b3);
   color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 16px;
+  padding: 12px 18px;
   border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
 }
 
-.review-filter55 button.active {
-  background-color: #28a745;
-}
-
+/* ✅ Hover ให้ดูมีลูกเล่น */
 .review-filter55 button:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
+  background: linear-gradient(135deg, #0056b3, #003c82);
 }
 
+/* ✅ ปุ่มที่เลือกแล้ว */
+.review-filter55 button.active {
+  background: linear-gradient(135deg, #004085, #002855);
+  transform: scale(1.1);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+.review-slider {
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
 
+/* ✅ การ์ดรีวิว */
+.review-slide {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: 80%;
+  max-width: 500px;
+  transition: transform 0.3s ease-in-out;
+}
 
-  
+/* ✅ เพิ่มเงาและขยายเมื่อ hover */
+.review-slide:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* ✅ ชื่อผู้ให้รีวิว */
+.review-user {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+/* ✅ คะแนนรีวิว */
+.review-rating {
+  font-size: 22px;
+  color: #ffc107;
+  margin-bottom: 10px;
+}
+
+/* ✅ คอมเมนต์ */
+.review-comment {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* ✅ วันที่รีวิว */
+.review-owner-date {
+  font-size: 14px;
+  color: #888;
+}
+/* ✅ ส่วนให้คะแนน */
+.review-rating-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  color: #555;
+  margin-top: 20px;
+}
+
+/* ✅ ไอคอนดาวให้คะแนน */
+.review-star {
+  font-size: 24px;
+  cursor: pointer;
+  color: #ccc;
+  transition: all 0.3s ease-in-out;
+}
+
+/* ✅ เมื่อเลือกแล้ว */
+.review-star.active {
+  color: #ffc107;
+  transform: scale(1.2);
+}
+
+/* ✅ ฟอร์มรีวิว */
+.review-form-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ✅ กล่องกรอกข้อความ */
+.review-textarea {
+  width: 100%;
+  max-width: 600px;
+  height: 120px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-size: 16px;
+  resize: none;
+  box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ ปุ่มส่งรีวิว */
+.review-submit-button {
+  background: linear-gradient(135deg, #28a745, #218838);
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+/* ✅ Hover ให้ปุ่มดูเด่นขึ้น */
+.review-submit-button:hover {
+  transform: scale(1.08);
+  background: linear-gradient(135deg, #218838, #1e7e34);
+}
+
+/* ✅ ทำให้วันที่ใต้รีวิวดูสวยขึ้น */
+.review-date {
+  font-size: 14px;
+  color: #888;
+  margin-top: 8px;
+  font-style: italic;
+}
+
