@@ -26,6 +26,8 @@ const RegistrationForm = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpSentTime, setOtpSentTime] = useState(null);
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -88,59 +90,104 @@ const RegistrationForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-
-  // ✅ ฟังก์ชันส่งข้อมูลสมัครสมาชิก
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
-
-    Swal.fire({
-      title: "กำลังสมัครสมาชิก...",
-      text: "กรุณารอสักครู่",
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    });
-    console.log("🚀 Data being sent to backend:", formData);
-
+  const sendOtp = async () => {
     try {
-      const response = await axios.post("http://localhost:4000/api/business/register",
-        { ...formData, role: "owner" },
-        { headers: { "Content-Type": "application/json" } }
-      );
-
-      if (response.data.success) {
-        // ✅ เก็บ Token และ Email
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("registeredEmail", formData.email);
-        Swal.fire({
-          title: "✅ สมัครสมาชิกสำเร็จ!",
-          text: "โปรดกรอกข้อมูลสนามและรอการอนุมัติ!",
-          icon: "success",
-          confirmButtonText: "ตกลง",
-        }).then(() => {
-          navigate("/RegisterArena");
-        });
-      } else {
-        Swal.fire({
-          title: "❌ เกิดข้อผิดพลาด",
-          text: response.data.message || "เกิดข้อผิดพลาดในการสมัครสมาชิก",
-          icon: "error",
-          confirmButtonText: "ตกลง",
-        });
-      }
+      Swal.fire({ title: 'กำลังส่ง OTP...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+      await axios.post('http://localhost:4000/api/auth/send-otp', { email: formData.email });
+      setOtpSent(true);
+      setOtpSentTime(Date.now());
+      Swal.fire('ส่ง OTP สำเร็จ', 'โปรดตรวจสอบอีเมล', 'success');
     } catch (error) {
-      console.error("🚨 Error registering user:", error.response?.data || error);
-      Swal.fire({
-        title: "❌ เกิดข้อผิดพลาด",
-        text: error.response?.data?.message || "ลองใหม่อีกครั้ง",
-        icon: "error",
-        confirmButtonText: "ตกลง",
-      });
+      Swal.fire('ส่ง OTP ไม่สำเร็จ', error.response?.data?.message || 'เกิดข้อผิดพลาด', 'error');
     }
   };
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    if (!otpSent) await sendOtp();
+
+    let otpVerified = false;
+    const otpExpiryTime = 5 * 60 * 1000;
+
+    while (!otpVerified) {
+      const currentTime = Date.now();
+      const timeLeft = otpSentTime ? otpExpiryTime - (currentTime - otpSentTime) : otpExpiryTime;
+
+      if (timeLeft <= 0) {
+        const resendOtp = await Swal.fire({
+          icon: 'warning',
+          title: '⚠️ OTP หมดอายุแล้ว',
+          text: 'กรุณาส่ง OTP อีกครั้ง',
+          confirmButtonText: 'ส่ง OTP อีกครั้ง',
+          cancelButtonText: 'ยกเลิก',
+          showCancelButton: true,
+          customClass: {
+            popup: 'otp-popup',
+            confirmButton: 'otp-popup-confirm-btn',
+            cancelButton: 'otp-popup-cancel-btn',
+          }
+        });
+
+        if (resendOtp.isConfirmed) {
+          await sendOtp();
+          continue;
+        } else {
+          navigate('/login');
+          return;
+        }
+      }
+
+      const { value: otp, dismiss } = await Swal.fire({
+        title: '<strong class="otp-swal-title">📧 ยืนยัน OTP</strong>',
+        input: 'text',
+        inputPlaceholder: 'รหัส OTP 6 หลัก',
+        showCancelButton: true,
+        confirmButtonText: 'ยืนยัน OTP',
+        cancelButtonText: 'ยกเลิก',
+        footer: `<span>OTP จะหมดอายุภายใน ${Math.floor(timeLeft / 60000)} นาที ${Math.floor((timeLeft % 60000) / 1000)} วินาที</span>`,
+        inputAttributes: { maxlength: 6, autocapitalize: 'off', autocorrect: 'off', style: 'text-align:center;font-size:18px;' },
+        customClass: {
+          popup: 'otp-popup',
+          input: 'otp-popup-input',
+          confirmButton: 'otp-popup-confirm-btn',
+          cancelButton: 'otp-popup-cancel-btn',
+        },
+        preConfirm: (otpValue) => {
+          if (!otpValue || !/^\d{6}$/.test(otpValue)) {
+            Swal.showValidationMessage('กรุณากรอก OTP เป็นตัวเลข 6 หลัก');
+          }
+          return otpValue;
+        },
+      });
+
+      if (dismiss === Swal.DismissReason.cancel || dismiss === Swal.DismissReason.close) {
+              Swal.fire('ยกเลิกการลงทะเบียน', 'ระบบจะนำคุณไปยังหน้า Login', 'info')
+                .then(() => navigate('/login'));
+              return;
+            }
+
+      try {
+        await axios.post('http://localhost:4000/api/auth/verify-otp', { email: formData.email, otp });
+        otpVerified = true;
+      } catch (error) {
+        Swal.fire('OTP ไม่ถูกต้อง', 'กรุณากรอก OTP อีกครั้ง', 'error');
+      }
+    }
+
+    Swal.fire({ title: "กำลังสมัครสมาชิก...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+    try {
+      await axios.post("http://localhost:4000/api/business/register", formData);
+      Swal.fire('สำเร็จ!', 'ลงทะเบียนสำเร็จแล้ว', 'success').then(() => navigate("/RegisterArena"));
+    } catch (error) {
+      Swal.fire('เกิดข้อผิดพลาด', error.response?.data?.message || 'ลองใหม่อีกครั้ง', 'error');
+    }
+  };
+  
 
 
   return (
@@ -222,7 +269,6 @@ const RegistrationForm = () => {
                   className="toggle-password-aeye"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <IoEyeSharp /> : <FaEyeSlash />}
                 </button>
               </div>
 

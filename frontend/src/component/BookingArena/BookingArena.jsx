@@ -471,13 +471,15 @@ const handleBooking = () => {
           </div>
 
         {/* ปุ่มจอง */}
-          <button 
-              className="booking101-button" 
-              onClick={handleBooking} 
-              disabled={!arena.open}
-          >
-              {arena.open ? `จองสนาม (${selectedSubStadiums.length})` : "สนามปิดในขณะนี้"}
-          </button>
+        <button 
+    className={`booking101-button ${!arena.open ? "disabled-button" : ""}`} 
+    onClick={handleBooking} 
+    disabled={!arena.open}
+>
+    {arena.open ? `จองสนาม (${selectedSubStadiums.length})` : "สนามปิดในขณะนี้"}
+</button>
+
+
       </div>
       </div>
     </>
