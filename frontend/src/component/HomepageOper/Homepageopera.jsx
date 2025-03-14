@@ -102,7 +102,7 @@ const Homepageopera = () => {
               className="overview-button77"
               onClick={() => navigate(`/ownerhistory`)}
             >
-              ภาพรวมการจองสนาม
+              สถิติการจองสนาม
             </button>
           </div>
 

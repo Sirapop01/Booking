@@ -1,62 +1,150 @@
+/* 📌 โครงสร้างหลัก */
 .owner-history-container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: auto;
-  }
-  
-  .title {
-    text-align: center;
-    color: #333;
-  }
-  
-  .filter-container {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .booking-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  
-  .booking-table th,
-  .booking-table td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
-  }
-  
-  .status {
-    font-weight: bold;
-  }
-  
-  .status.confirmed {
-    color: green;
-  }
-  
-  .status.pending {
-    color: orange;
-  }
-  
-  .status.rejected {
-    color: red;
-  }
-  
-  .no-data {
-    text-align: center;
-    color: gray;
-    padding: 20px;
-  }
-  
-  .charts-container {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-  }
-  
-  .chart-box {
-    text-align: center;
-    margin: 20px;
-  }
-  
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  padding: 40px;
+  font-family: "Kanit", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 📌 หัวข้อใหญ่ */
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  color: #07213A;
+  margin-bottom: 20px;
+}
+
+/* 📌 ตัวเลือกกรอง */
+.filter-container {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.filter-container label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.filter-container input,
+.filter-container select {
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.filter-container select:focus,
+.filter-container input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+/* 📌 ตารางแสดงประวัติการจอง */
+.booking-table {
+  width: 100%;
+  max-width: 1200px;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.booking-table th {
+  background: #07213A;
+  color: white;
+  padding: 12px;
+  text-align: left;
+  font-size: 16px;
+}
+
+.booking-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  font-size: 15px;
+}
+
+.booking-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.booking-table .status {
+  font-weight: bold;
+  padding: 6px 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+/* ✅ สถานะการจอง */
+.status.confirmed { background: #28a745; color: white; }
+.status.pending { background: #ffc107; color: black; }
+.status.rejected { background: #dc3545; color: white; }
+
+/* 📌 ไม่มีข้อมูล */
+.no-data {
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #888;
+  padding: 20px;
+}
+
+/* 📊 กราฟสถิติ */
+.charts-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.chart-box {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.chart-box h2 {
+  font-size: 18px;
+  font-weight: bold;
+  color: #07213A;
+  margin-bottom: 15px;
+}
+
+/* 📥 ปุ่มดาวน์โหลด PDF */
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.download-button {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.download-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 4px 10px rgba(0, 123, 255, 0.2);
+}
