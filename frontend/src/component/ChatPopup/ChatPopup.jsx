@@ -18,12 +18,10 @@ const ChatPopup = ({ isOpen, onClose, userId, userType }) => {
     const userModel = userType === "customer" ? "User" : "BusinessOwner";
 
     const fetchMessages = () => {
-      console.log("📢 Fetching chat history for:", { userId, userModel });
 
       fetch(`http://localhost:4000/api/chat/history/${userId}/${userModel}`)
         .then((res) => res.json())
         .then((data) => {
-          console.log("📜 Received Chat Data:", data);
           if (data.success) {
             setMessages(data.data);
             scrollToBottom();
@@ -56,8 +54,6 @@ const ChatPopup = ({ isOpen, onClose, userId, userType }) => {
       timestamp: new Date().toISOString(),
     };
 
-    console.log("📨 Sending Message Data:", newMessage);
-
     fetch("http://localhost:4000/api/chat/sendMessage", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -81,7 +77,6 @@ const ChatPopup = ({ isOpen, onClose, userId, userType }) => {
   // ✅ รองรับข้อความเรียลไทม์ผ่าน WebSocket
   useEffect(() => {
     const handleReceiveMessage = (newMessage) => {
-      console.log("📩 Received New Message:", newMessage);
       setMessages((prev) => {
         if (!prev.some((msg) => msg._id === newMessage._id)) {
           return [...prev, newMessage]; // หากยังไม่มีข้อความนี้ใน messages, เพิ่มเข้าไป
