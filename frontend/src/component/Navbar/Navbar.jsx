@@ -90,6 +90,7 @@ const Navbar = () => {
                     <button onClick={() => navigate("/stadium-list")}>สนามของฉัน</button>
                     <button onClick={() => navigate(`/Ownerledger/${decodedToken?.id}`)}>บัญชีรายรับ</button>
                     <button onClick={() => navigate("/addPromotion")}>เพิ่มโปรโมชั่น</button>
+                    <button onClick={() => navigate("/OwnerHistory")}>สถิติการจองสนาม</button>
                   </>
                 )}
                 <button onClick={handleLogout}>ลงชื่อออก</button>

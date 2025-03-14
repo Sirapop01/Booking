@@ -218,3 +218,38 @@
 .overview-button77:hover {
   background-color: #0056b3;
 }
+
+/* ✅ Container สำหรับปุ่ม */
+.overview-container77 {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* ✅ ปุ่มหลัก */
+.overview-button77 {
+  background: linear-gradient(135deg, #007bff, #0056b3); /* 🔹 ไล่สีฟ้าสวยงาม */
+  color: white;
+  padding: 12px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* ✅ เอฟเฟกต์เมื่อโฮเวอร์ */
+.overview-button77:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0px 6px 15px rgba(0, 123, 255, 0.3);
+  background: linear-gradient(135deg, #0056b3, #004494);
+}
+
+/* ✅ เอฟเฟกต์เมื่อคลิก */
+.overview-button77:active {
+  transform: scale(0.98);
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
