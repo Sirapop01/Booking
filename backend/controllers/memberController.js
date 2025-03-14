@@ -52,6 +52,8 @@ exports.register = async (req, res) => {
       };
       console.log("📌 อัปเดตพิกัดใหม่จาก Google Maps:", location);
 
+      
+
       // ✅ สร้างบัญชีผู้ใช้
       const newUser = await User.create({
         email,
@@ -68,6 +70,7 @@ exports.register = async (req, res) => {
         profileImage,
         role: role || "customer",
         location,
+        isEmailVerified: true,
       });
 
       res.status(201).json({ message: "✅ สมัครสมาชิกสำเร็จ!", user: newUser });
@@ -335,4 +338,54 @@ exports.delete = async (req, res) => {
     return res.status(500).json({ message: "ปิดบัญชีผู้ใช้ไม่สำเร็จ" });
   }
 };
+
+const otpCache = {};
+exports.sendOtp = async (req, res) => {
+  const { email } = req.body;
+
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return res.status(400).json({ message: "อีเมลนี้ถูกใช้งานแล้ว" });
+  }
+
+  const otp = Math.floor(100000 + Math.random() * 900000); // สุ่มเลข 6 หลัก
+  otpCache[email] = otp; // เก็บ OTP ใน cache
+  setTimeout(() => delete otpCache[email], 5 * 60 * 1000); // OTP มีอายุ 5 นาที
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "รหัส OTP สำหรับสมัครสมาชิก",
+    html: `<h3>รหัส OTP คือ <strong>${otp}</strong></h3>
+          <p>รหัสมีอายุ 5 นาที กรุณายืนยันโดยเร็ว</p>`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: "ส่ง OTP สำเร็จ" });
+  } catch (error) {
+    console.error("ส่ง OTP ล้มเหลว", error);
+    res.status(500).json({ message: "ส่ง OTP ล้มเหลว" });
+  }
+};
+
+exports.verifyOtp = (req, res) => {
+  const { email, otp } = req.body;
+
+  if (otpCache[email] && otpCache[email] == otp) {
+    delete otpCache[email]; // ลบ OTP ทันทีหลังยืนยันสำเร็จ
+    return res.status(200).json({ message: "ยืนยัน OTP สำเร็จ" });
+  }
+
+  res.status(400).json({ message: "OTP ไม่ถูกต้องหรือหมดอายุ" });
+};
+
 
