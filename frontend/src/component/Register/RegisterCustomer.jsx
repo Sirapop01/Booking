@@ -119,28 +119,38 @@ function RegisterCustomer() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
+  
     if (!validateForm()) return;
-
+  
     try {
       const submitFormData = new FormData();
-
+  
       Object.entries(formData).forEach(([key, value]) => {
         if (key === "confirmPassword") return;
         submitFormData.append(key, value);
       });
-
+  
       Swal.fire({
         title: "กำลังสมัครสมาชิก...",
         text: "โปรดรอสักครู่",
         allowOutsideClick: false,
         didOpen: () => Swal.showLoading(),
       });
-
-      await axios.post('http://localhost:4000/api/auth/register', submitFormData, {
+  
+      const res = await axios.post('http://localhost:4000/api/auth/register', submitFormData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-
+  
+      // ✅ ตรวจสอบ response จาก backend
+      if (res.data.message === "อีเมลนี้ถูกใช้งานแล้ว") {
+        Swal.fire({
+          icon: "error",
+          title: "เกิดข้อผิดพลาด!",
+          text: res.data.message, // "อีเมลนี้ถูกใช้งานแล้ว"
+        });
+        return; // ❗ หยุดการทำงาน ไม่ให้ดำเนินการต่อ
+      }
+  
       // ✅ ให้ผู้ใช้กด "ตกลง" ก่อนเปลี่ยนหน้า
       Swal.fire({
         title: "สมัครสมาชิกสำเร็จ!",
@@ -150,11 +160,16 @@ function RegisterCustomer() {
       }).then(() => {
         navigate('/login'); // ✅ เปลี่ยนหน้าไป login เมื่อกด "ตกลง"
       });
-    } catch (err) {
-      console.error('❌ Registration Error:', err);
-      Swal.fire("เกิดข้อผิดพลาด", err.response?.data?.message || "ลองใหม่อีกครั้ง", "error");
+  
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "เกิดข้อผิดพลาด!",
+        text: error.response?.data?.message || "มีบางอย่างผิดพลาด กรุณาลองใหม่อีกครั้ง",
+      });
     }
   };
+  
 
   const sportsOptions = [
     "Football",
