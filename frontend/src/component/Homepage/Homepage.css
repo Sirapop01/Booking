@@ -252,3 +252,7 @@
   color: white;
   border: 2px solid #0056b3;
 }
+
+.confirm-btn{
+  font-family: 'Kanit', sans-serif;
+}

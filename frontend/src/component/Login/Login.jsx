@@ -154,15 +154,17 @@ function Login() {
             <label htmlFor="rememberMe">remember me</label>
           </div>
 
+
+          <button className="login-button" onClick={handleLogin}>
+            Login
+          </button>
           {/* Divider Section */}
           <div className="login-divider">
             <span className="login-divider-text">Or</span>
           </div>
 
           {/* Login Button */}
-          <button className="login-button" onClick={handleLogin}>
-            Login
-          </button>
+          
 
           <p className="login-forgot-password">
             <a href="/forgot-password">Forgot password?</a>

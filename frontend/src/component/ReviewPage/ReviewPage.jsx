@@ -168,6 +168,7 @@ const ReviewPage = () => {
     
 
     return (
+    
         <div className="review-page-container">
             <Navbar />
             <h1>🏟️ รีวิวสนาม</h1>
@@ -215,6 +216,13 @@ const ReviewPage = () => {
                                     <p className="review-user">{review.userId?.firstName || "ไม่ทราบชื่อ"} {review.userId?.lastName || ""}</p>
                                     <p className="review-rating">⭐ {review.rating}</p>
                                     <p className="review-comment">{review.comment}</p>
+                                    <p className="review-date">
+                                        🗓️ {new Date(review.createdAt).toLocaleDateString("th-TH", {
+                                            day: "2-digit",
+                                            month: "long",
+                                            year: "numeric",
+                                        })}
+                                    </p>
                                 </div>
                             ))}
                         </Slider>
@@ -264,6 +272,7 @@ const ReviewPage = () => {
     
             {message && <div className="review-message">{message}</div>}
         </div>
+    
     );
     
     

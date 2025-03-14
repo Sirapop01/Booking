@@ -1,164 +1,149 @@
-/* ✅ เพิ่มระยะห่างระหว่าง Navbar กับเนื้อหา */
 .review-owner-container {
-    width: 100%;
-    max-width: 1100px;
-    margin: 80px auto 20px; /* ✅ เพิ่ม margin-top: 80px เพื่อขยับลง */
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-
-  .review-owner-container h1 {
-    font-size: 24px;
-    font-weight: bold;
-    color: #2c3e50;
-    margin-bottom: 15px;
-  }
-
-  .reviewowner-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: #34495e;
-    margin-bottom: 10px;
-    text-align: center; /* ✅ จัดให้อยู่ตรงกลาง */
-    display: block; /* ✅ ทำให้เป็นบล็อกเพื่อให้ text-align มีผล */
+  width: 100vw;
+  min-height: 100vh; /* ✅ ทำให้เต็มจอ */
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+  background-color: white; /* ✅ เปลี่ยนพื้นหลังเป็นสีขาว */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Kanit", sans-serif;
+}
+.review-owner-container h1{
+ margin-top: 200px;
+ color :#002855
 }
 
-  
-  .review-owner-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .review-owner-card {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    text-align: left;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .review-owner-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-  }
-  
-  .review-owner-date {
-    font-size: 14px;
-    color: gray;
-  }
-  
-  .review-owner-rating {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-    margin: 5px 0;
-  }
-  
-  .review-owner-star {
-    color: gold;
-  }
-  
-  .review-owner-text {
-    font-size: 16px;
-    color: #333;
-  }
-  
-  .review-owner-empty {
-    font-size: 18px;
-    color: #888;
-  }
-  
-  .review-slider {
-    margin: 20px auto;
-  }
-  .review-slide {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .review-comment {
-    font-size: 16px;
-    color: #333;
-    margin-top: 10px;
-  }
-  .review-slide {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease-in-out;
-  }
-
-  .review-stadium-title {
-    font-size: 22px;
-    font-weight: bold;
-    color: #2c3e50;
-    margin-bottom: 15px;
-  }
-  .review-section {
-    margin-bottom: 40px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .reviewowner-user {
-    font-size: 18px;
-    font-weight: bold;
-    color: #2c3e50;
-  }
-
-  /* ✅ ปุ่มตัวกรองรีวิว */
 .review-filter {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
-  .review-filter button {
-    background: #2c3e50;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 14px;
-  }
-  
-  .review-filter button:hover {
-    background: #69acbd;
-  }
-  
-  .review-filter button.active {
-    background: #289640;
-    color: white;
-    font-weight: bold;
-  }
-  
-  /* ✅ ปรับแต่งไอคอนดาว */
-  .star-filter {
-    color: gold;
-    font-size: 16px;
-  }
-  
-  .review-no-reviews {
-    color: black;  /* เปลี่ยนสีเป็นดำ */
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 20px;
-  }
-  
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  padding: 15px;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0px 5px 12px rgba(0, 0, 0, 0.15); /* ✅ เพิ่มเงานุ่มๆ */
+}
+
+.review-filter button {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.review-filter button:hover {
+  transform: scale(1.1);
+  background: linear-gradient(135deg, #0056b3, #003c82);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.review-filter button.active {
+  background: linear-gradient(135deg, #004085, #002855);
+  transform: scale(1.12);
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+
+
+/* ✅ ปรับขนาดการ์ดรีวิวให้กว้างขึ้น */
+.review-section {
+  width: 100%;
+  max-width: 1400px; /* ✅ รองรับการ์ดมากขึ้น */
+  min-width: 900px; /* ✅ ป้องกันหดตัว */
+  background: white;
+  border-radius: 15px;
+  padding: 35px;
+  margin-bottom: 40px;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* ✅ ป้องกันการล้น */
+}
+
+
+
+
+
+/* ✅ ปรับขนาดตัวอักษรของชื่อสนาม */
+.review-stadium-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* ✅ ปรับขนาดสไลด์ */
+.review-slider {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.review-slide {
+  flex: 0 0 40%; /* ✅ กำหนดให้การ์ดมีขนาด 40% ของพื้นที่ */
+  max-width: 500px; /* ✅ ป้องกันการ์ดใหญ่เกิน */
+  min-width: 300px; /* ✅ ป้องกันการ์ดเล็กเกิน */
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+  margin: 0 15px; /* ✅ เพิ่มระยะห่างระหว่างการ์ด */
+}
+
+.slick-next{
+  background-color: #002855;
+}
+
+.review-slide:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+
+/* ✅ ปรับขนาดของชื่อผู้รีวิว */
+.reviewowner-user {
+  font-size: 18px;
+  font-weight: bold;
+  color: #444;
+  margin-bottom: 5px;
+}
+
+/* ✅ ปรับขนาดของคะแนนดาว */
+.review-owner-rating {
+  font-size: 20px;
+  color: #ffc107;
+  margin-bottom: 10px;
+}
+
+/* ✅ ปรับขนาดของคอมเมนต์ */
+.review-comment {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* ✅ ปรับขนาดวันที่รีวิว */
+.review-owner-date {
+  font-size: 14px;
+  color: #888;
+}
+
+/* ✅ ปรับเอฟเฟกต์ hover */
+.review-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+}
+
