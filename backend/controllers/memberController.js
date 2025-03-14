@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User"); // Import User Model
 const Owner = require("../models/BusinessOwner"); // Import BusinessOwner Model
+const BusinessOwner = require("../models/BusinessOwner");
 const jwt = require("jsonwebtoken");
 const secret = "MatchWeb";
 require("dotenv").config();
@@ -22,9 +23,12 @@ exports.register = async (req, res) => {
     }
 
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "อีเมลนี้ถูกใช้งานแล้ว" });
-    }
+const existingBusinessOwner = await BusinessOwner.findOne({ email });
+
+if (existingUser || existingBusinessOwner) {
+  return res.status(400).json({ message: "อีเมลนี้ถูกใช้งานแล้ว" });
+}
+
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const formattedBirthdate = new Date(birthdate);
@@ -42,7 +46,7 @@ exports.register = async (req, res) => {
       );
 
       if (response.data.status !== "OK" || !response.data.results.length) {
-        return res.status(400).json({ message: "❌ ไม่สามารถดึงพิกัดจาก Google Maps ได้" });
+        return res.status(400).json({ message: "ไม่สามารถดึงพิกัดจาก Google Maps ได้" });
       }
 
       const { lat, lng } = response.data.results[0].geometry.location;
@@ -105,6 +109,13 @@ exports.login = async (req, res) => {
 
     let exitResult = null;
     let userType = "";
+    if (!existingUser && !existingOwner) {
+      console.log("❌ ไม่พบอีเมลในระบบ");
+      return res.status(401).json({
+        message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+        errorType: "invalid_credentials"
+      });
+    }
 
     // ✅ ตรวจสอบประเภทของบัญชีที่ล็อกอิน
     if (existingUser) {
