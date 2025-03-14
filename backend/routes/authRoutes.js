@@ -11,5 +11,7 @@ router.put("/update/:id", upload.single("profileImage"), MemberController.update
 router.post("/reset-password/:token", MemberController.resetPassword);
 router.post("/forgot-password", MemberController.sendResetPasswordEmail);
 router.delete("/delete/:id", MemberController.delete)
+router.post("/send-otp", MemberController.sendOtp);
+router.post("/verify-otp", MemberController.verifyOtp);
 
 module.exports = router;
