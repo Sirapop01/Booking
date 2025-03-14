@@ -8,6 +8,7 @@ import "./NavbarOwnerLedgerDetails.css";
 
 const NavbarOwnerLedgerDetails = () => {
   const [decodedToken, setDecodedToken] = useState(null);
+  const [homeLink, setHomeLink] = useState("/"); // ✅ ค่าเริ่มต้นเป็น "/"
 
   useEffect(() => {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
@@ -16,6 +17,13 @@ const NavbarOwnerLedgerDetails = () => {
         const decoded = jwtDecode(token);
         console.log("📌 Token Decoded:", decoded);
         setDecodedToken(decoded);
+
+        // ✅ ตั้งค่า homeLink ตาม role
+        if (decoded.role === "admin" || decoded.role === "superadmin") {
+          setHomeLink("/superadmin/dashboard");
+        } else if (decoded.role === "owner") {
+          setHomeLink("/");
+        }
       } catch (error) {
         console.error("❌ Error decoding token:", error);
       }
@@ -24,8 +32,8 @@ const NavbarOwnerLedgerDetails = () => {
 
   return (
     <nav className="owner-ledger-navbar">
-      {/* ✅ ปุ่ม Home (ด้านซ้าย) */}
-      <Link to="/superadmin/dashboard" className="ledger-home-button">
+      {/* ✅ ปุ่ม Home (เปลี่ยนเส้นทางตาม role) */}
+      <Link to={homeLink} className="ledger-home-button">
         <img src={homeLogo} alt="Home Logo" className="ledger-home-logo" />
       </Link>
 
