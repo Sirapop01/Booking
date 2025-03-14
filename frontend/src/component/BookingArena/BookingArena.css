@@ -261,6 +261,21 @@
   filter: grayscale(100%); /* ทำให้รูปเป็นขาวดำ */
 }
 
+.disabled-button {
+  background-color: #b0b0b0 !important;  /* สีเทาอ่อน */
+  color: #ffffff !important;  /* ตัวอักษรสีขาว */
+  border: 1px solid #a0a0a0 !important;  /* ขอบปุ่มสีเทาเข้ม */
+  cursor: not-allowed !important;  /* เปลี่ยน cursor เป็น "ห้ามคลิก" */
+  opacity: 0.6;  /* ลดความเข้มของปุ่ม */
+  transition: all 0.3s ease-in-out;
+}
+
+/* ป้องกัน hover เมื่อปิดสนาม */
+.disabled-button:hover {
+  background-color: #ff0000 !important;
+  color: #ffffff !important;
+}
+
 
 /* ✅ ปุ่มจอง */
 .booking101-button {
