@@ -55,31 +55,6 @@ useEffect(() => {
                 <img src={logo} alt="Logo" className="navbar-logo-img-homepage" />
                 <span className="navbar-title">สนามของฉัน</span>
             </div>
-
-            {/* Dropdown Menu */}
-            <div className="navbar-right">
-                {decodedToken ? (
-                    <div className="dropdown">
-                        <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-                            ☰
-                        </button>
-                        {isDropdownOpen && (
-                            <div className="dropdown-menu">
-                                <button onClick={() => navigate("/OwnerProfile")}>บัญชี</button>
-                                <button onClick={() => navigate("/stadium-list")}>สนามของฉัน</button>
-                                <button onClick={() => navigate(`/Ownerledger/${decodedToken?.id}`)}>บัญชีรายรับ</button>
-                                <button onClick={() => navigate("/addPromotion")}>เพิ่มโปรโมชั่น</button>
-                                <button onClick={handleLogout}>ลงชื่อออก</button>
-                            </div>
-                        )}
-                    </div>
-                ) : (
-                    <div className="navbar-links">
-                        <button className="navbar-button" onClick={() => navigate("/login")}>เข้าสู่ระบบ</button>
-                        <button className="navbar-link" onClick={() => navigate("/RegisterChoice")}>ลงทะเบียน</button>
-                    </div>
-                )}
-            </div>
         </nav>
 
       {/* 🔹 Popup Logout */}
