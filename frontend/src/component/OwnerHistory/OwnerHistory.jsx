@@ -183,7 +183,12 @@ const monthlyData = recentMonths.map((month) => ({
                                 <YAxis tickCount={6} allowDecimals={false} />
                                 <Tooltip />
                                 <Legend />
-                                <Bar dataKey="count" fill="#007bff" />
+                                <Bar 
+                                    dataKey="count" 
+                                    fill="#007bff"
+                                    isAnimationActive={true}  // ✅ เปิดใช้ Animation
+                                    animationDuration={1200}  // ⏳ ปรับความเร็ว Animation (1.2 วินาที)
+                                />
                             </BarChart>
                         </div>
 
@@ -197,6 +202,8 @@ const monthlyData = recentMonths.map((month) => ({
                                     cy="50%" 
                                     outerRadius={100} 
                                     dataKey="value"
+                                    isAnimationActive={true} // ✅ เปิดใช้ Animation
+                                    animationDuration={1500} // ⏳ Animation ใช้เวลา 1.5 วินาที
                                 >
                                     {pieChartData.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={entry.color} />
@@ -207,7 +214,6 @@ const monthlyData = recentMonths.map((month) => ({
                             </PieChart>
                         </div>
                     </div>
-
                 </div>
 
                 <button onClick={downloadPDF} className="download-button">ดาวน์โหลด PDF</button>
