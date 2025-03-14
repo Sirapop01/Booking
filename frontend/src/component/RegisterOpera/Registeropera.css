@@ -205,6 +205,45 @@ input[type="checkbox"] {
   color:#a5a5a5
 }
 
+/* ปรับแต่ง Popup OTP SweetAlert2 */
+.otp-popup {
+  font-family: 'Kanit', sans-serif;
+  border-radius: 16px;
+}
+
+.otp-popup-input {
+  border-radius: 10px;
+  font-size: 18px;
+  padding: 10px;
+  text-align: center;
+  width: 90% !important;
+  max-width : 500px;
+  margin-left : 25px;
+}
+
+.otp-popup-confirm-btn {
+  background-color: #2E4374 !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  padding: 8px 20px !important;
+}
+
+.otp-popup-cancel-btn {
+  border-radius: 8px !important;
+  padding: 8px 20px !important;
+}
+
+.swal2-title {
+  color: #2E4374;
+  font-size: 22px;
+}
+
+.otp-popup {
+  font-family: 'Kanit', sans-serif !important;
+  border-radius: 12px !important;
+  max-width: 1500px;
+}
+
 
 /* ====== Responsive Design (Mobile) ====== */
 @media (max-width: 768px) {
@@ -229,7 +268,5 @@ input[type="checkbox"] {
   }
 
   
-  
-
 }
 /*Fix*/
