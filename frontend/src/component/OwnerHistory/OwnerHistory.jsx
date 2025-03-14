@@ -55,40 +55,50 @@ const OwnerHistory = () => {
     }, [stadiums.length > 0 || ownerId]);
 
     useEffect(() => {
-        let filtered = bookings;
+        if (!bookings || bookings.length === 0) return;
 
-        if (selectedMonth) {
-            filtered = filtered.filter((booking) =>
-                booking.details.some((detail) => detail.bookingDate.startsWith(selectedMonth))
-            );
-        }
+        let filtered = bookings.filter(booking => {
+            const matchMonth = selectedMonth
+                ? booking.details.some(detail => detail.bookingDate.startsWith(selectedMonth))
+                : true;
 
-        if (selectedStadium !== "ทั้งหมด") {
-            filtered = filtered.filter((booking) => booking.fieldName === selectedStadium);
-        }
+            const matchStadium = selectedStadium !== "ทั้งหมด"
+                ? booking.fieldName === selectedStadium
+                : true;
 
+            return matchMonth && matchStadium;
+        });
+
+        console.log("🔍 Filtered Bookings:", filtered);
         setFilteredBookings(filtered);
     }, [selectedMonth, selectedStadium, bookings]);
 
-    // ✅ ฟังก์ชันดึงเดือนปัจจุบัน + 2 เดือนก่อนหน้า (แก้ไขให้ถูกต้อง)
-const getLastTwoMonthsAndCurrent = () => {
+// ✅ ฟังก์ชันดึงเดือนปัจจุบัน + 2 เดือนก่อนหน้า
+const getRecentMonths = (selectedMonth = null) => {
     const today = new Date();
+    let baseDate = selectedMonth ? new Date(`${selectedMonth}-01`) : today;
+
     return [...Array(3)].map((_, i) => {
         const date = new Date();
-        date.setMonth(today.getMonth() - (2 - i)); // ✅ ใช้ setMonth แทน new Date() เพื่อลดข้อผิดพลาด
-        return date.toISOString().slice(0, 7); // แสดงเป็นรูปแบบ YYYY-MM
+        date.setMonth(baseDate.getMonth() - (2 - i));
+        return date.toISOString().slice(0, 7);
     });
 };
 
-// ✅ กำหนดเดือนล่าสุดที่ต้องการแสดง
-const recentMonths = getLastTwoMonthsAndCurrent();
+const [recentMonths, setRecentMonths] = useState(getRecentMonths());
 
-// ✅ กำหนดข้อมูล Bar Chart โดยใช้ข้อมูลทั้งหมด `bookings`
+useEffect(() => {
+    setRecentMonths(getRecentMonths(selectedMonth));
+}, [selectedMonth]);
+
 const monthlyData = recentMonths.map((month) => ({
     month,
-    count: bookings.filter((booking) => booking.details[0].bookingDate.startsWith(month)).length,
+    count: bookings.filter((booking) => {
+        const matchMonth = booking.details.some((detail) => detail.bookingDate.startsWith(month));
+        const matchStadium = selectedStadium !== "ทั้งหมด" ? booking.fieldName === selectedStadium : true;
+        return matchMonth && matchStadium;
+    }).length,
 }));
-
 
 
     // ✅ สร้างข้อมูล Pie Chart และสุ่มสีแบบไดนามิก
@@ -195,23 +205,25 @@ const monthlyData = recentMonths.map((month) => ({
                         {/* ✅ Pie Chart: แสดงข้อมูลสนาม */}
                         <div className="chart-box">
                             <h2>การจองแยกตามสนาม</h2>
-                            <PieChart width={400} height={300}>
-                                <Pie 
-                                    data={pieChartData} 
-                                    cx="50%" 
-                                    cy="50%" 
-                                    outerRadius={100} 
-                                    dataKey="value"
-                                    isAnimationActive={true} // ✅ เปิดใช้ Animation
-                                    animationDuration={1500} // ⏳ Animation ใช้เวลา 1.5 วินาที
-                                >
-                                    {pieChartData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.color} />
-                                    ))}
-                                </Pie>
-                                <Legend />
-                                <Tooltip />
-                            </PieChart>
+                                <PieChart width={400} height={300}>
+                                    <Pie 
+                                        data={pieChartData.length > 0 ? pieChartData : [{ name: "ไม่มีข้อมูล", value: 1, color: "#e0e0e0" }]}
+                                        cx="50%" 
+                                        cy="50%" 
+                                        outerRadius={100} 
+                                        dataKey="value"
+                                        isAnimationActive={true} // ✅ เปิดใช้ Animation
+                                        animationDuration={1500} // ⏳ ใช้เวลา 1.5 วินาที
+                                    >
+                                        {pieChartData.length > 0 ? 
+                                            pieChartData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.color} />
+                                            )) 
+                                            : <Cell fill="#e0e0e0" />} {/* ✅ สีเทาถ้าไม่มีข้อมูล */}
+                                    </Pie>
+                                    <Legend />
+                                    <Tooltip />
+                                </PieChart>
                         </div>
                     </div>
                 </div>
