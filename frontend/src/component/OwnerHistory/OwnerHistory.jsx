@@ -12,11 +12,10 @@ const OwnerHistory = () => {
     const [bookings, setBookings] = useState([]);
     const [filteredBookings, setFilteredBookings] = useState([]);
     const [selectedMonth, setSelectedMonth] = useState("");
-    const [selectedStadium, setSelectedStadium] = useState("ทั้งหมด"); // ✅ ตัวเลือกสนาม Default เป็น "ทั้งหมด"
+    const [selectedStadium, setSelectedStadium] = useState("ทั้งหมด");
     const [ownerId, setOwnerId] = useState(null);
-    const reportRef = useRef(null); // ✅ ใช้ Ref ครอบพื้นที่ต้องการบันทึก PDF
+    const reportRef = useRef(null);
 
-    // ✅ ดึง ownerId จาก Token
     useEffect(() => {
         const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
         if (storedToken) {
@@ -29,14 +28,12 @@ const OwnerHistory = () => {
         }
     }, []);
 
-    // ✅ ดึงรายการสนามที่เป็นของเจ้าของ
     useEffect(() => {
         if (!ownerId) return;
     
         axios
-            .get(`http://localhost:4000/api/owner-history/owner-stadiums?ownerId=${ownerId}`) // ✅ เพิ่ม ownerId ใน query string
+            .get(`http://localhost:4000/api/owner-history/owner-stadiums?ownerId=${ownerId}`)
             .then((response) => {
-                console.log("📌 สนามที่พบ:", response.data);
                 setStadiums(response.data);
             })
             .catch((error) => {
@@ -44,13 +41,11 @@ const OwnerHistory = () => {
             });
     }, [ownerId]);
 
-    // ✅ ดึง `bookinghistory` เมื่อได้สนามของเจ้าของแล้ว
     useEffect(() => {
         if (!ownerId) return;
 
         axios.get(`http://localhost:4000/api/owner-history/history?ownerId=${ownerId}`)
             .then((response) => {
-                console.log("📌 ข้อมูล Booking ที่ดึงได้:", response.data);
                 setBookings(response.data);
                 setFilteredBookings(response.data);
             })
@@ -59,7 +54,6 @@ const OwnerHistory = () => {
             });
     }, [stadiums.length > 0 || ownerId]);
 
-    // ✅ ฟังก์ชันกรองข้อมูลตามเดือนและสนามที่เลือก
     useEffect(() => {
         let filtered = bookings;
 
@@ -76,33 +70,39 @@ const OwnerHistory = () => {
         setFilteredBookings(filtered);
     }, [selectedMonth, selectedStadium, bookings]);
 
-    // ✅ จัดกลุ่มข้อมูลสำหรับ Bar Chart
-    const monthlyData = filteredBookings.reduce((acc, booking) => {
-        const month = booking.details[0].bookingDate.substring(0, 7);
-        acc[month] = (acc[month] || 0) + 1;
-        return acc;
-    }, {});
+    // ✅ ฟังก์ชันดึงเดือนปัจจุบัน + 2 เดือนก่อนหน้า (แก้ไขให้ถูกต้อง)
+const getLastTwoMonthsAndCurrent = () => {
+    const today = new Date();
+    return [...Array(3)].map((_, i) => {
+        const date = new Date();
+        date.setMonth(today.getMonth() - (2 - i)); // ✅ ใช้ setMonth แทน new Date() เพื่อลดข้อผิดพลาด
+        return date.toISOString().slice(0, 7); // แสดงเป็นรูปแบบ YYYY-MM
+    });
+};
 
-    const barChartData = Object.keys(monthlyData).map((month) => ({
-        month,
-        count: monthlyData[month],
-    }));
+// ✅ กำหนดเดือนล่าสุดที่ต้องการแสดง
+const recentMonths = getLastTwoMonthsAndCurrent();
 
-    // ✅ จัดกลุ่มข้อมูลสำหรับ Pie Chart
+// ✅ กำหนดข้อมูล Bar Chart โดยใช้ข้อมูลทั้งหมด `bookings`
+const monthlyData = recentMonths.map((month) => ({
+    month,
+    count: bookings.filter((booking) => booking.details[0].bookingDate.startsWith(month)).length,
+}));
+
+
+
+    // ✅ สร้างข้อมูล Pie Chart และสุ่มสีแบบไดนามิก
     const stadiumData = filteredBookings.reduce((acc, booking) => {
-        const stadium = booking.fieldName;
-        acc[stadium] = (acc[stadium] || 0) + 1;
+        acc[booking.fieldName] = (acc[booking.fieldName] || 0) + 1;
         return acc;
     }, {});
 
-    const pieChartData = Object.keys(stadiumData).map((stadium) => ({
+    const pieChartData = Object.keys(stadiumData).map((stadium, index) => ({
         name: stadium,
         value: stadiumData[stadium],
+        color: `hsl(${index * 60}, 70%, 50%)`, // ✅ สุ่มสีแบบไดนามิก
     }));
 
-    const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#d45087"];
-
-    // ✅ ฟังก์ชันบันทึกเป็น PDF
     const downloadPDF = () => {
         if (!reportRef.current) {
             console.error("❌ reportRef.current is null. PDF generation failed.");
@@ -127,30 +127,24 @@ const OwnerHistory = () => {
         <>
             <Navbar />
             <div className="owner-history-container">
-                <div ref={reportRef}> {/* ✅ ครอบเฉพาะพื้นที่ที่ต้องการบันทึก PDF */}
+                <div ref={reportRef}>
                     <h1 className="title">ภาพรวมการจองสนาม</h1>
 
-                    {/* ✅ ตัวเลือกกรอง */}
                     <div className="filter-container">
                         <label htmlFor="month">เลือกเดือน:</label>
                         <input type="month" id="month" value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)} />
 
                         <label htmlFor="stadium">เลือกสนาม:</label>
-                            <select id="stadium" value={selectedStadium} onChange={(e) => setSelectedStadium(e.target.value)}>
-                                <option value="ทั้งหมด">ทั้งหมด</option>
-                                {stadiums.length > 0 ? (
-                                    stadiums.map((stadium) => (
-                                        <option key={stadium._id} value={stadium.fieldName || "ไม่ระบุ"}>
-                                            {stadium.fieldName || "ไม่ระบุ"}
-                                        </option>
-                                    ))
-                                ) : (
-                                    <option disabled>ไม่มีข้อมูลสนาม</option>
-                                )}
-                            </select>
-                        </div>
+                        <select id="stadium" value={selectedStadium} onChange={(e) => setSelectedStadium(e.target.value)}>
+                            <option value="ทั้งหมด">ทั้งหมด</option>
+                            {stadiums.map((stadium) => (
+                                <option key={stadium._id} value={stadium.fieldName}>
+                                    {stadium.fieldName}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
-                    {/* ✅ ตารางแสดงประวัติการจอง */}
                     <table className="booking-table">
                         <thead>
                             <tr>
@@ -166,11 +160,9 @@ const OwnerHistory = () => {
                                 filteredBookings.map((booking, index) => (
                                     <tr key={index}>
                                         <td>{new Date(booking.details[0].bookingDate).toLocaleDateString()}</td>
-                                        <td>{booking.fieldName || "ไม่ระบุ"}</td>
+                                        <td>{booking.fieldName}</td>
                                         <td>{booking.userId?.firstName} {booking.userId?.lastName}</td>
-                                        <td>
-                                            {`${booking.details[0].startTime} - ${booking.details[0].endTime}`}
-                                        </td>
+                                        <td>{`${booking.details[0].startTime} - ${booking.details[0].endTime}`}</td>
                                         <td className={`status ${booking.status}`}>{booking.status}</td>
                                     </tr>
                                 ))
@@ -182,37 +174,43 @@ const OwnerHistory = () => {
                         </tbody>
                     </table>
 
-                    {/* ✅ กราฟสถิติ */}
                     <div className="charts-container">
+                        {/* ✅ Bar Chart: จำนวนการจองแต่ละเดือน */}
                         <div className="chart-box">
                             <h2>สถิติการจองรายเดือน</h2>
-                            <BarChart width={500} height={300} data={barChartData}>
+                            <BarChart width={500} height={300} data={monthlyData}>
                                 <XAxis dataKey="month" />
-                                <YAxis />
+                                <YAxis tickCount={6} allowDecimals={false} />
                                 <Tooltip />
                                 <Legend />
                                 <Bar dataKey="count" fill="#007bff" />
                             </BarChart>
                         </div>
 
+                        {/* ✅ Pie Chart: แสดงข้อมูลสนาม */}
                         <div className="chart-box">
                             <h2>การจองแยกตามสนาม</h2>
                             <PieChart width={400} height={300}>
-                                <Pie data={pieChartData} cx="50%" cy="50%" outerRadius={100} fill="#8884d8" dataKey="value">
+                                <Pie 
+                                    data={pieChartData} 
+                                    cx="50%" 
+                                    cy="50%" 
+                                    outerRadius={100} 
+                                    dataKey="value"
+                                >
                                     {pieChartData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                        <Cell key={`cell-${index}`} fill={entry.color} />
                                     ))}
                                 </Pie>
+                                <Legend />
                                 <Tooltip />
                             </PieChart>
                         </div>
                     </div>
+
                 </div>
 
-                {/* ✅ ปุ่มดาวน์โหลด PDF */}
-                <div className="button-container">
-                    <button onClick={downloadPDF} className="download-button">ดาวน์โหลด PDF</button>
-                </div>
+                <button onClick={downloadPDF} className="download-button">ดาวน์โหลด PDF</button>
             </div>
         </>
     );
