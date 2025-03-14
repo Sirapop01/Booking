@@ -46,6 +46,7 @@ import Payment from './component/Payment/Payment';
 import AuthChecker from './AuthChecker';
 import ConfirmBooking from './component/ConfirmBooking/ConfirmBooking';
 import ReviewOwner from './component/reviewowner/reviewowner';
+import OwnerHistory from './component/OwnerHistory/OwnerHistory';
 
 function App() {
   const token = localStorage.getItem("token") || sessionStorage.getItem("token");
@@ -114,6 +115,7 @@ function App() {
         <Route path="/historybooking/:userId" element={<HistoryBooking />} />
         <Route path='/payment' element={<Payment />} />
         <Route path="/confirm-bookings/:stadiumId" element={<ConfirmBooking />} />
+        <Route path="/ownerhistory" element={<OwnerHistory />} />
 
         <Route element={<ProtectedRoute roles={["superadmin", "admin"]} />}>
           <Route path="/admin/register" element={<AdminRegister />} />

@@ -1,0 +1,62 @@
+.owner-history-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  .title {
+    text-align: center;
+    color: #333;
+  }
+  
+  .filter-container {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .booking-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .booking-table th,
+  .booking-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .status {
+    font-weight: bold;
+  }
+  
+  .status.confirmed {
+    color: green;
+  }
+  
+  .status.pending {
+    color: orange;
+  }
+  
+  .status.rejected {
+    color: red;
+  }
+  
+  .no-data {
+    text-align: center;
+    color: gray;
+    padding: 20px;
+  }
+  
+  .charts-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  
+  .chart-box {
+    text-align: center;
+    margin: 20px;
+  }
+  
