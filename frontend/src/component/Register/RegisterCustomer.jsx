@@ -6,6 +6,10 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 function RegisterCustomer() {
   const navigate = useNavigate();
+  const [otp, setOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpSentTime, setOtpSentTime] = useState(null);
+  
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -116,6 +120,16 @@ function RegisterCustomer() {
     }
   };
 
+  const sendOtpToEmail = async () => {
+    try {
+      await axios.post('http://localhost:4000/api/auth/send-otp', { email: formData.email });
+      Swal.fire("ส่ง OTP แล้ว!", "กรุณาเช็คอีเมลเพื่อรับรหัส OTP", "success");
+      setOtpSent(true);
+    } catch (error) {
+      Swal.fire("เกิดข้อผิดพลาด", error.response.data.message, "error");
+    }
+  };
+
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -135,11 +149,13 @@ function RegisterCustomer() {
         text: "โปรดรอสักครู่",
         allowOutsideClick: false,
         didOpen: () => Swal.showLoading(),
+
       });
   
       const res = await axios.post('http://localhost:4000/api/auth/register', submitFormData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
+
   
       // ✅ ตรวจสอบ response จาก backend
       if (res.data.message === "อีเมลนี้ถูกใช้งานแล้ว") {
@@ -152,14 +168,14 @@ function RegisterCustomer() {
       }
   
       // ✅ ให้ผู้ใช้กด "ตกลง" ก่อนเปลี่ยนหน้า
+
       Swal.fire({
-        title: "สมัครสมาชิกสำเร็จ!",
-        text: "คุณสามารถเข้าสู่ระบบได้ทันที",
-        icon: "success",
-        confirmButtonText: "ตกลง"
-      }).then(() => {
-        navigate('/login'); // ✅ เปลี่ยนหน้าไป login เมื่อกด "ตกลง"
+        title: 'กำลังส่ง OTP...',
+        text: 'โปรดรอสักครู่',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
       });
+
   
     } catch (error) {
       Swal.fire({
@@ -170,6 +186,7 @@ function RegisterCustomer() {
     }
   };
   
+
 
   const sportsOptions = [
     "Football",
@@ -285,7 +302,6 @@ function RegisterCustomer() {
               </div>
             </div>
           </div>
-
           <div className="button-container">
             <button type="submit" className="register-button">ลงทะเบียน</button>
           </div>
@@ -293,6 +309,8 @@ function RegisterCustomer() {
       </div>
     </div>
   );
+
+
 }
 
 export default RegisterCustomer;

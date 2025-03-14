@@ -96,6 +96,16 @@ const Homepageopera = () => {
             </div>
           </div>
 
+          {/* ปุ่มใหม่: ภาพรวมการจองสนาม */}
+          <div className="overview-container77">
+            <button
+              className="overview-button77"
+              onClick={() => navigate(`/ownerhistory`)}
+            >
+              สถิติการจองสนาม
+            </button>
+          </div>
+
          
         </div>
       </div>
