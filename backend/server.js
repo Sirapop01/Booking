@@ -51,6 +51,7 @@ const reviewRoutes = require("./routes/reviewRoutes");
 const bookingHistoryRoutes = require("./routes/bookingHistoryRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
+const ownerHistoryRoutes = require("./routes/ownerHistoryRoutes");
 
 
 // ✅ กำหนด CORS
@@ -112,6 +113,7 @@ app.use("/api/bookinghistories", bookingHistoryRoutes);
 app.use("/api/businessOwners", businessOwnerRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/owner-history", ownerHistoryRoutes);
 
 // ✅ WebSocket สำหรับ Chat (Socket.io)
 io.on("connection", (socket) => {
