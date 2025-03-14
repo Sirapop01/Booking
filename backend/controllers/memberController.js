@@ -89,59 +89,74 @@ exports.register = async (req, res) => {
 
 
 exports.login = async (req, res) => {
-
   try {
-    const { email, password, } = req.body;
+    const { email, password } = req.body;
 
-    // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
-    if (password == null || email == null) {
-      return res.json({ message: "กรุณากรอกข้อมูลให้ครบถ้วน" });
+    // ✅ ตรวจสอบว่ามีการกรอกข้อมูลครบถ้วน
+    if (!email || !password) {
+      return res.status(400).json({ message: "กรุณากรอกข้อมูลให้ครบถ้วน" });
     }
 
+    // ✅ ค้นหาผู้ใช้ในฐานข้อมูล
     const [existingUser, existingOwner] = await Promise.all([
       User.findOne({ email }), // ค้นหาใน Collection `users`
       Owner.findOne({ email }) // ค้นหาใน Collection `businessowners`
     ]);
 
     let exitResult = null;
+    let userType = "";
 
-    // ตรวจสอบว่าพบผู้ใช้หรือไม่
+    // ✅ ตรวจสอบประเภทของบัญชีที่ล็อกอิน
     if (existingUser) {
       exitResult = existingUser;
+      userType = "user";
     } else if (existingOwner) {
       exitResult = existingOwner;
+      userType = "owner";
     }
 
-    // ถ้าไม่พบผู้ใช้ในระบบ
-    if (!exitResult) {
-      return res.status(401).json({ message: "ไม่พบผู้ใช้ในระบบ" });
+    // 🚫 **บล็อกบัญชีที่ถูก Blacklist ไม่ให้เข้าสู่ระบบ**
+    if (exitResult.status === "blacklisted") {
+      return res.status(403).json({ 
+        message: "บัญชีของคุณถูกระงับ ไม่สามารถเข้าสู่ระบบได้",
+        errorType: "blacklisted_account" // 🔴 ประเภทของ Error
+      });
     }
 
-    const LoginOK = await bcrypt.compare(password, exitResult.password)
-    const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("รหัสผ่านที่ถูกเข้ารหัสใหม่:", hashedPassword);
+    // 🚫 **บล็อกบัญชีที่ถูก Blacklist ไม่ให้เข้าสู่ระบบ**
+    if (exitResult.status === "blacklisted") {
+      return res.status(403).json({ message: "บัญชีของคุณถูกระงับ ไม่สามารถเข้าสู่ระบบได้" });
+    }
 
-    if (LoginOK) {
-      const name = exitResult.firstName;
-      const id = exitResult._id;
-      const role = exitResult.role;
-      const token = jwt.sign({ email, name, id, role }, secret, { expiresIn: '1h' })
-
-      //password 123456
-      console.log("เข้าสู่ระบบสำเร็จ");
-      return res.json({ message: "เข้าสู่ระบบสำเร็จ", token }
-
+    // ✅ ตรวจสอบรหัสผ่าน
+    const isPasswordValid = await bcrypt.compare(password, exitResult.password);
+    
+    if (isPasswordValid) {
+      // 🔑 สร้าง Token สำหรับล็อกอิน
+      const token = jwt.sign(
+        {
+          email: exitResult.email,
+          name: exitResult.firstName,
+          id: exitResult._id,
+          role: exitResult.role,
+          userType: userType,
+        },
+        secret,
+        { expiresIn: '1h' }
       );
-    } else {
-      console.log("เข้าสู่ระบบไม่สำเร็จ");
-      return res.json({ message: "เข้าสู่ระบบไม่สำเร็จ" });
-    }
 
+      console.log("✅ เข้าสู่ระบบสำเร็จ");
+      return res.status(200).json({ message: "เข้าสู่ระบบสำเร็จ", token });
+    } else {
+      console.log("❌ เข้าสู่ระบบไม่สำเร็จ: รหัสผ่านไม่ถูกต้อง");
+      return res.status(401).json({ message: "เข้าสู่ระบบไม่สำเร็จ" });
+    }
   } catch (err) {
-    console.error("Error Login user:", err);
-    res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
+    console.error("❌ Error Login user:", err);
+    return res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
   }
 };
+
 
 exports.getMB = async (req, res) => {
   console.log("✅ GET Member Requested:", req.params.id);

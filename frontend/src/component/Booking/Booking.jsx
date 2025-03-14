@@ -333,11 +333,12 @@ return (
             <h2 className="booking-title">{sub.name}</h2>
             <label>วันที่จอง</label>
             <input
-              type="date"
-              min={new Date().toISOString().split("T")[0]} // ✅ ห้ามเลือกย้อนหลัง
-              value={selectedDates[sub._id] || ""}
-              onChange={(e) => handleDateChange(sub._id, e.target.value)}
-              required
+                type="date"
+                min={new Date().toLocaleDateString("sv-SE")} // ✅ ใช้ให้รองรับ Timezone
+                value={selectedDates[sub._id] || ""}
+                onChange={(e) => handleDateChange(sub._id, e.target.value)}
+                required
+                onClick={(e) => e.target.showPicker()} // ✅ ให้เด้ง DatePicker อัตโนมัติ
             />
             <label>ช่วงเวลา</label>
             <input

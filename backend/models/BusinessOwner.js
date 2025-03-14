@@ -10,7 +10,7 @@ const businessOwnerSchema = new mongoose.Schema({
     password: { type: String, required: true },
     acceptTerms: { type: Boolean, required: true }, // ✅ ต้องกำหนดค่า acceptTerms
     role: { type: String, default: "business_owner" },
-    status: { type: String, default: "pending" } // ["pending", "approved", "rejected"]
+    status: { type: String, enum: ["active", "blacklisted"], default: "active" }
 });
 
 

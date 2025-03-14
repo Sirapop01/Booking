@@ -40,7 +40,6 @@ exports.sendMessage = async (req, res) => {
 
 exports.getChatHistory = async (req, res) => {
   try {
-    console.log("📢 API getChatHistory Called with params:", req.params);
 
     let { userId, userModel } = req.params;
 
@@ -63,8 +62,6 @@ exports.getChatHistory = async (req, res) => {
     if (!chatHistory.length) {
       return res.status(404).json({ success: false, message: "No chat history found" });
     }
-
-    console.log("📜 Retrieved Chat History:", chatHistory);
 
     res.status(200).json({ success: true, data: chatHistory });
 
