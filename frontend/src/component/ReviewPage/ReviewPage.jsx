@@ -171,7 +171,7 @@ const ReviewPage = () => {
     
         <div className="review-page-container">
             <Navbar />
-            <h1>🏟️ รีวิวสนาม</h1>
+            <h1 className="review-title87">🏟️ รีวิวสนาม</h1>
     
             {isLoading ? (
                 <p>⏳ กำลังโหลดข้อมูล...</p>

@@ -190,7 +190,9 @@ const BusinessProfile = () => {
         {/* ✅ รวมข้อมูลส่วนตัว + บริเวณที่สนใจ */}
         <section className="business-profile-card">
         <div className="business-profile-card-header">
-              <h2>ข้อมูลเจ้าของสนาม</h2>
+         <h2>
+            <span className="jaosanum">ข้อมูลเจ้าของสนาม</span>
+         </h2>
         </div>
           <div className="form-grid">
             <div className="input-group">

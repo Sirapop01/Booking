@@ -30,6 +30,10 @@
     outline: none; /* ✅ Remove focus outline */
     border: none; /* ✅ Remove borders */
   }
+
+  .jaosanum {
+    color: white;
+  }
   
   .business-nav-menu button:focus {
     outline: none; /* ✅ Remove outline when focused */
