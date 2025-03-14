@@ -173,24 +173,31 @@ exports.confirmBooking = async (req, res) => {
 exports.cancelExpiredBooking = async (req, res) => {
     try {
         const { sessionId } = req.body;
+        console.log("📌 รับค่า sessionId:", sessionId);
 
         const booking = await BookingHistory.findOne({ sessionId });
+        console.log("🔍 พบคำสั่งจอง:", booking);
 
         if (!booking) {
             return res.status(404).json({ message: "❌ ไม่พบคำสั่งจองนี้" });
         }
 
+        console.log("⏳ เวลาปัจจุบัน:", new Date());
+        console.log("🕒 เวลาหมดอายุของคำสั่งจอง:", booking.expiresAt);
+
         if (booking.status !== "pending") {
+            console.log("⚠ คำสั่งจองไม่อยู่ในสถานะ pending");
             return res.status(400).json({ message: "❌ คำสั่งจองนี้ไม่สามารถยกเลิกได้" });
         }
 
         const currentTime = new Date();
-        if (currentTime >= booking.expiresAt) {
+        if (currentTime >= new Date(booking.expiresAt)) {
             booking.status = "canceled";
             await booking.save();
             console.log("🚨 คำสั่งจองถูกยกเลิกอัตโนมัติ:", sessionId);
             return res.status(200).json({ message: "✅ คำสั่งจองถูกยกเลิกอัตโนมัติ" });
         } else {
+            console.log("✅ คำสั่งจองยังไม่หมดเวลา");
             return res.status(400).json({ message: "✅ คำสั่งจองยังไม่หมดเวลา" });
         }
     } catch (error) {
@@ -198,6 +205,7 @@ exports.cancelExpiredBooking = async (req, res) => {
         res.status(500).json({ message: "❌ เกิดข้อผิดพลาด" });
     }
 };
+
 
 
 

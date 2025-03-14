@@ -180,122 +180,126 @@ const showAvailableTimes = async (subStadiumId) => {
   });
 };
   
-  const handleConfirmBooking = async () => {
-    try {
-        const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-        if (!token) {
-            Swal.fire("⚠ กรุณาเข้าสู่ระบบก่อนทำการจอง", "", "warning");
-            return;
-        }
+const handleConfirmBooking = async () => {
+  try {
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+      if (!token) {
+          Swal.fire("⚠ กรุณาเข้าสู่ระบบก่อนทำการจอง", "", "warning");
+          return;
+      }
 
-        let userId = null;
-        try {
-            const decodedToken = JSON.parse(atob(token.split(".")[1]));
-            console.log("✅ Decoded Token in Booking:", decodedToken);
-            userId = decodedToken?.id;
-        } catch (err) {
-            console.error("🚨 Error decoding JWT:", err);
-            Swal.fire("❌ Token ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่", "", "error");
-            return;
-        }
+      let userId = null;
+      try {
+          const decodedToken = JSON.parse(atob(token.split(".")[1]));
+          console.log("✅ Decoded Token in Booking:", decodedToken);
+          userId = decodedToken?.id;
+      } catch (err) {
+          console.error("🚨 Error decoding JWT:", err);
+          Swal.fire("❌ Token ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่", "", "error");
+          return;
+      }
 
-        if (!userId || Object.keys(selectedDates).length === 0) {
-            Swal.fire("⚠ กรุณาเลือกวันที่ก่อน", "", "warning");
-            return;
-        }
+      if (!userId || Object.keys(selectedDates).length === 0) {
+          Swal.fire("⚠ กรุณาเลือกวันที่ก่อน", "", "warning");
+          return;
+      }
 
-        let totalPrice = 0;
-        let details = [];
+      let totalPrice = 0;
+      let details = [];
 
-        selectedSubStadiums.forEach((sub) => {
-            const selectedBookingDate = selectedDates[sub._id];
-            const selectedTimeSlots = bookingData[sub._id]?.selectedTime?.split(", ") || [];
-            if (!selectedBookingDate) {
-                console.warn(`❌ ไม่พบวันที่ของสนาม ${sub.name}`);
-                return;
-            }
+      selectedSubStadiums.forEach((sub) => {
+          const selectedBookingDate = selectedDates[sub._id];
+          const selectedTimeSlots = bookingData[sub._id]?.selectedTime?.split(", ") || [];
+          if (!selectedBookingDate) {
+              console.warn(`❌ ไม่พบวันที่ของสนาม ${sub.name}`);
+              return;
+          }
 
-            if (selectedTimeSlots.length > 0) {
-                const startTime = selectedTimeSlots[0].split(" - ")[0];
-                const endTime = selectedTimeSlots[selectedTimeSlots.length - 1].split(" - ")[1];
+          if (selectedTimeSlots.length > 0) {
+              const startTime = selectedTimeSlots[0].split(" - ")[0];
+              const endTime = selectedTimeSlots[selectedTimeSlots.length - 1].split(" - ")[1];
 
-                const startHour = parseInt(startTime.split(":")[0]);
-                const endHour = parseInt(endTime.split(":")[0]);
-                let duration = endHour >= startHour ? endHour - startHour : (24 - startHour) + endHour;
-                if (duration < 0) duration = 0;
+              const startHour = parseInt(startTime.split(":")[0]);
+              const endHour = parseInt(endTime.split(":")[0]);
+              let duration = endHour >= startHour ? endHour - startHour : (24 - startHour) + endHour;
+              if (duration < 0) duration = 0;
 
-                const pricePerHour = parseFloat(sub.price) || 0;
-                const price = pricePerHour * duration;
-                totalPrice += price;
+              const pricePerHour = parseFloat(sub.price) || 0;
+              const price = pricePerHour * duration;
+              totalPrice += price;
 
-                details.push({
-                    bookingDate: formatDateForAPI(selectedBookingDate),
-                    subStadiumId: sub._id,
-                    sportName: sub.sportName,
-                    name: sub.name || "ไม่พบชื่อสนามย่อย",
-                    startTime,
-                    endTime,
-                    duration,
-                    pricePerHour,
-                    price,
-                });
-            }
-        });
+              details.push({
+                  bookingDate: formatDateForAPI(selectedBookingDate),
+                  subStadiumId: sub._id,
+                  sportName: sub.sportName,
+                  name: sub.name || "ไม่พบชื่อสนามย่อย",
+                  startTime,
+                  endTime,
+                  duration,
+                  pricePerHour,
+                  price,
+              });
+          }
+      });
 
-        if (details.length === 0) {
-            Swal.fire("⚠ กรุณาเลือกเวลาอย่างน้อย 1 ช่วง", "", "warning");
-            return;
-        }
+      if (details.length === 0) {
+          Swal.fire("⚠ กรุณาเลือกเวลาอย่างน้อย 1 ช่วง", "", "warning");
+          return;
+      }
 
-        const sessionId = nanoid(10);
-        const bookingPayload = {
-            sessionId,
-            userId,
-            stadiumId: selectedSubStadiums[0].arenaId,
-            ownerId: selectedSubStadiums[0].ownerId,
-            fieldName,
-            stadiumImage,
-            expiresAt: new Date(Date.now() + 5 * 60 * 1000), // ✅ หมดอายุใน 10 นาที
-            totalPrice,
-            details,
-        };
+      const sessionId = nanoid(10);
+      const newExpiresAt = new Date(Date.now() + 1 * 60 * 1000); // ✅ รีเซ็ต `expiresAt` เป็น 10 นาทีจากปัจจุบัน
 
-        console.log("📌 ข้อมูลที่ส่งไปยัง Backend:", bookingPayload);
+      const bookingPayload = {
+          sessionId,
+          userId,
+          stadiumId: selectedSubStadiums[0].arenaId,
+          ownerId: selectedSubStadiums[0].ownerId,
+          fieldName,
+          stadiumImage,
+          expiresAt: newExpiresAt, // ✅ กำหนดเวลาใหม่ทุกครั้ง
+          totalPrice,
+          details,
+      };
 
-        const response = await axios.post(
-            "http://localhost:4000/api/bookinghistories/confirm-booking",
-            bookingPayload,
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
+      console.log("📌 ข้อมูลที่ส่งไปยัง Backend:", bookingPayload);
 
-        if (response.status === 201) {
-            Swal.fire({
-                icon: "success",
-                title: "✅ ยืนยันการจองสำเร็จ!",
-                text: "ระบบได้บันทึกการจองของคุณแล้ว",
-                confirmButtonText: "ไปที่หน้าชำระเงิน",
-            }).then(() => {
+      const response = await axios.post(
+          "http://localhost:4000/api/bookinghistories/confirm-booking",
+          bookingPayload,
+          { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.status === 201) {
+          localStorage.setItem("expiresAt", newExpiresAt.getTime()); // ✅ บันทึก expiresAt ใหม่ลง localStorage
+
+          Swal.fire({
+              icon: "success",
+              title: "✅ ยืนยันการจองสำเร็จ!",
+              text: "ระบบได้บันทึกการจองของคุณแล้ว",
+              confirmButtonText: "ไปที่หน้าชำระเงิน",
+          }).then(() => {
               navigate("/payment", { state: { bookingData: bookingPayload } });
-            });
+          });
 
-            // ✅ ตั้งเวลายกเลิกอัตโนมัติใน 10 วินาที
-            setTimeout(async () => {
-                try {
-                    await axios.post(
-                        "http://localhost:4000/api/bookinghistories/cancel-expired",
-                        { sessionId },
-                        { headers: { Authorization: `Bearer ${token}` } }
-                    );
-                    console.log("🚨 คำสั่งจองหมดอายุและถูกยกเลิกแล้ว:", sessionId);
-                } catch (error) {
-                    console.error("❌ ไม่สามารถยกเลิกการจองอัตโนมัติ:", error);
-                }
-            }, 5 * 60 * 1000);
-        }
-    } catch (error) {
-        console.error("🚨 Error confirming booking:", error);
-        Swal.fire("❌ เกิดข้อผิดพลาด", "ไม่สามารถยืนยันการจองได้ กรุณาลองใหม่", "error");
-    }
+          // ✅ ตั้งเวลายกเลิกอัตโนมัติใน 10 นาที
+          setTimeout(async () => {
+              try {
+                  await axios.post(
+                      "http://localhost:4000/api/bookinghistories/cancel-expired",
+                      { sessionId },
+                      { headers: { Authorization: `Bearer ${token}` } }
+                  );
+                  console.log("🚨 คำสั่งจองหมดอายุและถูกยกเลิกแล้ว:", sessionId);
+              } catch (error) {
+                  console.error("❌ ไม่สามารถยกเลิกการจองอัตโนมัติ:", error);
+              }
+          }, 1 * 60 * 1000);
+      }
+  } catch (error) {
+      console.error("🚨 Error confirming booking:", error);
+      Swal.fire("❌ เกิดข้อผิดพลาด", "ไม่สามารถยืนยันการจองได้ กรุณาลองใหม่", "error");
+  }
 };
 
 
