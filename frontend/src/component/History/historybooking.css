@@ -154,7 +154,7 @@
 }
 
 .status.confirmed {
-  color: white;
+  color: white !important;
   background-color: #167503;
 }
 

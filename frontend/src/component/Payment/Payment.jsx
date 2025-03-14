@@ -13,7 +13,7 @@ const Payment = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const bookingData = location.state?.bookingData || null;
-    const [timeLeft, setTimeLeft] = useState(300); // ✅ นับเวลาถอยหลังเริ่มที่ 5 นาที
+    const [timeLeft, setTimeLeft] = useState(60); // ✅ นับเวลาถอยหลังเริ่มที่ 5 นาที
 
     useEffect(() => {
         const fetchPaymentDetails = async () => {
@@ -36,14 +36,9 @@ const Payment = () => {
                 console.log("✅ ข้อมูลที่ได้รับจาก API:", response.data);
                 setPaymentData(response.data);
     
-                // ✅ ดึงค่าหมดเวลา (`expiresAt`) จาก API และตรวจสอบก่อนบันทึก
+                // ✅ อัปเดต `expiresAt` ที่ได้จาก Backend
                 let expiresAt = new Date(response.data.booking.expiresAt).getTime();
-                const storedExpiresAt = localStorage.getItem("expiresAt");
-    
-                if (!storedExpiresAt || parseInt(storedExpiresAt) < expiresAt) {
-                    localStorage.setItem("expiresAt", expiresAt);
-                }
-    
+                localStorage.setItem("expiresAt", expiresAt);
                 updateCountdown(expiresAt);
             } catch (error) {
                 console.error("❌ Error fetching payment details:", error);
@@ -129,6 +124,7 @@ const Payment = () => {
             console.log("✅ Response from server:", response.data); // ✅ ตรวจสอบค่าที่ backend ส่งกลับ
 
             Swal.fire("ยกเลิกสำเร็จ!", "การจองของคุณถูกยกเลิกแล้ว", "success");
+            localStorage.removeItem("expiresAt"); // ✅ ลบค่าเมื่อหมดเวลา
             navigate("/");
         } catch (error) {
             console.error("❌ Error canceling booking:", error);

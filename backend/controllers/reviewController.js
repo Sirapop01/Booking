@@ -31,7 +31,7 @@ exports.submitReview = async (req, res) => {
         const booking = await BookingHistory.findOne({
             userId,
             stadiumId,
-            status: { $in: ["paid", "confirmed"] } // ✅ ตรวจสอบสถานะ
+            status: { $in: ["confirmed"] } // ✅ ตรวจสอบสถานะ
         });
 
         if (!booking) {
