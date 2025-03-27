@@ -1,70 +1,100 @@
-# Getting Started with Create React App
+# Booking System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+โปรเจกต์นี้เป็นระบบการจองที่พัฒนาด้วย [React](https://reactjs.org/) สำหรับฝั่ง Frontend และ [Node.js](https://nodejs.org/) สำหรับฝั่ง Backend
 
-## Available Scripts
+## คุณสมบัติ
 
-In the project directory, you can run:
+- **การจอง**: ผู้ใช้สามารถทำการจองผ่านระบบได้
+- **การจัดการการจอง**: ผู้ดูแลระบบสามารถจัดการการจองทั้งหมดได้
+- **การยืนยันตัวตน**: ระบบรองรับการลงทะเบียนและเข้าสู่ระบบของผู้ใช้
+- **การออกแบบที่ตอบสนอง**: ใช้ CSS Framework เพื่อให้แน่ใจว่าเว็บแอปพลิเคชันทำงานได้ดีบนทุกอุปกรณ์
 
-### `npm start`
+## การติดตั้ง
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### ข้อกำหนดเบื้องต้น
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- [Node.js](https://nodejs.org/) เวอร์ชันล่าสุด
+- [npm](https://www.npmjs.com/) หรือ [yarn](https://yarnpkg.com/) สำหรับการจัดการแพ็กเกจ
 
-### `npm test`
+### การติดตั้ง Backend
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **โคลนโปรเจกต์นี้**:
 
-### `npm run build`
+    ```bash
+    git clone https://github.com/Sirapop01/Booking.git
+    ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. **ไปที่ไดเรกทอรีของ Backend**:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    ```bash
+    cd Booking/backend
+    ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. **ติดตั้งแพ็กเกจที่จำเป็น**:
 
-### `npm run eject`
+    ```bash
+    npm install
+    ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+4. **กำหนดค่าตัวแปรสภาพแวดล้อม**:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    - สร้างไฟล์ `.env` โดยคัดลอกจาก `.env.example`
+    - กำหนดค่าตามความต้องการของคุณ เช่น การเชื่อมต่อฐานข้อมูล
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+5. **เริ่มเซิร์ฟเวอร์ Backend**:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+    ```bash
+    npm start
+    ```
 
-## Learn More
+    เซิร์ฟเวอร์จะทำงานที่ [http://localhost:5000](http://localhost:5000)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### การติดตั้ง Frontend
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. **ไปที่ไดเรกทอรีของ Frontend**:
 
-### Code Splitting
+    ```bash
+    cd ../frontend
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+2. **ติดตั้งแพ็กเกจที่จำเป็น**:
 
-### Analyzing the Bundle Size
+    ```bash
+    npm install
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+3. **เริ่มเซิร์ฟเวอร์ Frontend**:
 
-### Making a Progressive Web App
+    ```bash
+    npm start
+    ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+    แอปพลิเคชันจะทำงานที่ [http://localhost:3000](http://localhost:3000)
 
-### Advanced Configuration
+## การใช้งาน
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- **การลงทะเบียนผู้ใช้**: ไปที่หน้า `/register` เพื่อสร้างบัญชีใหม่
+- **การเข้าสู่ระบบ**: ไปที่หน้า `/login` และป้อนข้อมูลรับรองเพื่อเข้าสู่ระบบ
+- **การทำการจอง**: หลังจากเข้าสู่ระบบแล้ว ผู้ใช้สามารถทำการจองผ่านหน้า `/booking`
+- **การจัดการการจอง**: ผู้ดูแลระบบสามารถดูและจัดการการจองทั้งหมดผ่านหน้า `/admin`
 
-### Deployment
+## โครงสร้างไดเรกทอรี
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+Booking/
+├── backend/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── .env.example
+│   ├── server.js
+│   └── package.json
+└── frontend/
+    ├── src/
+    │   ├── components/
+    │   ├── pages/
+    │   ├── App.js
+    │   └── index.js
+    ├── public/
+    ├── .env.example
+    └── package.json
