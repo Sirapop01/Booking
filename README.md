@@ -111,8 +111,6 @@ npm start
 
 ## 🖼 Screenshots
 
-> วางไฟล์ภาพไว้ใน `frontend/public/screenshots/`
-
 ```md
 ### 🔐 Login
 ![Login](public/screenshots/login.png)
@@ -160,14 +158,3 @@ Booking/
 - PDF Export: jsPDF + html2canvas
 
 ---
-
-## ✍ Author
-
-- GitHub: [Sirapop01](https://github.com/Sirapop01)
-- Contact: เปิด issue ได้เลยครับ
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License.
