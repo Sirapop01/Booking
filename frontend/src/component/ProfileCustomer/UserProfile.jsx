@@ -134,42 +134,19 @@ const UserProfile = () => {
 
   const updateMemberData = async () => {
     try {
-      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-      if (!token) {
-        Swal.fire("กรุณาเข้าสู่ระบบ", "โปรดเข้าสู่ระบบก่อนทำการแก้ไข", "warning");
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("firstName", member.firstName);
-      formData.append("lastName", member.lastName);
-      formData.append("gender", member.gender);
-      formData.append("phoneNumber", member.phoneNumber);
-      formData.append("birthdate", member.birthdate);
-      formData.append("province", member.province);
-      formData.append("district", member.district);
-      formData.append("subdistrict", member.subdistrict);
-      formData.append("interestedSports", member.interestedSports);
-
-      // ✅ เพิ่มรูปเฉพาะกรณีที่มีการอัปโหลดรูปใหม่
+      let updatedData = { ...member };
+      let imageUrl = profileImage;
+  
       if (newProfileImage) {
-        formData.append("profileImage", newProfileImage);
+        await uploadImage(newProfileImage); // ✅ Upload image first
       }
-
-      Swal.fire({
-        title: "กำลังอัปเดตข้อมูล...",
-        allowOutsideClick: false,
-        didOpen: () => Swal.showLoading(),
-      });
-
-      const response = await axios.put(
-        `http://localhost:4000/api/auth/update/${id}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}` } }
-      );
-
-      Swal.fire("สำเร็จ!", "อัปเดตข้อมูลเรียบร้อย", "success");
-
+  
+      console.log("📤 Sending Updated Data:", updatedData);
+  
+      const response = await axios.put(`http://localhost:4000/api/auth/update/${id}`, updatedData);
+      console.log("✅ Updated Member Data:", response.data);
+  
+      alert("🎉 อัปเดตข้อมูลสำเร็จ!");
       await getMB();
       setIsEditable(false);
       setNewProfileImage(null);
@@ -178,6 +155,39 @@ const UserProfile = () => {
       Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถอัปเดตข้อมูลได้", "error");
     }
   };
+
+  
+  const uploadImage = async (file) => {
+    try {
+        if (!file) {
+            alert("กรุณาเลือกไฟล์ก่อนอัปโหลด");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("profileImage", file);
+
+        console.log("📤 กำลังอัปโหลดไฟล์:", file);
+
+        const response = await axios.put(
+            `http://localhost:4000/api/auth/updateProfileImage/${id}`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            }
+        );
+
+        console.log("✅ อัปโหลดรูปภาพสำเร็จ:", response.data);
+        alert("🎉 อัปโหลดรูปภาพสำเร็จ!");
+        getMB(); // โหลดข้อมูลใหม่
+        setIsEditable(false);
+    } catch (error) {
+        console.error("❌ อัปโหลดรูปไม่สำเร็จ:", error);
+        alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
+    }
+};
 
 
 
@@ -287,7 +297,7 @@ const UserProfile = () => {
       <aside className="profile-card">
         <div className="profile-image">
           <label htmlFor="fileUpload" className="image-upload-label">
-            <img src={profileImage} alt="Profile" />
+            <img src={profileImage || defaultProfilePic} alt="Profile" />
             {isEditable && (
               <input
                 id="fileUpload"
@@ -299,25 +309,19 @@ const UserProfile = () => {
             )}
           </label>
         </div>
-
-
         {/* ✅ "Edit Profile" Button (Only when NOT editing) */}
-        {!isEditable && (
-          <button className="edit-profile-button" onClick={toggleEdit}>
-            แก้ไขโปรไฟล์และข้อมูล
-          </button>
-        )}
+{!isEditable && (
+  <button className="edit-profile-button" onClick={toggleEdit}>
+    แก้ไขโปรไฟล์และข้อมูล
+  </button>
+)}
 
-        {/* ✅ "บันทึก" (Save) Button (Only when Editing) */}
-        {isEditable && (
-          <button className="save-button" onClick={updateMemberData}>
-            บันทึก
-          </button>
-        )}
-
-
-
-
+{/* ✅ "บันทึก" (Save) Button (Only when Editing) */}
+{isEditable && (
+  <button className="save-button" onClick={updateMemberData}>
+    บันทึก
+  </button>
+)}
         {/* ✅ Account Actions: Forgot Password & Delete Account */}
         <div className="account-actions">
           <h3 className="forgot-password-user" onClick={() => navigate("/forgot-password")}>
@@ -327,7 +331,6 @@ const UserProfile = () => {
             ลบบัญชี !
           </h3>
         </div>
-
         {/* ✅ Logout Button */}
         <button className="logout-button" onClick={toggleLogout}>
           ลงชื่อออก
@@ -445,3 +448,4 @@ const UserProfile = () => {
 
 
 export default UserProfile;
+
