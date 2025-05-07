@@ -171,6 +171,15 @@ const MatchWebForm = () => {
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
+    Swal.fire({
+      title: "กำลังอัปโหลด...",
+      text: "กรุณารอสักครู่",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
     console.log("📤 Form Data before submit:", formData);
 
     const submitFormData = new FormData();
@@ -398,6 +407,8 @@ const MatchWebForm = () => {
                 type="tel"
                 name="phone"
                 value={formData.phone}
+                inputMode="numeric"
+                maxLength="10"
                 onChange={handleInputChange}
                 placeholder="ระบุเบอร์โทรศัพท์"
               />

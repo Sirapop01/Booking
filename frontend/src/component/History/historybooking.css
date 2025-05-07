@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+
 /* ปรับแต่งหน้าหลัก */
 .history-page {
   padding: 20px;
   text-align: center;
-  background: linear-gradient(to right, #6a11cb, #2575fc); /* Gradient สีฟ้า-ม่วง */
+  background-color: #f5f7fa; /* Gradient สีฟ้า-ม่วง */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -12,33 +14,41 @@
 /* หัวข้อหลัก */
 .history-title {
   font-size: 28px;
+  margin-top: 100px;  /* ✅ เพิ่มระยะห่างด้านบน */
   margin-bottom: 20px;
-  color: white;
+  color: #07213A;;
   font-weight: bold;
+  text-align: center; /* ✅ จัดให้อยู่ตรงกลาง */
 }
 
 /* คอนเทนเนอร์ของการ์ด */
 .history-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; /* ✅ จัดให้อยู่ตรงกลางแนวตั้ง */
+  justify-content: center; /* ✅ จัดให้อยู่ตรงกลางแนวนอน */
   width: 100%;
+  max-width: 1200px; /* ✅ กำหนดขนาดเพื่อให้กึ่งกลาง */
+  margin: 0 auto; /* ✅ บังคับให้กึ่งกลางของหน้า */
+  gap: 20px;
 }
 
 /* การ์ดแต่ละรายการ */
 .history-card {
-  width: 90%;
-  max-width: 650px;
+  width: 95%;
+  max-width: 1200px; /* ✅ ปรับให้กว้างขึ้น */
   background: white;
-  margin: 15px 0;
-  padding: 20px;
+  padding: 25px;
   border-radius: 15px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex; /* ✅ จัดให้เป็นแนวนอน */
+  flex-direction: row; /* ✅ รูปภาพอยู่ซ้าย ข้อมูลอยู่ขวา */
+  align-items: center; /* ✅ จัดให้อยู่กึ่งกลางแนวตั้ง */
+  justify-content: space-between; /* ✅ ให้มีระยะห่างที่เหมาะสม */
+  gap: 20px; /* ✅ เพิ่มช่องว่างระหว่างรูปกับข้อมูล */
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  text-align: left;
+  background: linear-gradient(135deg, #ffffff, #f3f3f3);
 }
 
 /* เอฟเฟกต์ hover */
@@ -47,28 +57,72 @@
   box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* รายละเอียดของประวัติ */
-.history-details {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  color: #333;
+/* 🔵 รูปภาพสนาม (อยู่ฝั่งซ้าย) */
+.history-image {
+  flex-shrink: 0; /* ✅ ป้องกันการบีบรูป */
+  width: 280px; /* ✅ ปรับขนาดรูป */
 }
 
-/* รูปภาพสนาม */
 .history-image img {
-  width: 110px;
-  height: 110px;
-  border-radius: 15px;
+  width: 100%; /* ✅ ทำให้รูปเต็มพื้นที่ */
+  height: 180px;
+  border-radius: 10px;
   object-fit: cover;
-  border: 3px solid #6a11cb;
+  border: 2px solid #0D2A8B;
 }
+
+/* 🟠 รายละเอียดของประวัติ (อยู่ฝั่งขวา) */
+.history-details {
+  flex: 1; /* ✅ ให้เนื้อหาขยายเต็มพื้นที่ */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+/* ✅ ปรับสีของ "สถานะ" */
+.status-label {
+  color: black;
+  font-weight: bold;
+}
+
+/* ✅ ปุ่มรีวิวสนาม */
+.review-button-his {
+  background-color: #1E40AF;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+  margin-top: 10px;
+  font-family: "Kanit", sans-serif;
+}
+
+.review-button-his:hover {
+  background-color: #0D2A8B;
+}
+
+/* ✅ ปรับสีของ
+
+
+
+
+/* ✅ ปรับสีของ "สถานะ:" ให้เป็นสีดำ */
+.status-label {
+  color: black;
+  font-weight: bold;
+}
+
+
+
 
 /* ข้อความเมื่อไม่มีประวัติการจอง */
 .no-history {
   font-size: 20px;
-  color: white;
+  color: #0D2A8B;
   margin-top: 20px;
 }
 
@@ -80,7 +134,7 @@
   font-size: 14px;
   display: inline-block;
   text-transform: uppercase;
-  margin-top: 5px;
+  margin-top: 5px auto;
 }
 
 /* สีของแต่ละสถานะ */
@@ -97,6 +151,16 @@
 .status.pending {
   color: black;
   background-color: #ffc107;
+}
+
+.status.confirmed {
+  color: white !important;
+  background-color: #167503;
+}
+
+.status.rejected {
+  color: white;
+  background-color: #960f0f;
 }
 
 /* สไตล์รายการกีฬาแต่ละรายการ */
@@ -121,7 +185,7 @@
   font-size: 22px;
   font-weight: bold;
   margin-bottom: 10px;
-  color: #6a11cb;
+  color: #0D2A8B;
 }
 
 /* สไตล์สำหรับราคารวม */
@@ -136,3 +200,12 @@
   text-align: center;
   width: fit-content;
 }
+
+/* ✅ ปรับสไตล์ให้เหตุผลปฏิเสธอยู่ติดกับ Status */
+.rejection-reason {
+  color: #d9534f; /* สีแดงเข้ม */
+  font-weight: bold;
+  margin-left: 10px; /* เว้นระยะห่างจาก Status */
+  display: inline-block; /* ให้อยู่ในบรรทัดเดียวกัน */
+}
+

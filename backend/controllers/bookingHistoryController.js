@@ -6,7 +6,7 @@ const Stadium = require("../models/Stadium");
 // ✅ ฟังก์ชันเพิ่มการจองใหม่
 exports.addBookingHistory = async (req, res) => {
     try {
-        const { userId, stadiumId, subStadiumId, ownerId, sportName, timeSlots, bookingDate, status } = req.body;
+        const { userId, stadiumId, subStadiumId, ownerId, sportName, timeSlots, bookingDate, status , rejectionReason } = req.body;
 
         // ✅ ตรวจสอบข้อมูลที่ต้องมี
         if (!userId || !stadiumId || !subStadiumId || !ownerId || !sportName || !timeSlots || !bookingDate) {
@@ -62,12 +62,13 @@ exports.getUserBookingHistory = async (req, res) => {
 
         console.log("🔍 กำลังดึงประวัติการจองของ userId:", userId);
 
-        // ✅ ดึงข้อมูลการจองพร้อมข้อมูลสนามย่อย
+        // ✅ ดึงข้อมูล `rejectionReason` เพิ่มเติม
         const bookings = await BookingHistory.find({ userId })
+            .select("_id fieldName stadiumId status rejectionReason totalPrice expiresAt details")
             .populate({ path: "details.subStadiumId", select: "name images", options: { strictPopulate: false } })
             .lean();
 
-        console.log("📌 Raw Bookings from DB:", bookings);
+            console.log("📌 Raw Bookings from DB:", bookings); // ✅ ตรวจสอบว่ามี rejectionReason หรือไม่
 
         if (!bookings.length) {
             console.log("❌ ไม่พบประวัติการจอง");
@@ -92,11 +93,12 @@ exports.getUserBookingHistory = async (req, res) => {
                 stadiumImage: arena?.images?.[0] || "https://via.placeholder.com/150",
                 totalPrice: booking.totalPrice,
                 status: booking.status,
+                rejectionReason: booking.rejectionReason || null, // ✅ เพิ่ม rejectionReason
                 expiresAt: booking.expiresAt,
                 details: booking.details.map(detail => ({
                     subStadiumId: detail.subStadiumId?._id || null,
                     subStadiumName: detail.subStadiumId?.name || "ไม่พบชื่อสนามย่อย",
-                    sportName: detail.sportName, // ✅ ดึง sportName มาด้วย
+                    sportName: detail.sportName,
                     bookingDate: detail.bookingDate,
                     startTime: detail.startTime,
                     endTime: detail.endTime,
@@ -116,16 +118,27 @@ exports.getUserBookingHistory = async (req, res) => {
 };
 
 
-
 // ✅ ฟังก์ชันใหม่สำหรับบันทึกการจองโดยตรง
 exports.confirmBooking = async (req, res) => {
     try {
         console.log("📌 ข้อมูลที่ได้รับจาก Frontend:", req.body);
 
-        const { sessionId, userId, stadiumId, ownerId, bookingDate, expiresAt, totalPrice, details } = req.body;
+        let { sessionId, userId, stadiumId, ownerId, bookingDate, expiresAt, totalPrice, details, fieldName, stadiumImage } = req.body;
 
         if (!details || !Array.isArray(details) || details.length === 0) {
             return res.status(400).json({ message: "❌ ไม่มีข้อมูลการจองที่ถูกต้อง" });
+        }
+
+        // ✅ ถ้า fieldName ไม่มีค่า ให้ดึงจากฐานข้อมูล
+        if (!fieldName || fieldName === "ไม่พบชื่อสนาม") {
+            const stadium = await Stadium.findById(stadiumId);
+            fieldName = stadium?.name || "ไม่ระบุชื่อสนาม";
+        }
+
+        // ✅ ถ้า stadiumImage ไม่มีค่า ให้ดึงจากฐานข้อมูล
+        if (!stadiumImage) {
+            const stadium = await Stadium.findById(stadiumId);
+            stadiumImage = stadium?.images?.[0] || "https://via.placeholder.com/150"; // ✅ ใช้ placeholder ถ้าไม่มีรูป
         }
 
         // ✅ ตรวจสอบว่ามี sessionId ซ้ำหรือไม่
@@ -134,12 +147,14 @@ exports.confirmBooking = async (req, res) => {
             return res.status(400).json({ message: "❌ Session นี้มีอยู่แล้วในระบบ" });
         }
 
-        // ✅ สร้าง BookingHistory เดียวที่รวมข้อมูลทั้งหมด
+        // ✅ บันทึกข้อมูลการจอง
         const newBooking = new BookingHistory({
             sessionId,
             userId,
             stadiumId,
             ownerId,
+            fieldName, // ✅ บันทึก fieldName
+            stadiumImage, // ✅ เพิ่ม stadiumImage ลงในฐานข้อมูล
             bookingDate,
             expiresAt,
             totalPrice,
@@ -154,6 +169,44 @@ exports.confirmBooking = async (req, res) => {
         res.status(500).json({ message: "❌ ไม่สามารถบันทึกการจองได้", error: error.message });
     }
 };
+
+exports.cancelExpiredBooking = async (req, res) => {
+    try {
+        const { sessionId } = req.body;
+        console.log("📌 รับค่า sessionId:", sessionId);
+
+        const booking = await BookingHistory.findOne({ sessionId });
+        console.log("🔍 พบคำสั่งจอง:", booking);
+
+        if (!booking) {
+            return res.status(404).json({ message: "❌ ไม่พบคำสั่งจองนี้" });
+        }
+
+        console.log("⏳ เวลาปัจจุบัน:", new Date());
+        console.log("🕒 เวลาหมดอายุของคำสั่งจอง:", booking.expiresAt);
+
+        if (booking.status !== "pending") {
+            console.log("⚠ คำสั่งจองไม่อยู่ในสถานะ pending");
+            return res.status(400).json({ message: "❌ คำสั่งจองนี้ไม่สามารถยกเลิกได้" });
+        }
+
+        const currentTime = new Date();
+        if (currentTime >= new Date(booking.expiresAt)) {
+            booking.status = "canceled";
+            await booking.save();
+            console.log("🚨 คำสั่งจองถูกยกเลิกอัตโนมัติ:", sessionId);
+            return res.status(200).json({ message: "✅ คำสั่งจองถูกยกเลิกอัตโนมัติ" });
+        } else {
+            console.log("✅ คำสั่งจองยังไม่หมดเวลา");
+            return res.status(400).json({ message: "✅ คำสั่งจองยังไม่หมดเวลา" });
+        }
+    } catch (error) {
+        console.error("❌ Error canceling expired booking:", error);
+        res.status(500).json({ message: "❌ เกิดข้อผิดพลาด" });
+    }
+};
+
+
 
 
 

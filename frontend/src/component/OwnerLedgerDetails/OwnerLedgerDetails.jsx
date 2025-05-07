@@ -81,9 +81,11 @@ function OwnerLedgerDetails() {
     ? ledgerData.filter((entry) => getMonthFromDate(entry.dateTime) === selectedMonth)
     : ledgerData;
 
-  const totalAmount = filteredData.reduce((acc, entry) => acc + entry.amount, 0).toFixed(2);
-  const totalTaxAmount = filteredData.reduce((acc, entry) => acc + entry.amount * 0.1, 0).toFixed(2);
-  const netAmount = (totalAmount - totalTaxAmount).toFixed(2);
+  const totalTaxAmount = filteredData.reduce((acc, entry) => acc + entry.amount * 0.1, 0).toFixed(2); 
+  const totalAmountAfterTax = filteredData.reduce((acc, entry) => {
+    const taxAmount = entry.amount * 0.1; // คำนวณภาษี 10%
+    return acc + (entry.amount - taxAmount); // บวกยอดหลังหักภาษี
+  }, 0).toFixed(2);
 
   const chartData = filteredData.map((entry) => ({
     date: new Date(entry.dateTime).toLocaleDateString(),
@@ -184,24 +186,37 @@ function OwnerLedgerDetails() {
                       <th>รวม</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    {filteredData.map((entry) => (
-                      <tr key={entry._id}>
-                        <td>{new Date(entry.dateTime).toLocaleString()}</td>
-                        <td>{entry.item}</td>
-                        <td>{entry.quantity || "1"}</td>
-                        <td>{entry.amount.toFixed(2)} B</td>
-                        <td>{(entry.amount * 0.1).toFixed(2)} B</td>
-                        <td>{(entry.amount * 0.9).toFixed(2)} B</td>
-                      </tr>
-                    ))}
-                  </tbody>
+                    <tbody>
+                      {filteredData.map((entry) => {
+                        const detail = entry.details?.[0]; // ดึงข้อมูลจาก details array ตัวแรก
+                        const taxAmount = entry.amount * 0.1; // คำนวณภาษี 10%
+
+                        // คำนวณรวมหลังหักภาษี 10%
+                        const totalAfterTax = (entry.amount - taxAmount).toFixed(2);
+
+                        return (
+                          <tr key={entry._id}>
+                            <td>
+                              {detail?.bookingDate
+                                ? new Date(detail.bookingDate).toLocaleDateString("th-TH")
+                                : "ไม่ระบุ"}
+                            </td>
+                            <td>{detail?.sportName || "ไม่ระบุ"}</td>
+                            <td>{entry.quantity || "1"}</td>
+                            <td>{entry.amount.toFixed(2)} B</td>
+                            <td>{taxAmount.toFixed(2)} B</td> {/* ค่าธรรมเนียม 10% */}
+                            <td>{totalAfterTax} B</td> {/* รวมหลังหักภาษี 10% */}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
                 </table>
               )}
 
-                        <div className="details-total-boxs">
-                          <p><strong>รวมทั้งหมด:</strong> {totalAmount} B</p>
-                        </div>
+                  <div className="details-total-box">
+                    <p><strong>ค่าธรรมเนียม 10%:</strong> {totalTaxAmount} B</p>
+                    <p><strong>รวมทั้งหมด:</strong> {totalAmountAfterTax} B</p>
+                  </div>
 
               <button className="details-manage-button" onClick={() => setShowChart(!showChart)}>
                 {showChart ? "กลับไปยังตาราง" : "การจัดการ"}

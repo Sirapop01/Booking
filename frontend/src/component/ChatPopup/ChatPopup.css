@@ -1,0 +1,123 @@
+/* 🔹 ป๊อปอัปแชท */
+.chat-popup {
+  position: fixed;
+  bottom: 90px; /* ✅ ขยับขึ้นเล็กน้อยให้ไม่ชนปุ่มแชท */
+  right: 20px;
+  width: 340px; /* ✅ ขยายขนาดให้พอดีกับ UI */
+  height: 450px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1051; /* ✅ ปรับ z-index ให้สูงขึ้น */
+}
+
+/* 🔹 หัวข้อแชท */
+.chat-header {
+  background: #007bff;
+  color: white;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+/* 🔹 ปุ่มปิด */
+.close-icon {
+  font-size: 18px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.close-icon:hover {
+  transform: scale(1.1);
+}
+
+/* 🔹 เนื้อหาแชท */
+.chat-body {
+  flex-grow: 1;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background: #f9f9f9;
+}
+
+/* 🔹 ข้อความในแชท */
+.chat-message {
+  max-width: 75%;
+  padding: 10px 14px;
+  margin: 6px;
+  border-radius: 12px;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+
+/* 🔹 ข้อความที่ส่ง */
+.sent {
+  align-self: flex-end;
+  background: #007bff;
+  color: white;
+}
+
+/* 🔹 ข้อความที่ได้รับ */
+.received {
+  align-self: flex-start;
+  background: #e1e1e1;
+  color: black;
+}
+
+/* 🔹 ข้อความ placeholder */
+.chat-placeholder {
+  text-align: center;
+  color: #aaa;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+/* 🔹 ส่วนพิมพ์ข้อความ */
+.chat-footer {
+  display: flex;
+  padding: 10px;
+  background: white;
+  border-top: 1px solid #ddd;
+}
+
+/* 🔹 ช่องป้อนข้อความ */
+.chat-footer input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.2s ease-in-out;
+}
+
+.chat-footer input:focus {
+  border: 1px solid #007bff;
+}
+
+/* 🔹 ปุ่มส่งข้อความ */
+.chat-footer button {
+  background: #007bff;
+  border: none;
+  color: white;
+  font-size: 16px;
+  margin-left: 8px;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out, transform 0.2s;
+}
+
+.chat-footer button:hover {
+  background: #0056b3;
+  transform: scale(1.1);
+}

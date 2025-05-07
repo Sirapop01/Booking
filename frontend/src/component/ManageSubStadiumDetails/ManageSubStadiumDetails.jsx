@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import "./ManageSubStadiumDetails.css";
 import NavbarStadiumlist from "../NavbarStadiumlist/NavbarStadiumlist";
 import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2";
 
 function ManageSubStadiumDetails() {
   const { arenaId, sportId } = useParams();
@@ -136,39 +137,69 @@ useEffect(() => {
   };
 
 // ✅ ฟังก์ชันยืนยันการลบสนาม
-    const confirmDeleteCourt = async () => {
-      if (deleteConfirmText !== "Delete") return;
-      if (!courtToDelete) {
-        alert("❌ ไม่พบ ID ของสนาม กรุณารีเฟรชหน้าแล้วลองใหม่");
-        return;
-      }
+const confirmDeleteCourt = async () => {
+  if (deleteConfirmText !== "Delete") {
+      Swal.fire({
+          icon: "warning",
+          title: "⚠ กรุณาพิมพ์ 'Delete' ให้ถูกต้อง",
+          confirmButtonText: "ตกลง"
+      });
+      return;
+  }
+  
+  if (!courtToDelete) {
+      Swal.fire({
+          icon: "error",
+          title: "❌ ไม่พบ ID ของสนาม",
+          text: "กรุณารีเฟรชหน้าแล้วลองใหม่",
+          confirmButtonText: "ตกลง"
+      });
+      return;
+  }
 
-      const owner_id = getOwnerIdFromToken(); // ✅ ดึง owner_id จาก token
-      console.log("🗑️ ลบสนาม ID:", courtToDelete, "โดย owner_id:", owner_id); // ✅ Debug
+  const owner_id = getOwnerIdFromToken(); // ✅ ดึง owner_id จาก token
+  console.log("🗑️ ลบสนาม ID:", courtToDelete, "โดย owner_id:", owner_id); // ✅ Debug
 
-      if (!owner_id) {
-        alert("❌ ไม่พบ owner_id กรุณาเข้าสู่ระบบใหม่!");
-        return;
-      }
+  if (!owner_id) {
+      Swal.fire({
+          icon: "error",
+          title: "❌ ไม่พบ owner_id",
+          text: "กรุณาเข้าสู่ระบบใหม่!",
+          confirmButtonText: "ตกลง"
+      });
+      return;
+  }
 
-      try {
-        const response = await axios.delete(`http://localhost:4000/api/substadiums/${courtToDelete}`, {
+  try {
+      const response = await axios.delete(`http://localhost:4000/api/substadiums/${courtToDelete}`, {
           data: { owner_id }, // ✅ ส่ง owner_id ไปด้วย
-        });
+      });
 
-        console.log("✅ ลบสนามย่อยสำเร็จ:", response.data);
-        setCourts((prevCourts) => prevCourts.filter((court) => court._id !== courtToDelete));
-        
-        setIsDeletePopupOpen(false);
-        setDeleteConfirmText("");
-        setCourtToDelete(null);
-        
-        alert("✅ ลบสนามย่อยสำเร็จ!");
-      } catch (error) {
-        console.error("❌ Failed to delete substadium:", error.response?.data || error);
-        alert("❌ เกิดข้อผิดพลาดในการลบสนามย่อย: " + (error.response?.data?.message || "ไม่ทราบสาเหตุ"));
-      }
-    };
+      console.log("✅ ลบสนามย่อยสำเร็จ:", response.data);
+      setCourts((prevCourts) => prevCourts.filter((court) => court._id !== courtToDelete));
+
+      setIsDeletePopupOpen(false);
+      setDeleteConfirmText("");
+      setCourtToDelete(null);
+
+      Swal.fire({
+          icon: "success",
+          title: "✅ ลบสนามย่อยสำเร็จ!",
+          text: "สนามของคุณถูกลบออกจากระบบเรียบร้อย",
+          confirmButtonText: "ตกลง"
+      });
+  } catch (error) {
+      console.error("❌ Failed to delete substadium:", error.response?.data || error);
+      
+      Swal.fire({
+          icon: "error",
+          title: "❌ เกิดข้อผิดพลาด",
+          text: error.response?.data?.message || "ไม่ทราบสาเหตุ",
+          confirmButtonText: "ตกลง"
+      });
+  }
+};
+
 
     const toggleStatus = async (courtId, currentStatus) => {
       const newStatus = currentStatus === "เปิด" ? "ปิดชั่วคราว" : "เปิด";
@@ -262,7 +293,7 @@ useEffect(() => {
                     <td>{court.name}</td>
                     <td>
                     <button 
-                      className={court.status === "เปิด" ? "btn-open" : "btn-closed"} 
+                      className={court.status === "เปิด" ? "btn-open-sta" : "btn-closed-sta"} 
                       onClick={(e) => { e.stopPropagation(); toggleStatus(court._id, court.status); }}
                     >
                       {court.status}

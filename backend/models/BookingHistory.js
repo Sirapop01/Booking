@@ -7,6 +7,10 @@ const BookingHistorySchema = new mongoose.Schema(
       required: true,
       unique: true, // ✅ ป้องกัน session ซ้ำ
     },
+    fieldName: {
+      type: String,
+      required: true,
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -19,9 +23,11 @@ const BookingHistorySchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "completed", "canceled"],
+      enum: ["pending", "completed", "canceled", "rejected"], // ✅ เพิ่ม "rejected"
       default: "pending",
     },
+    rejectionReason: { type: String, default: null }, // ✅ เพิ่มช่องเก็บเหตุผลการปฏิเสธ
+
     totalPrice: {
       type: Number,
       required: true,
@@ -34,6 +40,7 @@ const BookingHistorySchema = new mongoose.Schema(
       {
         subStadiumId: { type: mongoose.Schema.Types.ObjectId, ref: "SubStadium", required: true },
         sportName: { type: String, required: true },
+        name:{type: String, required: true},
         bookingDate: { type: Date, required: true }, // ✅ เพิ่ม bookingDate ลงใน details
         startTime: { type: String, required: true },
         endTime: { type: String, required: true },

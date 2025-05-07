@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import "./StadiumList.css";
-import NavbarStadiumlist from "../NavbarStadiumlist/NavbarStadiumlist";
+import Navbar from "../Navbar/Navbar";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css"; // ✅ นำเข้า CSS ของ SweetAlert2
+import ChatButton from "../ChatButton/ChatButton"; // ✅ Import ChatButton
 
 function StadiumList() {
     const navigate = useNavigate();
@@ -13,32 +14,33 @@ function StadiumList() {
     const [selectedStadium, setSelectedStadium] = useState(null);
     const [loading, setLoading] = useState(false); // ✅ ป้องกันการกดปุ่มซ้ำ
     const [ownerId, setOwnerId] = useState(null);
+    const [userType, setUserType] = useState(null); // ✅ เพิ่ม userType
 
     useEffect(() => {
         const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-
         if (!token) {
             alert("Session หมดอายุ! กรุณาเข้าสู่ระบบใหม่");
             navigate("/login");
             return;
         }
-
+    
         try {
             const decoded = jwtDecode(token);
-            const userId = decoded.id;
-
-            if (!userId) {
-                console.error("⚠️ ไม่พบ ID ใน Token");
+            console.log("📢 Token Decoded:", decoded); // ✅ ตรวจสอบค่า token
+            
+            if (!decoded.id || !decoded.role) {
+                console.error("❌ ไม่พบ userId หรือ userType ใน token");
                 return;
             }
-
-            setOwnerId(userId);
+    
+            setOwnerId(decoded.id);
         } catch (error) {
-            console.error("⚠️ ไม่สามารถถอดรหัส Token:", error);
+            console.error("❌ Error decoding token:", error);
             alert("Session ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่");
             navigate("/login");
         }
     }, [navigate]);
+    
 
     // ✅ ฟังก์ชันโหลดข้อมูลสนาม
     const fetchStadiumsStatus = async () => {
@@ -137,7 +139,10 @@ function StadiumList() {
     
     return (
         <div className="stadium-page-container">
-            <NavbarStadiumlist />
+            <Navbar/>
+
+            {/* ✅ เพิ่ม ChatButton ตรงนี้ */}
+            {ownerId && userType && <ChatButton userId={ownerId} userType={userType} />}
 
             {/* ✅ ตารางสนาม */}
             <table className="stadium-table-stadiumlist">
@@ -193,31 +198,41 @@ function StadiumList() {
                     className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
                     onClick={() => navigate(`/Registerarena/${selectedStadium}`)} 
                     disabled={!selectedStadium}
-                >
-                    แก้ไข
+                    >
+                แก้ไข
                 </button>
 
                 <button onClick={() => navigate("/Registerarena")} className="btn-stadiumlist">
-                    เพิ่มสนามใหม่
+                เพิ่มสนามใหม่
                 </button>
 
                 <button 
                     className={`btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
                     onClick={() => navigate(`/manage-sub-stadium/${selectedStadium}`)} 
                     disabled={!selectedStadium}
-                >
-                    จัดการสนามย่อย
+                    >
+                จัดการสนามย่อย
                 </button>
+
+                {/* ✅ ปุ่ม "ยืนยันการจอง" */}
+                <button 
+                    className={`confirm-booking-btn ${selectedStadium ? "" : "disabled"}`} 
+                    onClick={() => navigate(`/confirm-bookings/${selectedStadium}`)}
+                    disabled={!selectedStadium}
+                >
+                    ตรวจสอบการจอง
+                </button>
+
 
                 <button 
                     className={`delete-btn-stadiumlist ${selectedStadium ? "" : "disabled"}`} 
                     onClick={() => deleteStadium(selectedStadium)}
                     disabled={!selectedStadium}
-                >
-                    ลบสนาม
+                    >
+                ลบสนาม
                 </button>
-            </div>
 
+            </div>
         </div>
     );
 }

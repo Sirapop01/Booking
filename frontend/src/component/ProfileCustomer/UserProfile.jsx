@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./UserProfile.css";
-import defaultProfilePic from "../assets/threeman.png";
 import { FaPencilAlt } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
@@ -56,12 +55,19 @@ const UserProfile = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+
     if (file) {
-      setNewProfileImage(file); // ✅ เก็บไฟล์ไว้ แต่ยังไม่อัปโหลด
-      setProfileImage(URL.createObjectURL(file)); // ✅ แสดงรูปที่เลือกเป็น preview
+      setNewProfileImage(file); // ✅ เก็บไฟล์ไว้สำหรับอัปโหลด
+      setProfileImage(URL.createObjectURL(file)); // ✅ แสดง Preview
+    } else {
+      // ✅ ถ้าไม่มีไฟล์ใหม่ ใช้รูปจาก database ถ้ามี
+      if (member.profileImage) {
+        setProfileImage(member.profileImage); // ใช้รูปที่มีอยู่
+      } else {
+        setProfileImage(null); // ✅ ถ้าไม่มีรูปใน database ก็ไม่ต้องแสดงอะไรเลย
+      }
     }
   };
-
 
   useEffect(() => {
     if (id) {
@@ -146,9 +152,10 @@ const UserProfile = () => {
       setNewProfileImage(null);
     } catch (error) {
       console.error("❌ Error updating member data:", error);
-      alert("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
+      Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถอัปเดตข้อมูลได้", "error");
     }
   };
+
   
   const uploadImage = async (file) => {
     try {
@@ -181,6 +188,7 @@ const UserProfile = () => {
         alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
     }
 };
+
 
 
   const toggleLogout = () => {
@@ -284,7 +292,7 @@ const UserProfile = () => {
           <button onClick={() => navigate("/Discount")}>คูปอง</button>
         </nav>
       </header>
-  
+
       {/* 🔹 Profile Card (Left Side) */}
       <aside className="profile-card">
         <div className="profile-image">
@@ -301,7 +309,6 @@ const UserProfile = () => {
             )}
           </label>
         </div>
-  
         {/* ✅ "Edit Profile" Button (Only when NOT editing) */}
 {!isEditable && (
   <button className="edit-profile-button" onClick={toggleEdit}>
@@ -315,10 +322,6 @@ const UserProfile = () => {
     บันทึก
   </button>
 )}
-
-  
-        
-  
         {/* ✅ Account Actions: Forgot Password & Delete Account */}
         <div className="account-actions">
           <h3 className="forgot-password-user" onClick={() => navigate("/forgot-password")}>
@@ -328,13 +331,12 @@ const UserProfile = () => {
             ลบบัญชี !
           </h3>
         </div>
-  
         {/* ✅ Logout Button */}
         <button className="logout-button" onClick={toggleLogout}>
           ลงชื่อออก
         </button>
       </aside>
-  
+
       {/* 🔹 Profile Content (Right Side) */}
       <main className="profile-content">
         {/* ✅ Personal Info Card */}
@@ -371,7 +373,7 @@ const UserProfile = () => {
             </div>
           </div>
         </div>
-  
+
         {/* ✅ Location Info Card */}
         <div className="info-card">
           <h3>📍 บริเวณที่สนใจ</h3>
@@ -425,7 +427,7 @@ const UserProfile = () => {
           </div>
         </div>
       </main>
-  
+
       {/* ✅ Logout Popup Modal */}
       {showLogoutModal && (
         <div className="logout-popup-overlay" onClick={() => setShowLogoutModal(false)}>
@@ -440,7 +442,7 @@ const UserProfile = () => {
       )}
     </div>
   );
-  
+
 };
 
 

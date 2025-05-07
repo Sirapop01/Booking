@@ -396,6 +396,7 @@ h3 {
   background: transparent; /* ไม่มีพื้นหลัง */
   cursor: pointer;
   
+
 }
 
 .forgot-password-user:hover {
@@ -539,6 +540,5 @@ h3 {
   border: 1px solid #ccc;
   border-radius: 4px;
   background-color: #fff;
+
 }
-
-

@@ -19,15 +19,15 @@ exports.getStadiumsByOwner = async (req, res) => {
   }
 };
 
-// ✅ ดึงข้อมูล payment ของสนามนั้น (เฉพาะ confirmed)
+// ✅ ดึงข้อมูล payment ของสนามนั้น (เฉพาะ confirmed หรือ paid)
 exports.getLedgerByArena = async (req, res) => {
   try {
     const { arenaId } = req.params;
+    console.log("📌 Received arenaId:", arenaId); // ✅ Debugging log
 
-    // ✅ แปลง arenaId ให้เป็น ObjectId ก่อนค้นหา
     const ledgerData = await Payment.find({
-      arenaId: new mongoose.Types.ObjectId(arenaId),
-      status: "confirmed",
+      stadiumId: new mongoose.Types.ObjectId(arenaId),
+      status: { $in: ["confirmed", "paid"] }, // ✅ รองรับ "confirmed" และ "paid"
     });
 
     if (!ledgerData || ledgerData.length === 0) {
@@ -40,3 +40,5 @@ exports.getLedgerByArena = async (req, res) => {
     res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
   }
 };
+
+

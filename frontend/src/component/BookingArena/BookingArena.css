@@ -251,6 +251,31 @@
   color: white;
 }
 
+.disabled-substadium {
+  background-color: #d3d3d3 !important; /* เปลี่ยนสีปุ่มเป็นเทา */
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
+.disabled-substadium img {
+  filter: grayscale(100%); /* ทำให้รูปเป็นขาวดำ */
+}
+
+.disabled-button {
+  background-color: #b0b0b0 !important;  /* สีเทาอ่อน */
+  color: #ffffff !important;  /* ตัวอักษรสีขาว */
+  border: 1px solid #a0a0a0 !important;  /* ขอบปุ่มสีเทาเข้ม */
+  cursor: not-allowed !important;  /* เปลี่ยน cursor เป็น "ห้ามคลิก" */
+  opacity: 0.6;  /* ลดความเข้มของปุ่ม */
+  transition: all 0.3s ease-in-out;
+}
+
+/* ป้องกัน hover เมื่อปิดสนาม */
+.disabled-button:hover {
+  background-color: #ff0000 !important;
+  color: #ffffff !important;
+}
+
 
 /* ✅ ปุ่มจอง */
 .booking101-button {
@@ -332,5 +357,48 @@
 .heart-icon.liked + .favorite-text {
   color: red;
 }
+
+/* ทำให้จุดนำทาง (dots) อยู่ด้านบน */
+.slick-dots {
+  top: -30px !important; /* ย้ายขึ้นไป 30px */
+  bottom: auto !important;
+}
+
+.review-filter {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  justify-content: center;
+}
+
+.review-filter button {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.review-filter button.active {
+  background: #ffc107;
+  color: white;
+  font-weight: bold;
+}
+
+.star-filter {
+  color: gold;
+  font-size: 18px;
+}
+
+.review-no-reviews {
+  color: black;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+}
+
 
 

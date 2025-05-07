@@ -41,19 +41,19 @@ const Information = () => {
                     console.error("❌ No Token Found");
                     return;
                 }
-    
+
                 const userData = jwtDecode(Token);
                 if (!userData.id) {
                     console.error("❌ Missing user ID in Token");
                     return;
                 }
-    
+
                 console.log("✅ Arena ID:", arenaId); // ✅ Log Arena ID ที่รับมาจาก URL
-    
+
                 const response = await axios.get("http://localhost:4000/api/business/find-owner", {
                     params: { id: userData.id },
                 });
-    
+
                 if (response.data && response.data.businessOwnerId) {
                     setFormData(prevData => ({
                         ...prevData,
@@ -67,36 +67,36 @@ const Information = () => {
                 console.error("🚨 Error fetching BusinessOwner:", error.response?.data || error.message);
             }
         };
-    
+
         fetchBusinessOwner();
     }, [arenaId]); // ✅ ถ้า arenaId เปลี่ยน ค่าจะอัปเดตอัตโนมัติ
-    
-    
+
+
 
     const handleImageChange = async (event, type) => {
         const file = event.target.files[0];
-    
+
         if (file) {
             setImages(prev => ({ ...prev, [type]: URL.createObjectURL(file) }));
             setErrors(prev => ({ ...prev, [type]: '' }));
-    
+
             const formData = new FormData();
             formData.append('image', file);
             formData.append('folder', 'business-info');
-    
+
             setIsUploading(true); // ✅ เริ่มอัปโหลด
-    
+
             try {
                 const response = await axios.post('http://localhost:4000/api/upload/single', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 });
-    
+
                 setUploadedImages(prev => {
                     const updated = { ...prev, [type]: response.data.imageUrl };
                     setErrors(errors => ({ ...errors, [type]: '' })); // ✅ เคลียร์ error
                     return updated;
                 });
-    
+
                 console.log(`✅ Uploaded ${type}:`, response.data.imageUrl);
             } catch (error) {
                 console.error(`❌ Upload ${type} failed:`, error);
@@ -106,7 +106,7 @@ const Information = () => {
             }
         }
     };
-    
+
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -137,9 +137,9 @@ const Information = () => {
             });
             return;
         }
-    
+
         if (!validateForm()) return;
-    
+
         if (!formData.arenaId) { // ✅ ตรวจสอบว่ามี arenaId หรือไม่
             Swal.fire({
                 icon: "error",
@@ -149,20 +149,20 @@ const Information = () => {
             });
             return;
         }
-    
+
         try {
             const submissionData = {
                 ...formData,
                 arenaId: formData.arenaId, // ✅ เพิ่ม `arenaId`
                 images: uploadedImages
             };
-    
+
             console.log("📡 Sending request to API:", submissionData); // ✅ Debugging
-    
+
             const response = await axios.post("http://localhost:4000/api/business-info-requests/submit", submissionData);
-    
+
             console.log("✅ API Response:", response.data);
-    
+
             Swal.fire({
                 icon: "success",
                 title: "ลงทะเบียนสำเร็จ!",
@@ -171,10 +171,10 @@ const Information = () => {
             }).then(() => {
                 navigate("/SuccessRegis");
             });
-    
+
         } catch (error) {
             console.error("❌ Submission failed:", error.response?.data || error);
-    
+
             Swal.fire({
                 icon: "error",
                 title: "เกิดข้อผิดพลาด!",
@@ -183,10 +183,10 @@ const Information = () => {
             });
         }
     };
-    
-    
+
+
     return (
-        
+
         <div className="information-container">
             <div className="information-section">
                 {/* 🔹 รูปถ่ายหนังสือจดทะเบียน */}
@@ -206,7 +206,7 @@ const Information = () => {
                         </label>
                     </div>
                 </div>
-                
+
 
                 {/* 🔹 รูปถ่ายบัตรประชาชน */}
                 <div className="information-box">
@@ -265,18 +265,27 @@ const Information = () => {
 
                     <input type="text" name="accountName" placeholder="ชื่อบัญชี" className="information-input" value={formData.accountName} onChange={handleInputChange} />
                     <input type="text" name="bank" placeholder="ธนาคาร" className="information-input" value={formData.bank} onChange={handleInputChange} />
-                    <input type="text" name="accountNumber" placeholder="เลขบัญชี" className="information-input" value={formData.accountNumber} onChange={handleInputChange} />
+                    <input
+                        type="text"
+                        name="accountNumber"
+                        placeholder="กรอกเลขที่บัญชี"
+                        className="information-input"
+                        value={formData.accountNumber}
+                        onChange={handleInputChange}
+                        maxLength={20} // จำกัดจำนวนตัวเลขที่กรอก
+                        pattern="\d*" // อนุญาตเฉพาะตัวเลข
+                        inputMode="numeric" // ทำให้คีย์บอร์ดบนมือถือแสดงตัวเลข
+                    />
 
 
                 </div>
             </div>
 
             <div className="information-buttons">
-                <button className="information-cancel">ยกเลิก</button>
-                <button className="information-next" onClick={handleSubmit}>ต่อไป</button>
+                <button className="information-next" onClick={handleSubmit}>ดำเนินการต่อ</button>
             </div>
         </div>
-        
+
     );
 };
 

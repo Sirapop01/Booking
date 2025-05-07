@@ -59,6 +59,35 @@
     font-size: 12px;
     color: #666;
   }
+
+  .rating {
+    font-size: 14px;
+    color: #ffcc00; /* สีเหลือง */
+    margin-left: 5px;
+  }
+  
+  .no-rating {
+    font-size: 12px;
+    color: gray;
+    margin-left: 5px;
+  }
+
+.for-rating {
+  display: flex;
+  justify-content: space-between; /* เพิ่มตรงนี้ */
+  align-items: center;
+}
+
+.rating-container {
+  margin-left: auto; /* จะทำให้ rating ไปชิดขวาสุด */
+}
+
+.rating,
+.no-rating {
+  font-size: 12px;
+}
+
+  
   
   /* Responsive Layout */
   @media (min-width: 1200px) {

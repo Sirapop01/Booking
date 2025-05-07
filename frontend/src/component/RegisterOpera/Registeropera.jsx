@@ -6,7 +6,7 @@ import { IoEyeSharp } from "react-icons/io5";
 import { FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import Swal from "sweetalert2";
 
 //Fix
 const RegistrationForm = () => {
@@ -26,6 +26,13 @@ const RegistrationForm = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpSentTime, setOtpSentTime] = useState(null);
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    return today.toISOString().split("T")[0]; // ✅ แปลงเป็น YYYY-MM-DD
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -83,35 +90,104 @@ const RegistrationForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-
-  // ✅ ฟังก์ชันส่งข้อมูลสมัครสมาชิก
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
-    console.log("🚀 Data being sent to backend:", formData);
-
+  const sendOtp = async () => {
     try {
-      const response = await axios.post("http://localhost:4000/api/business/register",
-        { ...formData, role: "owner" },
-        { headers: { "Content-Type": "application/json" } }
-      );
-
-      if (response.data.success) {
-        // ✅ เก็บ Token และ Email
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("registeredEmail", formData.email);
-
-        alert("✅ สมัครสมาชิกสำเร็จ! โปรดกรอกข้อมูลสนามและรอการอนุมัติ!");
-        navigate("/RegisterArena");
-      } else {
-        alert(response.data.message || "❌ เกิดข้อผิดพลาดในการสมัครสมาชิก");
-      }
+      Swal.fire({ title: 'กำลังส่ง OTP...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+      await axios.post('http://localhost:4000/api/auth/send-otp', { email: formData.email });
+      setOtpSent(true);
+      setOtpSentTime(Date.now());
+      Swal.fire('ส่ง OTP สำเร็จ', 'โปรดตรวจสอบอีเมล', 'success');
     } catch (error) {
-      console.error("🚨 Error registering user:", error.response?.data || error);
-      alert("❌ เกิดข้อผิดพลาด: " + (error.response?.data?.message || "ลองใหม่อีกครั้ง"));
+      Swal.fire('ส่ง OTP ไม่สำเร็จ', error.response?.data?.message || 'เกิดข้อผิดพลาด', 'error');
     }
   };
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    if (!otpSent) await sendOtp();
+
+    let otpVerified = false;
+    const otpExpiryTime = 5 * 60 * 1000;
+
+    while (!otpVerified) {
+      const currentTime = Date.now();
+      const timeLeft = otpSentTime ? otpExpiryTime - (currentTime - otpSentTime) : otpExpiryTime;
+
+      if (timeLeft <= 0) {
+        const resendOtp = await Swal.fire({
+          icon: 'warning',
+          title: '⚠️ OTP หมดอายุแล้ว',
+          text: 'กรุณาส่ง OTP อีกครั้ง',
+          confirmButtonText: 'ส่ง OTP อีกครั้ง',
+          cancelButtonText: 'ยกเลิก',
+          showCancelButton: true,
+          customClass: {
+            popup: 'otp-popup',
+            confirmButton: 'otp-popup-confirm-btn',
+            cancelButton: 'otp-popup-cancel-btn',
+          }
+        });
+
+        if (resendOtp.isConfirmed) {
+          await sendOtp();
+          continue;
+        } else {
+          navigate('/login');
+          return;
+        }
+      }
+
+      const { value: otp, dismiss } = await Swal.fire({
+        title: '<strong class="otp-swal-title">📧 ยืนยัน OTP</strong>',
+        input: 'text',
+        inputPlaceholder: 'รหัส OTP 6 หลัก',
+        showCancelButton: true,
+        confirmButtonText: 'ยืนยัน OTP',
+        cancelButtonText: 'ยกเลิก',
+        footer: `<span>OTP จะหมดอายุภายใน ${Math.floor(timeLeft / 60000)} นาที ${Math.floor((timeLeft % 60000) / 1000)} วินาที</span>`,
+        inputAttributes: { maxlength: 6, autocapitalize: 'off', autocorrect: 'off', style: 'text-align:center;font-size:18px;' },
+        customClass: {
+          popup: 'otp-popup',
+          input: 'otp-popup-input',
+          confirmButton: 'otp-popup-confirm-btn',
+          cancelButton: 'otp-popup-cancel-btn',
+        },
+        preConfirm: (otpValue) => {
+          if (!otpValue || !/^\d{6}$/.test(otpValue)) {
+            Swal.showValidationMessage('กรุณากรอก OTP เป็นตัวเลข 6 หลัก');
+          }
+          return otpValue;
+        },
+      });
+
+      if (dismiss === Swal.DismissReason.cancel || dismiss === Swal.DismissReason.close) {
+              Swal.fire('ยกเลิกการลงทะเบียน', 'ระบบจะนำคุณไปยังหน้า Login', 'info')
+                .then(() => navigate('/login'));
+              return;
+            }
+
+      try {
+        await axios.post('http://localhost:4000/api/auth/verify-otp', { email: formData.email, otp });
+        otpVerified = true;
+      } catch (error) {
+        Swal.fire('OTP ไม่ถูกต้อง', 'กรุณากรอก OTP อีกครั้ง', 'error');
+      }
+    }
+
+    Swal.fire({ title: "กำลังสมัครสมาชิก...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+    try {
+      await axios.post("http://localhost:4000/api/business/register", formData);
+      Swal.fire('สำเร็จ!', 'ลงทะเบียนสำเร็จแล้ว', 'success').then(() => navigate("/RegisterArena"));
+    } catch (error) {
+      Swal.fire('เกิดข้อผิดพลาด', error.response?.data?.message || 'ลองใหม่อีกครั้ง', 'error');
+    }
+  };
+  
 
 
   return (
@@ -161,14 +237,14 @@ const RegistrationForm = () => {
 
               <label>
                 วัน/เดือน/ปีเกิด * {errors.dob && <span className="error-message">{errors.dob}</span>}
-                <input type="date" name="dob" value={formData.dob} onChange={handleChange} />
+                <input type="date" name="dob" value={formData.dob} max={getCurrentDate()} onChange={handleChange} />
               </label>
             </div>
 
             <div className="form-group">
               <label>
                 เบอร์โทรศัพท์มือถือ * {errors.phoneNumber && <span className="error-message">{errors.phoneNumber}</span>}
-                <input type="text" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
+                <input type="text" name="phoneNumber" value={formData.phoneNumber} maxLength="10" inputMode="numeric" onChange={handleChange} />
               </label>
 
               <label>
@@ -190,10 +266,9 @@ const RegistrationForm = () => {
                 />
                 <button
                   type="button"
-                  className="toggle-password"
+                  className="toggle-password-aeye"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <IoEyeSharp /> : <FaEyeSlash />}
                 </button>
               </div>
 
@@ -224,9 +299,9 @@ const RegistrationForm = () => {
             </div>
 
 
-            <div className="submit-button-container">
-              <button type="submit" className="submit-button">ดำเนินการต่อ</button>
-            </div>
+            
+              <button type="submit" className="submit-button-rehere">ดำเนินการต่อ</button>
+            
           </form>
         </main>
       </div>

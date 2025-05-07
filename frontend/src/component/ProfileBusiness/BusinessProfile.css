@@ -1,0 +1,270 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inder&display=swap');
+
+.business-profile-content{
+  background-color: #f5f7fa;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: "Kanit", sans-serif;
+}
+
+
+
+/* ✅ Business Profile Header (Navbar) */
+.business-profile-header {
+    width: 100%;
+    background: #07213A;
+    padding: 15px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    
+  }
+  
+  /* 📌 Remove focus outline and borders */
+.business-nav-menu button {
+    outline: none; /* ✅ Remove focus outline */
+    border: none; /* ✅ Remove borders */
+  }
+
+  .jaosanum {
+    color: white;
+  }
+  
+  .business-nav-menu button:focus {
+    outline: none; /* ✅ Remove outline when focused */
+    border: none; /* ✅ Remove border */
+    box-shadow: none; /* ✅ Remove any shadow */
+  }
+  
+  /* 📌 Navigation menu styling */
+  .business-nav-menu {
+    display: flex;
+    gap: 40px; /* ✅ Add space between menu items */
+    justify-content: center; /* ✅ Align menu items at center */
+    padding: 15px 0; /* ✅ Add top and bottom padding */
+  }
+  
+  /* 📌 Navigation buttons */
+  .business-nav-menu button {
+    background: none !important; /* ✅ Remove background */
+    border: none !important; /* ✅ Remove borders */
+    color: white; /* ✅ Default text color */
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+    padding: 5px 0; /* ✅ Increase clickable area */
+    transition: color 0.3s ease-in-out;
+    white-space: nowrap;
+    font-family: "Kanit", sans-serif;
+  }
+  
+  /* 📌 Hover effect */
+  .business-nav-menu button:hover {
+    color: white; /* ✅ Keep text color white on hover */
+  }
+  
+  /* 📌 Underline effect on hover */
+  .business-nav-menu button::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -5px; /* ✅ Distance from text */
+    width: 0%;
+    height: 3px;
+    background-color: white;
+    transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
+  }
+  
+  .business-nav-menu button:hover::after {
+    width: 100%;
+    left: 0;
+  }
+  
+  /* ✅ Profile Content */
+  .business-profile-card {
+    background: white; /* ✅ พื้นหลังสีขาว */
+    padding: 40px; /* ✅ เพิ่มระยะห่างขอบ */
+    border-radius: 12px; /* ✅ ทำขอบโค้งมน */
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 90%; /* ✅ ทำให้กว้างขึ้น */
+    max-width: 1200px; /* ✅ กำหนดความกว้างสูงสุด */
+    min-height: 700px; /* ✅ เพิ่มความสูง */
+    margin: 40px auto; /* ✅ จัดให้อยู่ตรงกลาง */
+    flex-direction: column;
+    position : relative;
+    top : -40px;
+  }
+
+  .business-profile-card-header {
+    background: #0a3155; /* ✅ เปลี่ยนเป็นสีน้ำเงิน */
+    color: white; /* ✅ เปลี่ยนสีตัวอักษรเป็นขาว */
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    padding:-100px; /* ✅ เพิ่มพื้นที่ใน Header */
+    border-radius: 12px 12px 0 0; /* ✅ ทำให้ขอบบนโค้ง */
+  }
+  
+  /* ✅ จัดรูปแบบฟอร์มในการ์ด */
+  .business-profile-card .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* ✅ แบ่งเป็น 2 คอลัมน์ */
+    gap: 30px;
+    width: 100%; /* ✅ ยืดช่องกรอกข้อมูลให้กว้างขึ้น */
+  }
+
+
+  .form-grid{
+    margin-top:50px;
+  }
+
+  /* ✅ ส่วนหัวของการ์ด */
+
+  
+  /* ✅ Input */
+  .input-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .input-group label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .input-group input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    width: 100%;
+  }
+
+    
+
+  .business-action-container {
+    display: flex;
+  justify-content: flex-end; /* ✅ Move buttons to the right */
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  }
+  
+
+  .business-save-button,
+.business-logout-button {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+  /* ✅ ปุ่ม Save */
+  .business-save-button {
+    background: #e45b00;
+    color: white;
+    box-shadow: 0px 4px 10px rgba(13, 110, 253, 0.2);
+  }
+  
+  .business-save-button:hover {
+    background: #ff9900;
+    transform: translateY(-2px);
+  }
+  
+  /* ✅ ปุ่มลืมรหัสผ่าน */
+  .business-forgot-password {
+    font-size: 14px;
+    font-weight: bold;
+    color: #1e90ff;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+    position : relative;
+    right : -1100px;
+  }
+  
+  .business-forgot-password:hover {
+    text-decoration: underline;
+    color: #0056b3;
+  }
+  
+  /* ✅ ปุ่ม Logout */
+  .business-logout-button {
+    background: #dc3545;
+    color: white;
+  }
+  
+  .business-logout-button:hover {
+    background: #a71d2a;
+    transform: translateY(-2px);
+  }
+  .business-account-actions {
+    display: flex;
+    flex-direction: row; /* ✅ จัดปุ่มให้อยู่ในแถวเดียวกัน */
+    justify-content: center; /* ✅ จัดให้อยู่กึ่งกลาง */
+    align-items: center;
+    gap: 15px; /* ✅ เพิ่มช่องว่างระหว่างปุ่ม */
+    margin-top: 20px;
+  }
+
+
+
+  .business-edit-profile-button,
+  .business-logout-button,
+  .business-forgot-password {
+    flex: 1; /* ✅ Ensures equal width */
+    padding: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    text-align: center;
+    max-width: 180px; /* ✅ Keeps button size manageable */
+    font-family: "Kanit", sans-serif;
+  }
+
+  .business-edit-profile-button {
+    background-color: #115da3;
+    color: white;
+  }
+  
+  .business-edit-profile-button:hover {
+    background-color: #0056b3;
+    scale:1.01;
+  }
+
+
+  .business-forgot-password {
+    color: #0d6efd;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .business-forgot-password:hover {
+    text-decoration: underline;
+    color: #0046a1;
+  }
+
+  .business-logout-button {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .business-logout-button:hover {
+    background-color: #a71d2a;
+  }

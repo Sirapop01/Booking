@@ -2,36 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './NavbarStadiumlist.css';
 import logo from '../assets/logo.png';
-import homeLogo from '../assets/logoalt.png'; // นำเข้าไอคอน Home
+import homeLogo from '../assets/logoalt.png';
 import { jwtDecode } from 'jwt-decode';
+import ChatButton from "../ChatButton/ChatButton"; // ✅ เพิ่ม ChatButton
 
 const NavbarStadiumlist = () => {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [decodedToken, setDecodedToken] = useState(null);
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [userType, setUserType] = useState(null);
 
-  useEffect(() => {
-    // ดึง Token จาก Local Storage หรือ Session Storage
-    const storedToken = localStorage.getItem("token") || sessionStorage.getItem("token");
-    if (storedToken) {
+  // ✅ ดึง Token และ decode
+useEffect(() => {
+  const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+  if (token) {
       try {
-        const decoded = jwtDecode(storedToken);
-        setDecodedToken(decoded);
+          const decoded = jwtDecode(token);
+          setDecodedToken(decoded);
       } catch (error) {
-        console.error("Error decoding token:", error);
-        setDecodedToken(null);
+          console.error("Error decoding token:", error);
+          setDecodedToken(null);
       }
-    }
-  }, []);
+  }
+}, []);
 
-  const isLoggedIn = !!decodedToken;
-
-  // ฟังก์ชัน Logout: แสดง Popup ยืนยันการออกจากระบบ
-  const handleLogout = () => {
-    setShowLogoutPopup(true);
-  };
-
+  // ✅ ฟังก์ชัน Logout
+  const handleLogout = () => setShowLogoutPopup(true);
   const confirmLogout = () => {
     localStorage.removeItem("token");
     sessionStorage.removeItem("token");
@@ -44,51 +42,22 @@ const NavbarStadiumlist = () => {
 
   return (
     <>
-      <nav className="navbar-homepage">
-        {/* มุมซ้าย: ปุ่ม Home (ไอคอน Home) */}
-        <div className="navbar-left">
-          <a href="/" className="home-button">
-            <img src={homeLogo} alt="Home Logo" className="home-logo" />
-          </a>
-        </div>
-
-        {/* ตรงกลาง: โลโก้และข้อความ "สนามของฉัน" */}
-        <div className="navbar-center">
-          <img src={logo} alt="Logo" className="navbar-logo-img-homepage" />
-          <span className="navbar-title">สนามของฉัน</span>
-        </div>
-
-        {/* มุมขวา: Dropdown Menu */}
-        <div className="navbar-right">
-          {isLoggedIn ? (
-            <div className="dropdown">
-              <button className="menu-icon" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-                ☰
-              </button>
-              {isDropdownOpen && (
-                <div className="dropdown-menu">
-                  <button onClick={() => navigate("/OwnerProfile")}>บัญชี</button>
-                  <button onClick={() => navigate("/stadium-list")}>สนามของฉัน</button>
-                  <button onClick={() => navigate(`/Ownerledger/${decodedToken?.id}`)}>บัญชีรายรับ</button>
-                  <button onClick={() => navigate("/addPromotion")}>เพิ่มโปรโมชั่น</button>
-                  <button onClick={handleLogout}>ลงชื่อออก</button>
-                </div>
-              )}
+        <nav className="navbar-homepage">
+            {/* ปุ่ม Home */}
+            <div className="navbar-left">
+                <a href="/" className="home-button">
+                    <img src={homeLogo} alt="Home Logo" className="home-logo" />
+                </a>
             </div>
-          ) : (
-            <div className="navbar-links">
-              <button className="navbar-button" onClick={() => navigate("/login")}>
-                เข้าสู่ระบบ
-              </button>
-              <button className="navbar-link" onClick={() => navigate("/RegisterChoice")}>
-                ลงทะเบียน
-              </button>
-            </div>
-          )}
-        </div>
-      </nav>
 
-      {/* Popup ยืนยันออกจากระบบ */}
+            {/* ตรงกลาง: โลโก้ */}
+            <div className="navbar-center">
+                <img src={logo} alt="Logo" className="navbar-logo-img-homepage" />
+                <span className="navbar-title">สนามของฉัน</span>
+            </div>
+        </nav>
+
+      {/* 🔹 Popup Logout */}
       {showLogoutPopup && (
         <div className="logout-popup-overlay" onClick={() => setShowLogoutPopup(false)}>
           <div className="logout-popup" onClick={(e) => e.stopPropagation()}>
@@ -100,6 +69,11 @@ const NavbarStadiumlist = () => {
           </div>
         </div>
       )}
+
+      {/* ✅ เพิ่ม ChatButton ที่นี่ */}
+      {decodedToken?.id && decodedToken?.role && (
+            <ChatButton userId={decodedToken.id} userType={decodedToken.role} />
+        )}
     </>
   );
 };

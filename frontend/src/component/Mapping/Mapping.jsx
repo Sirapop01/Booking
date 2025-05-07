@@ -1,11 +1,12 @@
-import React from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
+import React, { useCallback } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { useMap, useMapEvents } from "react-leaflet/hooks";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import "./Mapping.css";
 
-const DEFAULT_LOCATION = [13.736717, 100.523186]; // ✅ พิกัดดีฟอลต์ (กรุงเทพฯ)
+const DEFAULT_LOCATION = [13.736717, 100.523186];
 
-// ✅ ปรับไอคอน Marker เพราะ Leaflet ไม่โหลดไอคอนเริ่มต้นใน React
 const customMarkerIcon = new L.Icon({
   iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
   iconSize: [25, 41],
@@ -13,35 +14,82 @@ const customMarkerIcon = new L.Icon({
   popupAnchor: [1, -34],
 });
 
-const Mapping = ({ location, setLocation }) => {
-  // ✅ ป้องกัน `location` เป็น `undefined`
-  const safeLocation = Array.isArray(location) && location.length === 2 ? location : DEFAULT_LOCATION;
+// ✅ แยก Component: ปุ่มตำแหน่งผู้ใช้
+const MapController = ({ setLocation }) => {
+  const map = useMap();
 
-  const MapClickHandler = () => {
-    useMapEvents({
-      click(e) {
-        setLocation([e.latlng.lat, e.latlng.lng]); // ✅ อัปเดตค่าพิกัด
+  const goToUserLocation = useCallback(() => {
+    if (!navigator.geolocation) {
+      alert("เบราว์เซอร์ของคุณไม่รองรับ Geolocation");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        const newLocation = [coords.latitude, coords.longitude];
+        setLocation(newLocation);
+        map.flyTo(newLocation, 15, { duration: 1.5 });
       },
-    });
-    return null;
-  };
+      (error) => {
+        console.error("❌ Geolocation error:", error);
+        alert("ไม่สามารถดึงตำแหน่งของคุณได้");
+      }
+    );
+  }, [map, setLocation]);
 
   return (
-    <MapContainer center={safeLocation} zoom={13}  style={{ width: "100%", height: "300px", maxHeight: "300px", overflow: "hidden" }}>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <MapClickHandler />
-      <Marker position={safeLocation} icon={customMarkerIcon} draggable={true} eventHandlers={{
-        dragend: (e) => {
-          const { lat, lng } = e.target.getLatLng();
-          setLocation([lat, lng]); // ✅ อัปเดตค่าพิกัดเมื่อลาก Marker
-        },
-      }}>
-        <Popup>ตำแหน่งสนามของคุณ</Popup>
-      </Marker>
-    </MapContainer>
+    <button onClick={goToUserLocation} className="map-button" title="ไปยังตำแหน่งปัจจุบันของคุณ">
+      📍ตำแหน่งของฉัน
+    </button>
+  );
+};
+
+// ✅ แยก Component: จัดการการคลิกแผนที่
+const MapClickHandler = ({ setLocation }) => {
+  const map = useMap();
+
+  useMapEvents({
+    click(e) {
+      const newLocation = [e.latlng.lat, e.latlng.lng];
+      setLocation(newLocation);
+      map.flyTo(newLocation, 15, { duration: 1.5 });
+    },
+  });
+
+  return null;
+};
+
+const Mapping = ({ location, setLocation }) => {
+  const safeLocation =
+    Array.isArray(location) && location.length === 2 ? location : DEFAULT_LOCATION;
+
+  const handleMarkerDragEnd = useCallback(
+    (e) => {
+      const { lat, lng } = e.target.getLatLng();
+      setLocation([lat, lng]);
+    },
+    [setLocation]
+  );
+
+  return (
+    <div className="map-container">
+      <MapContainer center={safeLocation} zoom={13} className="map-container">
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <MapController setLocation={setLocation} />
+        <MapClickHandler setLocation={setLocation} />
+        <Marker
+          position={safeLocation}
+          icon={customMarkerIcon}
+          draggable
+          eventHandlers={{ dragend: handleMarkerDragEnd }}
+        >
+          <Popup>ตำแหน่งสนามของคุณ</Popup>
+        </Marker>
+      </MapContainer>
+    </div>
   );
 };
 

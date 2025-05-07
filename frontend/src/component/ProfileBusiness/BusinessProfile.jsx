@@ -5,6 +5,8 @@ import { FaPencilAlt } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import "./BusinessProfile.css";
 
 const BusinessProfile = () => {
   const [isEditable, setIsEditable] = useState(false);
@@ -44,18 +46,20 @@ const BusinessProfile = () => {
 
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setMember((prevMember) => {
-      const updatedMember = { ...prevMember, [e.target.name]: e.target.value };
-      console.log("✏️ Member Updated Locally:", updatedMember);
+      let updatedValue = value;
+
+      // ✅ แปลงค่าที่ได้รับจาก input type="date" ให้เป็น Date object
+      if (name === "dob") {
+        updatedValue = new Date(value).toISOString(); // แปลงเป็น ISO String format
+      }
+
+      const updatedMember = { ...prevMember, [name]: updatedValue };
+      console.log("✏️ Updated Member Data Locally:", updatedMember);
       return updatedMember;
     });
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setNewProfileImage(file); // ✅ เก็บไฟล์ไว้ แต่ยังไม่อัปเดต DB
-    setProfileImage(URL.createObjectURL(file)); // แสดง preview
-    uploadImage(file);
   };
 
   useEffect(() => {
@@ -113,7 +117,13 @@ const BusinessProfile = () => {
       const response = await axios.put(`http://localhost:4000/api/business/update/${id}`, updatedData);
 
       console.log("✅ Updated Member Data:", response.data);
-      alert("🎉 อัปเดตข้อมูลสำเร็จ!");
+      Swal.fire({
+        icon: "success",
+        title: "🎉 อัปเดตข้อมูลสำเร็จ!",
+        text: "ข้อมูลของคุณถูกอัปเดตเรียบร้อยแล้ว",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง",
+      });
 
       // ✅ โหลดข้อมูลใหม่จาก API ทันที
       await getMB();
@@ -123,29 +133,13 @@ const BusinessProfile = () => {
       setNewProfileImage(null);
     } catch (error) {
       console.error("❌ Error updating member data:", error);
-      alert("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
-    }
-  };
-
-  const uploadImage = async (file) => {
-    try {
-      const formData = new FormData();
-      formData.append("profileImage", file);
-      formData.append("id", id);
-
-      const response = await axios.put(
-        `http://localhost:4000/api/upload/images/${id}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-
-      console.log("✅ Profile Image Updated:", response.data);
-      alert("🎉 อัปโหลดรูปภาพสำเร็จ!");
-      getMB(); // โหลดข้อมูลใหม่
-      setIsEditable(false);
-    } catch (error) {
-      console.error("❌ Error uploading image:", error);
-      alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
+      Swal.fire({
+        icon: "error",
+        title: "❌ เกิดข้อผิดพลาด!",
+        text: "ไม่สามารถอัปเดตข้อมูลได้ กรุณาลองใหม่อีกครั้ง",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "ตกลง",
+      });
     }
   };
 
@@ -176,46 +170,30 @@ const BusinessProfile = () => {
   };
 
   return (
-    <div className="profile-container" style={{
-      overflowY: "hidden",
-      display: "flex",
-      minHeight: "100vh",
-    }}>
-      {/* เมนูด้านซ้าย */}
-      <aside
-        className="sidebar"
-        style={{
-          backgroundColor: "#0d1b2a", // น้ำเงินเข้มแบบเต็ม
-          height: "100vh", // เต็มความสูงของหน้าจอ
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          paddingTop: "8%"
-        }}
-      >
-
-
-        <nav>
+    <div className="business-profile-container">
+      {/* 🔹 Header Navigation */}
+      <header className="business-profile-header">
+        <nav className="business-nav-menu">
           <button onClick={() => navigate("/stadium-list")}>สนามของฉัน</button>
           <button onClick={() => navigate(`/Ownerledger/${id}`)}>บัญชีรายรับ</button>
           <button onClick={() => navigate(`/Addpromotion`)}>เพิ่มโปรโมชั่น</button>
-          <button>รีวิวทั้งหมด</button>
+          <button onClick={() => navigate(`/reviewowner/${id}`)}>รีวิวทั้งหมด</button>
           <button>ตรวจสอบการจ่ายเงิน</button>
-          <button className="logout-button" onClick={toggleLogout}>ลงชื่อออก</button>
+          
         </nav>
-
-      </aside>
-
-      {/* ข้อมูลผู้ใช้ */}
-      <main className="profile-content">
-        <h2>ข้อมูลเจ้าของสนาม</h2>
-
-        {/* ข้อมูลส่วนตัว */}
-        <section className="user-info">
-          <h3>
-            📌 ข้อมูลส่วนตัว
-            <FaPencilAlt className="edit-icon" onClick={toggleEdit} />
-          </h3>
+      </header>
+  
+      {/* 🔹 Profile Content (Combined Card) */}
+      <main className="business-profile-content">
+        
+  
+        {/* ✅ รวมข้อมูลส่วนตัว + บริเวณที่สนใจ */}
+        <section className="business-profile-card">
+        <div className="business-profile-card-header">
+         <h2>
+            <span className="jaosanum">ข้อมูลเจ้าของสนาม</span>
+         </h2>
+        </div>
           <div className="form-grid">
             <div className="input-group">
               <label>ชื่อ</label>
@@ -231,38 +209,45 @@ const BusinessProfile = () => {
             </div>
             <div className="input-group">
               <label>หมายเลขโทรศัพท์</label>
-              <input type="text" name="phoneNumber" value={member?.phoneNumber || ""} onChange={handleChange} readOnly={!isEditable} />
+              <input type="text" name="phoneNumber" value={member?.phoneNumber || ""} inputMode="numeric" maxLength="10" onChange={handleChange} readOnly={!isEditable} />
             </div>
-
-
-          </div>
-        </section>
-
-        {/* บริเวณที่สนใจ */}
-        <section className="location-info">
-
-          <div className="form-grid">
             <div className="input-group">
               <label>วัน/เดือน/ปีเกิด</label>
               <input
                 type="date"
-                name="birthdate"
-                value={member?.dob ? member.dob.substring(0, 10) : ""}
+                name="dob"
+                value={member?.dob ? new Date(member.dob).toISOString().split("T")[0] : ""}
                 onChange={handleChange}
                 readOnly={!isEditable}
               />
             </div>
             <div className="input-group">
               <label>หมายเลขบัตรประชาชน</label>
-              <input type="idCard" name="idCard" value={member?.idCard || ""} readOnly />
+              <input type="text" name="idCard" value={member?.idCard || ""} readOnly />
             </div>
           </div>
+
+
+          {/* ✅ ปุ่มบันทึก + ลืมรหัสผ่าน + แก้ไขโปรไฟล์ + Logout */}
+          {isEditable && <button className="business-save-button" onClick={updateMemberData}>บันทึก</button>}
+
+        
+         {/* ✅ Buttons Aligned Horizontally */}
+          <div className="business-action-container">
+            <button className="business-edit-profile-button" onClick={toggleEdit}>
+              แก้ไขโปรไฟล์
+            </button>
+           
+            <button className="business-logout-button" onClick={toggleLogout}>
+              ลงชื่อออก
+            </button>
+          </div>
+          <h3 className="business-forgot-password" onClick={() => navigate("/forgot-password")}>
+              ลืมรหัสผ่าน ?
+            </h3>
         </section>
-
-        {isEditable && <button className="save-button" onClick={updateMemberData}>บันทึก</button>}
-        .
       </main>
-
+  
       {/* 🔹 Logout Popup Modal */}
       {showLogoutModal && (
         <div className="logout-popup-overlay" onClick={() => setShowLogoutModal(false)}>
@@ -270,15 +255,15 @@ const BusinessProfile = () => {
             <p>คุณต้องการออกจากระบบหรือไม่?</p>
             <div className="logout-buttons">
               <button className="confirm-btn" onClick={confirmLogout}>ยืนยัน</button>
-              <button className="cancel-btn" onClick={() => setShowLogoutModal(false)}>ยกเลิก</button>
+              <button className="confirm-btn" onClick={() => setShowLogoutModal(false)}>ยกเลิก</button>
             </div>
           </div>
         </div>
       )}
     </div>
-
-
   );
+  
+  
 };
 
 export default BusinessProfile;

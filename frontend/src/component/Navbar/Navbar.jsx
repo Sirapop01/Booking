@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logo from '../assets/logo.png';
 import { jwtDecode } from 'jwt-decode';
+import ChatButton from "../ChatButton/ChatButton";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -24,7 +25,11 @@ const Navbar = () => {
   }, []);
 
   const isLoggedIn = !!decodedToken;
+  const userId = decodedToken?.id || null; // ✅ ดึง `userId` จาก Token
+  const userType = decodedToken?.role?.toLowerCase() || null; // ✅ ดึง `userType` และแปลงเป็นตัวพิมพ์เล็ก
 
+  console.log("📌 userId จาก Navbar:", userId);
+  console.log("📌 userType จาก Navbar:", userType);
   const handleLogout = () => {
     setShowLogoutPopup(true);
   };
@@ -56,8 +61,13 @@ const Navbar = () => {
         <div className="navbar-right">
           {!isLoggedIn ? (
             <div className="navbar-links">
-              <button className="navbar-link" onClick={() => navigate("/login")}>เข้าสู่ระบบ</button>
-              <button className="navbar-button" onClick={() => navigate("/RegisterChoice")}>ลงทะเบียน</button>
+
+              <button className="navbar-link" onClick={() => navigate("/login")}>
+                เข้าสู่ระบบ
+              </button>
+              <button className="navbar-button" onClick={() => navigate("/RegisterChoice")}>
+                ลงทะเบียน
+              </button>
             </div>
           ) : (
             <div className="dropdown">
@@ -67,7 +77,6 @@ const Navbar = () => {
               >
                 <span className={`icon ${isDropdownOpen ? "rotate" : ""}`}>☰</span>
               </button>
-
               <div className={`dropdown-menu ${isDropdownOpen ? "open" : ""}`}>
                 {decodedToken?.role === "customer" ? (
                   <>
@@ -81,6 +90,7 @@ const Navbar = () => {
                     <button onClick={() => navigate("/stadium-list")}>สนามของฉัน</button>
                     <button onClick={() => navigate(`/Ownerledger/${decodedToken?.id}`)}>บัญชีรายรับ</button>
                     <button onClick={() => navigate("/addPromotion")}>เพิ่มโปรโมชั่น</button>
+                    <button onClick={() => navigate("/OwnerHistory")}>สถิติการจองสนาม</button>
                   </>
                 )}
                 <button onClick={handleLogout}>ลงชื่อออก</button>
@@ -100,6 +110,11 @@ const Navbar = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* ✅ ตรวจสอบว่า ChatButton โหลดได้ถูกต้อง */}
+      {isLoggedIn && userId && (userType === "customer" || userType === "owner") && (
+        <ChatButton userId={userId} userType={userType} />
       )}
     </>
   );

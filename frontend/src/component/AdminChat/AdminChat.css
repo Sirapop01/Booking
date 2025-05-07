@@ -1,149 +1,235 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;700&display=swap');
 
-/* 📌 โครงสร้างหลักของหน้า */
+/* 🌟 General Page Layout */
 .admin-chat-container {
+    background-color: #f5f7fa;
+    height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    background-color: #0b2840;
-    height: 100vh;
-    color: white;
     font-family: "Kanit", sans-serif;
 }
 
-/* 🔙 ปุ่มกลับไปยังหน้า Home */
+/* 🌟 Fixed Top Header */
+.admin-chat-header {
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #07213A;
+    padding: 15px 40px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    height: 70px;
+}
+
+/* 🔵 Home Button */
 .home-button {
     position: fixed;
     top: 20px;
     left: 20px;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     background-color: white;
-    border-radius: 15px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
-}
-
-.home-button:hover {
-    transform: scale(1.1);
+    border: 2px solid #0a1e33;
 }
 
 .home-logo {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
 }
 
-/* ✅ หัวข้อหลักของหน้า */
+.home-button:hover {
+    transform: scale(1.05);
+}
+
+/* 🔹 Page Title */
 .page-title2 {
-    font-size: 36px;
-    margin: 20px 0;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
 }
 
-/* ✅ แยกคอนเทนเนอร์ออกเป็น 2 ส่วน */
-.chat-content {
+/* 🎭 Category Toggle (Customers / Owners) */
+.category-toggle {
     display: flex;
-    justify-content: space-between;
-    width: 90%;
-    max-width: 1200px;
-    height: 80vh;
-}
-
-/* 📜 รายชื่อผู้ใช้ */
-.user-list-container2 {
-    width: 25%;
-    background: white;
-    border-radius: 10px;
-    overflow-y: auto;
-}
-
-.user-list2 {
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
     padding: 10px;
 }
 
+.category-toggle button {
+    flex: 1;
+    background: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    transition: all 0.3s ease-in-out;
+    font-family: "Kanit", sans-serif;
+}
+
+.category-toggle button.active {
+    background: #007bff;
+    color: white;
+}
+
+.category-toggle button:hover {
+    background: #357ec7;
+    color: white;
+}
+
+.category-toggle button:disabled {
+    background: #b0b0b0;
+    cursor: not-allowed;
+}
+
+/* 📌 Layout for Chat */
+.chat-layout {
+    display: flex;
+    gap: 20px;
+    height: calc(100vh - 90px);
+    padding: 10px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+/* 🟦 User List Container */
+.user-list-container2 {
+    flex: 0 0 280px;
+    background: #1b2a47;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    margin-top:100px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 📜 Header for User List */
 .list-header2 {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     padding: 15px;
     text-align: center;
-    background: #e0e0e0;
-    border-bottom: 2px solid #ddd;
+    background: #00264d;
+    color: white;
+    border-bottom: 2px solid #004080;
 }
 
+/* 🔴 New Message Notification Dot */
+.chat-notification-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* 🟡 User List Items */
 .user-item2 {
-    padding: 10px;
+    padding: 12px 15px;
     cursor: pointer;
-    border-bottom: 1px solid #ddd;
-    transition: background 0.3s;
+    border-bottom: 1px solid #3c587a;
+    color: white;
+    transition: background 0.3s ease;
+    font-size: 16px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .user-item2:hover {
-    background: #f1f1f1;
+    background: #004080;
 }
 
 .user-item2.selected {
     background-color: #008cff;
-    color: white;
-}
-
-/* 💬 กล่องแชท */
-.chat-box-container2 {
-    width: 73%;
-    background: white;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-}
-
-.chat-box {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
-.chat-header {
-    font-size: 20px;
     font-weight: bold;
-    padding: 15px;
-    text-align: center;
-    background: #e0e0e0;
-    border-bottom: 2px solid #ddd;
+    border-left: 5px solid white;
 }
 
-/* ✅ ข้อความ */
+/* 🟣 Chat Box Container */
+.chat-box-container2 {
+    flex-grow: 1;
+    max-width: 900px;
+    background: rgba(255, 255, 255, 0.15); /* 🌟 Semi-transparent */
+    backdrop-filter: blur(10px); /* ✅ เพิ่ม Glass Effect */
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    margin-top:100px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    justify-content: space-between;
+}
+
+/* 🟢 Chat Header */
+.chat-header {
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px;
+    text-align: center;
+    background: #008cff;
+    color: white;
+    border-bottom: 2px solid #005f99;
+}
+
+/* 📝 Chat Messages position */
 .chat-messages {
     flex: 1;
     padding: 15px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    background: #f1f1f1;
+    max-height: 60vh;
 }
 
-/* ✅ ข้อความแต่ละอัน */
+/* ✨ Chat Message Style */
 .chat-message {
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 10px;
-    max-width: 60%;
+    padding: 12px 15px;
+    margin: 6px 0;
+    border-radius: 12px;
+    max-width: 75%;
     word-wrap: break-word;
+    font-size: 14px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* ✅ ข้อความของผู้ใช้ */
+/* 🟠 User Message */
 .user-message {
-    background: #eee;
+    background: #d4dbe2;
     align-self: flex-start;
+    color: #333;
 }
 
-/* ✅ ข้อความของแอดมิน */
+/* 🔵 Admin Message */
 .admin-message {
     background: #008cff;
     color: white;
     align-self: flex-end;
 }
 
-/* ✅ Scrollbar ของข้อความ */
+/* 🖱 Scrollbar Customization */
 .chat-messages::-webkit-scrollbar {
     width: 8px;
 }
@@ -157,12 +243,16 @@
     border-radius: 4px;
 }
 
-/* ✅ กล่องป้อนข้อความ */
+/* 🔽 Chat Input */
 .message-input {
     display: flex;
-    padding: 10px;
+    padding: 12px;
     border-top: 2px solid #ddd;
-    background: #f9f9f9;
+    background: #fff;
+    align-items: center;
+    position: relative; /* ❌ Remove `sticky` to keep it inside */
+    bottom: 0;
+    margin-top: auto; /* ✅ Push it to the bottom of `.chat-box-container2` */
 }
 
 .message-input input {
@@ -171,20 +261,27 @@
     border: none;
     font-size: 16px;
     outline: none;
-    border-radius: 5px;
+    border-radius: 6px;
+    background: #f1f1f1;
+    padding-left: 10px;
 }
 
 .message-input button {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 5px;
+    padding: 8px;
+    margin-left: 10px;
+    transition: transform 0.2s ease;
+    width: 40px;
+    height: 40px;
 }
 
 .message-input button:hover {
-    opacity: 0.8;
+    transform: scale(1.05);
 }
 
 .message-input img {
-    width: 30px;
+    width: 24px;
+    height: 24px;
 }

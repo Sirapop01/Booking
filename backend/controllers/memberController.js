@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User"); // Import User Model
-const BusinessOwner = require("../models/BusinessOwner"); // Import BusinessOwner Model
+const Owner = require("../models/BusinessOwner"); // Import BusinessOwner Model
+const BusinessOwner = require("../models/BusinessOwner");
 const jwt = require("jsonwebtoken");
 const secret = "MatchWeb";
 require("dotenv").config();
@@ -22,9 +23,12 @@ exports.register = async (req, res) => {
     }
 
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "อีเมลนี้ถูกใช้งานแล้ว" });
-    }
+const existingBusinessOwner = await BusinessOwner.findOne({ email });
+
+if (existingUser || existingBusinessOwner) {
+  return res.status(400).json({ message: "อีเมลนี้ถูกใช้งานแล้ว" });
+}
+
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const formattedBirthdate = new Date(birthdate);
@@ -42,7 +46,7 @@ exports.register = async (req, res) => {
       );
 
       if (response.data.status !== "OK" || !response.data.results.length) {
-        return res.status(400).json({ message: "❌ ไม่สามารถดึงพิกัดจาก Google Maps ได้" });
+        return res.status(400).json({ message: "ไม่สามารถดึงพิกัดจาก Google Maps ได้" });
       }
 
       const { lat, lng } = response.data.results[0].geometry.location;
@@ -51,6 +55,8 @@ exports.register = async (req, res) => {
         coordinates: [lng, lat],
       };
       console.log("📌 อัปเดตพิกัดใหม่จาก Google Maps:", location);
+
+      
 
       // ✅ สร้างบัญชีผู้ใช้
       const newUser = await User.create({
@@ -68,6 +74,7 @@ exports.register = async (req, res) => {
         profileImage,
         role: role || "customer",
         location,
+        isEmailVerified: true,
       });
 
       res.status(201).json({ message: "✅ สมัครสมาชิกสำเร็จ!", user: newUser });
@@ -86,59 +93,81 @@ exports.register = async (req, res) => {
 
 
 exports.login = async (req, res) => {
-
   try {
-    const { email, password, } = req.body;
+    const { email, password } = req.body;
 
-    // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
-    if (password == null || email == null) {
-      return res.json({ message: "กรุณากรอกข้อมูลให้ครบถ้วน" });
+    // ✅ ตรวจสอบว่ามีการกรอกข้อมูลครบถ้วน
+    if (!email || !password) {
+      return res.status(400).json({ message: "กรุณากรอกข้อมูลให้ครบถ้วน" });
     }
 
+    // ✅ ค้นหาผู้ใช้ในฐานข้อมูล
     const [existingUser, existingOwner] = await Promise.all([
       User.findOne({ email }), // ค้นหาใน Collection `users`
-      BusinessOwner.findOne({ email }) // ค้นหาใน Collection `businessowners`
+      Owner.findOne({ email }) // ค้นหาใน Collection `businessowners`
     ]);
 
     let exitResult = null;
+    let userType = "";
+    if (!existingUser && !existingOwner) {
+      console.log("❌ ไม่พบอีเมลในระบบ");
+      return res.status(401).json({
+        message: "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+        errorType: "invalid_credentials"
+      });
+    }
 
-    // ตรวจสอบว่าพบผู้ใช้หรือไม่
+    // ✅ ตรวจสอบประเภทของบัญชีที่ล็อกอิน
     if (existingUser) {
       exitResult = existingUser;
+      userType = "user";
     } else if (existingOwner) {
       exitResult = existingOwner;
+      userType = "owner";
     }
 
-    // ถ้าไม่พบผู้ใช้ในระบบ
-    if (!exitResult) {
-      return res.status(401).json({ message: "ไม่พบผู้ใช้ในระบบ" });
+    // 🚫 **บล็อกบัญชีที่ถูก Blacklist ไม่ให้เข้าสู่ระบบ**
+    if (exitResult.status === "blacklisted") {
+      return res.status(403).json({ 
+        message: "บัญชีของคุณถูกระงับ ไม่สามารถเข้าสู่ระบบได้",
+        errorType: "blacklisted_account" // 🔴 ประเภทของ Error
+      });
     }
 
-    const LoginOK = await bcrypt.compare(password, exitResult.password)
-    const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("รหัสผ่านที่ถูกเข้ารหัสใหม่:", hashedPassword);
+    // 🚫 **บล็อกบัญชีที่ถูก Blacklist ไม่ให้เข้าสู่ระบบ**
+    if (exitResult.status === "blacklisted") {
+      return res.status(403).json({ message: "บัญชีของคุณถูกระงับ ไม่สามารถเข้าสู่ระบบได้" });
+    }
 
-    if (LoginOK) {
-      const name = exitResult.firstName;
-      const id = exitResult._id;
-      const role = exitResult.role;
-      const token = jwt.sign({ email, name, id, role }, secret, { expiresIn: '1h' })
-
-      //password 123456
-      console.log("เข้าสู่ระบบสำเร็จ");
-      return res.json({ message: "เข้าสู่ระบบสำเร็จ", token }
-
+    // ✅ ตรวจสอบรหัสผ่าน
+    const isPasswordValid = await bcrypt.compare(password, exitResult.password);
+    
+    if (isPasswordValid) {
+      // 🔑 สร้าง Token สำหรับล็อกอิน
+      const token = jwt.sign(
+        {
+          email: exitResult.email,
+          name: exitResult.firstName,
+          id: exitResult._id,
+          role: exitResult.role,
+          userType: userType,
+        },
+        secret,
+        { expiresIn: '1h' }
       );
-    } else {
-      console.log("เข้าสู่ระบบไม่สำเร็จ");
-      return res.json({ message: "เข้าสู่ระบบไม่สำเร็จ" });
-    }
 
+      console.log("✅ เข้าสู่ระบบสำเร็จ");
+      return res.status(200).json({ message: "เข้าสู่ระบบสำเร็จ", token });
+    } else {
+      console.log("❌ เข้าสู่ระบบไม่สำเร็จ: รหัสผ่านไม่ถูกต้อง");
+      return res.status(401).json({ message: "เข้าสู่ระบบไม่สำเร็จ" });
+    }
   } catch (err) {
-    console.error("Error Login user:", err);
-    res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
+    console.error("❌ Error Login user:", err);
+    return res.status(500).json({ message: "เกิดข้อผิดพลาดในระบบ" });
   }
 };
+
 
 exports.getMB = async (req, res) => {
   console.log("✅ GET Member Requested:", req.params.id);
@@ -179,22 +208,26 @@ exports.updateUser = async (req, res) => {
     const { id } = req.params;
     let updateData = req.body;
 
-    // ✅ ตรวจสอบว่าผู้ใช้มีอยู่จริงหรือไม่
     const existingUser = await User.findById(id);
     if (!existingUser) {
       return res.status(404).json({ message: "ไม่พบผู้ใช้ในระบบ" });
     }
 
-    // ✅ ตรวจสอบว่ามีการเปลี่ยนแปลงที่อยู่หรือไม่
+    // ✅ ถ้าไม่มีไฟล์ใหม่ที่อัปโหลด จะไม่อัปเดต profileImage
+    if (req.file) {
+      updateData.profileImage = req.file.path;
+    } else {
+      updateData.profileImage = existingUser.profileImage; // ✅ ใช้รูปเดิม
+    }
+
+    // ✅ ตรวจสอบและอัปเดตตำแหน่ง (Lat/Lng) ถ้ามีการเปลี่ยนแปลงที่อยู่
     if (updateData.province || updateData.district || updateData.subdistrict) {
       const addressQuery = `${updateData.subdistrict}, ${updateData.district}, ${updateData.province}, Thailand`;
-      const encodedAddress = encodeURIComponent(addressQuery);
+      const googleApiKey = process.env.GOOGLE_API;
 
       try {
-        // 🔹 ใช้ Google Maps API เพื่อดึงค่าพิกัด lat, lng
-        const googleApiKey = process.env.GOOGLE_API; // 🔥 ใส่ API Key ของคุณตรงนี้
         const response = await axios.get(
-          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${googleApiKey}`
+          `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(addressQuery)}&key=${googleApiKey}`
         );
 
         if (response.data.status === "OK") {
@@ -203,46 +236,26 @@ exports.updateUser = async (req, res) => {
             type: "Point",
             coordinates: [lng, lat],
           };
-          console.log("📌 อัปเดตพิกัดใหม่จาก Google Maps:", updateData.location);
         } else {
           return res.status(400).json({ message: "❌ ไม่สามารถดึงพิกัดจาก Google Maps ได้" });
         }
       } catch (error) {
-        console.error("❌ Error fetching geolocation from Google Maps:", error);
+        console.error("❌ Error fetching geolocation:", error);
         return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตพิกัด" });
       }
     }
 
-    // ✅ อัปเดตข้อมูลผู้ใช้ใน Database
     const updatedUser = await User.findByIdAndUpdate(id, updateData, { new: true });
 
-    return res.status(200).json({
-      message: "✅ อัปเดตข้อมูลสำเร็จ!",
-      user: updatedUser,
-    });
+    res.status(200).json({ message: "✅ อัปเดตข้อมูลสำเร็จ!", user: updatedUser });
   } catch (error) {
     console.error("❌ Error updating user:", error);
-    return res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูล" });
+    res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตข้อมูล" });
   }
 };
 
-exports.updateProfileImage = async (req, res) => {
-  try {
-    const { id } = req.params;
-    if (!req.file) {
-      return res.status(400).json({ message: "ไม่มีไฟล์ที่อัปโหลด" });
-    }
 
-    const profileImage = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
 
-    const updatedUser = await User.findByIdAndUpdate(id, { profileImage }, { new: true });
-
-    res.status(200).json({ message: "อัปโหลดรูปภาพสำเร็จ!", profileImage });
-  } catch (error) {
-    console.error("❌ Error updating profile image:", error);
-    res.status(500).json({ message: "เกิดข้อผิดพลาดในการอัปเดตรูปภาพ" });
-  }
-};
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -257,35 +270,41 @@ exports.sendResetPasswordEmail = async (req, res) => {
   const { email } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+      // ✅ ค้นหาผู้ใช้ใน `User` หรือ `Owner`
+      let user = await User.findOne({ email });
+      let owner = await Owner.findOne({ email });
 
-    if (!user) {
-      return res.status(404).json({ message: "❌ ไม่พบอีเมลนี้ในระบบ" });
-    }
+      if (!user && !owner) {
+          return res.status(404).json({ message: "❌ ไม่พบอีเมลนี้ในระบบ" });
+      }
 
-    // ✅ สร้าง Token ที่มีอายุ 15 นาที
-    const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
+      // ✅ กำหนด `userId` และ `userType`
+      const userId = user ? user._id : owner._id;
+      const userType = user ? "user" : "owner";
 
-    // ✅ สร้างลิงก์ Reset Password โดยแนบ Token
-    const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
+      // ✅ สร้าง Token ที่มีอายุ 15 นาที
+      const resetToken = jwt.sign({ id: userId, type: userType }, process.env.JWT_SECRET, { expiresIn: "15m" });
 
-    // ✅ ส่งอีเมลแจ้งเตือน
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "🔑 รีเซ็ตรหัสผ่านของคุณ",
-      html: `<p>คุณได้รับคำขอรีเซ็ตรหัสผ่าน</p>
-             <p>กดที่ลิงก์ด้านล่างเพื่อเปลี่ยนรหัสผ่านใหม่:</p>
-             <a href="${resetLink}" target="_blank">${resetLink}</a>
-             <p>ลิงก์นี้จะหมดอายุภายใน 15 นาที</p>`,
-    };
+      // ✅ สร้างลิงก์ Reset Password โดยแนบ Token
+      const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
 
-    await transporter.sendMail(mailOptions);
-    return res.status(200).json({ message: "✅ กรุณาตรวจสอบอีเมลของคุณ" });
+      // ✅ ส่งอีเมลแจ้งเตือน
+      const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: email,
+          subject: "🔑 รีเซ็ตรหัสผ่านของคุณ",
+          html: `<p>คุณได้รับคำขอรีเซ็ตรหัสผ่าน</p>
+                 <p>กดที่ลิงก์ด้านล่างเพื่อเปลี่ยนรหัสผ่านใหม่:</p>
+                 <a href="${resetLink}" target="_blank">${resetLink}</a>
+                 <p>ลิงก์นี้จะหมดอายุภายใน 15 นาที</p>`,
+      };
+
+      await transporter.sendMail(mailOptions);
+      return res.status(200).json({ message: "✅ กรุณาตรวจสอบอีเมลของคุณ" });
 
   } catch (error) {
-    console.error("❌ Error sending reset password email:", error);
-    return res.status(500).json({ message: "เกิดข้อผิดพลาดในการส่งอีเมล" });
+      console.error("❌ Error sending reset password email:", error);
+      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการส่งอีเมล" });
   }
 };
 
@@ -295,43 +314,104 @@ exports.resetPassword = async (req, res) => {
   const { newPassword } = req.body;
 
   try {
-    // ✅ ถอดรหัส Token เพื่อดึง userId
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
+      // ✅ ถอดรหัส Token เพื่อดึง `userId` และ `userType`
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userId = decoded.id;
+      const userType = decoded.type; // ✅ ตรวจสอบว่าเป็น user หรือ owner
 
-    // ✅ เข้ารหัสรหัสผ่านใหม่
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+      // ✅ เข้ารหัสรหัสผ่านใหม่
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // ✅ อัปเดตรหัสผ่านใหม่ในฐานข้อมูล
-    await User.findByIdAndUpdate(userId, { password: hashedPassword });
+      // ✅ อัปเดตรหัสผ่านใหม่ในฐานข้อมูล
+      if (userType === "user") {
+          await User.findByIdAndUpdate(userId, { password: hashedPassword });
+      } else if (userType === "owner") {
+          await Owner.findByIdAndUpdate(userId, { password: hashedPassword });
+      }
 
-    return res.status(200).json({ message: "✅ เปลี่ยนรหัสผ่านสำเร็จ!" });
+      return res.status(200).json({ message: "✅ เปลี่ยนรหัสผ่านสำเร็จ!" });
 
   } catch (error) {
-    console.error("❌ Error resetting password:", error);
-    return res.status(400).json({ message: "❌ ลิงก์หมดอายุหรือไม่ถูกต้อง" });
+      console.error("❌ Error resetting password:", error);
+      return res.status(400).json({ message: "❌ ลิงก์หมดอายุหรือไม่ถูกต้อง" });
   }
 };
 
 exports.delete = async (req, res) => {
   console.log("✅ Delete Member Requested:", req.params.id);
   try {
-    const  userId  = req.params.id;
-    console.log("🗑️ กำลังลบผู้ใช้ ID:", userId);
+    const userId = req.params.id;
+    console.log("🗑️ กำลังปิดบัญชีผู้ใช้ ID:", userId);
 
     if (!userId) {
       return res.status(400).json({ message: "❌ ไม่ได้รับ userId" });
     }
 
-    const deletedUser = await User.findByIdAndDelete(userId);
-    if (!deletedUser) {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { status: "inactive" },  // เปลี่ยนสถานะเป็น inactive
+      { new: true }
+    );
+
+    if (!updatedUser) {
       return res.status(404).json({ message: "❌ ไม่พบผู้ใช้ในระบบ" });
     }
 
-    console.log("✅ ผู้ใช้ถูกลบ:", deletedUser);
-    return res.status(200).json({ message: "ลบข้อมูลผู้ใช้เรียบร้อย", deletedUser });
+    console.log("✅ บัญชีผู้ใช้ถูกปิด:", updatedUser);
+    return res.status(200).json({ message: "บัญชีผู้ใช้ถูกปิดเรียบร้อย", updatedUser });
   } catch (error) {
-    console.error("❌ Error deleting user:", error);
-    return res.status(500).json({ message: "ลบข้อมูลไม่สำเร็จ" });
+    console.error("❌ Error disabling user:", error);
+    return res.status(500).json({ message: "ปิดบัญชีผู้ใช้ไม่สำเร็จ" });
   }
 };
+
+const otpCache = {};
+exports.sendOtp = async (req, res) => {
+  const { email } = req.body;
+
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return res.status(400).json({ message: "อีเมลนี้ถูกใช้งานแล้ว" });
+  }
+
+  const otp = Math.floor(100000 + Math.random() * 900000); // สุ่มเลข 6 หลัก
+  otpCache[email] = otp; // เก็บ OTP ใน cache
+  setTimeout(() => delete otpCache[email], 5 * 60 * 1000); // OTP มีอายุ 5 นาที
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "รหัส OTP สำหรับสมัครสมาชิก",
+    html: `<h3>รหัส OTP คือ <strong>${otp}</strong></h3>
+          <p>รหัสมีอายุ 5 นาที กรุณายืนยันโดยเร็ว</p>`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ message: "ส่ง OTP สำเร็จ" });
+  } catch (error) {
+    console.error("ส่ง OTP ล้มเหลว", error);
+    res.status(500).json({ message: "ส่ง OTP ล้มเหลว" });
+  }
+};
+
+exports.verifyOtp = (req, res) => {
+  const { email, otp } = req.body;
+
+  if (otpCache[email] && otpCache[email] == otp) {
+    delete otpCache[email]; // ลบ OTP ทันทีหลังยืนยันสำเร็จ
+    return res.status(200).json({ message: "ยืนยัน OTP สำเร็จ" });
+  }
+
+  res.status(400).json({ message: "OTP ไม่ถูกต้องหรือหมดอายุ" });
+};
+
+

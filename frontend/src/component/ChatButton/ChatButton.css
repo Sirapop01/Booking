@@ -1,0 +1,147 @@
+/* ปุ่มแชท */
+.chat-button {
+  position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: black;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  z-index: 1050; /* ✅ ปรับ z-index ให้สูงขึ้น */
+}
+
+.chat-button:hover {
+  transform: scale(1.1);
+}
+
+/* ✅ จุดแจ้งเตือน */
+.chat-notification-dot {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 12px;
+  height: 12px;
+  background-color: red;
+  border-radius: 50%;
+  display: block;
+  z-index: 1100; /* ✅ ปรับ z-index ให้สูงขึ้น */
+}
+
+
+
+/* คอนเทนเนอร์ของป็อปอัปแชท */
+.chat-popup-container {
+  position: fixed;
+  bottom: 90px; /* ✅ ปรับให้อยู่สูงขึ้นจากปุ่มแชท */
+  right: 20px;
+  width: 320px; /* ✅ ขยายให้กว้างขึ้น */
+  height: 450px; /* ✅ ขยายให้สูงขึ้น */
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  z-index: 1051; /* ✅ ปรับ z-index ให้อยู่เหนือปุ่มแชท */
+}
+
+/* ส่วนหัวของป็อปอัป */
+.chat-popup-header {
+  background: #007bff;
+  color: white;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ปุ่มปิด */
+.chat-popup-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* ส่วนเนื้อหาของแชท */
+.chat-popup-body {
+  flex-grow: 1;
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ข้อความที่ถูกส่ง */
+.chat-message {
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  word-wrap: break-word;
+}
+
+/* ข้อความที่ส่งออก */
+.chat-message.sent {
+  align-self: flex-end;
+  background-color: #007bff;
+  color: white;
+}
+
+/* ข้อความที่รับ */
+.chat-message.received {
+  align-self: flex-start;
+  background-color: #f1f1f1;
+  color: black;
+}
+
+/* คอนเทนเนอร์ของช่องพิมพ์ */
+.chat-input-container {
+  display: flex;
+  padding: 8px;
+  border-top: 1px solid #ddd;
+  background: white;
+}
+
+/* ช่องพิมพ์ข้อความ */
+.chat-input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+}
+
+/* ปุ่มส่ง */
+.chat-send-button {
+  background: #007bff;
+  border: none;
+  color: white;
+  font-size: 16px;
+  margin-left: 8px;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.chat-send-button:hover {
+  background: #0056b3;
+}
