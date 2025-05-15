@@ -71,7 +71,7 @@ app.use(bodyParser.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads"))); 
 
 // ✅ เชื่อมต่อ MongoDB
-const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://Booking:Booking@cluster0.1cryq.mongodb.net/BookingDB";
+const MONGO_URI = process.env.MONGO_URI;
 const connectDB = async () => {
   try {
     await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
