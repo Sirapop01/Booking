@@ -23,11 +23,11 @@ exports.register = async (req, res) => {
     }
 
     const existingUser = await User.findOne({ email });
-const existingBusinessOwner = await BusinessOwner.findOne({ email });
+    const existingBusinessOwner = await BusinessOwner.findOne({ email });
 
-if (existingUser || existingBusinessOwner) {
-  return res.status(400).json({ message: "อีเมลนี้ถูกใช้งานแล้ว" });
-}
+    if (existingUser || existingBusinessOwner) {
+      return res.status(400).json({ message: "อีเมลนี้ถูกใช้งานแล้ว" });
+    }
 
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -56,7 +56,7 @@ if (existingUser || existingBusinessOwner) {
       };
       console.log("📌 อัปเดตพิกัดใหม่จาก Google Maps:", location);
 
-      
+
 
       // ✅ สร้างบัญชีผู้ใช้
       const newUser = await User.create({
@@ -128,7 +128,7 @@ exports.login = async (req, res) => {
 
     // 🚫 **บล็อกบัญชีที่ถูก Blacklist ไม่ให้เข้าสู่ระบบ**
     if (exitResult.status === "blacklisted") {
-      return res.status(403).json({ 
+      return res.status(403).json({
         message: "บัญชีของคุณถูกระงับ ไม่สามารถเข้าสู่ระบบได้",
         errorType: "blacklisted_account" // 🔴 ประเภทของ Error
       });
@@ -141,7 +141,7 @@ exports.login = async (req, res) => {
 
     // ✅ ตรวจสอบรหัสผ่าน
     const isPasswordValid = await bcrypt.compare(password, exitResult.password);
-    
+
     if (isPasswordValid) {
       // 🔑 สร้าง Token สำหรับล็อกอิน
       const token = jwt.sign(
@@ -270,41 +270,41 @@ exports.sendResetPasswordEmail = async (req, res) => {
   const { email } = req.body;
 
   try {
-      // ✅ ค้นหาผู้ใช้ใน `User` หรือ `Owner`
-      let user = await User.findOne({ email });
-      let owner = await Owner.findOne({ email });
+    // ✅ ค้นหาผู้ใช้ใน `User` หรือ `Owner`
+    let user = await User.findOne({ email });
+    let owner = await Owner.findOne({ email });
 
-      if (!user && !owner) {
-          return res.status(404).json({ message: "❌ ไม่พบอีเมลนี้ในระบบ" });
-      }
+    if (!user && !owner) {
+      return res.status(404).json({ message: "❌ ไม่พบอีเมลนี้ในระบบ" });
+    }
 
-      // ✅ กำหนด `userId` และ `userType`
-      const userId = user ? user._id : owner._id;
-      const userType = user ? "user" : "owner";
+    // ✅ กำหนด `userId` และ `userType`
+    const userId = user ? user._id : owner._id;
+    const userType = user ? "user" : "owner";
 
-      // ✅ สร้าง Token ที่มีอายุ 15 นาที
-      const resetToken = jwt.sign({ id: userId, type: userType }, process.env.JWT_SECRET, { expiresIn: "15m" });
+    // ✅ สร้าง Token ที่มีอายุ 15 นาที
+    const resetToken = jwt.sign({ id: userId, type: userType }, process.env.JWT_SECRET, { expiresIn: "15m" });
 
-      // ✅ สร้างลิงก์ Reset Password โดยแนบ Token
-      const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
+    // ✅ สร้างลิงก์ Reset Password โดยแนบ Token
+    const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
 
-      // ✅ ส่งอีเมลแจ้งเตือน
-      const mailOptions = {
-          from: process.env.EMAIL_USER,
-          to: email,
-          subject: "🔑 รีเซ็ตรหัสผ่านของคุณ",
-          html: `<p>คุณได้รับคำขอรีเซ็ตรหัสผ่าน</p>
+    // ✅ ส่งอีเมลแจ้งเตือน
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "🔑 รีเซ็ตรหัสผ่านของคุณ",
+      html: `<p>คุณได้รับคำขอรีเซ็ตรหัสผ่าน</p>
                  <p>กดที่ลิงก์ด้านล่างเพื่อเปลี่ยนรหัสผ่านใหม่:</p>
                  <a href="${resetLink}" target="_blank">${resetLink}</a>
                  <p>ลิงก์นี้จะหมดอายุภายใน 15 นาที</p>`,
-      };
+    };
 
-      await transporter.sendMail(mailOptions);
-      return res.status(200).json({ message: "✅ กรุณาตรวจสอบอีเมลของคุณ" });
+    await transporter.sendMail(mailOptions);
+    return res.status(200).json({ message: "✅ กรุณาตรวจสอบอีเมลของคุณ" });
 
   } catch (error) {
-      console.error("❌ Error sending reset password email:", error);
-      return res.status(500).json({ message: "เกิดข้อผิดพลาดในการส่งอีเมล" });
+    console.error("❌ Error sending reset password email:", error);
+    return res.status(500).json({ message: "เกิดข้อผิดพลาดในการส่งอีเมล" });
   }
 };
 
@@ -314,26 +314,26 @@ exports.resetPassword = async (req, res) => {
   const { newPassword } = req.body;
 
   try {
-      // ✅ ถอดรหัส Token เพื่อดึง `userId` และ `userType`
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const userId = decoded.id;
-      const userType = decoded.type; // ✅ ตรวจสอบว่าเป็น user หรือ owner
+    // ✅ ถอดรหัส Token เพื่อดึง `userId` และ `userType`
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+    const userType = decoded.type; // ✅ ตรวจสอบว่าเป็น user หรือ owner
 
-      // ✅ เข้ารหัสรหัสผ่านใหม่
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
+    // ✅ เข้ารหัสรหัสผ่านใหม่
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-      // ✅ อัปเดตรหัสผ่านใหม่ในฐานข้อมูล
-      if (userType === "user") {
-          await User.findByIdAndUpdate(userId, { password: hashedPassword });
-      } else if (userType === "owner") {
-          await Owner.findByIdAndUpdate(userId, { password: hashedPassword });
-      }
+    // ✅ อัปเดตรหัสผ่านใหม่ในฐานข้อมูล
+    if (userType === "user") {
+      await User.findByIdAndUpdate(userId, { password: hashedPassword });
+    } else if (userType === "owner") {
+      await Owner.findByIdAndUpdate(userId, { password: hashedPassword });
+    }
 
-      return res.status(200).json({ message: "✅ เปลี่ยนรหัสผ่านสำเร็จ!" });
+    return res.status(200).json({ message: "✅ เปลี่ยนรหัสผ่านสำเร็จ!" });
 
   } catch (error) {
-      console.error("❌ Error resetting password:", error);
-      return res.status(400).json({ message: "❌ ลิงก์หมดอายุหรือไม่ถูกต้อง" });
+    console.error("❌ Error resetting password:", error);
+    return res.status(400).json({ message: "❌ ลิงก์หมดอายุหรือไม่ถูกต้อง" });
   }
 };
 
@@ -390,8 +390,15 @@ exports.sendOtp = async (req, res) => {
     from: process.env.EMAIL_USER,
     to: email,
     subject: "รหัส OTP สำหรับสมัครสมาชิก",
-    html: `<h3>รหัส OTP คือ <strong>${otp}</strong></h3>
-          <p>รหัสมีอายุ 5 นาที กรุณายืนยันโดยเร็ว</p>`,
+    html: `
+  <h3>รหัส OTP ของคุณคือ <strong>${otp}</strong></h3>
+  <p>คุณได้รับอีเมลนี้เนื่องจากได้ทำการลงทะเบียนในระบบจองสนามฟุตบอล</p>
+  <p>กรุณานำรหัส OTP นี้ไปกรอกในหน้าลงทะเบียนเพื่อยืนยันอีเมลของคุณ</p>
+  <p><strong>รหัสจะหมดอายุภายใน 5 นาที</strong></p>
+  <p style="color:red;">ห้ามเปิดเผยรหัสนี้กับผู้อื่นเพื่อความปลอดภัยของบัญชีคุณ</p>
+  <hr/>
+  <p>หากคุณไม่ได้ร้องขอรหัสนี้ กรุณาละเว้นอีเมลนี้</p>
+`,
   };
 
   try {

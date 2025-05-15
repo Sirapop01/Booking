@@ -9,7 +9,7 @@ function RegisterCustomer() {
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
   const [otpSentTime, setOtpSentTime] = useState(null);
-  
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -126,25 +126,25 @@ function RegisterCustomer() {
       Object.entries(formData).forEach(([key, value]) => {
         if (key !== 'confirmPassword') submitFormData.append(key, value);
       });
-  
+
       await axios.post('http://localhost:4000/api/auth/register', submitFormData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-  
+
       Swal.fire("สมัครสมาชิกสำเร็จ!", "คุณสามารถเข้าสู่ระบบได้ทันที", "success")
         .then(() => navigate('/login'));
-  
+
     } catch (err) {
       Swal.fire("เกิดข้อผิดพลาด", err.response?.data?.message, "error");
     }
   };
-  
+
 
   const handleRegister = async (e) => {
     e.preventDefault();
-  
+
     if (!validateForm()) return;
-  
+
     const sendOtp = async () => {
       Swal.fire({
         title: 'กำลังส่ง OTP...',
@@ -152,27 +152,39 @@ function RegisterCustomer() {
         allowOutsideClick: false,
         didOpen: () => Swal.showLoading(),
       });
+    
       try {
         await axios.post('http://localhost:4000/api/auth/send-otp', { email: formData.email });
         setOtpSent(true);
-        setOtpSentTime(Date.now()); // ✅ กำหนดค่าเวลาที่ส่ง OTP สำเร็จตรงนี้
+        setOtpSentTime(Date.now());
         Swal.close();
+        return true;
       } catch (error) {
-        Swal.fire('❌ ส่ง OTP ไม่สำเร็จ', error.response?.data?.message || 'ลองใหม่อีกครั้ง', 'error');
+        const message = error.response?.data?.message || 'ลองใหม่อีกครั้ง';
+        Swal.fire('❌ ส่ง OTP ไม่สำเร็จ', message, 'error');
+    
+        if (message.includes("อีเมลนี้ถูกใช้งานแล้ว")) {
+          return false; // ⛔ บอกให้ handleRegister หยุด
+        }
+    
+        return false;
       }
     };
-  
+    
+
     if (!otpSent) {
-      await sendOtp();
+      const otpSentSuccess = await sendOtp();
+      if (!otpSentSuccess) return; // ⛔ หยุด flow ถ้าส่ง OTP ไม่ได้ (เช่น อีเมลซ้ำ)
     }
-  
+    
+
     let otpVerified = false;
     const otpExpiryTime = 5 * 60 * 1000; // 5 นาที
-  
+
     while (!otpVerified) {
       const currentTime = Date.now();
       const timeLeft = otpSentTime ? (otpExpiryTime - (currentTime - otpSentTime)) : otpExpiryTime;
-  
+
       if (timeLeft <= 0) {
         const resendOtp = await Swal.fire({
           icon: 'warning',
@@ -183,7 +195,7 @@ function RegisterCustomer() {
           showCancelButton: true,
           confirmButtonColor: '#2E4374',
         });
-  
+
         if (resendOtp.isConfirmed) {
           await sendOtp();
           continue;
@@ -192,7 +204,7 @@ function RegisterCustomer() {
           return;
         }
       }
-  
+
       const { value: otp, dismiss } = await Swal.fire({
         title: '<strong class="otp-swal-title">📧 ยืนยัน OTP</strong>',
         input: 'text',
@@ -220,20 +232,20 @@ function RegisterCustomer() {
           return otpValue;
         },
       });
-  
+
       if (dismiss === Swal.DismissReason.cancel || dismiss === Swal.DismissReason.close) {
         Swal.fire('ยกเลิกการลงทะเบียน', 'ระบบจะนำคุณไปยังหน้า Login', 'info')
           .then(() => navigate('/login'));
         return;
       }
-  
+
       if (otp) {
         Swal.fire({
           title: 'กำลังตรวจสอบ OTP...',
           allowOutsideClick: false,
           didOpen: () => Swal.showLoading(),
         });
-  
+
         try {
           await axios.post('http://localhost:4000/api/auth/verify-otp', {
             email: formData.email,
@@ -251,13 +263,13 @@ function RegisterCustomer() {
         }
       }
     }
-  
+
     Swal.fire({
       title: 'กำลังบันทึกข้อมูล...',
       allowOutsideClick: false,
       didOpen: () => Swal.showLoading(),
     });
-  
+
     try {
       await handleActualRegister();
       Swal.close();
@@ -265,8 +277,8 @@ function RegisterCustomer() {
       Swal.fire('❌ เกิดข้อผิดพลาด', error.response?.data?.message || 'ลองใหม่อีกครั้ง', 'error');
     }
   };
-  
-  
+
+
 
 
   const sportsOptions = [

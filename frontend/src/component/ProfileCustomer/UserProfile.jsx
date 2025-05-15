@@ -297,7 +297,7 @@ const UserProfile = () => {
       <aside className="profile-card">
         <div className="profile-image">
           <label htmlFor="fileUpload" className="image-upload-label">
-            <img src={profileImage || defaultProfilePic} alt="Profile" />
+            <img src={profileImage} alt="Profile" />
             {isEditable && (
               <input
                 id="fileUpload"
