@@ -7,6 +7,7 @@ import homeLogo from "../assets/logoalt.png";
 import addIcon from "../assets/icons/add.png";
 import { jwtDecode } from "jwt-decode"; // ✅ ใช้ decode token
 import ChatButton from "../ChatButton/ChatButton"; // ✅ นำเข้า ChatButton
+import sportsOptions from "../../data/sportsOptions"; // ✅ นำเข้าข้อมูลประเภทกีฬา
 
 function ManageSubStadium() {
   const navigate = useNavigate();
@@ -67,13 +68,13 @@ function ManageSubStadium() {
         iconUrl: newSport.iconUrl,
         description: newSport.description
       })
-      .then(response => {
-        console.log("✅ บันทึกสำเร็จ:", response.data);
-        setSports([...sports, response.data]);
-        setNewSport({ sportName: "", iconUrl: "", description: "" });
-        togglePopup();
-      })
-      .catch(error => console.error("❌ บันทึกไม่สำเร็จ:", error));
+        .then(response => {
+          console.log("✅ บันทึกสำเร็จ:", response.data);
+          setSports([...sports, response.data]);
+          setNewSport({ sportName: "", iconUrl: "", description: "" });
+          togglePopup();
+        })
+        .catch(error => console.error("❌ บันทึกไม่สำเร็จ:", error));
     } else {
       console.error("⚠️ ข้อมูลไม่ครบ sportName หรือ iconUrl");
     }
@@ -94,27 +95,27 @@ function ManageSubStadium() {
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-  
+
     const formData = new FormData();
     formData.append("image", file); // ✅ ส่งไฟล์ไป API ของคุณ
     formData.append("folder", "sports_icons"); // ✅ สามารถเปลี่ยนเป็นโฟลเดอร์อื่นได้
-  
+
     try {
       const response = await axios.post("http://localhost:4000/api/upload/single", formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
-  
+
       const imageUrl = response.data.imageUrl;
       console.log("✅ รูปอัปโหลดสำเร็จ:", imageUrl);
-  
+
       // ✅ อัปเดต URL รูปภาพใน state
       setNewSport({ ...newSport, iconUrl: imageUrl });
-  
+
     } catch (error) {
       console.error("❌ อัปโหลดรูปไม่สำเร็จ:", error);
     }
   };
-  
+
 
   return (
     <div className="manage-substadium-page">
@@ -153,18 +154,26 @@ function ManageSubStadium() {
         <div className="substadium-popup-overlay">
           <div className="substadium-popup-box">
             <h3>เพิ่มประเภทกีฬา</h3>
-            <input
-              type="text"
-              placeholder="ชื่อประเภทกีฬา"
+
+            <select
               value={newSport.sportName}
               onChange={(e) => setNewSport({ ...newSport, sportName: e.target.value })}
-            />
+            >
+              <option value="">-- กรุณาเลือกกีฬา --</option>
+              {sportsOptions.map((sport, index) => (
+                <option key={index} value={sport}>
+                  {sport}
+                </option>
+              ))}
+            </select>
+
             <input
               type="text"
               placeholder="รายละเอียด"
               value={newSport.description}
               onChange={(e) => setNewSport({ ...newSport, description: e.target.value })}
             />
+
             <label className="substadium-image-upload">
               {newSport.iconUrl ? (
                 <img src={newSport.iconUrl} alt="New Sport" className="substadium-uploaded-image" />
@@ -196,10 +205,10 @@ function ManageSubStadium() {
       )}
       {/* ✅ แสดง ChatButton */}
       {decodedToken?.id && decodedToken?.role && (
-              <ChatButton userId={decodedToken.id} userType={decodedToken.role} />
-            )}
-          </div>
-        );
-      }
+        <ChatButton userId={decodedToken.id} userType={decodedToken.role} />
+      )}
+    </div>
+  );
+}
 
 export default ManageSubStadium;

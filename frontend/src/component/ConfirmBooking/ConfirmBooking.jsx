@@ -21,9 +21,9 @@ const ConfirmBooking = () => {
   }
 
   useEffect(() => {
-    axios.get(`http://localhost:4000/api/payments/paid-users?stadiumId=${stadiumId}`, { 
+    axios.get(`http://localhost:4000/api/payments/paid-users?stadiumId=${stadiumId}`, {
       headers: { Authorization: `Bearer ${token}` }
-    })  
+    })
       .then(({ data }) => {
         console.log("✅ Paid Users Fetched", data);
         setUsers(data);
@@ -33,7 +33,7 @@ const ConfirmBooking = () => {
 
   useEffect(() => {
     if (!selectedUser || !token) return;
-  
+
     axios
       .get(`http://localhost:4000/api/payments/user-bookings?userId=${selectedUser.userId._id}&sessionId=${selectedUser.sessionId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -52,14 +52,14 @@ const ConfirmBooking = () => {
       Swal.fire("ผิดพลาด!", "ไม่พบข้อมูลการจอง กรุณาลองใหม่", "error");
       return;
     }
-  
+
     // ✅ ตรวจสอบว่า `_id` เป็น string
-    const bookingId = String(selectedBooking._id); 
+    const bookingId = String(selectedBooking._id);
     const apiUrl = `http://localhost:4000/api/payments/confirm/${bookingId}`;
-  
+
     console.log("🛠️ Debug: Booking ID:", bookingId);
     console.log("🛠️ Debug: API URL:", apiUrl);
-  
+
     Swal.fire({
       title: "ยืนยันการจอง?",
       text: "คุณต้องการยืนยันการจองนี้หรือไม่?",
@@ -75,10 +75,10 @@ const ConfirmBooking = () => {
             {}, // ✅ ไม่ต้องใส่ body เพราะ id อยู่ใน URL แล้ว
             { headers: { Authorization: `Bearer ${token}` } }
           );
-  
+
           console.log("✅ Booking Confirmed:", response.data);
           Swal.fire("สำเร็จ!", "การจองถูกยืนยันแล้ว", "success");
-  
+
           // ✅ อัปเดตสถานะใน UI
           setBookings((prevBookings) =>
             prevBookings.map((booking) =>
@@ -87,7 +87,7 @@ const ConfirmBooking = () => {
                 : booking
             )
           );
-  
+
           setSelectedBooking(null); // ✅ เคลียร์การเลือกหลังยืนยัน
         } catch (error) {
           console.error("❌ เกิดข้อผิดพลาดในการยืนยันการจอง:", error);
@@ -97,20 +97,20 @@ const ConfirmBooking = () => {
     });
   };
 
-  
+
   const rejectBooking = async () => {
     if (!selectedBooking || !selectedBooking._id) {
       console.error("❌ Error: ไม่พบข้อมูลการจอง", selectedBooking);
       Swal.fire("ผิดพลาด!", "ไม่พบข้อมูลการจอง กรุณาลองใหม่", "error");
       return;
     }
-  
+
     const bookingId = String(selectedBooking._id);
     const apiUrl = `http://localhost:4000/api/payments/reject/${bookingId}`;
-  
+
     console.log("🛠️ Debug: Booking ID ที่จะปฏิเสธ:", bookingId);
     console.log("🛠️ Debug: API URL:", apiUrl);
-  
+
     // ✅ Popup ให้แอดมินกรอกเหตุผล
     const { value: rejectionReason } = await Swal.fire({
       title: "กรุณาระบุเหตุผลที่ปฏิเสธ",
@@ -120,12 +120,12 @@ const ConfirmBooking = () => {
       confirmButtonText: "✔️ ส่งเหตุผล",
       cancelButtonText: "❌ ยกเลิก",
     });
-  
+
     if (!rejectionReason) {
       Swal.fire("❌ ปฏิเสธไม่สำเร็จ", "กรุณาระบุเหตุผลในการปฏิเสธ", "error");
       return;
     }
-  
+
     Swal.fire({
       title: "ปฏิเสธการจอง?",
       text: "คุณแน่ใจหรือไม่ว่าต้องการปฏิเสธการจองนี้?",
@@ -142,10 +142,10 @@ const ConfirmBooking = () => {
             { rejectionReason }, // ✅ ส่งเหตุผลไปด้วย
             { headers: { Authorization: `Bearer ${token}` } }
           );
-  
+
           console.log("✅ Booking Rejected:", response.data);
           Swal.fire("สำเร็จ!", "การจองถูกปฏิเสธแล้ว", "success");
-  
+
           // ✅ อัปเดตสถานะใน UI
           setBookings((prevBookings) =>
             prevBookings.map((booking) =>
@@ -154,7 +154,7 @@ const ConfirmBooking = () => {
                 : booking
             )
           );
-  
+
           setSelectedBooking(null); // ✅ เคลียร์การเลือกหลังปฏิเสธ
         } catch (error) {
           console.error("❌ เกิดข้อผิดพลาดในการปฏิเสธการจอง:", error);
@@ -162,9 +162,9 @@ const ConfirmBooking = () => {
         }
       }
     });
-  };  
-  
-  
+  };
+
+
   return (
     <div className="admin-payment-container">
       <Navbar />
@@ -181,7 +181,7 @@ const ConfirmBooking = () => {
                   className={`user-item3 ${selectedUser?._id === user._id ? "selected" : ""}`}
                   onClick={() => setSelectedUser(user)}
                 >
-                  {user.userId.firstName} {user.userId.lastName}
+                  {user.userId?.firstName ?? "ไม่ทราบชื่อ"} {user.userId?.lastName ?? ""}
                 </div>
               ))
             )}

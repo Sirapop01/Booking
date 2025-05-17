@@ -5,6 +5,7 @@ import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import sportsOptions from "../../data/sportsOptions"; // ปรับ path ให้ตรงกับโฟลเดอร์ของคุณ
 
 const UserProfile = () => {
   const [isEditable, setIsEditable] = useState(false);
@@ -133,61 +134,78 @@ const UserProfile = () => {
 
 
   const updateMemberData = async () => {
-    try {
-      let updatedData = { ...member };
-      let imageUrl = profileImage;
-  
-      if (newProfileImage) {
-        await uploadImage(newProfileImage); // ✅ Upload image first
+  try {
+    Swal.fire({
+      title: "กำลังบันทึก...",
+      text: "กรุณารอสักครู่",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
       }
-  
-      console.log("📤 Sending Updated Data:", updatedData);
-  
-      const response = await axios.put(`http://localhost:4000/api/auth/update/${id}`, updatedData);
-      console.log("✅ Updated Member Data:", response.data);
-  
-      alert("🎉 อัปเดตข้อมูลสำเร็จ!");
-      await getMB();
-      setIsEditable(false);
-      setNewProfileImage(null);
-    } catch (error) {
-      console.error("❌ Error updating member data:", error);
-      Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถอัปเดตข้อมูลได้", "error");
-    }
-  };
+    });
 
-  
+    let updatedData = { ...member };
+    let imageUrl = profileImage;
+
+    if (newProfileImage) {
+      await uploadImage(newProfileImage); // ✅ Upload image first
+    }
+
+    console.log("📤 Sending Updated Data:", updatedData);
+
+    const response = await axios.put(
+      `http://localhost:4000/api/auth/update/${id}`,
+      updatedData
+    );
+
+    console.log("✅ Updated Member Data:", response.data);
+
+    await getMB();
+    setIsEditable(false);
+    setNewProfileImage(null);
+
+    Swal.close(); // ปิด loading ก่อนแสดงผล
+    Swal.fire("สำเร็จ", "อัปเดตข้อมูลเรียบร้อยแล้ว", "success");
+  } catch (error) {
+    console.error("❌ Error updating member data:", error);
+    Swal.close(); // ปิด loading ก่อนแจ้ง error
+    Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถอัปเดตข้อมูลได้", "error");
+  }
+};
+
   const uploadImage = async (file) => {
     try {
-        if (!file) {
-            alert("กรุณาเลือกไฟล์ก่อนอัปโหลด");
-            return;
+      if (!file) {
+        Swal.fire("ไม่พบไฟล์", "กรุณาเลือกไฟล์ก่อนอัปโหลด", "warning");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("profileImage", file);
+
+      console.log("📤 กำลังอัปโหลดไฟล์:", file);
+
+      const response = await axios.put(
+        `http://localhost:4000/api/auth/update/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
         }
+      );
 
-        const formData = new FormData();
-        formData.append("profileImage", file);
+      console.log("✅ อัปโหลดรูปภาพสำเร็จ:", response.data);
 
-        console.log("📤 กำลังอัปโหลดไฟล์:", file);
 
-        const response = await axios.put(
-            `http://localhost:4000/api/auth/updateProfileImage/${id}`,
-            formData,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            }
-        );
 
-        console.log("✅ อัปโหลดรูปภาพสำเร็จ:", response.data);
-        alert("🎉 อัปโหลดรูปภาพสำเร็จ!");
-        getMB(); // โหลดข้อมูลใหม่
-        setIsEditable(false);
+      getMB(); // โหลดข้อมูลใหม่
+      setIsEditable(false);
     } catch (error) {
-        console.error("❌ อัปโหลดรูปไม่สำเร็จ:", error);
-        alert("เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ");
+      console.error("❌ อัปโหลดรูปไม่สำเร็จ:", error);
+      Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถอัปโหลดรูปภาพได้", "error");
     }
-};
+  };
 
 
 
@@ -310,18 +328,18 @@ const UserProfile = () => {
           </label>
         </div>
         {/* ✅ "Edit Profile" Button (Only when NOT editing) */}
-{!isEditable && (
-  <button className="edit-profile-button" onClick={toggleEdit}>
-    แก้ไขโปรไฟล์และข้อมูล
-  </button>
-)}
+        {!isEditable && (
+          <button className="edit-profile-button" onClick={toggleEdit}>
+            แก้ไขโปรไฟล์และข้อมูล
+          </button>
+        )}
 
-{/* ✅ "บันทึก" (Save) Button (Only when Editing) */}
-{isEditable && (
-  <button className="save-button" onClick={updateMemberData}>
-    บันทึก
-  </button>
-)}
+        {/* ✅ "บันทึก" (Save) Button (Only when Editing) */}
+        {isEditable && (
+          <button className="save-button" onClick={updateMemberData}>
+            บันทึก
+          </button>
+        )}
         {/* ✅ Account Actions: Forgot Password & Delete Account */}
         <div className="account-actions">
           <h3 className="forgot-password-user" onClick={() => navigate("/forgot-password")}>
@@ -353,7 +371,7 @@ const UserProfile = () => {
             </div>
             <div className="input-group">
               <label>เพศ</label>
-              <input type="text" name="gender" value={member?.gender || ""} onChange={handleChange} readOnly={!isEditable} />
+              <input type="text" name="gender" value={member?.gender || ""} onChange={handleChange} readOnly />
             </div>
             <div className="input-group">
               <label>หมายเลขโทรศัพท์</label>
@@ -361,8 +379,21 @@ const UserProfile = () => {
             </div>
             <div className="input-group">
               <label>กีฬาที่สนใจ</label>
-              <input type="text" name="sport" value={member?.interestedSports || ""} onChange={handleChange} readOnly={!isEditable} />
+              <select
+                name="sport"
+                value={member?.interestedSports || ""}
+                onChange={handleChange}
+                disabled={!isEditable}
+              >
+                <option value="">-- กรุณาเลือกกีฬา --</option>
+                {sportsOptions.map((sport, index) => (
+                  <option key={index} value={sport}>
+                    {sport}
+                  </option>
+                ))}
+              </select>
             </div>
+
             <div className="input-group">
               <label>อีเมล</label>
               <input type="email" name="email" value={member?.email || ""} readOnly />

@@ -77,7 +77,11 @@ function RegisterCustomer() {
     if (!formData.profileImage) newErrors.profileImage = "กรุณาใส่รูปโปรไฟล์";
     if (!formData.firstName) newErrors.firstName = "กรุณากรอกชื่อจริง";
     if (!formData.lastName) newErrors.lastName = "กรุณากรอกนามสกุล";
-    if (!formData.email) newErrors.email = "กรุณากรอกอีเมล";
+    if (!formData.email) {
+      newErrors.email = "กรุณากรอกอีเมล";
+    } else if (!formData.email.endsWith("@gmail.com")) {
+      newErrors.email = "อีเมลต้องเป็น @gmail.com เท่านั้น";
+    }
     if (!formData.phoneNumber) newErrors.phoneNumber = "กรุณากรอกเบอร์โทรศัพท์";
     if (!formData.password) newErrors.password = "กรุณากรอกรหัสผ่าน";
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "รหัสผ่านไม่ตรงกัน";
@@ -152,7 +156,7 @@ function RegisterCustomer() {
         allowOutsideClick: false,
         didOpen: () => Swal.showLoading(),
       });
-    
+
       try {
         await axios.post('http://localhost:4000/api/auth/send-otp', { email: formData.email });
         setOtpSent(true);
@@ -162,21 +166,21 @@ function RegisterCustomer() {
       } catch (error) {
         const message = error.response?.data?.message || 'ลองใหม่อีกครั้ง';
         Swal.fire('❌ ส่ง OTP ไม่สำเร็จ', message, 'error');
-    
+
         if (message.includes("อีเมลนี้ถูกใช้งานแล้ว")) {
           return false; // ⛔ บอกให้ handleRegister หยุด
         }
-    
+
         return false;
       }
     };
-    
+
 
     if (!otpSent) {
       const otpSentSuccess = await sendOtp();
       if (!otpSentSuccess) return; // ⛔ หยุด flow ถ้าส่ง OTP ไม่ได้ (เช่น อีเมลซ้ำ)
     }
-    
+
 
     let otpVerified = false;
     const otpExpiryTime = 5 * 60 * 1000; // 5 นาที

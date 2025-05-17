@@ -14,64 +14,77 @@ function ForgotPassword() {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
     if (token) {
-        try {
-            const decoded = jwtDecode(token);
-            console.log("✅ Token ถูกต้อง, ข้อมูลที่ได้:", decoded);
-            
-            setUser({
-                email: decoded.email || "",
-                ownerEmail: decoded.owner?.email || "" // ✅ ดึง owner.email ถ้ามี
-            });
+      try {
+        const decoded = jwtDecode(token);
+        console.log("✅ Token ถูกต้อง, ข้อมูลที่ได้:", decoded);
 
-        } catch (error) {
-            console.error("❌ Error decoding token:", error);
-            setUser(null);
-        }
-    } else {
-        console.log("⚠ ไม่มี Token ใน LocalStorage");
+        setUser({
+          email: decoded.email || "",
+          ownerEmail: decoded.owner?.email || "" // ✅ ดึง owner.email ถ้ามี
+        });
+
+      } catch (error) {
+        console.error("❌ Error decoding token:", error);
         setUser(null);
+      }
+    } else {
+      console.log("⚠ ไม่มี Token ใน LocalStorage");
+      setUser(null);
     }
-}, []);
+  }, []);
 
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  // ✅ ตรวจสอบว่าผู้ใช้กรอกอีเมลที่ตรงกับบัญชี
-  if (
+    // ✅ ตรวจสอบว่าผู้ใช้กรอกอีเมลที่ตรงกับบัญชี
+    if (
       user &&
       ((user.email && email !== user.email) &&
-       (user.ownerEmail && email !== user.ownerEmail))
-  ) {
+        (user.ownerEmail && email !== user.ownerEmail))
+    ) {
       Swal.fire({
-          icon: "error",
-          title: "อีเมลไม่ถูกต้อง!",
-          text: "กรุณากรอกอีเมลที่ใช้ลงทะเบียน",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "ตกลง",
+        icon: "error",
+        title: "อีเมลไม่ถูกต้อง!",
+        text: "กรุณากรอกอีเมลที่ใช้ลงทะเบียน",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง",
       });
       return;
-  }
+    }
 
-  try {
+    try {
+      Swal.fire({
+        title: "กำลังส่งอีเมล...",
+        text: "กรุณารอสักครู่",
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
       await axios.post("http://localhost:4000/api/auth/forgot-password", { email });
+
+      Swal.close(); // ปิดโหลดก่อนแสดงผล
       Swal.fire({
-          icon: "success",
-          title: " กรุณาตรวจสอบอีเมล!",
-          text: "เราได้ส่งลิงก์สำหรับเปลี่ยนรหัสผ่านไปที่อีเมลของคุณ",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "ตกลง",
+        icon: "success",
+        title: "กรุณาตรวจสอบอีเมล!",
+        text: "เราได้ส่งลิงก์สำหรับเปลี่ยนรหัสผ่านไปที่อีเมลของคุณ",
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "ตกลง",
       });
-  } catch (error) {
+    } catch (error) {
+      Swal.close(); // ปิดโหลดก่อนแสดง error
       Swal.fire({
-          icon: "error",
-          title: " ไม่พบอีเมลนี้",
-          text: "โปรดตรวจสอบและลองอีกครั้ง",
-          confirmButtonColor: "#d33",
-          confirmButtonText: "ตกลง",
+        icon: "error",
+        title: "ไม่พบอีเมลนี้",
+        text: "โปรดตรวจสอบและลองอีกครั้ง",
+        confirmButtonColor: "#d33",
+        confirmButtonText: "ตกลง",
       });
-  }
-};
+    }
+
+  };
 
 
   return (
@@ -83,17 +96,17 @@ const handleSubmit = async (e) => {
         <form onSubmit={handleSubmit}>
           <label htmlFor="email" className="new-label">ป้อนที่อยู่อีเมล</label>
           <input
-              id="email"
-              type="email"
-              placeholder={
-                  user && (user.ownerEmail || user.email)
-                      ? user.ownerEmail || user.email
-                      : "กรุณากรอกอีเมล"
-              }
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="new-input"
+            id="email"
+            type="email"
+            placeholder={
+              user && (user.ownerEmail || user.email)
+                ? user.ownerEmail || user.email
+                : "กรุณากรอกอีเมล"
+            }
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="new-input"
           />
           <button type="submit" className="new-reset-button">ส่งคำขอ</button>
         </form>
