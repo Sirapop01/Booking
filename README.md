@@ -73,6 +73,8 @@ npm start
 
 ---
 
+[![Watch the demo video](https://img.youtube.com/vi/byr-z6YT-XI/hqdefault.jpg)](https://youtu.be/byr-z6YT-XI)
+
 ## 🧭 Usage
 
 ### 1. 👤 ผู้ใช้ทั่วไป
